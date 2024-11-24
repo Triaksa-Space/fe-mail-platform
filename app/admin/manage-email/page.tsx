@@ -27,10 +27,10 @@ export default function ManageEmailPage() {
       <div className="w-full max-w-2xl space-y-8">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Manage Emails
+            Coming Soon
           </h1>
         </div>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <h2 className="text-xl font-semibold">Email List</h2>
           <ul className="space-y-2">
             {emails.map(email => (
@@ -40,7 +40,7 @@ export default function ManageEmailPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   )
