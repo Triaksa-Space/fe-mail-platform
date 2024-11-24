@@ -1,7 +1,16 @@
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
 
-const Inbox: React.FC<{ emails: any[] }> = ({ emails }) => {
+type Email = {
+  id: string;
+  subject: string;
+  body: string;
+  sender: string;
+  timestamp: string; 
+  preview: string;
+};
+
+const Inbox: React.FC<{ emails: Email[] }> = ({ emails }) => {
   return (
     <div className="space-y-0.5">
       {emails.map((email) => (

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
+import Image from 'next/image';
 
 // Mock function to get logged-in user's email
 const getLoggedInUserEmail = () => {
@@ -104,10 +105,12 @@ const Send: React.FC = () => {
           <div className="mt-4 flex flex-wrap gap-2">
             {attachments.map((file, index) => (
               <div key={index} className="relative">
-                <img
+                <Image
                   src={URL.createObjectURL(file)}
                   alt={`attachment-${index}`}
-                  className="w-24 h-24 object-cover rounded"
+                  width={96} // 24 * 4 (tailwind w-24)
+                  height={96} // 24 * 4 (tailwind h-24)
+                  className="object-cover rounded"
                 />
                 <button
                   type="button"
