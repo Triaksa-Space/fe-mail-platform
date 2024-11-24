@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
     Table,
@@ -11,13 +10,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/navigation"
 import DropdownMenuComponent from "@/components/DropdownMenuComponent"
 
 interface User {
@@ -44,7 +36,6 @@ export default function AdminDashboard() {
     const [currentPage, setCurrentPage] = useState(1)
     const totalUsers = 1200
     const totalPages = Math.ceil(totalUsers / 10)
-    const router = useRouter()
 
     return (
         <div className="min-h-screen bg-white">

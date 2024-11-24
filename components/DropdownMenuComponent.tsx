@@ -3,9 +3,7 @@ import { Menu } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
-type DropdownMenuComponentProps = {}
-
-const DropdownMenuComponent: React.FC<DropdownMenuComponentProps> = () => {
+const DropdownMenuComponent: React.FC = () => {
   const router = useRouter()
 
   const handleLogout = () => {

@@ -30,7 +30,7 @@ export default function ManageEmailPage() {
             Coming Soon
           </h1>
         </div>
-        {/* <div className="space-y-4">
+        <div className="space-y-4">
           <h2 className="text-xl font-semibold">Email List</h2>
           <ul className="space-y-2">
             {emails.map(email => (
@@ -40,7 +40,7 @@ export default function ManageEmailPage() {
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </div>
     </div>
   )
