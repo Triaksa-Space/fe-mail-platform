@@ -4,8 +4,9 @@ import FooterNav from '@/components/FooterNav';
 import Inbox from '@/components/Inbox';
 import Send from '@/components/Send';
 import Settings from '@/components/Settings';
+import { Email } from '@/types/email';
 
-const emails = [
+const emails: Email[] = [
       {
         id: "1",
         sender: "Google Gemini",

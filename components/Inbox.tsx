@@ -1,14 +1,6 @@
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
-
-type Email = {
-  id: string;
-  subject: string;
-  body: string;
-  sender: string;
-  timestamp: string; 
-  preview: string;
-};
+import { Email } from "@/types/email";
 
 const Inbox: React.FC<{ emails: Email[] }> = ({ emails }) => {
   return (
