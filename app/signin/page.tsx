@@ -15,11 +15,19 @@ export default function SignInPage() {
     event.preventDefault()
     setIsLoading(true)
 
+    const formData = new FormData(event.target as HTMLFormElement)
+    const email = formData.get('email') as string
+
     // Simulate authentication
     setTimeout(() => {
       setIsLoading(false)
-      // Redirect to inbox after successful login
-      router.push('/inbox')
+      if (email === 'admin@mailria.com') {
+        // Redirect to admin page
+        router.push('/admin')
+      } else {
+        // Redirect to inbox after successful login
+        router.push('/inbox')
+      }
     }, 1000)
   }
 
@@ -40,6 +48,7 @@ export default function SignInPage() {
               <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               <Input 
                 id="email" 
+                name="email"
                 placeholder="example@mailria.com" 
                 required 
                 type="email"
@@ -55,6 +64,7 @@ export default function SignInPage() {
               <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               <Input 
                 id="password" 
+                name="password"
                 placeholder="Input password"
                 required 
                 type="password"
@@ -74,4 +84,3 @@ export default function SignInPage() {
     </div>
   )
 }
-
