@@ -1,17 +1,52 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Upload } from 'lucide-react';
+
+// Mock function to get logged-in user's email
+const getLoggedInUserEmail = () => {
+  return "user@example.com"; // Replace with actual logic to get the logged-in user's email
+};
 
 const Send: React.FC = () => {
+  const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [attachments, setAttachments] = useState<File[]>([]);
 
-  const isFormValid = to && subject && message;
+  useEffect(() => {
+    // Set the "From" field with the logged-in user's email
+    setFrom(getLoggedInUserEmail());
+  }, []);
+
+  const isFormValid = from && to && subject && message;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setAttachments([...attachments, ...Array.from(e.target.files)]);
+    }
+  };
+
+  const handleRemoveAttachment = (index: number) => {
+    setAttachments(attachments.filter((_, i) => i !== index));
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen p-4">
-      <h1 className="text-2xl font-bold mb-4">Compose New Message</h1>
+    <div className="flex justify-center h-screen p-4">
+      {/* <h1 className="text-2xl font-bold mb-4">Compose New Message</h1> */}
       <form className="w-full max-w-lg">
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="from">
+            From:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="from"
+            type="text"
+            value={from}
+            readOnly
+          />
+        </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="to">
             To:
@@ -50,6 +85,40 @@ const Send: React.FC = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="attachments">
+            Attachments:
+          </label>
+          <input
+            className="hidden"
+            id="attachments"
+            type="file"
+            multiple
+            onChange={handleFileChange}
+          />
+          <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 text-blue-500">
+            <Upload className="h-6 w-6" />
+            <span>Upload Images</span>
+          </label>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {attachments.map((file, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`attachment-${index}`}
+                  className="w-24 h-24 object-cover rounded"
+                />
+                <button
+                  type="button"
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                  onClick={() => handleRemoveAttachment(index)}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="flex items-center justify-center">
           <button
