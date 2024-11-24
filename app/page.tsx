@@ -8,7 +8,7 @@ export default function LandingPage() {
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <Link className="flex items-center justify-center" href="#">
           <Mail className="h-6 w-6" />
-          <span className="ml-2 text-2xl font-bold">Mailria</span>
+          {/* <span className="ml-2 text-2xl font-bold">Mailria</span> */}
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
@@ -27,19 +27,19 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-                  Your Email, Simplified
+                <h1 className="text-6xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
+                Mailria
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Experience email the way it should be. Fast, secure, and beautifully designed.
+                Where Simplicity Meets Speed.
                 </p>
               </div>
-              <div className="space-x-4">
+              {/* <div className="space-x-4">
                 <Button size="lg">Get Started</Button>
                 <Button variant="outline" size="lg">
                   Learn More
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
