@@ -17,6 +17,7 @@ export default function SignInPage() {
 
     const formData = new FormData(event.target as HTMLFormElement)
     const email = formData.get('email') as string
+    const password = formData.get('password') as string
 
     // Simulate authentication
     setTimeout(() => {
@@ -32,14 +33,14 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-screen justify-center bg-white p-4">
-      <div className="w-full max-w-sm space-y-8">
+    <div className="flex flex-col min-h-screen justify-between bg-white p-4 pt-8">
+      <div className="w-full max-w-sm mx-auto space-y-8">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="text-xl font-semibold tracking-tight">
             Where Simplicity Meets Speed.
           </h1>
         </div>
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6 p-4">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-base">
               Email
@@ -80,6 +81,16 @@ export default function SignInPage() {
             {isLoading ? "Signing in..." : "Login"}
           </Button>
         </form>
+      </div>
+      <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-4 text-left">
+        <h2 className="text-l font-semibold">Looking for reliable email services?</h2>
+        <p className="text-sm text-gray-600">
+          Mailria has you covered! Drop us a message at{" "}
+          <a href="mailto:support@mailria.com" className="text-blue-600 hover:underline">
+            support@mailria.com
+          </a>
+          {" "}for more details.
+        </p>
       </div>
     </div>
   )
