@@ -1,15 +1,38 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Mail, Lock } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [failedAttempts, setFailedAttempts] = useState(0)
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null)
+  const [countdown, setCountdown] = useState<number | null>(null)
   const router = useRouter()
+  const setToken = useAuthStore((state) => state.setToken)
+
+  useEffect(() => {
+    if (lockoutTime) {
+      const interval = setInterval(() => {
+        const remainingTime = Math.max(0, lockoutTime - Date.now())
+        setCountdown(Math.ceil(remainingTime / 1000))
+
+        if (remainingTime <= 0) {
+          clearInterval(interval)
+          setLockoutTime(null)
+          setCountdown(null)
+          setFailedAttempts(0)
+        }
+      }, 1000)
+
+      return () => clearInterval(interval)
+    }
+  }, [lockoutTime])
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -19,17 +42,38 @@ export default function SignInPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    // Simulate authentication
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
       setIsLoading(false)
-      if (email === 'admin@mailria.com') {
-        // Redirect to admin page
-        router.push('/admin')
+
+      if (response.ok) {
+        setFailedAttempts(0)
+        setLockoutTime(null)
+        setCountdown(null)
+        setToken(data.token) // Save the JWT token into the global state
+        // if (email === 'admin@mailria.com') {
+        //   router.push('/admin')
+        // } else {
+          router.push('/inbox')
+        // }
       } else {
-        // Redirect to inbox after successful login
-        router.push('/inbox')
+        setFailedAttempts((prev) => prev + 1)
+        if (failedAttempts >= 3) {
+          setLockoutTime(Date.now() + 10 * 60 * 1000) // 10 minutes lockout
+        }
       }
-    }, 1000)
+    } catch (error) {
+      setIsLoading(false)
+      console.error('An error occurred:', error)
+    }
   }
 
   return (
@@ -74,12 +118,22 @@ export default function SignInPage() {
             </div>
           </div>
           <Button 
-            className="w-full h-12 text-base font-medium bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black"
+            className={`w-full h-12 text-base font-medium ${lockoutTime ? 'bg-gray-400' : 'bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black'}`}
             type="submit" 
-            disabled={isLoading}
+            disabled={isLoading || !!lockoutTime}
           >
-            {isLoading ? "Signing in..." : "Login"}
+            {lockoutTime ? `Login (${countdown})` : isLoading ? "Signing in..." : "Login"}
           </Button>
+          {failedAttempts === 3 && (
+            <p className="text-xs text-red-600 text-center">
+              Careful! One more failed attempt will disable login for 10 minutes.
+            </p>
+          )}
+          {lockoutTime ?
+          <p className="text-xs text-red-600 text-left">
+            Too many failed attempts. Try again in 10 minutes.
+          </p>
+          : null}
         </form>
       </div>
       <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-4 text-left">
