@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuthStore } from "@/stores/useAuthStore"
+import axios from "axios"
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -43,18 +44,15 @@ export default function SignInPage() {
     const password = formData.get('password') as string
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
+        email,
+        password,
       })
 
-      const data = await response.json()
+      const data = response.data
       setIsLoading(false)
 
-      if (response.ok) {
+      if (response.status == 200) {
         setFailedAttempts(0)
         setLockoutTime(null)
         setCountdown(null)

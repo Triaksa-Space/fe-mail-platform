@@ -1,8 +1,15 @@
-export type Email = {
-  id: string;
+export interface Attachment {
+  name: string;
+  url: string;
+}
+
+export interface Email {
+  id: number;
   sender: string;
+  recipient: string;
+  timestamp: string;
   subject: string;
   preview: string;
-  timestamp: string;
-  body?: string; // Optional body property
-};
+  body: string; // May contain HTML content
+  attachments?: Attachment[];
+}
