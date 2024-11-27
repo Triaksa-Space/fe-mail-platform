@@ -80,10 +80,13 @@ const Send: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
+  useEffect(() => {
   //   // Set the "From" field with the logged-in user's email
   //   setFrom(getLoggedInUserEmail());
-  // }, []);
+    const params = new URLSearchParams(window.location.search);
+    setTo(params.get('to') || '');
+    setSubject(params.get('subject') || '');
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

@@ -6,7 +6,8 @@ export interface Attachment {
 export interface Email {
   ID: number;
   UserID: number,
-  Sender: string;
+  SenderEmail: string;
+  SenderName: string;
   Subject: string;
   Preview: string;
   RelativeTime: string;

@@ -113,7 +113,7 @@ const InboxPage: React.FC = () => {
                 >
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold">{email.Sender}</h3>
+                      <h3 className="font-semibold">{email.SenderName}</h3>
                       <span className="text-sm text-gray-500">
                         {email.RelativeTime}
                       </span>

@@ -9,7 +9,8 @@ import FooterNav from "@/components/FooterNav";
 
 interface EmailDetail {
     ID: number;
-    Sender: string;
+    SenderEmail: string;
+    SenderName: string;
     Subject: string;
     Body: string;
     RelativeTime: string;
@@ -59,12 +60,23 @@ export default function EmailDetailPage() {
         fetchEmailDetail();
     }, [params.id, token]);
 
+    const handleReply = () => {
+        if (!email) return;
+
+        const replyParams = new URLSearchParams({
+          to: email.SenderEmail,
+          subject: `Re: ${email.Subject}`,
+        }).toString();
+      
+        router.push(`/inbox/send?${replyParams}`);
+      };
+
     if (isLoading) return <div className="p-4">Loading...</div>;
     if (error) return <div className="p-4 text-red-500">{error}</div>;
     if (!email) return <div className="p-4">Email not found</div>;
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col h-screen">
             <div className="p-4 space-y-4 flex-1 overflow-auto">
                 <div className="flex justify-between items-center bg-white">
                     <div className="flex items-center gap-2">
@@ -78,7 +90,12 @@ export default function EmailDetailPage() {
                         </Button>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 [&_svg]:size-5">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 [&_svg]:size-5"
+                            onClick={handleReply}
+                        >
                             <Reply className="h-12 w-12" />
                         </Button>
                     </div>
@@ -87,7 +104,7 @@ export default function EmailDetailPage() {
                 <div className="space-y-2 text-xs p-1">
                     <div className="grid grid-cols-[80px_1fr] gap-2">
                         <span className="text-gray-500">From</span>
-                        <span className="font-medium">{email.Sender}</span>
+                        <span className="font-medium">{email.SenderName} - {email.SenderEmail}</span>
                     </div>
                     <div className="grid grid-cols-[80px_1fr] gap-2">
                         <span className="text-gray-500">Subject</span>
