@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from './ui/button';
 
 const Settings: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -8,74 +9,75 @@ const Settings: React.FC = () => {
   const isFormValid = newPassword && confirmPassword && newPassword === confirmPassword;
 
   const handleLogout = () => {
-    // Add your logout logic here
     console.log('User logged out');
-    // Redirect to signin page
-  window.location.href = '/signin';
+    window.location.href = '/signin';
   };
 
   return (
-    <div className="flex justify-center h-screen p-4">
-      {/* <h1 className="text-2xl font-bold mb-4">Change Password</h1> */}
-      <form className="w-full max-w-lg">
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="current-password">
-            Old Password:
+    <div className="p-4 space-y-4">
+      <div className="flex justify-between items-center p-2 bg-white">
+        <div className="flex items-center gap-2">
+          <label className="text-xl font-bold">
+            Change Password
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="current-password"
-            type="password"
-            placeholder="Current password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="new-password">
-            New Password:
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="new-password"
-            type="password"
-            placeholder="New password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirm-password">
-            Confirm New Password:
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="confirm-password"
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center justify-center">
-          <button
-            className={`w-3/4 bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline ${!isFormValid ? 'opacity-50 cursor-not-allowed' : ''}`}
-            type="button"
-            disabled={!isFormValid}
-          >
-            Submit
-          </button>
-        </div>
-        <div className="flex items-center justify-center mt-20">
-          <button
+      </div>
+
+      <div className="flex justify-center items-start p-4">
+        <form className="w-full max-w-lg text-sm">
+          <div className="mb-4">
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="current-password"
+              type="password"
+              placeholder="Old Password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="new-password"
+              type="password"
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="confirm-password"
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <Button
+              className={`w-3/4 bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline ${!isFormValid ? 'opacity-50 cursor-not-allowed' : ''}`}
+              type="button"
+              disabled={!isFormValid}
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      <div className="p-4">
+        <div className="flex items-center justify-center max-w-lg mx-auto">
+          <Button
             className="w-3/4 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={handleLogout}
           >
             Logout
-          </button>
+          </Button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

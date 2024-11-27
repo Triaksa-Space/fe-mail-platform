@@ -5,6 +5,8 @@ import Inbox from '@/components/Inbox';
 import Send from '@/components/Send';
 import Settings from '@/components/Settings';
 import { Email } from '@/types/email';
+import { useRouter } from 'next/navigation';
+import { Separator } from '@/components/ui/separator';
 
 const emails: Email[] = [
       {
@@ -101,26 +103,53 @@ const emails: Email[] = [
 
 const Page: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('inbox');
+  const router = useRouter();
 
-  const renderContent = () => {
-    switch (currentPage) {
-      case 'inbox':
-        return <Inbox emails={emails} />;
-      case 'send':
-        return <Send />;
-      case 'settings':
-        return <Settings />;
-      default:
-        return <Inbox emails={emails} />;
-    }
-  };
+  // const renderContent = () => {
+  //   switch (currentPage) {
+  //     case 'inbox':
+  //       return <Inbox emails={emails} />;
+  //     case 'send':
+  //       return <Send />;
+  //     case 'settings':
+  //       return <Settings />;
+  //     default:
+  //       return <Inbox emails={emails} />;
+  //   }
+  // };
 
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1 overflow-auto">
-        {renderContent()}
+      <div className="space-y-0.5">
+      <div className="flex justify-between p-2 bg-[#F7D65D]">
+        <h1 className="text-xl font-semibold tracking-tight">
+          john@mailria.com
+        </h1>
+        <h1 className="text-sm font-semibold tracking-tight">
+        Daily Send 0/3
+        </h1>
       </div>
-      <FooterNav setCurrentPage={setCurrentPage} />
+      {emails.map((email) => (
+        <div
+        key={email.id}
+        className="p-4 hover:bg-gray-100 cursor-pointer"
+        onClick={() => router.push(`/inbox/${email.id}`)}
+      >
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">{email.sender}</h3>
+              <span className="text-sm text-gray-500">{email.timestamp}</span>
+            </div>
+            <h4 className="font-medium">{email.subject}</h4>
+            <p className="text-sm text-gray-500">{email.preview}</p>
+          </div>
+          <Separator className="mt-4" />
+        </div>
+      ))}
+    </div>
+      </div>
+      <FooterNav />
     </div>
   );
 };

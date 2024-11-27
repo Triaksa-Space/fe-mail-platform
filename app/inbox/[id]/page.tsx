@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Email } from "@/types/email";
-import { X, Reply, DownloadIcon } from 'lucide-react';
+import { CircleX, Reply, Download } from 'lucide-react';
 import FooterNav from '@/components/FooterNav';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -64,21 +64,23 @@ const DetailInbox: React.FC<{ emails: Email[] }> = ({ emails }) => {
     };
 
     return (
+        <div className="flex flex-col h-screen">
+        <div className="flex-1 overflow-auto">
         <div className="p-4 space-y-4">
-            <div className="flex justify-between items-center p-2 bg-white">
+            <div className="flex justify-between items-center bg-white">
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => router.back()}>
-                        <X className="h-12 w-12" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 [&_svg]:size-5" onClick={() =>  router.push('/inbox')}>
+                        <CircleX className="h-12 w-12" />
                     </Button>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="default" size="icon" className="h-8 w-8">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 [&_svg]:size-5">
                         <Reply className="h-12 w-12" />
                     </Button>
                 </div>
             </div>
-            <div className="border p-2 text-sm">
-                <div className="space-y-1 text-sm">
+            <div className="border p-2 text-xs">
+                <div className="space-y-1 text-xs">
                     <div className="grid grid-cols-[60px_1fr] gap-2">
                         <span className="text-gray-500">From</span>
                         <span className="font-medium">{email.sender}</span>
@@ -108,7 +110,7 @@ const DetailInbox: React.FC<{ emails: Email[] }> = ({ emails }) => {
                             <li key={index} className="flex items-center justify-between text-sm">
                                 <span>{attachment.name}
                                 <Button variant="ghost" onClick={() => downloadAttachment(attachment.url)}>
-                                    <DownloadIcon className="h-12 w-12" />
+                                    <Download className="h-12 w-12" />
                                 </Button>
                                 </span>
                             </li>
@@ -116,8 +118,10 @@ const DetailInbox: React.FC<{ emails: Email[] }> = ({ emails }) => {
                     </ul>
                 </div>
             )}
-            {/* <FooterNav setCurrentPage={setCurrentPage} /> */}
-        </div>        
+        </div>
+        </div>
+        <FooterNav/>
+      </div>        
     );
 };
 
