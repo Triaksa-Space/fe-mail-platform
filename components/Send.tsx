@@ -80,22 +80,22 @@ const Send: React.FC = () => {
             </div>
           </div>
           <div className="flex bg-white text-sm w-full">
-  <div className="flex items-center gap-2 w-12">
-    <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
-      To:
-    </label>
-  </div>
-  <div className="mt-2 flex-1">
-    <input
-      className="text-sm shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      id="to"
-      type="text"
-      placeholder=""
-      value={to}
-      onChange={(e) => setTo(e.target.value)}
-    />
-  </div>
-</div>
+            <div className="flex items-center gap-2 w-12">
+              <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
+                To:
+              </label>
+            </div>
+            <div className="mt-2 flex-1">
+              <input
+                className="text-sm shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="to"
+                type="text"
+                placeholder=""
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              />
+            </div>
+          </div>
           <div className="mb-1 mt-2">
             <input
               className="text-sm shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -117,25 +117,25 @@ const Send: React.FC = () => {
             />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-              {attachments.map((file, index) => (
-                <div key={index} className="relative">
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt={`attachment-${index}`}
-                    width={96} // 24 * 4 (tailwind w-24)
-                    height={96} // 24 * 4 (tailwind h-24)
-                    className="object-cover rounded"
-                  />
-                  <button
-                    type="button"
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-                    onClick={() => handleRemoveAttachment(index)}
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
+            {attachments.map((file, index) => (
+              <div key={index} className="relative">
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt={`attachment-${index}`}
+                  width={96} // 24 * 4 (tailwind w-24)
+                  height={96} // 24 * 4 (tailwind h-24)
+                  className="object-cover rounded"
+                />
+                <button
+                  type="button"
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+                  onClick={() => handleRemoveAttachment(index)}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
         </form>
       </div>
     </div>
