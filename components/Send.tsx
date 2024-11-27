@@ -4,27 +4,86 @@ import { CircleXIcon, SendIcon, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
+import { useToast } from "@/hooks/use-toast";
+import { useAuthStore } from "@/stores/useAuthStore";
+import axios from "axios";
 
-
-// Mock function to get logged-in user's email
-const getLoggedInUserEmail = () => {
-  return "user@example.com"; // Replace with actual logic to get the logged-in user's email
-};
+// // Mock function to get logged-in user's email
+// const getLoggedInUserEmail = () => {
+//   return "user@example.com"; // Replace with actual logic to get the logged-in user's email
+// };
 
 const Send: React.FC = () => {
   const router = useRouter();
-  const [from, setFrom] = useState('');
+  // const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [attachments, setAttachments] = useState<File[]>([]);
+  const { toast } = useToast();
+  const token = useAuthStore((state) => state.token);
+  const email = useAuthStore((state) => state.email);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // Set the "From" field with the logged-in user's email
-    setFrom(getLoggedInUserEmail());
-  }, []);
+  const handleSendEmail = async () => {
+    if (!to || !subject || !message) {
+      toast({
+        title: "Error",
+        description: "Please fill all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  // const isFormValid = from && to && subject && message;
+    setIsLoading(true);
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`,
+        {
+          to,
+          subject,
+          body: message,
+          attachments: attachments,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast({
+        title: "Success",
+        description: "Send email successful!",
+        className: "bg-green-500 text-white border-0",
+      });
+
+      router.push("/inbox");
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 429) {
+        toast({
+          title: "Error",
+          description: "Daily send email limit reached. Try again tomorrow.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to send email. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   // Set the "From" field with the logged-in user's email
+  //   setFrom(getLoggedInUserEmail());
+  // }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -59,13 +118,18 @@ const Send: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8 [&_svg]:size-5">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 [&_svg]:size-5"
+            onClick={handleSendEmail}
+            disabled={isLoading}
+          >
             <SendIcon className="h-16 w-16" />
           </Button>
         </div>
       </div>
       <div className="flex justify-center h-screen pl-4 pr-4">
-        {/* <h1 className="text-2xl font-bold mb-4">Compose New Message</h1> */}
         <form className="w-full max-w-lg">
           <div className="flex bg-white text-sm">
             <div className="flex items-center gap-2">
@@ -75,7 +139,7 @@ const Send: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <label className="ml-4 text-gray-700 text-sm" htmlFor="from">
-                {from}
+                {email}
               </label>
             </div>
           </div>

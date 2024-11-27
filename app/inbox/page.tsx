@@ -5,21 +5,45 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
 import FooterNav from "@/components/FooterNav";
-import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 
 const InboxPage: React.FC = () => {
+  const [sentEmails, setSentEmails] = useState(0);
+  const [email, setEmailLocal] = useState(0);
   const [emails, setEmails] = useState<Email[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // const token = useAuthStore((state) => state.token);
-  const token = useAuthStore.getState().getStoredToken()
+  const token = useAuthStore((state) => state.token);
   const router = useRouter();
+  const { setEmail } = useAuthStore();
 
   useEffect(() => {
-    // Guard against double loading
     let isSubscribed = true;
     const controller = new AbortController();
+
+    const fetchCountSentEmails = async () => {
+      if (!token) return;
+      
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+    
+        if (response.data) {
+          console.log(response.data);
+          setSentEmails(response.data.SentEmails);
+          setEmail(response.data.Email);
+          setEmailLocal(response.data.Email);
+        }
+      } catch (err) {
+        console.error('Failed to fetch sent emails count:', err);
+      }
+    };
 
     const fetchEmails = async () => {
       if (!token) {
@@ -28,29 +52,25 @@ const InboxPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            signal: controller.signal
+            signal: controller.signal,
           }
         );
 
-        if (!isSubscribed) return;
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch emails");
+        if (isSubscribed) {
+          setEmails(response.data);
+          setError(null);
         }
-
-        const data = await response.json();
-        setEmails(data);
-        setError(null);
       } catch (err) {
-        if (!isSubscribed) return;
-        console.error("Failed to fetch emails:", err);
-        setError("Failed to load emails");
+        if (isSubscribed) {
+          console.error("Failed to fetch emails:", err);
+          setError("Failed to load emails");
+        }
       } finally {
         if (isSubscribed) {
           setIsLoading(false);
@@ -58,14 +78,14 @@ const InboxPage: React.FC = () => {
       }
     };
 
+    fetchCountSentEmails();
     fetchEmails();
 
-    // Cleanup function
     return () => {
       isSubscribed = false;
       controller.abort();
     };
-  }, [token]);
+  }, [token, router]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -73,10 +93,10 @@ const InboxPage: React.FC = () => {
         <div className="space-y-0.5">
           <div className="flex justify-between p-2 bg-[#F7D65D]">
             <h1 className="text-xl font-semibold tracking-tight">
-              Your Inbox
+              {email}
             </h1>
             <h1 className="text-sm font-semibold tracking-tight">
-              Daily Send 0/3
+              Daily Send {sentEmails}/3
             </h1>
           </div>
           {isLoading ? (
