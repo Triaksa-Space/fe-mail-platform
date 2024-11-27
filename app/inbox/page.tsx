@@ -36,7 +36,6 @@ const InboxPage: React.FC = () => {
         );
     
         if (response.data) {
-          console.log(response.data);
           setSentEmails(response.data.SentEmails);
           setEmail(response.data.Email);
           setEmailLocal(response.data.Email);

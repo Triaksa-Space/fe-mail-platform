@@ -59,7 +59,6 @@ export default function CreateBulkEmail() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submitted forms:', forms)
   }
 
   return (

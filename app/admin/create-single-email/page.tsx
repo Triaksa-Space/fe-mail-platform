@@ -22,8 +22,6 @@ export default function CreateSingleEmail() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log('Submitted:', username, password)
   }
 
   return (

@@ -60,7 +60,6 @@ const Settings: React.FC = () => {
       setConfirmPassword('');
 
       toast({
-        title: "Success",
         description: "Password successfully updated!",
         className: "bg-green-500 text-white border-0",
       });
