@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
 import FooterNav from "@/components/FooterNav";
 import { useRouter } from "next/navigation";
+import { Toaster } from "@/components/ui/toaster";
 
 const InboxPage: React.FC = () => {
   const [sentEmails, setSentEmails] = useState(0);
@@ -88,6 +89,7 @@ const InboxPage: React.FC = () => {
   }, [token, router]);
 
   return (
+    <>
     <div className="flex flex-col h-screen">
       <div className="flex-1 overflow-auto">
         <div className="space-y-0.5">
@@ -131,6 +133,8 @@ const InboxPage: React.FC = () => {
       </div>
       <FooterNav />
     </div>
+    <Toaster />
+    </>
   );
 };
 

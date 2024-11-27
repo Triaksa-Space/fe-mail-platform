@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
 
 // // Mock function to get logged-in user's email
@@ -54,6 +55,8 @@ const Send: React.FC = () => {
         }
       );
 
+      // setMessage('');
+
       toast({
         title: "Success",
         description: "Send email successful!",
@@ -63,6 +66,7 @@ const Send: React.FC = () => {
       router.push("/inbox");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 429) {
+        console.log(error.response?.data);
         toast({
           title: "Error",
           description: "Daily send email limit reached. Try again tomorrow.",
@@ -99,6 +103,7 @@ const Send: React.FC = () => {
   };
 
   return (
+    <>
     <div className="p-4 space-y-4">
       <div className="flex justify-between items-center p-2 bg-white">
         <div className="flex items-center gap-2">
@@ -206,6 +211,8 @@ const Send: React.FC = () => {
         </form>
       </div>
     </div>
+    <Toaster />
+    </>
   );
 };
 
