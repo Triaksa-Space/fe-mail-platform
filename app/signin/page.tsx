@@ -1,78 +1,87 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Mail, Lock } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useAuthStore } from "@/stores/useAuthStore"
-import axios from "axios"
+import React, { useState, useEffect } from "react";
+import { Mail, Lock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useRouter } from "next/navigation";
 
-export default function SignInPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [failedAttempts, setFailedAttempts] = useState(0)
-  const [lockoutTime, setLockoutTime] = useState<number | null>(null)
-  const [countdown, setCountdown] = useState<number | null>(null)
-  const router = useRouter()
-  const setToken = useAuthStore((state) => state.setToken)
+const SignInPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number>(0);
 
-  useEffect(() => {
-    if (lockoutTime) {
-      const interval = setInterval(() => {
-        const remainingTime = Math.max(0, lockoutTime - Date.now())
-        setCountdown(Math.ceil(remainingTime / 1000))
+  const { setToken } = useAuthStore();
+  const router = useRouter();
 
-        if (remainingTime <= 0) {
-          clearInterval(interval)
-          setLockoutTime(null)
-          setCountdown(null)
-          setFailedAttempts(0)
-        }
-      }, 1000)
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-      return () => clearInterval(interval)
-    }
-  }, [lockoutTime])
+    if (lockoutTime) return;
 
-  async function onSubmit(event: React.FormEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email")?.toString();
+    const password = formData.get("password")?.toString();
 
-    const formData = new FormData(event.target as HTMLFormElement)
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
+    if (!email || !password) return;
+
+    setIsLoading(true);
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/login`, {
-        email,
-        password,
-      })
-
-      const data = response.data
-      setIsLoading(false)
-
-      if (response.status == 200) {
-        setFailedAttempts(0)
-        setLockoutTime(null)
-        setCountdown(null)
-        setToken(data.token) // Save the JWT token into the global state
-        // if (email === 'admin@mailria.com') {
-        //   router.push('/admin')
-        // } else {
-          router.push('/inbox')
-        // }
-      } else {
-        setFailedAttempts((prev) => prev + 1)
-        if (failedAttempts >= 3) {
-          setLockoutTime(Date.now() + 10 * 60 * 1000) // 10 minutes lockout
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
         }
+      );
+
+      if (!response.ok) {
+        throw new Error("Login failed");
       }
+
+      const { token } = await response.json();
+
+      setToken(token);
+
+      // Use router.push for navigation
+      router.push("/inbox");
     } catch (error) {
-      setIsLoading(false)
-      console.error('An error occurred:', error)
+      console.error("Login failed:", error);
+      setFailedAttempts((prev) => prev + 1);
+
+      if (failedAttempts + 1 >= 4) {
+        setLockoutTime(Date.now() + 10 * 60 * 1000);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (!lockoutTime) return;
+
+    const interval = setInterval(() => {
+      const remaining = lockoutTime - Date.now();
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        setLockoutTime(null);
+        setFailedAttempts(0);
+        setCountdown(0);
+      } else {
+        setCountdown(Math.ceil(remaining / 1000));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lockoutTime]);
 
   return (
     <div className="flex flex-col min-h-screen justify-between bg-white p-4 pt-8">
@@ -89,11 +98,11 @@ export default function SignInPage() {
             </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-              <Input 
-                id="email" 
+              <Input
+                id="email"
                 name="email"
-                placeholder="example@mailria.com" 
-                required 
+                placeholder="example@mailria.com"
+                required
                 type="email"
                 className="pl-10 h-12 text-base border-gray-200"
               />
@@ -105,45 +114,60 @@ export default function SignInPage() {
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-              <Input 
-                id="password" 
+              <Input
+                id="password"
                 name="password"
                 placeholder="Input password"
-                required 
+                required
                 type="password"
                 className="pl-10 h-12 text-base border-gray-200"
               />
             </div>
           </div>
-          <Button 
-            className={`w-full h-12 text-base font-medium ${lockoutTime ? 'bg-gray-400' : 'bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black'}`}
-            type="submit" 
+          <Button
+            className={`w-full h-12 text-base font-medium ${
+              lockoutTime
+                ? "bg-gray-400"
+                : "bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black"
+            }`}
+            type="submit"
             disabled={isLoading || !!lockoutTime}
           >
-            {lockoutTime ? `Login (${countdown})` : isLoading ? "Signing in..." : "Login"}
+            {lockoutTime
+              ? `Login (${countdown})`
+              : isLoading
+              ? "Signing in..."
+              : "Login"}
           </Button>
           {failedAttempts === 3 && (
             <p className="text-xs text-red-600 text-center">
               Careful! One more failed attempt will disable login for 10 minutes.
             </p>
           )}
-          {lockoutTime ?
-          <p className="text-xs text-red-600 text-left">
-            Too many failed attempts. Try again in 10 minutes.
-          </p>
-          : null}
+          {lockoutTime ? (
+            <p className="text-xs text-red-600 text-left">
+              Too many failed attempts. Try again in {Math.ceil(countdown / 60)} minutes.
+            </p>
+          ) : null}
         </form>
       </div>
       <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-4 text-left">
-        <h2 className="text-l font-semibold">Looking for reliable email services?</h2>
+        <h2 className="text-l font-semibold">
+          Looking for reliable email services?
+        </h2>
         <p className="text-sm text-gray-600">
           Mailria has you covered! Drop us a message at{" "}
-          <a href="mailto:support@mailria.com" className="text-blue-600 hover:underline">
+          <a
+            href="mailto:support@mailria.com"
+            className="text-blue-600 hover:underline"
+          >
             support@mailria.com
-          </a>
-          {" "}for more details.
+          </a>{" "}
+          for more details.
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default SignInPage;

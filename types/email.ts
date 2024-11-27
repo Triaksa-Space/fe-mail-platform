@@ -1,15 +1,17 @@
 export interface Attachment {
-  name: string;
-  url: string;
+  Name: string;
+  Url: string;
 }
 
 export interface Email {
-  id: number;
-  sender: string;
-  recipient: string;
-  timestamp: string;
-  subject: string;
-  preview: string;
-  body: string; // May contain HTML content
-  attachments?: Attachment[];
+  ID: number;
+  UserID: number,
+  Sender: string;
+  Subject: string;
+  Preview: string;
+  RelativeTime: string;
+  Body: string; // May contain HTML content
+  Recipient: string;
+  Timestamp: string;
+  Attachments?: Attachment[];
 }

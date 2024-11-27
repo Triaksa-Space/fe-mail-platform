@@ -1,157 +1,117 @@
 "use client";
-import React, { useState } from 'react';
-import FooterNav from '@/components/FooterNav';
-import Inbox from '@/components/Inbox';
-import Send from '@/components/Send';
-import Settings from '@/components/Settings';
-import { Email } from '@/types/email';
-import { useRouter } from 'next/navigation';
-import { Separator } from '@/components/ui/separator';
 
-const emails: Email[] = [
-      {
-        id: 1,
-        recipient: "",
-        body: "",
-        sender: "Google Gemini",
-        subject: "Welcome to Gemini",
-        preview: "Learn more about what you can do with Gemini",
-        timestamp: "Just now"
-      },
-      {
-        id: 2,
-        recipient: "",
-        body: "",
-        sender: "Google Play",
-        subject: "You Google Play Order Receipt from Nov 11, 20...",
-        preview: "Learn more about what you can do with Gemini",
-        timestamp: "2 Minutes ago"
-      },
-      {
-        id: 3,
-        recipient: "",
-        body: "",
-        sender: "Netflix",
-        subject: "Selamat datang di Netflix, johny",
-        preview: "Kamu siap untuk menikmati acara TV & film terbaru kami...",
-        timestamp: "1 Hour ago"
-      },
-      {
-        id: 4,
-        recipient: "",
-        body: "",
-        sender: "DigitalOcean Support",
-        subject: "[DigitalOcean] Your 2024-10 invoice for team: ...",
-        preview: "Your 2024-10 invoice is now available for team: GameMar...",
-        timestamp: "24 Hours ago"
-      },
-      {
-        id: 5,
-        recipient: "",
-        body: "",
-        sender: "Google Play",
-        subject: "You Google Play Order Receipt from Nov 11, 20...",
-        preview: "Learn more about what you can do with Gemini",
-        timestamp: "10 Sep 2024"
-      },
-      {
-        id: 6,
-        recipient: "",
-        body: "",
-        sender: "Google Gemini",
-        subject: "Welcome to Gemini",
-        preview: "Learn more about what you can do with Gemini",
-        timestamp: "Just now"
-      },
-      {
-        id: 7,
-        recipient: "",
-        body: "",
-        sender: "Google Play",
-        subject: "You Google Play Order Receipt from Nov 11, 20...",
-        preview: "Learn more about what you can do with Gemini",
-        timestamp: "2 Minutes ago"
-      },
-      {
-        id: 8,
-        recipient: "",
-        body: "",
-        sender: "Netflix",
-        subject: "Selamat datang di Netflix, johny",
-        preview: "Kamu siap untuk menikmati acara TV & film terbaru kami...",
-        timestamp: "1 Hour ago"
-      },
-      {
-        id: 9,
-        recipient: "",
-        body: "",
-        sender: "DigitalOcean Support",
-        subject: "[DigitalOcean] Your 2024-10 invoice for team: ...",
-        preview: "Your 2024-10 invoice is now available for team: GameMar...",
-        timestamp: "24 Hours ago"
-      },
-      {
-        id: 10,
-        recipient: "",
-        body: "",
-        sender: "Google Play",
-        subject: "You Google Play Order Receipt from Nov 11, 20...",
-        preview: "Learn more about what you can do with Gemini",
-        timestamp: "10 Sep 2024"
-      }
-    ]
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { Email } from "@/types/email";
+import FooterNav from "@/components/FooterNav";
+import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
-const Page: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState('inbox');
+const InboxPage: React.FC = () => {
+  const [emails, setEmails] = useState<Email[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  // const token = useAuthStore((state) => state.token);
+  const token = useAuthStore.getState().getStoredToken()
   const router = useRouter();
 
-  // const renderContent = () => {
-  //   switch (currentPage) {
-  //     case 'inbox':
-  //       return <Inbox emails={emails} />;
-  //     case 'send':
-  //       return <Send />;
-  //     case 'settings':
-  //       return <Settings />;
-  //     default:
-  //       return <Inbox emails={emails} />;
-  //   }
-  // };
+  useEffect(() => {
+    // Guard against double loading
+    let isSubscribed = true;
+    const controller = new AbortController();
+
+    const fetchEmails = async () => {
+      if (!token) {
+        router.replace("/signin");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            signal: controller.signal
+          }
+        );
+
+        if (!isSubscribed) return;
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch emails");
+        }
+
+        const data = await response.json();
+        setEmails(data);
+        setError(null);
+      } catch (err) {
+        if (!isSubscribed) return;
+        console.error("Failed to fetch emails:", err);
+        setError("Failed to load emails");
+      } finally {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchEmails();
+
+    // Cleanup function
+    return () => {
+      isSubscribed = false;
+      controller.abort();
+    };
+  }, [token]);
 
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-1 overflow-auto">
-      <div className="space-y-0.5">
-      <div className="flex justify-between p-2 bg-[#F7D65D]">
-        <h1 className="text-xl font-semibold tracking-tight">
-          john@mailria.com
-        </h1>
-        <h1 className="text-sm font-semibold tracking-tight">
-        Daily Send 0/3
-        </h1>
-      </div>
-      {emails.map((email) => (
-        <div
-        key={email.id}
-        className="p-4 hover:bg-gray-100 cursor-pointer"
-        onClick={() => router.push(`/inbox/${email.id}`)}
-      >
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">{email.sender}</h3>
-              <span className="text-sm text-gray-500">{email.timestamp}</span>
-            </div>
-            <h4 className="font-medium">{email.subject}</h4>
-            <p className="text-sm text-gray-500">{email.preview}</p>
+        <div className="space-y-0.5">
+          <div className="flex justify-between p-2 bg-[#F7D65D]">
+            <h1 className="text-xl font-semibold tracking-tight">
+              Your Inbox
+            </h1>
+            <h1 className="text-sm font-semibold tracking-tight">
+              Daily Send 0/3
+            </h1>
           </div>
-          <Separator className="mt-4" />
+          {isLoading ? (
+            <div className="p-4 text-center">Loading...</div>
+          ) : error ? (
+            <div className="p-4 text-center">{error}</div>
+          ) : emails.length > 0 ? (
+            <div className="divide-y">
+              {emails.map((email) => (
+                <div
+                  key={email.ID}
+                  className="p-4 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => router.push(`/inbox/${email.ID}`)}
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold">{email.Sender}</h3>
+                      <span className="text-sm text-gray-500">
+                        {email.RelativeTime}
+                      </span>
+                    </div>
+                    <h4 className="font-medium">{email.Subject}</h4>
+                    <p className="text-sm text-gray-500">{email.Preview}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 text-center">No emails found.</div>
+          )}
         </div>
-      ))}
-    </div>
       </div>
       <FooterNav />
     </div>
   );
 };
 
-export default Page;
+export default InboxPage;
