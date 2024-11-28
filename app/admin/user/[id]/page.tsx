@@ -28,6 +28,11 @@ export default function UserDetail() {
   const params = useParams()
   const router = useRouter()
   const token = useAuthStore((state) => state.token)
+  const userEmail = useAuthStore((state) => state.email)
+
+  const handleEmailClick = (email: UserEmail) => {
+    router.push(`/admin/user/${email.ID}/detail?email=${encodeURIComponent(JSON.stringify(email))}`);
+  }
 
   useEffect(() => {
     const fetchUserEmails = async () => {
@@ -60,7 +65,8 @@ export default function UserDetail() {
       <div className="flex flex-col h-screen">
         <div className="flex-1 overflow-auto">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-4">
+            <div className="flex justify-between items-center gap-4">
+              <h1 className="text-xl font-semibold tracking-tight">
               <Button
                 variant="ghost"
                 size="icon"
@@ -68,8 +74,12 @@ export default function UserDetail() {
               >
                 <ArrowLeft className="h-6 w-6" />
               </Button>
-              <h1 className="text-xl font-bold">User Details</h1>
+            </h1>
+            <h1 className="text-sm font-semibold tracking-tight">
+            {userEmail}
+            </h1>
             </div>
+            <div className="flex items-center gap-4"></div>
             {isLoading ? (
               <div className="p-4 text-center">Loading...</div>
             ) : error ? (
@@ -80,7 +90,7 @@ export default function UserDetail() {
                   <div
                     key={email.ID}
                     className="p-4 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => router.push(`/inbox/${email.ID}`)}
+                    onClick={() => handleEmailClick(email)}
                   >
                     <div className="space-y-1">
                       <div className="flex items-center justify-between">

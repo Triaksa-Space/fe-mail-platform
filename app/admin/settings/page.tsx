@@ -27,7 +27,7 @@ import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 
-interface EmailUser {
+interface AdminUser {
     id: number
     email: string
     lastActive: string
@@ -37,9 +37,9 @@ interface EmailUser {
 type SortField = 'lastActive' | 'created'
 type SortOrder = 'asc' | 'desc'
 
-export default function EmailManagement() {
+export default function UserAdminManagement() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState<EmailUser[]>([])
+    const [users, setUsers] = useState<AdminUser[]>([])
     const [sortField, setSortField] = useState<SortField>('lastActive')
     const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
     const [isLoading, setIsLoading] = useState(true)
@@ -54,9 +54,9 @@ export default function EmailManagement() {
     const [pageInput, setPageInput] = useState("");
 
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<EmailUser | null>(null);
+    const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
-    const handleDeleteClick = (user: EmailUser) => {
+    const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
         setIsDialogDeleteOpen(true);
     };
@@ -79,11 +79,11 @@ export default function EmailManagement() {
             // Show success toast
             toast({
                 title: "Success",
-                description: "User deleted successfully!",
+                description: "Admin deleted successfully!",
                 className: "bg-green-500 text-white border-0",
             });
         } catch (error) {
-            console.error('Failed to delete user:', error);
+            console.error('Failed to delete admin:', error);
         }
     };
 
@@ -104,11 +104,12 @@ export default function EmailManagement() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/user/?page=' + currentPage + '&page_size=' + pageSize + '&email=' + searchTerm, {
+                const response = await axios.get('http://localhost:8080/user/admin?email=' + searchTerm, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 })
+                console.log("response.data", response.data)
                 const data = response.data.users.map((user: any) => ({
                     id: user.ID,
                     email: user.Email,
@@ -158,6 +159,12 @@ export default function EmailManagement() {
         setCurrentPage(page)
     }
 
+    const handleLogout = () => {
+        // Clear token and redirect to login page
+        useAuthStore.getState().setToken(null);
+        router.push('/signin');
+    }
+
     return (
         <div className="p-6 space-y-2">
             <div className="flex justify-between items-center pl-4">
@@ -166,7 +173,7 @@ export default function EmailManagement() {
             </div>
 
             <div className="overflow-x-auto p-4">
-                <Toaster />
+            <Toaster />
                 {isLoading ? (
                     <div>Loading...</div>
                 ) : error ? (
@@ -175,7 +182,7 @@ export default function EmailManagement() {
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                <TableHead className="text-center text-black font-bold">Name</TableHead>
+                                <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
                                 <TableHead className="text-center text-black font-bold">
                                     <Button
                                         variant="ghost"
@@ -188,18 +195,7 @@ export default function EmailManagement() {
                                         )}
                                     </Button>
                                 </TableHead>
-                                <TableHead className="text-center text-black font-bold">
-                                    <Button
-                                        variant="ghost"
-                                        onClick={() => toggleSort('created')}
-                                        className="font-bold text-black hover:bg-gray-500"
-                                    >
-                                        Created
-                                        {sortField === 'created' && (
-                                            sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                        )}
-                                    </Button>
-                                </TableHead>
+                                <TableHead className="text-center text-black font-bold">Created</TableHead>
                                 <TableHead className="text-center text-black font-bold">Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -210,9 +206,6 @@ export default function EmailManagement() {
                                     <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
                                     <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
                                     <TableCell className="px-2 py-1 space-x-2 text-center">
-                                        <Button variant="secondary" className="bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
-                                            View
-                                        </Button>
                                         <Button
                                             variant="destructive"
                                             onClick={() => handleDeleteClick(user)}
@@ -231,7 +224,7 @@ export default function EmailManagement() {
                         <DialogHeader>
                             <DialogTitle>Delete Confirmation</DialogTitle>
                         </DialogHeader>
-                        <p>Are you sure you want to delete user {selectedUser?.email}?</p>
+                        <p>Are you sure you want to delete admin {selectedUser?.email}?</p>
                         <DialogFooter>
                             <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
                             <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
@@ -240,47 +233,21 @@ export default function EmailManagement() {
                 </Dialog>
             </div>
 
-            <div className="flex justify-between pl-4">
-                <span className="text-sm text-gray-500">Showing {users.length} of {totalPages * pageSize}</span>
-                <Pagination className="ml-auto">
-                    <PaginationContent>
-                        {Array.from({ length: Math.min(3, totalPages) }, (_, i) => (
-                            <PaginationItem key={i}>
-                                <PaginationLink onClick={() => handlePageChange(i + 1)}>{i + 1}</PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        {totalPages > 3 && (
-                            <>
-                                <PaginationItem>
-                                    <PaginationEllipsis onClick={() => setIsDialogOpen(true)} className="cursor-pointer" />
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink onClick={() => handlePageChange(totalPages)}>
-                                        {totalPages}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            </>
-                        )}
-                    </PaginationContent>
-                </Pagination>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Go to Page</DialogTitle>
-                        </DialogHeader>
-                        <Input
-                            type="number"
-                            min={4}
-                            max={totalPages - 1}
-                            value={pageInput}
-                            onChange={(e) => setPageInput(e.target.value)}
-                            placeholder="Enter page number"
-                        />
-                        <DialogFooter>
-                            <Button onClick={handlePageInputSubmit}>Go</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+            <div className="flex justify-between mt-4">
+                <Button
+                    variant="default"
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                    onClick={() => router.push('/admin/create')}
+                >
+                    Create Admin
+                </Button>
+                <Button
+                    variant="destructive"
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                    onClick={handleLogout}
+                >
+                    Logout
+                </Button>
             </div>
 
             <FooterAdminNav />

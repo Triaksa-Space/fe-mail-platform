@@ -4,8 +4,10 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 interface AuthState {
   token: string | null
   email: string | null
-  setToken: (token: string | null) => void
-  setEmail: (email: string | null) => void
+  roleId: number | null
+  setToken: (token: string | null) => void;
+  setEmail: (email: string | null) => void;
+  setRoleId: (roleId: number | null) => void;
   logout: () => void
   getStoredToken: () => string | null
   getStoredEmail: () => string | null
@@ -16,12 +18,21 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       email: null,
+      roleId: null,
       setToken: (token) => set({ token }),
       setEmail: (email) => set({ email }),
+      setRoleId: (roleId) => set({ roleId }),
       logout: () => {
-        set({ token: null })
-        window.localStorage.removeItem('auth-storage')
-        window.location.href = '/signin'
+        console.log("LOGOUT TRIGGERED")
+        // Clear zustand state
+        set({ token: null, email: null })
+        
+        // Clear storage
+        if (typeof window !== 'undefined') {
+          window.sessionStorage.removeItem('auth-storage')
+          window.localStorage.removeItem('auth-storage')
+          window.location.href = '/signin'
+        }
       },
       getStoredToken: () => {
         if (typeof window === 'undefined') return null
@@ -62,7 +73,7 @@ export const useAuthStore = create<AuthState>()(
           removeItem: () => {}
         }
       }),
-      partialize: (state) => ({ token: state.token }),
+      partialize: (state) => ({ token: state.token, email: state.email, roleId: state.roleId }),
     }
   )
 )

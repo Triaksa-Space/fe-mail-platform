@@ -1,15 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import DropdownMenuComponent from "@/components/DropdownMenuComponent"
+import FooterAdminNav from "@/components/FooterAdminNav"
+import { useAuthStore } from "@/stores/useAuthStore";
+import axios from 'axios'
+import { useToast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 export default function CreateSingleEmail() {
+  const token = useAuthStore((state) => state.token);
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const { toast } = useToast()
 
   const generateRandomPassword = () => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
@@ -20,14 +24,47 @@ export default function CreateSingleEmail() {
     setPassword(password)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/user/',
+        {
+          email: `${username}@mailria.com`,
+          password: password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      // Show success toast
+      toast({
+        description: `email: ${username}@mailria.com password: ${password} successfully created!`,
+        className: "bg-green-500 text-white border-0",
+      })
+      setUsername("")
+      setPassword("")
+    } catch (error) {
+      let errorMessage = "Failed to create user. Please try again.";
+      if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.error) {
+        errorMessage = error.response.data.error;
+      }
+      toast({
+        description: errorMessage,
+        className: "bg-red-500 text-white border-0",
+      });
+    }
   }
 
   return (
     <div className="min-h-screen bg-white">
       <div className="p-4 border-b flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Link href="/admin">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-6 w-6" />
@@ -37,11 +74,12 @@ export default function CreateSingleEmail() {
         </div>
         <Button variant="ghost" size="icon">
         <DropdownMenuComponent />
-        </Button>
+        </Button> */}
+        <Toaster />
       </div>
 
       <div className="max-w-md mx-auto p-6">
-        <h2 className="text-2xl font-bold text-center mb-8">Create Single Email</h2>
+        <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-2">
             <Input
@@ -57,7 +95,7 @@ export default function CreateSingleEmail() {
               className="flex-1 bg-gray-50"
             />
           </div>
-          
+
           <div className="flex gap-2">
             <Input
               type="text"
@@ -66,23 +104,25 @@ export default function CreateSingleEmail() {
               placeholder="!@#DF3"
               className="flex-1 bg-gray-100"
             />
-            <Button 
+            <Button
               type="button"
               onClick={generateRandomPassword}
               className="bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-black"
             >
-              Random
+              Random Password
             </Button>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full bg-gray-700 hover:bg-gray-800 text-white"
+          <Button
+            type="submit"
+            className="w-full bg-gray-400 hover:bg-yellow-300 text-black"
+            disabled={!username || !password}
           >
-            SUBMIT
+            Create
           </Button>
         </form>
       </div>
+      <FooterAdminNav />
     </div>
   )
 }

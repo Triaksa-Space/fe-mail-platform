@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 const SignInPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,7 @@ const SignInPage: React.FC = () => {
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
 
-  const { setToken } = useAuthStore();
+  const { setToken, setEmail, setRoleId } = useAuthStore();
   const router = useRouter();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,27 +32,39 @@ const SignInPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
+        { email, password },
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, password }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const { token } = await response.json();
-
+      const { token } = response.data;
       setToken(token);
 
-      // Use router.push for navigation
-      router.push("/inbox");
+      // Get user details
+      const userResponse = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const userData = userResponse.data;
+      setEmail(userData.Email);
+      setRoleId(userData.RoleID);
+
+      // Redirect based on role
+      if (userData.RoleID === 0) {
+        router.push("/admin");
+      } else {
+        router.push("/inbox");
+      }
     } catch (error) {
       console.error("Login failed:", error);
       setFailedAttempts((prev) => prev + 1);
@@ -125,19 +138,18 @@ const SignInPage: React.FC = () => {
             </div>
           </div>
           <Button
-            className={`w-full h-12 text-base font-medium ${
-              lockoutTime
+            className={`w-full h-12 text-base font-medium ${lockoutTime
                 ? "bg-gray-400"
                 : "bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black"
-            }`}
+              }`}
             type="submit"
             disabled={isLoading || !!lockoutTime}
           >
             {lockoutTime
               ? `Login (${countdown})`
               : isLoading
-              ? "Signing in..."
-              : "Login"}
+                ? "Signing in..."
+                : "Login"}
           </Button>
           {failedAttempts === 3 && (
             <p className="text-xs text-red-600 text-center">

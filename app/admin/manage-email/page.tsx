@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import FooterAdminNav from "@/components/FooterAdminNav"
 
 type Email = {
   id: string
@@ -42,6 +43,7 @@ export default function ManageEmailPage() {
           </ul>
         </div>
       </div>
+      <FooterAdminNav />
     </div>
   )
 }
