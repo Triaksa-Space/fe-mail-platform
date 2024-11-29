@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import FooterAdminNav from "@/components/FooterAdminNav"
@@ -8,8 +8,15 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import axios from 'axios'
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import DomainSelector from "@/components/DomainSelector"
+
+interface Domain {
+  ID: number;
+  Domain: string;
+}
 
 export default function CreateSingleEmail() {
+  const [selectedDomain, setSelectedDomain] = useState("")
   const token = useAuthStore((state) => state.token);
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -64,17 +71,6 @@ export default function CreateSingleEmail() {
   return (
     <div className="min-h-screen bg-white">
       <div className="p-4 border-b flex items-center justify-between">
-        {/* <div className="flex items-center gap-2">
-          <Link href="/admin">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-          </Link>
-          <h1 className="text-xl font-semibold">Dashboard</h1>
-        </div>
-        <Button variant="ghost" size="icon">
-        <DropdownMenuComponent />
-        </Button> */}
         <Toaster />
       </div>
 
@@ -89,10 +85,10 @@ export default function CreateSingleEmail() {
               className="flex-1"
             />
             <span className="text-lg">@</span>
-            <Input
-              value="mailria.com"
-              readOnly
-              className="flex-1 bg-gray-50"
+            <DomainSelector
+              value={selectedDomain}
+              onChange={setSelectedDomain}
+              className="w-[180px]"
             />
           </div>
 

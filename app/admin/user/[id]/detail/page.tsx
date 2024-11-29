@@ -10,7 +10,7 @@ export default function UserDetail() {
   const router = useRouter()
   const userEmail = useAuthStore((state) => state.email)
   const searchParams = useSearchParams()
-  const email = JSON.parse(searchParams.get('email'))
+  const email = JSON.parse(searchParams.get('email') || '{}')
 
   return (
     <div className="flex flex-col h-screen">

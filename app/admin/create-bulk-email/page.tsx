@@ -10,12 +10,14 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
 import axios from 'axios'
+import DomainSelector from "@/components/DomainSelector"
 
 interface EmailForm {
   email: string
 }
 
 export default function CreateBulkEmail() {
+  const [selectedDomain, setSelectedDomain] = useState("")
   const [count, setCount] = useState(2)
   const [forms, setForms] = useState<EmailForm[]>([])
   const [password, setPassword] = useState("")
@@ -231,11 +233,11 @@ export default function CreateBulkEmail() {
                     className="flex-1"
                   />
                   <span className="text-lg">@</span>
-                  <Input
-                    value="mailria.com"
-                    readOnly
-                    className="flex-1 bg-gray-50"
-                  />
+                  <DomainSelector
+              value={selectedDomain}
+              onChange={setSelectedDomain}
+              className="w-[180px]"
+            />
                 </div>
               </div>
             ))}
