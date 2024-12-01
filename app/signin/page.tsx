@@ -15,8 +15,40 @@ const SignInPage: React.FC = () => {
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
 
-  const { setToken, setEmail, setRoleId } = useAuthStore();
+  const { token, setToken, setEmail, setRoleId } = useAuthStore();
   const router = useRouter();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      if (token) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const userData = response.data;
+          setEmail(userData.Email);
+          setRoleId(userData.RoleID);
+
+          // Redirect based on role
+          if (userData.RoleID === 0) {
+            router.push("/admin");
+          } else {
+            router.push("/inbox");
+          }
+        } catch (error) {
+          console.error("Token validation failed:", error);
+        }
+      }
+    };
+
+    checkToken();
+  }, [token, setEmail, setRoleId, router]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -1,6 +1,6 @@
 export interface Attachment {
-  Name: string;
-  Url: string;
+  Filename: string;
+  FileUrl: string;
 }
 
 export interface Email {
@@ -14,5 +14,5 @@ export interface Email {
   Body: string; // May contain HTML content
   Recipient: string;
   Timestamp: string;
-  Attachments?: Attachment[];
+  ListAttachments: Attachment;
 }
