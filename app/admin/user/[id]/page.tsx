@@ -30,13 +30,26 @@ export default function UserDetail() {
   const token = useAuthStore((state) => state.token)
   const userEmail = useAuthStore((state) => state.email)
 
-  const handleEmailClick = (email: UserEmail) => {
-    router.push(`/admin/user/${email.ID}/detail?email=${encodeURIComponent(JSON.stringify(email))}`);
+  const handleEmailClick = (uemail: UserEmail) => {
+    router.push(`/admin/user/detail/${uemail.ID}/?email=${email}`);
   }
 
   useEffect(() => {
     const fetchUserEmails = async () => {
       try {
+        const responseDetailUser = await axios.get(
+          `http://localhost:8080/user/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (responseDetailUser.data) {
+          setEmail(responseDetailUser.data.Email);
+        }
+
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
           {
@@ -46,7 +59,7 @@ export default function UserDetail() {
           }
         )
         setEmails(response.data)
-        setEmail(response.data[0]?.SenderEmail || "")
+        // setEmail(response.data[0]?.SenderEmail || "")
         setSentEmails(response.data.length)
         setError(null)
       } catch (err) {
@@ -63,21 +76,21 @@ export default function UserDetail() {
   return (
     <>
       <div className="flex flex-col h-screen">
-        <div className="flex-1 overflow-auto">
+        <div className=" space-y-4 flex-1 overflow-auto">
           <div className="space-y-0.5">
-            <div className="flex justify-between items-center gap-4">
+            <div className="flex justify-between items-center bg-white p-2 shadow-sm">
               <h1 className="text-xl font-semibold tracking-tight">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => router.back()}
-              >
-                <ArrowLeft className="h-6 w-6" />
-              </Button>
-            </h1>
-            <h1 className="text-sm font-semibold tracking-tight">
-            {userEmail}
-            </h1>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.back()}
+                >
+                  <ArrowLeft className="h-6 w-6" />
+                </Button>
+              </h1>
+              <h1 className="text-sm font-semibold tracking-tight">
+                {email}
+              </h1>
             </div>
             <div className="flex items-center gap-4"></div>
             {isLoading ? (

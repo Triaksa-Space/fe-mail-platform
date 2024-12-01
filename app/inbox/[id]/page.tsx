@@ -36,7 +36,7 @@ const EmailDetailPage: React.FC = () => {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/${params.id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

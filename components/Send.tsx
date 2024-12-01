@@ -1,22 +1,16 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
-import Image from 'next/image';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
-
-// // Mock function to get logged-in user's email
-// const getLoggedInUserEmail = () => {
-//   return "user@example.com"; // Replace with actual logic to get the logged-in user's email
-// };
+import { fileToBase64 } from "@/utils/fileToBase64";
 
 const Send: React.FC = () => {
   const router = useRouter();
-  // const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -27,6 +21,7 @@ const Send: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendEmail = async () => {
+    console.log("Send email clicked");
     if (!to || !subject || !message) {
       toast({
         description: "Please fill all required fields",
@@ -38,23 +33,32 @@ const Send: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Convert all attachments to base64
-      const attachmentPromises = attachments.map(async (file) => ({
-        name: file.name,
-        type: file.type,
-        content: await fileToBase64(file)
-      }));
+      console.log("Sending email...");
+      // Convert all attachments to base64 and then to byte array
+      const attachmentPromises = attachments.map(async (file) => {
+        const base64Content = await fileToBase64(file);
+        const byteArray = base64ToByteArray(base64Content);
+        return {
+          Filename: file.name,
+          ContentType: file.type,
+          Content: Array.from(byteArray), // Convert Uint8Array to regular array
+        };
+      });
 
       const processedAttachments = await Promise.all(attachmentPromises);
+      console.log("processedAttachments");
+      const payload = {
+        to,
+        subject,
+        body: message,
+        attachments: processedAttachments,
+      };
+
+      console.log("Payload:", payload); // Log the payload to the console
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`,
-        {
-          to,
-          subject,
-          body: message,
-          attachments: processedAttachments,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,8 +91,6 @@ const Send: React.FC = () => {
   };
 
   useEffect(() => {
-    //   // Set the "From" field with the logged-in user's email
-    //   setFrom(getLoggedInUserEmail());
     const params = new URLSearchParams(window.location.search);
     setTo(params.get('to') || '');
     setSubject(params.get('subject') || '');
@@ -104,20 +106,14 @@ const Send: React.FC = () => {
     setAttachments(attachments.filter((_, i) => i !== index));
   };
 
-  // Add new function to convert file to base64
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          // Remove data:image/jpeg;base64, prefix
-          const base64 = reader.result.split(',')[1];
-          resolve(base64);
-        }
-      };
-      reader.onerror = reject;
-    });
+  const base64ToByteArray = (base64: string): Uint8Array => {
+    const binaryString = atob(base64.split(",")[1]);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
   };
 
   return (

@@ -1,5 +1,3 @@
-// FILE: app/admin/settings/page.tsx
-
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -14,13 +12,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-} from "@/components/ui/pagination"
 import { ChevronUp, ChevronDown } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -59,6 +50,10 @@ const UserAdminManagement: React.FC = () => {
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
+    const [isDialogCreateOpen, setIsDialogCreateOpen] = useState(false);
+    const [newAdminEmail, setNewAdminEmail] = useState("");
+    const [newAdminPassword, setNewAdminPassword] = useState("");
+
     const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
         setIsDialogDeleteOpen(true);
@@ -82,11 +77,65 @@ const UserAdminManagement: React.FC = () => {
             // Show success toast
             toast({
                 title: "Success",
-                description: "Admin deleted successfully!",
+                description: newAdminEmail + " admin deleted successfully!",
                 className: "bg-green-500 text-white border-0",
             });
         } catch (error) {
             console.error('Failed to delete admin:', error);
+            toast({
+                title: "Error",
+                description: "Failed to delete admin. Please try again.",
+                className: "bg-red-500 text-white border-0",
+            });
+        }
+    };
+
+    const handleCreateAdmin = async () => {
+        if (!newAdminEmail || !newAdminPassword) {
+            toast({
+                title: "Error",
+                description: "Please fill all required fields",
+                className: "bg-red-500 text-white border-0",
+            });
+            return;
+        }
+
+        try {
+            await axios.post(
+                'http://localhost:8080/user/admin',
+                {
+                    username: newAdminEmail,
+                    password: newAdminPassword,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            // Show success toast
+            toast({
+                title: "Success",
+                description: newAdminEmail + " admin has been successfully created!",
+                className: "bg-green-500 text-white border-0",
+            });
+
+            // Close the dialog and reset the form
+            setIsDialogCreateOpen(false);
+            setNewAdminEmail("");
+            setNewAdminPassword("");
+
+            // Refresh the user list
+            fetchUsers();
+        } catch (error) {
+            console.error('Failed to create admin:', error);
+            toast({
+                title: "Error",
+                description: "Failed to create admin. Please try again.",
+                className: "bg-red-500 text-white border-0",
+            });
         }
     };
 
@@ -104,32 +153,31 @@ const UserAdminManagement: React.FC = () => {
         setCurrentPage(1); // Reset to first page when searching
     };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/user/admin?email=' + searchTerm, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                console.log("response.data", response.data)
-                const data = response.data.users.map((user: any) => ({
-                    id: user.ID,
-                    email: user.Email,
-                    lastActive: new Date(user.LastLogin).toLocaleString(),
-                    created: new Date(user.CreatedAt).toLocaleDateString(),
-                }))
-                setUsers(data)
-                setTotalPages(response.data.total_pages)
-                setError(null)
-            } catch (err) {
-                console.error('Failed to fetch users:', err)
-                setError('Failed to load users')
-            } finally {
-                setIsLoading(false)
-            }
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/user/admin?email=' + searchTerm, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            const data = response.data.users.map((user: any) => ({
+                id: user.ID,
+                email: user.Email,
+                lastActive: new Date(user.LastLogin).toLocaleString(),
+                created: new Date(user.CreatedAt).toLocaleDateString(),
+            }))
+            setUsers(data)
+            setTotalPages(response.data.total_pages)
+            setError(null)
+        } catch (err) {
+            console.error('Failed to fetch users:', err)
+            setError('Failed to load users')
+        } finally {
+            setIsLoading(false)
         }
+    }
 
+    useEffect(() => {
         const timeoutId = setTimeout(() => {
             fetchUsers();
         }, 500);
@@ -234,13 +282,38 @@ const UserAdminManagement: React.FC = () => {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
+
+                <Dialog open={isDialogCreateOpen} onOpenChange={setIsDialogCreateOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Create Admin</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                            <Input
+                                placeholder="Username"
+                                value={newAdminEmail}
+                                onChange={(e) => setNewAdminEmail(e.target.value)}
+                            />
+                            <Input
+                                placeholder="Password"
+                                type="password"
+                                value={newAdminPassword}
+                                onChange={(e) => setNewAdminPassword(e.target.value)}
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button variant="secondary" onClick={() => setIsDialogCreateOpen(false)}>Cancel</Button>
+                            <Button variant="default" onClick={handleCreateAdmin}>Create</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <div className="flex justify-between mt-4">
                 <Button
                     variant="default"
                     className="bg-blue-500 hover:bg-blue-600 text-white"
-                    onClick={() => router.push('/admin/create')}
+                    onClick={() => setIsDialogCreateOpen(true)}
                 >
                     Create Admin
                 </Button>
