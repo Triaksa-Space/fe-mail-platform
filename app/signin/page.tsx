@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation";
-import axios from 'axios';
+import axios from "axios";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 
 const SignInPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +19,7 @@ const SignInPage: React.FC = () => {
 
   const { token, setToken, setEmail, setRoleId } = useAuthStore();
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     const checkToken = async () => {
@@ -104,6 +107,12 @@ const SignInPage: React.FC = () => {
       if (failedAttempts + 1 >= 4) {
         setLockoutTime(Date.now() + 10 * 60 * 1000);
       }
+
+      // Show error toast
+      toast({
+        description: "Incorrect email or password.",
+        className: "bg-red-500 text-white border-0",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -129,6 +138,7 @@ const SignInPage: React.FC = () => {
   }, [lockoutTime]);
 
   return (
+    <>
     <div className="flex flex-col min-h-screen justify-between bg-white p-4 pt-8">
       <div className="w-full max-w-sm mx-auto space-y-8">
         <div className="space-y-2 text-center">
@@ -170,18 +180,19 @@ const SignInPage: React.FC = () => {
             </div>
           </div>
           <Button
-            className={`w-full h-12 text-base font-medium ${lockoutTime
+            className={`w-full h-12 text-base font-medium ${
+              lockoutTime
                 ? "bg-gray-400"
                 : "bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black"
-              }`}
+            }`}
             type="submit"
             disabled={isLoading || !!lockoutTime}
           >
             {lockoutTime
               ? `Login (${countdown})`
               : isLoading
-                ? "Signing in..."
-                : "Login"}
+              ? "Signing in..."
+              : "Login"}
           </Button>
           {failedAttempts === 3 && (
             <p className="text-xs text-red-600 text-center">
@@ -211,6 +222,8 @@ const SignInPage: React.FC = () => {
         </p>
       </div>
     </div>
+    <Toaster />
+    </>
   );
 };
 

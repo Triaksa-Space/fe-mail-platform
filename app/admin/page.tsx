@@ -1,3 +1,5 @@
+// FILE: app/admin/page.tsx
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -26,6 +28,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
+import withAuth from "@/components/hoc/withAuth";
 
 interface EmailUser {
     id: number
@@ -37,7 +40,7 @@ interface EmailUser {
 type SortField = 'lastActive' | 'created'
 type SortOrder = 'asc' | 'desc'
 
-export default function EmailManagement() {
+const EmailManagement: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<EmailUser[]>([])
     const [sortField, setSortField] = useState<SortField>('lastActive')
@@ -163,10 +166,10 @@ export default function EmailManagement() {
             <div className="flex justify-between items-center pl-4">
                 <Input placeholder="by username" className="max-w-xs" value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)} />
+                    <Toaster />
             </div>
 
             <div className="overflow-x-auto p-4">
-                <Toaster />
                 {isLoading ? (
                     <div>Loading...</div>
                 ) : error ? (
@@ -287,3 +290,5 @@ export default function EmailManagement() {
         </div>
     )
 }
+
+export default withAuth(EmailManagement);

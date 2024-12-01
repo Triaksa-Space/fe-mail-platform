@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import FooterNav from '@/components/FooterNav';
 import Send from '@/components/Send';
+import withAuth from "@/components/hoc/withAuth";
 
 const Page: React.FC = () => {
   return (
@@ -14,4 +15,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

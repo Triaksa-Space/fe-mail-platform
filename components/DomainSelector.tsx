@@ -27,6 +27,9 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
   useEffect(() => {
     const fetchDomains = async () => {
       try {
+        if (!token) {
+          return;
+        }
         const response = await axios.get(
           'http://localhost:8080/domain/dropdown',
           {

@@ -18,7 +18,7 @@ interface EmailDetail {
   ListAttachments: { Filename: string; FileUrl: string }[];
 }
 
-export default function EmailDetailPage() {
+const EmailDetailPage: React.FC = () => {
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,21 +72,21 @@ export default function EmailDetailPage() {
     router.push(`/inbox/send?${replyParams}`);
   };
 
-  if (isLoading) return <div className="p-4">Loading...</div>;
-  if (error) return <div className="p-4 text-red-500">{error}</div>;
-  if (!email) return <div className="p-4">Email not found</div>;
+  if (isLoading) return <div className="p-4 text-center">Loading...</div>;
+  if (error) return <div className="p-4 text-red-500 text-center">{error}</div>;
+  if (!email) return <div className="p-4 text-center">Email not found</div>;
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="p-4 space-y-4 flex-1 overflow-auto">
-        <div className="flex justify-between items-center bg-white">
+      <div className=" space-y-4 flex-1 overflow-auto">
+        <div className="flex justify-between items-center bg-white p-2 shadow-sm">
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 [&_svg]:size-5"
             onClick={() => router.push("/inbox")}
           >
-            <CircleX className="h-12 w-12" />
+            <CircleX className="h-6 w-6" />
           </Button>
           <Button
             variant="ghost"
@@ -94,11 +94,11 @@ export default function EmailDetailPage() {
             className="h-8 w-8 [&_svg]:size-5"
             onClick={handleReply}
           >
-            <Reply className="h-12 w-12" />
+            <Reply className="h-6 w-6" />
           </Button>
         </div>
 
-        <div className="space-y-2 text-xs p-1">
+        <div className="space-y-2 p-4 text-sm">
           <div className="grid grid-cols-[80px_1fr] gap-2">
             <span className="text-gray-500">From</span>
             <span className="font-medium">
@@ -110,11 +110,12 @@ export default function EmailDetailPage() {
             <span className="font-medium">{email.Subject}</span>
           </div>
           <div className="grid grid-cols-[80px_1fr] gap-2">
+            <span className="text-gray-500">Date</span>
             <span className="font-medium">{email.RelativeTime}</span>
           </div>
         </div>
 
-        <div className="border rounded-lg p-4 bg-white shadow-sm">
+        <div className="border rounded-lg bg-white shadow-sm">
           <div
             className="prose max-w-none"
             dangerouslySetInnerHTML={{ __html: email.Body }}
@@ -154,4 +155,6 @@ export default function EmailDetailPage() {
       <FooterNav />
     </div>
   );
-}
+};
+
+export default EmailDetailPage;

@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -9,13 +9,14 @@ import axios from 'axios'
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import DomainSelector from "@/components/DomainSelector"
+import withAuth from "@/components/hoc/withAuth";
 
 interface Domain {
   ID: number;
   Domain: string;
 }
 
-export default function CreateSingleEmail() {
+const CreateSingleEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("")
   const token = useAuthStore((state) => state.token);
   const [username, setUsername] = useState("")
@@ -123,3 +124,4 @@ export default function CreateSingleEmail() {
   )
 }
 
+export default withAuth(CreateSingleEmail);

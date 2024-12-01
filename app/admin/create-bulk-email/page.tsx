@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
 import { ArrowLeft, Minus, Plus } from 'lucide-react'
@@ -11,12 +11,13 @@ import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
 import axios from 'axios'
 import DomainSelector from "@/components/DomainSelector"
+import withAuth from "@/components/hoc/withAuth";
 
 interface EmailForm {
   email: string
 }
 
-export default function CreateBulkEmail() {
+const CreateBulkEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("")
   const [count, setCount] = useState(2)
   const [forms, setForms] = useState<EmailForm[]>([])
@@ -274,3 +275,5 @@ export default function CreateBulkEmail() {
     </>
   )
 }
+
+export default withAuth(CreateBulkEmail);

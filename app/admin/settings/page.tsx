@@ -1,3 +1,5 @@
+// FILE: app/admin/settings/page.tsx
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -26,6 +28,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
+import withAuth from "@/components/hoc/withAuth";
 
 interface AdminUser {
     id: number
@@ -37,7 +40,7 @@ interface AdminUser {
 type SortField = 'lastActive' | 'created'
 type SortOrder = 'asc' | 'desc'
 
-export default function UserAdminManagement() {
+const UserAdminManagement: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<AdminUser[]>([])
     const [sortField, setSortField] = useState<SortField>('lastActive')
@@ -254,3 +257,5 @@ export default function UserAdminManagement() {
         </div>
     )
 }
+
+export default withAuth(UserAdminManagement);
