@@ -23,7 +23,6 @@ export default function UserDetail() {
   const userEmail = useAuthStore((state) => state.email);
   const params = useParams()
   const searchParams = useSearchParams();
-  // console.log("emailId", params.id)
   const token = useAuthStore((state) => state.token);
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);

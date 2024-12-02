@@ -98,41 +98,44 @@ const EmailDetailPage: React.FC = () => {
           </Button>
         </div>
 
-        <div className="space-y-2 p-4 text-sm">
-          <div className="grid grid-cols-[80px_1fr] gap-2">
-            <span className="text-gray-500">From</span>
-            <span className="font-medium">
-              {email.SenderName} - {email.SenderEmail}
-            </span>
-          </div>
-          <div className="grid grid-cols-[80px_1fr] gap-2">
-            <span className="text-gray-500">Subject</span>
-            <span className="font-medium">{email.Subject}</span>
-          </div>
-          <div className="grid grid-cols-[80px_1fr] gap-2">
-            <span className="text-gray-500">Date</span>
-            <span className="font-medium">{email.RelativeTime}</span>
+        <div className="space-y-2 pl-4 pr-4">
+          <div className="border space-y-2 text-xs">
+            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4 ">
+              <span className="text-gray-500">From</span>
+              <span className="font-medium">
+                {email.SenderName} - {email.SenderEmail}
+              </span>
+            </div>
+            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4 ">
+              <span className="text-gray-500">Subject</span>
+              <span className="font-medium">{email.Subject}</span>
+            </div>
+            <div className="pl-1 pr-1 ">
+              <span className="font-medium">{email.RelativeTime}</span>
+            </div>
           </div>
         </div>
 
-        <div className="border rounded-lg bg-white shadow-sm">
-          <div
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{ __html: email.Body }}
-          />
+        <div className="space-y-2 pl-4 pr-4">
+          <div className="border bg-white shadow-sm flex">
+            <div
+              className="prose max-w-none p-2 text-sm overflow-hidden"
+              dangerouslySetInnerHTML={{ __html: email.Body }}
+            />
+          </div>
         </div>
 
         {/* Attachments Section */}
         {email.ListAttachments && email.ListAttachments.length > 0 && (
-          <div className="mt-4">
-            <h5 className="font-medium">Attachments:</h5>
+          <div className="pl-5 pr-5">
+            {/* <h5 className="font-medium">Attachments:</h5> */}
             <div className="space-y-1">
               {email.ListAttachments.map((attachment, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between"
+                  className="flex items-center"
                 >
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-gray-700 pr-4">
                     {attachment.Filename}
                   </span>
                   <a
@@ -143,7 +146,7 @@ const EmailDetailPage: React.FC = () => {
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`Download ${attachment.Filename}`}
                   >
-                    <Download className="h-5 w-5" />
+                    <Download className="h-4 w-4" />
                   </a>
                 </div>
               ))}

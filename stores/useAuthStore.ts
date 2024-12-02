@@ -23,7 +23,6 @@ export const useAuthStore = create<AuthState>()(
       setEmail: (email) => set({ email }),
       setRoleId: (roleId) => set({ roleId }),
       logout: () => {
-        console.log("LOGOUT TRIGGERED")
         // Clear zustand state
         set({ token: null, email: null })
         

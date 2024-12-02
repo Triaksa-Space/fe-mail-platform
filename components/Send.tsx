@@ -21,7 +21,6 @@ const Send: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendEmail = async () => {
-    console.log("Send email clicked");
     if (!to || !subject || !message) {
       toast({
         description: "Please fill all required fields",
@@ -33,28 +32,25 @@ const Send: React.FC = () => {
     setIsLoading(true);
 
     try {
-      console.log("Sending email...");
       // Convert all attachments to base64 and then to byte array
       const attachmentPromises = attachments.map(async (file) => {
         const base64Content = await fileToBase64(file);
-        const byteArray = base64ToByteArray(base64Content);
+        // const byteArray = base64ToByteArray(base64Content);
         return {
           Filename: file.name,
           ContentType: file.type,
-          Content: Array.from(byteArray), // Convert Uint8Array to regular array
+          Content: base64Content.split(',')[1], // Extract base64 string without the prefix
         };
       });
 
       const processedAttachments = await Promise.all(attachmentPromises);
-      console.log("processedAttachments");
+      
       const payload = {
         to,
         subject,
         body: message,
         attachments: processedAttachments,
       };
-
-      console.log("Payload:", payload); // Log the payload to the console
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`,
@@ -74,6 +70,7 @@ const Send: React.FC = () => {
 
       router.push("/inbox");
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error) && error.response?.status === 429) {
         toast({
           description: "Daily send email limit reached. Try again tomorrow.",
@@ -173,7 +170,7 @@ const Send: React.FC = () => {
               </div>
               <div className="mt-2 flex-1">
                 <input
-                  className="text-sm shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="to"
                   type="text"
                   placeholder=""
@@ -182,9 +179,9 @@ const Send: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="mb-1 mt-2">
+            <div className="mb-2 mt-2">
               <input
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="subject"
                 type="text"
                 placeholder="Subject"
@@ -194,7 +191,7 @@ const Send: React.FC = () => {
             </div>
             <div className="mb-4">
               <textarea
-                className="text-sm shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="message"
                 rows={14}
                 placeholder="Compose email"
@@ -206,7 +203,7 @@ const Send: React.FC = () => {
               {attachments.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                  className="flex items-center justify-between p-2 bg-gray-50"
                 >
                   <span className="text-sm text-gray-600 truncate">
                     {file.name}

@@ -4,9 +4,46 @@ import React, { useState } from 'react';
 import { Button } from './ui/button';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { Eye, EyeOff } from 'lucide-react';
+
+const PasswordInput: React.FC<{
+  id: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  showPassword: boolean;
+  setShowPassword: (show: boolean) => void;
+  error?: string | null;
+}> = ({ id, placeholder, value, onChange, showPassword, setShowPassword, error }) => (
+  <div className="mb-4">
+    <div className="relative">
+      <input
+        className={`shadow appearance-none border ${error ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10`}
+        id={id}
+        type={showPassword ? "text" : "password"}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
+      <button
+        type="button"
+        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+        onClick={() => setShowPassword(!showPassword)}
+      >
+        {showPassword ? (
+          <EyeOff className="h-4 w-4 text-gray-400" />
+        ) : (
+          <Eye className="h-4 w-4 text-gray-400" />
+        )}
+      </button>
+    </div>
+    {error && (
+      <p className="text-red-500 text-xs mt-1">{error}</p>
+    )}
+  </div>
+);
 
 const Settings: React.FC = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -85,88 +122,39 @@ const Settings: React.FC = () => {
 
         <div className="flex justify-center items-start p-4">
           <form className="w-full max-w-lg text-sm" onSubmit={(e) => e.preventDefault()}>
-            <div className="mb-4">
-              <div className="relative">
-                <input
-                  className={`shadow appearance-none border ${oldPasswordError ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10`}
-                  id="current-password"
-                  type={showCurrentPassword ? "password" : "text"}
-                  placeholder="Old Password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                >
-                  {showCurrentPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-              </div>
-              {oldPasswordError && (
-                <p className="text-red-500 text-xs mt-1">{oldPasswordError}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <div className="relative">
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
-                  id="new-password"
-                  type={showNewPassword ? "password" : "text"}
-                  placeholder="New Password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="relative">
-                <input
-                  className={`shadow appearance-none border ${confirmPasswordError ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10`}
-                  id="confirm-password"
-                  type={showConfirmPassword ? "password" : "text"}
-                  placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-              </div>
-              {confirmPasswordError && (
-                <p className="text-red-500 text-xs mt-1">{confirmPasswordError}</p>
-              )}
-            </div>
+            <PasswordInput
+              id="current-password"
+              placeholder="Old Password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              showPassword={showCurrentPassword}
+              setShowPassword={setShowCurrentPassword}
+              error={oldPasswordError}
+            />
+            <PasswordInput
+              id="new-password"
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              showPassword={showNewPassword}
+              setShowPassword={setShowNewPassword}
+            />
+            <PasswordInput
+              id="confirm-password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              showPassword={showConfirmPassword}
+              setShowPassword={setShowConfirmPassword}
+              error={confirmPasswordError}
+            />
             <div className="flex items-center justify-center">
               <Button
                 className="w-3/4 bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={handleSubmit}
-                disabled={isLoading}
+                disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
               >
-                {isLoading ? 'Changing Password...' : 'Submit'}
+                Submit
               </Button>
             </div>
           </form>

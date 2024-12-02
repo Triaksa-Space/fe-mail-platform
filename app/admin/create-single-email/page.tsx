@@ -34,7 +34,6 @@ const CreateSingleEmail: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("baseURL", process.env.NEXT_PUBLIC_API_BASE_URL)
 
     try {
       const response = await axios.post(

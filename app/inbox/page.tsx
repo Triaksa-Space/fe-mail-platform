@@ -66,7 +66,6 @@ const InboxPage: React.FC = () => {
         );
 
         if (isSubscribed) {
-          console.log(response.data)
           setEmails(response.data);
           setError(null);
         }
@@ -96,7 +95,7 @@ const InboxPage: React.FC = () => {
       <div className="flex flex-col h-screen">
         <div className="flex-1 overflow-auto">
           <div className="space-y-0.5">
-            <div className="flex justify-between p-2 bg-[#F7D65D]">
+            <div className="flex justify-between p-2 bg-[#ffeeac]">
               <h1 className="text-xl font-semibold tracking-tight">
                 {email}
               </h1>
@@ -109,7 +108,7 @@ const InboxPage: React.FC = () => {
             ) : error ? (
               <div className="p-4 text-center">{error}</div>
             ) : emails.length > 0 ? (
-              <div className="divide-y">
+              <div className="divide-y divide-dashed">
                 {emails.map((email) => (
                   <div
                     key={email.ID}
@@ -123,7 +122,7 @@ const InboxPage: React.FC = () => {
                           {email.RelativeTime}
                         </span>
                       </div>
-                      <h4 className="font-medium">{email.Subject}</h4>
+                      <h4 className="font-medium truncate">{email.Subject}</h4>
                       <p className="text-sm text-gray-500 truncate">{email.Preview}</p>
                     </div>
                   </div>
