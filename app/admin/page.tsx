@@ -68,7 +68,7 @@ const EmailManagement: React.FC = () => {
         if (!selectedUser) return;
 
         try {
-            await axios.delete(`http://localhost:8080/user/${selectedUser.id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${selectedUser.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -107,7 +107,7 @@ const EmailManagement: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/user/?page=' + currentPage + '&page_size=' + pageSize + '&email=' + searchTerm, {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/?page=` + currentPage + '&page_size=' + pageSize + '&email=' + searchTerm, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

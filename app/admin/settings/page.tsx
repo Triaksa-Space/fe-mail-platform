@@ -63,7 +63,7 @@ const UserAdminManagement: React.FC = () => {
         if (!selectedUser) return;
 
         try {
-            await axios.delete(`http://localhost:8080/user/${selectedUser.id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${selectedUser.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -102,7 +102,7 @@ const UserAdminManagement: React.FC = () => {
 
         try {
             await axios.post(
-                'http://localhost:8080/user/admin',
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`,
                 {
                     username: newAdminEmail,
                     password: newAdminPassword,
@@ -155,7 +155,7 @@ const UserAdminManagement: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/user/admin?email=' + searchTerm, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin?email=` + searchTerm, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

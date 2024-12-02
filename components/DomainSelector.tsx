@@ -31,7 +31,7 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
           return;
         }
         const response = await axios.get(
-          'http://localhost:8080/domain/dropdown',
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/domain/dropdown`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

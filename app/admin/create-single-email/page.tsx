@@ -34,10 +34,11 @@ const CreateSingleEmail: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("baseURL", process.env.NEXT_PUBLIC_API_BASE_URL)
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/user/',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
         {
           email: `${username}@mailria.com`,
           password: password,
@@ -76,20 +77,20 @@ const CreateSingleEmail: React.FC = () => {
       </div>
 
       <div className="max-w-md mx-auto p-6">
-        <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2>
+        {/* <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2> */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex items-center gap-2">
             <Input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="yono"
-              className="flex-1"
+              className="flex-1 h-12"
             />
             <span className="text-lg">@</span>
             <DomainSelector
               value={selectedDomain}
               onChange={setSelectedDomain}
-              className="w-[180px]"
+              className="w-[180px] h-12"
             />
           </div>
 
@@ -99,24 +100,27 @@ const CreateSingleEmail: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="!@#DF3"
-              className="flex-1 bg-gray-100"
+              className="h-12 flex-1 bg-gray-100"
             />
             <Button
-              type="button"
-              onClick={generateRandomPassword}
-              className="bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-black"
-            >
-              Random Password
-            </Button>
+                type="button"
+                onClick={generateRandomPassword}
+                className="h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 border border-black/20 text-black"
+              >
+                Random Password
+              </Button>
           </div>
 
           <Button
-            type="submit"
-            className="w-full bg-gray-400 hover:bg-yellow-300 text-black"
-            disabled={!username || !password}
-          >
-            Create
-          </Button>
+              type="submit"
+              className={`h-12 w-full font-bold border border-black/20 text-black ${!username || !password
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-yellow-300 hover:bg-yellow-300"
+                }`}
+              disabled={!username || !password}
+            >
+              Create
+            </Button>
         </form>
       </div>
       <FooterAdminNav />

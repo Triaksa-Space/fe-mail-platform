@@ -38,7 +38,7 @@ export default function UserDetail() {
     const fetchUserEmails = async () => {
       try {
         const responseDetailUser = await axios.get(
-          `http://localhost:8080/user/${params.id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -36,7 +36,7 @@ export default function UserDetail() {
       try {
 
         const response = await axios.get(
-          `http://localhost:8080/email/by_user/detail/${params.id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
