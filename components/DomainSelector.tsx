@@ -41,7 +41,7 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
         setDomains(response.data)
         // Set default domain if no value is provided
         if (!value && response.data.length > 0) {
-          const defaultDomainObj = response.data.find(d => d.Domain === 'mailria.com') || response.data[0]
+          const defaultDomainObj = response.data[0]
           onChange(defaultDomainObj.Domain)
         }
       } catch (error) {

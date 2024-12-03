@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import FooterAdminNav from "@/components/FooterAdminNav"
@@ -11,10 +11,10 @@ import { Toaster } from "@/components/ui/toaster"
 import DomainSelector from "@/components/DomainSelector"
 import withAuth from "@/components/hoc/withAuth";
 
-interface Domain {
-  ID: number;
-  Domain: string;
-}
+// interface Domain {
+//   ID: number;
+//   Domain: string;
+// }
 
 const CreateSingleEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("")
@@ -36,7 +36,7 @@ const CreateSingleEmail: React.FC = () => {
     e.preventDefault()
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
         {
           email: `${username}@mailria.com`,

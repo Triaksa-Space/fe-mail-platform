@@ -24,11 +24,10 @@ export default function UserDetail() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState("")
-  const [sentEmails, setSentEmails] = useState(0)
+  // const [sentEmails, setSentEmails] = useState(0)
   const params = useParams()
   const router = useRouter()
   const token = useAuthStore((state) => state.token)
-  const userEmail = useAuthStore((state) => state.email)
 
   const handleEmailClick = (uemail: UserEmail) => {
     router.push(`/admin/user/detail/${uemail.ID}/?email=${email}`);
@@ -60,7 +59,7 @@ export default function UserDetail() {
         )
         setEmails(response.data)
         // setEmail(response.data[0]?.SenderEmail || "")
-        setSentEmails(response.data.length)
+        // setSentEmails(response.data.length)
         setError(null)
       } catch (err) {
         console.error('Failed to fetch user emails:', err)

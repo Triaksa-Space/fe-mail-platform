@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import FooterNav from '@/components/FooterNav';
 import Send from '@/components/Send';
 import withAuth from "@/components/hoc/withAuth";

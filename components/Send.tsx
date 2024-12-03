@@ -103,16 +103,6 @@ const Send: React.FC = () => {
     setAttachments(attachments.filter((_, i) => i !== index));
   };
 
-  const base64ToByteArray = (base64: string): Uint8Array => {
-    const binaryString = atob(base64.split(",")[1]);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes;
-  };
-
   return (
     <>
       <div className="p-4 space-y-4">

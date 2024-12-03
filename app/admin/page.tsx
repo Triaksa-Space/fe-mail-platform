@@ -1,5 +1,3 @@
-// FILE: app/admin/page.tsx
-
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -37,6 +35,13 @@ interface EmailUser {
     created: string
 }
 
+interface User {
+    ID: number
+    Email: string
+    LastLogin: string
+    CreatedAt: string
+}
+
 type SortField = 'lastActive' | 'created'
 type SortOrder = 'asc' | 'desc'
 
@@ -48,7 +53,7 @@ const EmailManagement: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(10)
+    const pageSize = 10
     const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
@@ -112,7 +117,7 @@ const EmailManagement: React.FC = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-                const data = response.data.users.map((user: any) => ({
+                const data = response.data.users.map((user: User) => ({
                     id: user.ID,
                     email: user.Email,
                     lastActive: new Date(user.LastLogin).toLocaleString(),

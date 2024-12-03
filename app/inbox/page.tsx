@@ -6,9 +6,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
 import FooterNav from "@/components/FooterNav";
 import { useRouter } from "next/navigation";
-import { Toaster } from "@/components/ui/toaster";
-import { useToast } from "@/hooks/use-toast";
-import withAuth from "@/components/hoc/withAuth";
 
 const InboxPage: React.FC = () => {
   const [sentEmails, setSentEmails] = useState(0);
@@ -19,7 +16,6 @@ const InboxPage: React.FC = () => {
   const token = useAuthStore((state) => state.token);
   const router = useRouter();
   const { setEmail } = useAuthStore();
-  const { toast } = useToast();
 
   useEffect(() => {
     let isSubscribed = true;
@@ -135,7 +131,6 @@ const InboxPage: React.FC = () => {
         </div>
         <FooterNav />
       </div>
-      <Toaster />
     </>
   );
 };

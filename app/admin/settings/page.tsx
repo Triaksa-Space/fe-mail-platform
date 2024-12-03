@@ -28,6 +28,13 @@ interface AdminUser {
     created: string
 }
 
+interface User {
+    ID: number
+    Email: string
+    LastLogin: string
+    CreatedAt: string
+}
+
 type SortField = 'lastActive' | 'created'
 type SortOrder = 'asc' | 'desc'
 
@@ -39,13 +46,13 @@ const UserAdminManagement: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(10)
-    const [totalPages, setTotalPages] = useState(1)
+    const pageSize = 10
+    // const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [pageInput, setPageInput] = useState("");
+    // const [isDialogOpen, setIsDialogOpen] = useState(false);
+    // const [pageInput, setPageInput] = useState("");
 
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
@@ -139,14 +146,14 @@ const UserAdminManagement: React.FC = () => {
         }
     };
 
-    const handlePageInputSubmit = () => {
-        const page = parseInt(pageInput);
-        if (page && page > 3 && page < totalPages) {
-            handlePageChange(page);
-        }
-        setIsDialogOpen(false);
-        setPageInput("");
-    };
+    // const handlePageInputSubmit = () => {
+    //     const page = parseInt(pageInput);
+    //     if (page && page > 3 && page < totalPages) {
+    //         handlePageChange(page);
+    //     }
+    //     setIsDialogOpen(false);
+    //     setPageInput("");
+    // };
 
     const handleSearch = (value: string) => {
         setSearchTerm(value);
@@ -160,14 +167,14 @@ const UserAdminManagement: React.FC = () => {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            const data = response.data.users.map((user: any) => ({
+            const data = response.data.users.map((user: User) => ({
                 id: user.ID,
                 email: user.Email,
                 lastActive: new Date(user.LastLogin).toLocaleString(),
                 created: new Date(user.CreatedAt).toLocaleDateString(),
             }))
             setUsers(data)
-            setTotalPages(response.data.total_pages)
+            // setTotalPages(response.data.total_pages)
             setError(null)
         } catch (err) {
             console.error('Failed to fetch users:', err)
@@ -206,9 +213,9 @@ const UserAdminManagement: React.FC = () => {
         }
     }
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page)
-    }
+    // const handlePageChange = (page: number) => {
+    //     setCurrentPage(page)
+    // }
 
     const handleLogout = () => {
         // Clear token and redirect to login page

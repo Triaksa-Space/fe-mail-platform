@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button";
-import { CircleX, Download } from 'lucide-react';
+import { CircleX } from 'lucide-react';
 import FooterAdminNav from '@/components/FooterAdminNav';
 import { useAuthStore } from '@/stores/useAuthStore';
 import axios from "axios";
@@ -20,7 +20,7 @@ interface EmailDetail {
 
 export default function UserDetail() {
   const router = useRouter();
-  const userEmail = useAuthStore((state) => state.email);
+  // const userEmail = useAuthStore((state) => state.email);
   const params = useParams()
   const searchParams = useSearchParams();
   const token = useAuthStore((state) => state.token);
@@ -55,7 +55,7 @@ export default function UserDetail() {
     };
 
     fetchEmailDetail();
-  }, [token]);
+  }, [token, params.id]);
 
   if (isLoading) return <div className="p-4 text-center">Loading...</div>;
   if (error) return <div className="p-4 text-red-500 text-center">{error}</div>;
