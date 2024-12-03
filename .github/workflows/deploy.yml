@@ -62,7 +62,7 @@ jobs:
         echo "📝 Files to be archived:$FILES_TO_ARCHIVE"
         
         # Create deployment package
-        tar -czf deploy.tar.gz $FILES_TO_ARCHIVE
+        sudo tar -czf deploy.tar.gz $FILES_TO_ARCHIVE
 
         # Verify package
         if [ ! -s "deploy.tar.gz" ]; then
