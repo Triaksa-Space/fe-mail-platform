@@ -80,26 +80,26 @@ const SignInPage: React.FC = () => {
       const { token } = response.data;
       setToken(token);
 
-      // Get user details
-      const userResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // // Get user details
+      // const userResponse = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
-      const userData = userResponse.data;
-      setEmail(userData.Email);
-      setRoleId(userData.RoleID);
+      // const userData = userResponse.data;
+      // setEmail(userData.Email);
+      // setRoleId(userData.RoleID);
 
-      // Redirect based on role
-      if (userData.RoleID === 0) {
-        router.push("/admin");
-      } else {
-        router.push("/inbox");
-      }
+      // // Redirect based on role
+      // if (userData.RoleID === 0) {
+      //   router.push("/admin");
+      // } else {
+      //   router.push("/inbox");
+      // }
     } catch (error) {
       console.error("Login failed:", error);
       setFailedAttempts((prev) => prev + 1);

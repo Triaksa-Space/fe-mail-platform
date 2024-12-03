@@ -140,4 +140,4 @@ const InboxPage: React.FC = () => {
   );
 };
 
-export default withAuth(InboxPage);
+export default InboxPage;

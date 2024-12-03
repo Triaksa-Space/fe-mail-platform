@@ -6,6 +6,9 @@ import { CircleX, Reply, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
 import FooterNav from "@/components/FooterNav";
+import axios from "axios";
+import { saveAs } from 'file-saver';
+
 
 interface EmailDetail {
   ID: number;
@@ -15,7 +18,7 @@ interface EmailDetail {
   Body: string;
   BodyEml: string;
   RelativeTime: string;
-  ListAttachments: { Filename: string; FileUrl: string }[];
+  ListAttachments: { Filename: string; URL: string }[];
 }
 
 const EmailDetailPage: React.FC = () => {
@@ -26,6 +29,26 @@ const EmailDetailPage: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
+
+  // Function to handle file download
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/download/file/${params.id}/${url}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob', // Important to handle binary data
+        }
+      );
+  
+      const blob = new Blob([response.data], { type: response.headers['content-type'] });
+      saveAs(blob, filename);
+    } catch (error) {
+      console.error('Failed to download file:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchEmailDetail = async () => {
@@ -136,18 +159,14 @@ const EmailDetailPage: React.FC = () => {
                   className="flex items-center"
                 >
                   <span className="text-sm text-gray-700 pr-4">
-                    {attachment.Filename}
+                    {attachment.Filename.split('_').pop()}
                   </span>
-                  <a
-                    href={attachment.FileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`Download ${attachment.Filename}`}
+                  <button
+                    onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
+                    aria-label={`Download ${attachment.Filename.split('_').pop()}`}
                   >
                     <Download className="h-4 w-4" />
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>

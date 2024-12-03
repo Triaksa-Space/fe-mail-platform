@@ -18,6 +18,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
         }
 
         try {
+          console.log("Checking token...");
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
             {
