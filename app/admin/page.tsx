@@ -12,13 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-} from "@/components/ui/pagination"
+import PaginationComponent from "@/components/PaginationComponent"
 import { ChevronUp, ChevronDown } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -171,7 +165,7 @@ const EmailManagement: React.FC = () => {
             <div className="flex justify-between items-center pl-4">
                 <Input placeholder="by username" className="max-w-xs" value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)} />
-                    <Toaster />
+                <Toaster />
             </div>
 
             <div className="overflow-x-auto p-4">
@@ -233,7 +227,7 @@ const EmailManagement: React.FC = () => {
                         </TableBody>
                     </Table>
                 )}
-            
+
                 <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                     <DialogContent>
                         <DialogHeader>
@@ -248,48 +242,11 @@ const EmailManagement: React.FC = () => {
                 </Dialog>
             </div>
 
-            <div className="flex justify-between pl-4">
-                <span className="text-sm text-gray-500">Showing {users.length} of {totalPages * pageSize}</span>
-                <Pagination className="ml-auto">
-                    <PaginationContent>
-                        {Array.from({ length: Math.min(3, totalPages) }, (_, i) => (
-                            <PaginationItem key={i}>
-                                <PaginationLink onClick={() => handlePageChange(i + 1)}>{i + 1}</PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        {totalPages > 3 && (
-                            <>
-                                <PaginationItem>
-                                    <PaginationEllipsis onClick={() => setIsDialogOpen(true)} className="cursor-pointer" />
-                                </PaginationItem>
-                                <PaginationItem>
-                                    <PaginationLink onClick={() => handlePageChange(totalPages)}>
-                                        {totalPages}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            </>
-                        )}
-                    </PaginationContent>
-                </Pagination>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Go to Page</DialogTitle>
-                        </DialogHeader>
-                        <Input
-                            type="number"
-                            min={4}
-                            max={totalPages - 1}
-                            value={pageInput}
-                            onChange={(e) => setPageInput(e.target.value)}
-                            placeholder="Enter page number"
-                        />
-                        <DialogFooter>
-                            <Button onClick={handlePageInputSubmit}>Go</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
+            <PaginationComponent
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+            />
 
             <FooterAdminNav />
         </div>
