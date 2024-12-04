@@ -126,7 +126,7 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pl-4">
-      <span className="text-sm text-gray-500">Page {currentPage} of {totalPages}</span>
+      <span className="text-sm text-gray-500 w-full">Page {currentPage} of {totalPages}</span>
       <Pagination>
         <PaginationContent>
           <PaginationItem>

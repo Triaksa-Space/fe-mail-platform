@@ -217,6 +217,7 @@ const EmailManagement: React.FC = () => {
                                         </Button>
                                         <Button
                                             variant="destructive"
+                                            className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                             onClick={() => handleDeleteClick(user)}
                                         >
                                             Delete

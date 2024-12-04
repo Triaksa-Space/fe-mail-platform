@@ -266,6 +266,7 @@ const UserAdminManagement: React.FC = () => {
                                     <TableCell className="px-2 py-1 space-x-2 text-center">
                                         <Button
                                             variant="destructive"
+                                            className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                             onClick={() => handleDeleteClick(user)}
                                         >
                                             Delete
@@ -309,8 +310,15 @@ const UserAdminManagement: React.FC = () => {
                             />
                         </div>
                         <DialogFooter>
-                            <Button variant="secondary" onClick={() => setIsDialogCreateOpen(false)}>Cancel</Button>
-                            <Button variant="default" onClick={handleCreateAdmin}>Create</Button>
+                            <Button variant="secondary" className='w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' onClick={() => setIsDialogCreateOpen(false)}>Back</Button>
+                            <Button 
+                            variant="default" 
+                            className={`w-1/2  font-bold border border-black/20 text-black ${!newAdminEmail || !newAdminPassword
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-yellow-300 hover:bg-yellow-300"
+                              }`}
+                            disabled={!newAdminEmail || !newAdminPassword}
+                            onClick={handleCreateAdmin}>Confirm</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

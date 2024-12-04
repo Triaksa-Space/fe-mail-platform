@@ -158,7 +158,7 @@ const SignInPage: React.FC = () => {
                 name="email"
                 placeholder="example@mailria.com"
                 required
-                type="email"
+                type="text"
                 className="pl-10 h-12 text-base border-gray-200"
               />
             </div>
