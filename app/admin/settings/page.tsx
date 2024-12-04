@@ -231,7 +231,7 @@ const UserAdminManagement: React.FC = () => {
             </div>
 
             <div className="overflow-x-auto p-4">
-            <Toaster />
+                <Toaster />
                 {isLoading ? (
                     <div>Loading...</div>
                 ) : error ? (
@@ -276,7 +276,7 @@ const UserAdminManagement: React.FC = () => {
                         </TableBody>
                     </Table>
                 )}
-            
+
                 <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                     <DialogContent>
                         <DialogHeader>
@@ -316,21 +316,24 @@ const UserAdminManagement: React.FC = () => {
                 </Dialog>
             </div>
 
-            <div className="flex justify-between mt-4">
-                <Button
-                    variant="default"
-                    className="bg-blue-500 hover:bg-blue-600 text-white"
-                    onClick={() => setIsDialogCreateOpen(true)}
-                >
-                    Create Admin
-                </Button>
-                <Button
-                    variant="destructive"
-                    className="bg-red-500 hover:bg-red-600 text-white"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </Button>
+            <div className="p-4">
+                {/* rest of the code here */}
+                <div className="flex justify-center gap-4 mt-4 mb-8">
+                    <Button
+                        
+                        className="w-[200px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                        onClick={() => setIsDialogCreateOpen(true)}
+                    >
+                        Create Admin
+                    </Button>
+                    <Button
+                        
+                        className="w-[200px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                </div>
             </div>
 
             <FooterAdminNav />
