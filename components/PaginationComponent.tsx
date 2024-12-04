@@ -132,7 +132,7 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
           <PaginationItem>
             <PaginationLink 
               onClick={() => onPageChange(1)}
-              disabled={currentPage === 1}
+              aria-disabled={currentPage === 1}
               aria-label="Go to first page"
             >
               &lt;&lt;
@@ -141,7 +141,7 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
           <PaginationItem>
             <PaginationLink 
               onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
+              aria-disabled={currentPage === 1}
               aria-label="Go to previous page"
             >
               &lt;
@@ -151,7 +151,7 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
           <PaginationItem>
             <PaginationLink 
               onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
+              aria-disabled={currentPage === totalPages}
               aria-label="Go to next page"
             >
               &gt;
@@ -160,7 +160,7 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
           <PaginationItem>
             <PaginationLink 
               onClick={() => onPageChange(totalPages)}
-              disabled={currentPage === totalPages}
+              aria-disabled={currentPage === totalPages}
               aria-label="Go to last page"
             >
               &gt;&gt;
