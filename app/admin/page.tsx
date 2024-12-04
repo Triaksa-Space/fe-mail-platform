@@ -52,9 +52,7 @@ const EmailManagement: React.FC = () => {
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const { toast } = useToast();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [pageInput, setPageInput] = useState("");
-
+    
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<EmailUser | null>(null);
 
@@ -87,15 +85,6 @@ const EmailManagement: React.FC = () => {
         } catch (error) {
             console.error('Failed to delete user:', error);
         }
-    };
-
-    const handlePageInputSubmit = () => {
-        const page = parseInt(pageInput);
-        if (page && page > 3 && page < totalPages) {
-            handlePageChange(page);
-        }
-        setIsDialogOpen(false);
-        setPageInput("");
     };
 
     const handleSearch = (value: string) => {
