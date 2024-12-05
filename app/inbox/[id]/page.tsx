@@ -8,7 +8,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import FooterNav from "@/components/FooterNav";
 import axios from "axios";
 import { saveAs } from 'file-saver';
-
+import LoadingDownloadPage from "@/components/DownloadLoading";
 
 interface EmailDetail {
   ID: number;
@@ -25,6 +25,7 @@ const EmailDetailPage: React.FC = () => {
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false); // State for loading indicator
 
   const params = useParams();
   const router = useRouter();
@@ -32,6 +33,7 @@ const EmailDetailPage: React.FC = () => {
 
   // Function to handle file download
   const handleDownload = async (url: string, filename: string) => {
+    setIsDownloading(true);
     try {
       const payload = {
         email_id: params.id,
@@ -53,6 +55,8 @@ const EmailDetailPage: React.FC = () => {
       saveAs(blob, filename);
     } catch (error) {
       console.error('Failed to download file:', error);
+    } finally {
+      setIsDownloading(false); 
     }
   };
 
@@ -127,7 +131,7 @@ const EmailDetailPage: React.FC = () => {
           </Button>
         </div>
 
-        <div className="space-y-2 pl-4 pr-4">
+        <div className="space-y-2 p-4">
           <div className="border space-y-2 text-xs">
             <div className="grid grid-cols-[50px_1fr] pl-1 pr-4 ">
               <span className="text-gray-500">From</span>
@@ -156,7 +160,7 @@ const EmailDetailPage: React.FC = () => {
 
         {/* Attachments Section */}
         {email.ListAttachments && email.ListAttachments.length > 0 && (
-          <div className="pl-5 pr-5">
+          <div className="pl-5 pr-5 pt-4">
             {/* <h5 className="font-medium">Attachments:</h5> */}
             <div className="space-y-1">
               {email.ListAttachments.map((attachment, index) => (
@@ -180,6 +184,9 @@ const EmailDetailPage: React.FC = () => {
         )}
         {/* End of Attachments Section */}
       </div>
+      {isDownloading && (
+        <LoadingDownloadPage/>
+      )}
       <FooterNav />
     </div>
   );

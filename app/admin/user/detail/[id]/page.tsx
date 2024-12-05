@@ -8,7 +8,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import FooterAdminNav from "@/components/FooterAdminNav";
 import axios from "axios";
 import { saveAs } from 'file-saver';
-
+import LoadingDownloadPage from "@/components/DownloadLoading";
 
 interface EmailDetail {
   ID: number;
@@ -25,6 +25,7 @@ const EmailDetailPage: React.FC = () => {
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false); // State for loading indicator
 
   const searchParams = useSearchParams();
   const params = useParams();
@@ -33,6 +34,7 @@ const EmailDetailPage: React.FC = () => {
 
   // Function to handle file download
   const handleDownload = async (url: string, filename: string) => {
+    setIsDownloading(true);
     try {
       const payload = {
         email_id: params.id,
@@ -54,6 +56,8 @@ const EmailDetailPage: React.FC = () => {
       saveAs(blob, filename);
     } catch (error) {
       console.error('Failed to download file:', error);
+    } finally {
+      setIsDownloading(false); 
     }
   };
 
@@ -166,6 +170,9 @@ const EmailDetailPage: React.FC = () => {
         )}
         {/* End of Attachments Section */}
       </div>
+      {isDownloading && (
+        <LoadingDownloadPage/>
+      )}
       <FooterAdminNav />
     </div>
   );
