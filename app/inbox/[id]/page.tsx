@@ -33,8 +33,14 @@ const EmailDetailPage: React.FC = () => {
   // Function to handle file download
   const handleDownload = async (url: string, filename: string) => {
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/download/file/${params.id}/${url}`,
+      const payload = {
+        email_id: params.id,
+        file_url: url,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/download/file`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
