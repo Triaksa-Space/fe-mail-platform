@@ -5,7 +5,9 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
 import FooterNav from "@/components/FooterNav";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from '@/hooks/use-toast';
+import { Toaster } from "@/components/ui/toaster";
 
 const InboxPage: React.FC = () => {
   const [sentEmails, setSentEmails] = useState(0);
@@ -15,11 +17,23 @@ const InboxPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const token = useAuthStore((state) => state.token);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sentStatus = searchParams.get('sent');
+
   const { setEmail } = useAuthStore();
 
   useEffect(() => {
     let isSubscribed = true;
     const controller = new AbortController();
+
+      if (sentStatus === 'success') {
+        toast({
+          description: "Send email successful!",
+          className: "bg-green-500 text-white border-0",
+        });
+        // Remove the query parameter from the URL
+        router.replace('/inbox');
+      }
 
     const fetchCountSentEmails = async () => {
       if (!token) return;
@@ -84,7 +98,7 @@ const InboxPage: React.FC = () => {
       isSubscribed = false;
       controller.abort();
     };
-  }, [token, router, setEmail]);
+  }, [sentStatus, token, router, setEmail]);
 
   return (
     <>
@@ -130,6 +144,7 @@ const InboxPage: React.FC = () => {
           </div>
         </div>
         <FooterNav />
+        <Toaster />
       </div>
     </>
   );

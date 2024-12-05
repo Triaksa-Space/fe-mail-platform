@@ -63,12 +63,7 @@ const Send: React.FC = () => {
         }
       );
 
-      toast({
-        description: "Send email successful!",
-        className: "bg-green-500 text-white border-0",
-      });
-
-      router.push("/inbox");
+      router.push("/inbox?sent=success");
     } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error) && error.response?.status === 429) {
