@@ -6,11 +6,11 @@ import withAuth from "@/components/hoc/withAuth";
 
 const SettingPage: React.FC = () => {
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex-1 overflow-auto">
-      <Settings />
+    <div className="space-y-2">
+      <div className="flex-1 overflow-auto pb-20">
+        <Settings />
       </div>
-      <FooterNav/>
+      <FooterNav />
     </div>
   );
 };

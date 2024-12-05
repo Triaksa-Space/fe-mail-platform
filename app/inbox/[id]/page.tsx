@@ -42,7 +42,7 @@ const EmailDetailPage: React.FC = () => {
           responseType: 'blob', // Important to handle binary data
         }
       );
-  
+
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
       saveAs(blob, filename);
     } catch (error) {
@@ -100,8 +100,8 @@ const EmailDetailPage: React.FC = () => {
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className=" space-y-4 flex-1 overflow-auto">
+    <div className="space-y-2">
+      <div className="flex-1 overflow-auto pb-20">
         <div className="flex justify-between items-center bg-white p-2 shadow-sm">
           <Button
             variant="ghost"

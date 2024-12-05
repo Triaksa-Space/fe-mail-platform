@@ -78,7 +78,7 @@ const Send: React.FC = () => {
         });
       } else {
         toast({
-          description: "Failed to send email. Please try again.",
+          description: "Failed to send email. "+ error + " Please try again." ,
           variant: "destructive",
         });
       }

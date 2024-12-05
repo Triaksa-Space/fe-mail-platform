@@ -88,8 +88,8 @@ const InboxPage: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
-        <div className="flex-1 overflow-auto">
+      <div className="space-y-2">
+        <div className="flex-1 overflow-auto pb-20">
           <div className="space-y-0.5">
             <div className="flex justify-between p-2 bg-[#ffeeac]">
               <h1 className="text-xl font-semibold tracking-tight">

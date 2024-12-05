@@ -17,7 +17,7 @@ import withAuth from "@/components/hoc/withAuth";
 // }
 
 const CreateSingleEmail: React.FC = () => {
-  const [selectedDomain, setSelectedDomain] = useState("")
+  const [selectedDomain, setSelectedDomain] = useState("mailria.com")
   const token = useAuthStore((state) => state.token);
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -39,7 +39,7 @@ const CreateSingleEmail: React.FC = () => {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
         {
-          email: `${username}@mailria.com`,
+          email: `${username}@${selectedDomain}`,
           password: password,
         },
         {
@@ -52,7 +52,7 @@ const CreateSingleEmail: React.FC = () => {
 
       // Show success toast
       toast({
-        description: `email: ${username}@mailria.com password: ${password} successfully created!`,
+        description: `email: ${username}@${selectedDomain} password: ${password} successfully created!`,
         className: "bg-green-500 text-white border-0",
       })
       setUsername("")
@@ -71,6 +71,7 @@ const CreateSingleEmail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <div className="flex-1 overflow-auto pb-20">
       <div className="p-4 border-b flex items-center justify-between">
         <Toaster />
       </div>
@@ -88,7 +89,7 @@ const CreateSingleEmail: React.FC = () => {
             <span className="text-lg">@</span>
             <DomainSelector
               value={selectedDomain}
-              onChange={setSelectedDomain}
+              onChange={(value) => setSelectedDomain(value)}
               className="w-[180px] h-12"
             />
           </div>
@@ -121,6 +122,7 @@ const CreateSingleEmail: React.FC = () => {
               Create
             </Button>
         </form>
+      </div>
       </div>
       <FooterAdminNav />
     </div>

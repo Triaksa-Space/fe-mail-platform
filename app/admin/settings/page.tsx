@@ -225,12 +225,13 @@ const UserAdminManagement: React.FC = () => {
 
     return (
         <div className="p-6 space-y-2">
+            <div className="flex-1 overflow-auto pb-20">
             <div className="flex justify-between items-center pl-4">
                 <Input placeholder="by username" className="max-w-xs" value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)} />
             </div>
 
-            <div className="overflow-x-auto p-4">
+            <div className="overflow-auto p-4 pb-20">
                 <Toaster />
                 {isLoading ? (
                     <div>Loading...</div>
@@ -324,24 +325,26 @@ const UserAdminManagement: React.FC = () => {
                 </Dialog>
             </div>
 
-            <div className="p-4">
+            <div className="fixed bottom-10 left-0 right-0 p-4">
+            {/* <div className="fixed bottom-0 left-0 right-0 border-t bg-background"> */}
                 {/* rest of the code here */}
                 <div className="flex justify-center gap-4 mt-4 mb-8">
                     <Button
                         
-                        className="w-[200px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                        className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
                         onClick={() => setIsDialogCreateOpen(true)}
                     >
                         Create Admin
                     </Button>
                     <Button
                         
-                        className="w-[200px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                        className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
                         onClick={handleLogout}
                     >
                         Logout
                     </Button>
                 </div>
+            </div>
             </div>
 
             <FooterAdminNav />

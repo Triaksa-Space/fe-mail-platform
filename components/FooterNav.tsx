@@ -10,7 +10,7 @@ const FooterNav = () => {
   const isInboxActive = pathname === '/inbox' || /^\/inbox\/\d+$/.test(pathname);
 
   return (
-    <div className="flex justify-around p-4 border-t bg-white">
+    <div className="flex justify-around p-4 border-t bg-white fixed bottom-0 left-0 right-0">
       <Button
         variant="ghost"
         className={`flex-1 flex flex-col items-center gap-1 hover:bg-[#F7D65D]/90 text-black ${isInboxActive ? 'bg-[#ffeeac]' : ''}`}

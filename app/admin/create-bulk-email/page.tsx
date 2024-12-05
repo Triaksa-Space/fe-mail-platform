@@ -52,7 +52,7 @@ const CreateBulkEmail: React.FC = () => {
     }
     try {
       await axios.post(
-        'http://localhost:8080/user/bulk',
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/bulk`,
         {
           base_name: baseName || "random",
           quantity: count,
@@ -91,6 +91,7 @@ const CreateBulkEmail: React.FC = () => {
   return (
     <>
       <div className="min-h-screen bg-white">
+      <div className="flex-1 overflow-auto pb-20">
         <div className="p-4 border-b flex items-center justify-between">
           <div className="flex items-center gap-2">
             {/* <h2 className="text-xl font-bold text-center mb-8">Create Bulk Email</h2> */}
@@ -169,7 +170,7 @@ const CreateBulkEmail: React.FC = () => {
               <span className="text-lg">@</span>
               <DomainSelector
                 value={selectedDomain}
-                onChange={setSelectedDomain}
+                onChange={(value) => setSelectedDomain(value)}
                 className="w-[180px]"
               />
             </div>
@@ -193,6 +194,7 @@ const CreateBulkEmail: React.FC = () => {
               Create
             </Button>
           </form>
+        </div>
         </div>
         <FooterAdminNav />
       </div>

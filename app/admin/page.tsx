@@ -147,6 +147,7 @@ const EmailManagement: React.FC = () => {
     
     return (
         <div className="p-6 space-y-2">
+            <div className="flex-1 overflow-auto pb-20">
             <div className="flex justify-between items-center pl-4">
                 <Input placeholder="by username" className="max-w-xs" value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)} />
@@ -233,6 +234,7 @@ const EmailManagement: React.FC = () => {
                 currentPage={currentPage}
                 onPageChange={setCurrentPage}
             />
+            </div>
 
             <FooterAdminNav />
         </div>
