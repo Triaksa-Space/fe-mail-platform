@@ -226,125 +226,125 @@ const UserAdminManagement: React.FC = () => {
     return (
         <div className="p-6 space-y-2">
             <div className="flex-1 overflow-auto pb-20">
-            <div className="flex justify-between items-center pl-4">
-                <Input placeholder="by username" className="max-w-xs" value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)} />
-            </div>
-
-            <div className="overflow-auto p-4 pb-20">
-                <Toaster />
-                {isLoading ? (
-                    <div>Loading...</div>
-                ) : error ? (
-                    <div className="text-red-500">{error}</div>
-                ) : (
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
-                                <TableHead className="text-center text-black font-bold">
-                                    <Button
-                                        variant="ghost"
-                                        onClick={() => toggleSort('lastActive')}
-                                        className="font-bold text-black hover:bg-gray-500"
-                                    >
-                                        Last Active
-                                        {sortField === 'lastActive' && (
-                                            sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                        )}
-                                    </Button>
-                                </TableHead>
-                                <TableHead className="text-center text-black font-bold">Created</TableHead>
-                                <TableHead className="text-center text-black font-bold">Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {sortedUsers.map((user) => (
-                                <TableRow key={user.email}>
-                                    <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 space-x-2 text-center">
-                                        <Button
-                                            variant="destructive"
-                                            className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
-                                            onClick={() => handleDeleteClick(user)}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                )}
-
-                <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Delete Confirmation</DialogTitle>
-                        </DialogHeader>
-                        <p>Are you sure you want to delete admin {selectedUser?.email}?</p>
-                        <DialogFooter>
-                            <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                            <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-
-                <Dialog open={isDialogCreateOpen} onOpenChange={setIsDialogCreateOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Create Admin</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                            <Input
-                                placeholder="Username"
-                                value={newAdminEmail}
-                                onChange={(e) => setNewAdminEmail(e.target.value)}
-                            />
-                            <Input
-                                placeholder="Password"
-                                type="password"
-                                value={newAdminPassword}
-                                onChange={(e) => setNewAdminPassword(e.target.value)}
-                            />
-                        </div>
-                        <DialogFooter>
-                            <Button variant="secondary" className='w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' onClick={() => setIsDialogCreateOpen(false)}>Back</Button>
-                            <Button 
-                            variant="default" 
-                            className={`w-1/2  font-bold border border-black/20 text-black ${!newAdminEmail || !newAdminPassword
-                                ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-yellow-300 hover:bg-yellow-300"
-                              }`}
-                            disabled={!newAdminEmail || !newAdminPassword}
-                            onClick={handleCreateAdmin}>Confirm</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
-
-            <div className="fixed bottom-10 left-0 right-0 p-4">
-            {/* <div className="fixed bottom-0 left-0 right-0 border-t bg-background"> */}
-                {/* rest of the code here */}
-                <div className="flex justify-center gap-4 mt-4 mb-8">
-                    <Button
-                        
-                        className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
-                        onClick={() => setIsDialogCreateOpen(true)}
-                    >
-                        Create Admin
-                    </Button>
-                    <Button
-                        
-                        className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </Button>
+                <div className="flex justify-between items-center pl-4">
+                    <Input placeholder="by username" className="max-w-xs" value={searchTerm}
+                        onChange={(e) => handleSearch(e.target.value)} />
                 </div>
-            </div>
+
+                <div className="overflow-auto p-4 pb-20">
+                    <Toaster />
+                    {isLoading ? (
+                        <div>Loading...</div>
+                    ) : error ? (
+                        <div className="text-red-500">{error}</div>
+                    ) : (
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-gray-400 hover:bg-gray-400">
+                                    <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
+                                    <TableHead className="text-center text-black font-bold">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => toggleSort('lastActive')}
+                                            className="font-bold text-black hover:bg-gray-500"
+                                        >
+                                            Last Active
+                                            {sortField === 'lastActive' && (
+                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
+                                            )}
+                                        </Button>
+                                    </TableHead>
+                                    <TableHead className="text-center text-black font-bold">Created</TableHead>
+                                    <TableHead className="text-center text-black font-bold">Action</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {sortedUsers.map((user) => (
+                                    <TableRow key={user.email}>
+                                        <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
+                                        <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
+                                        <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
+                                        <TableCell className="px-2 py-1 space-x-2 text-center">
+                                            <Button
+                                                variant="destructive"
+                                                className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                                onClick={() => handleDeleteClick(user)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+
+                    <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Delete Confirmation</DialogTitle>
+                            </DialogHeader>
+                            <p>Are you sure you want to delete admin {selectedUser?.email}?</p>
+                            <DialogFooter>
+                                <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
+                                <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    <Dialog open={isDialogCreateOpen} onOpenChange={setIsDialogCreateOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Create Admin</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <Input
+                                    placeholder="Username"
+                                    value={newAdminEmail}
+                                    onChange={(e) => setNewAdminEmail(e.target.value)}
+                                />
+                                <Input
+                                    placeholder="Password"
+                                    type="password"
+                                    value={newAdminPassword}
+                                    onChange={(e) => setNewAdminPassword(e.target.value)}
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button variant="secondary" className='w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' onClick={() => setIsDialogCreateOpen(false)}>Back</Button>
+                                <Button
+                                    variant="default"
+                                    className={`w-1/2  font-bold border border-black/20 text-black ${!newAdminEmail || !newAdminPassword
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-yellow-300 hover:bg-yellow-300"
+                                        }`}
+                                    disabled={!newAdminEmail || !newAdminPassword}
+                                    onClick={handleCreateAdmin}>Confirm</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+
+                <div className="fixed bottom-10 left-0 right-0 p-4">
+                    {/* <div className="fixed bottom-0 left-0 right-0 border-t bg-background"> */}
+                    {/* rest of the code here */}
+                    <div className="flex justify-center gap-4 mt-4 mb-8">
+                        <Button
+
+                            className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                            onClick={() => setIsDialogCreateOpen(true)}
+                        >
+                            Create Admin
+                        </Button>
+                        <Button
+
+                            className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </Button>
+                    </div>
+                </div>
             </div>
 
             <FooterAdminNav />

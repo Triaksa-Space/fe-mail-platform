@@ -199,6 +199,7 @@ const Send: React.FC = () => {
                     {file.name}
                   </span>
                   <Button
+                    type="button" 
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"

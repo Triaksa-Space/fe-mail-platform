@@ -161,7 +161,7 @@ const Settings: React.FC = () => {
         </div>
 
         <div className="p-4">
-          <div className="flex items-center justify-center max-w-lg mx-auto">
+          <div className="fixed bottom-24 left-0 right-0 w-3/4 flex items-center justify-center max-w-lg mx-auto">
             <Button
               className="w-3/4 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               onClick={logout}
