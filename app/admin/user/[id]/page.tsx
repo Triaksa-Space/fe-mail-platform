@@ -74,8 +74,8 @@ export default function UserDetail() {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
-        <div className=" space-y-4 flex-1 overflow-auto">
+      <div className="space-y-2">
+        <div className="flex-1 overflow-auto pb-20">
           <div className="space-y-0.5">
             <div className="flex justify-between items-center bg-white p-2 shadow-sm">
               <h1 className="text-xl font-semibold tracking-tight">
