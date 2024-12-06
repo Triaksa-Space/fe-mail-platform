@@ -7,12 +7,14 @@ const FooterAdminNav = () => {
     const router = useRouter();
     const pathname = usePathname();
 
+    const isAdminActive = /^\/admin(\/user(\/.*)?)?$/.test(pathname);
+
     return (
         <div className="fixed bottom-0 left-0 right-0 border-t bg-background">
             <div className="container mx-auto flex justify-around py-4">
                 <Button
                     variant="ghost"
-                    className={`flex flex-col items-center gap-1 hover:bg-[#ffeeac] ${pathname === '/admin' ? 'bg-[#ffeeac]' : ''}`}
+                    className={`flex flex-col items-center gap-1 hover:bg-[#ffeeac] ${isAdminActive ? 'bg-[#ffeeac]' : ''}`}
                     onClick={() => router.push('/admin')}
                 >
                     <LayoutGrid className="h-5 w-5" />
