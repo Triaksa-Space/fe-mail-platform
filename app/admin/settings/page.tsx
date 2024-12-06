@@ -35,7 +35,7 @@ interface User {
     CreatedAt: string
 }
 
-type SortField = 'lastActive' | 'created'
+type SortField = 'lastActive' | 'created' | 'lastCreated'
 type SortOrder = 'asc' | 'desc'
 
 const UserAdminManagement: React.FC = () => {
@@ -47,12 +47,9 @@ const UserAdminManagement: React.FC = () => {
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const pageSize = 10
-    // const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const { toast } = useToast();
-    // const [isDialogOpen, setIsDialogOpen] = useState(false);
-    // const [pageInput, setPageInput] = useState("");
 
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
@@ -146,15 +143,6 @@ const UserAdminManagement: React.FC = () => {
         }
     };
 
-    // const handlePageInputSubmit = () => {
-    //     const page = parseInt(pageInput);
-    //     if (page && page > 3 && page < totalPages) {
-    //         handlePageChange(page);
-    //     }
-    //     setIsDialogOpen(false);
-    //     setPageInput("");
-    // };
-
     const handleSearch = (value: string) => {
         setSearchTerm(value);
         setCurrentPage(1); // Reset to first page when searching
@@ -174,7 +162,6 @@ const UserAdminManagement: React.FC = () => {
                 created: new Date(user.CreatedAt).toLocaleDateString(),
             }))
             setUsers(data)
-            // setTotalPages(response.data.total_pages)
             setError(null)
         } catch (err) {
             console.error('Failed to fetch users:', err)
@@ -197,6 +184,10 @@ const UserAdminManagement: React.FC = () => {
             return sortOrder === 'asc'
                 ? a.lastActive.localeCompare(b.lastActive)
                 : b.lastActive.localeCompare(a.lastActive)
+        } else if (sortField === 'created') {
+            return sortOrder === 'asc'
+                ? a.created.localeCompare(b.created)
+                : b.created.localeCompare(a.created)
         } else {
             return sortOrder === 'asc'
                 ? a.created.localeCompare(b.created)
@@ -212,10 +203,6 @@ const UserAdminManagement: React.FC = () => {
             setSortOrder('desc')
         }
     }
-
-    // const handlePageChange = (page: number) => {
-    //     setCurrentPage(page)
-    // }
 
     const handleLogout = () => {
         // Clear token and redirect to login page
@@ -254,7 +241,18 @@ const UserAdminManagement: React.FC = () => {
                                             )}
                                         </Button>
                                     </TableHead>
-                                    <TableHead className="text-center text-black font-bold">Created</TableHead>
+                                    <TableHead className="text-center text-black font-bold">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => toggleSort('created')}
+                                            className="font-bold text-black hover:bg-gray-500"
+                                        >
+                                            Created
+                                            {sortField === 'created' && (
+                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
+                                            )}
+                                        </Button>
+                                    </TableHead>
                                     <TableHead className="text-center text-black font-bold">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -326,18 +324,14 @@ const UserAdminManagement: React.FC = () => {
                 </div>
 
                 <div className="fixed bottom-10 left-0 right-0 p-4">
-                    {/* <div className="fixed bottom-0 left-0 right-0 border-t bg-background"> */}
-                    {/* rest of the code here */}
                     <div className="flex justify-center gap-4 mt-4 mb-8">
                         <Button
-
                             className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
                             onClick={() => setIsDialogCreateOpen(true)}
                         >
                             Create Admin
                         </Button>
                         <Button
-
                             className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
                             onClick={handleLogout}
                         >
