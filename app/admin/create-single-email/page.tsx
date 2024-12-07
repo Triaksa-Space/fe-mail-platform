@@ -94,7 +94,10 @@ const CreateSingleEmail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Input
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setUsername(value.replace(/\s/g, '')); // Remove spaces
+                }}
                 placeholder="Email"
                 className="flex-1 h-12"
               />
@@ -120,7 +123,7 @@ const CreateSingleEmail: React.FC = () => {
               <Button
                 type="button"
                 onClick={generateRandomPassword}
-                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300  text-black"
+                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300  text-black "
               >
                 Random Password
               </Button>
@@ -131,7 +134,7 @@ const CreateSingleEmail: React.FC = () => {
                 type="submit"
                 className={`h-11 w-3/4 max-w-xs font-bold  text-black ${!username || !password
                   ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-yellow-300 hover:bg-yellow-300"
+                  : "bg-[#ffeeac] hover:bg-yellow-300"
                   }`}
                 disabled={!username || !password}
               >

@@ -299,13 +299,19 @@ const UserAdminManagement: React.FC = () => {
                                 <Input
                                     placeholder="Username"
                                     value={newAdminEmail}
-                                    onChange={(e) => setNewAdminEmail(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setNewAdminEmail(value.replace(/\s/g, '')); // Remove spaces
+                                      }}
                                 />
                                 <Input
                                     placeholder="Password"
                                     type="password"
                                     value={newAdminPassword}
-                                    onChange={(e) => setNewAdminPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setNewAdminPassword(value.replace(/\s/g, '')); // Remove spaces
+                                      }}
                                 />
                             </div>
                             <DialogFooter>

@@ -44,7 +44,7 @@ const Send: React.FC = () => {
       });
 
       const processedAttachments = await Promise.all(attachmentPromises);
-      
+
       const payload = {
         to,
         subject,
@@ -73,7 +73,7 @@ const Send: React.FC = () => {
         });
       } else {
         toast({
-          description: "Failed to send email. "+ error + " Please try again." ,
+          description: "Failed to send email. " + error + " Please try again.",
           variant: "destructive",
         });
       }
@@ -103,7 +103,7 @@ const Send: React.FC = () => {
       <div className="p-4 space-y-4">
         <div className="flex justify-between items-center p-2 bg-white">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 [&_svg]:size-5" onClick={() => router.push('/inbox')}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100" onClick={() => router.push('/inbox')}>
               <CircleXIcon className="h-16 w-16" />
             </Button>
           </div>
@@ -116,7 +116,7 @@ const Send: React.FC = () => {
                 multiple
                 onChange={handleFileChange}
               />
-              <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2">
+              <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-gray-100 p-2 rounded">
                 <Paperclip className="h-5 w-5" />
               </label>
             </div>
@@ -125,7 +125,7 @@ const Send: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 [&_svg]:size-5"
+              className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
               onClick={handleSendEmail}
               disabled={isLoading}
             >
@@ -160,7 +160,10 @@ const Send: React.FC = () => {
                   type="text"
                   placeholder=""
                   value={to}
-                  onChange={(e) => setTo(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setTo(value.replace(/\s/g, '')); // Remove spaces
+                  }}
                 />
               </div>
             </div>
@@ -194,7 +197,7 @@ const Send: React.FC = () => {
                     {file.name}
                   </span>
                   <Button
-                    type="button" 
+                    type="button"
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"

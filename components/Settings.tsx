@@ -126,7 +126,10 @@ const Settings: React.FC = () => {
               id="current-password"
               placeholder="Old Password"
               value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCurrentPassword(value.replace(/\s/g, '')); // Remove spaces
+              }}
               showPassword={showCurrentPassword}
               setShowPassword={setShowCurrentPassword}
               error={oldPasswordError}
@@ -135,7 +138,10 @@ const Settings: React.FC = () => {
               id="new-password"
               placeholder="New Password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewPassword(value.replace(/\s/g, '')); // Remove spaces
+              }}
               showPassword={showNewPassword}
               setShowPassword={setShowNewPassword}
             />
@@ -143,14 +149,22 @@ const Settings: React.FC = () => {
               id="confirm-password"
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setConfirmPassword(value.replace(/\s/g, '')); // Remove spaces
+              }}
               showPassword={showConfirmPassword}
               setShowPassword={setShowConfirmPassword}
               error={confirmPasswordError}
             />
             <div className="flex items-center justify-center">
               <Button
-                className="w-3/4 bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                // className="w-3/4 bg-[#F7D65D] font-bold hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className={`w-3/4 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+                  isLoading || !currentPassword || !newPassword || !confirmPassword
+                    ? 'bg-gray-300 text-black cursor-not-allowed'
+                    : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
+                }`}
                 onClick={handleSubmit}
                 disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
               >

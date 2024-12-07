@@ -124,7 +124,7 @@ const CreateBulkEmail: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
                   onClick={generateRandomNames}
                 >
@@ -136,7 +136,7 @@ const CreateBulkEmail: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     className="h-12 w-12 rounded-none "
                     onClick={() => updateCount(count - 1)}
                     disabled={count <= 2}
@@ -209,7 +209,7 @@ const CreateBulkEmail: React.FC = () => {
               <Button
                 type="button"
                 onClick={generateRandomPassword}
-                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 border text-black"
+                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
               >
                 Random Password
               </Button>
@@ -229,9 +229,9 @@ const CreateBulkEmail: React.FC = () => {
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className={`h-12 w-full max-w-xs font-bold border text-black ${!receiveEmail || !password
+                className={`h-12 w-full max-w-xs font-bold text-black ${!receiveEmail || !password
                   ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-yellow-300 hover:bg-yellow-300"
+                  : "bg-[#ffeeac] hover:bg-yellow-300"
                   }`}
                 disabled={!receiveEmail || !password}
               >
