@@ -80,16 +80,14 @@ const UserAdminManagement: React.FC = () => {
 
             // Show success toast
             toast({
-                title: "Success",
                 description: newAdminEmail + " admin deleted successfully!",
-                className: "bg-green-500 text-white border-0",
+                variant: "default",
             });
         } catch (error) {
             console.error('Failed to delete admin:', error);
             toast({
-                title: "Error",
                 description: "Failed to delete admin. Please try again.",
-                className: "bg-red-500 text-white border-0",
+                variant: "destructive",
             });
         }
     };
@@ -99,7 +97,7 @@ const UserAdminManagement: React.FC = () => {
             toast({
                 title: "Error",
                 description: "Please fill all required fields",
-                className: "bg-red-500 text-white border-0",
+                variant: "destructive",
             });
             return;
         }
@@ -121,9 +119,8 @@ const UserAdminManagement: React.FC = () => {
 
             // Show success toast
             toast({
-                title: "Success",
                 description: newAdminEmail + " admin has been successfully created!",
-                className: "bg-green-500 text-white border-0",
+                variant: "default",
             });
 
             // Close the dialog and reset the form
@@ -136,9 +133,8 @@ const UserAdminManagement: React.FC = () => {
         } catch (error) {
             console.error('Failed to create admin:', error);
             toast({
-                title: "Error",
                 description: "Failed to create admin. Please try again.",
-                className: "bg-red-500 text-white border-0",
+                variant: "destructive",
             });
         }
     };

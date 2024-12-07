@@ -111,7 +111,7 @@ const SignInPage: React.FC = () => {
       // Show error toast
       toast({
         description: "Incorrect email or password.",
-        className: "bg-red-500 text-white border-0",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);

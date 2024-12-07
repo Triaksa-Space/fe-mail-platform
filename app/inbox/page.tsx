@@ -29,7 +29,7 @@ const InboxPageContent: React.FC = () => {
     if (sentStatus === 'success') {
       toast({
         description: "Send email successful!",
-        className: "bg-green-500 text-white border-0",
+        variant: "default",
       });
       // Remove the query parameter from the URL
       router.replace('/inbox');

@@ -82,7 +82,7 @@ const EmailManagement: React.FC = () => {
             toast({
                 title: "Success",
                 description: "User deleted successfully!",
-                className: "bg-green-500 text-white border-0",
+                variant: "default",
             });
         } catch (error) {
             console.error('Failed to delete user:', error);

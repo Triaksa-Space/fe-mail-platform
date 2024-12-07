@@ -63,7 +63,7 @@ const CreateSingleEmail: React.FC = () => {
       // Show success toast
       toast({
         description: `email: ${username}@${selectedDomain} password: ${password} successfully created!`,
-        className: "bg-green-500 text-white border-0",
+        variant: "default",
       })
       setUsername("")
       setPassword("")
@@ -74,7 +74,7 @@ const CreateSingleEmail: React.FC = () => {
       }
       toast({
         description: errorMessage,
-        className: "bg-red-500 text-white border-0",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false)

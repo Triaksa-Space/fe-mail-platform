@@ -98,7 +98,7 @@ const Settings: React.FC = () => {
 
       toast({
         description: "Password successfully updated!",
-        className: "bg-green-500 text-white border-0",
+        variant: "default",
       });
     } catch (err) {
       if (axios.isAxiosError(err)) {

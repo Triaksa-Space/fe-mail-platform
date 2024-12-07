@@ -88,7 +88,7 @@ const CreateBulkEmail: React.FC = () => {
       )
       toast({
         description: `Successfully created ${count} accounts.`,
-        className: "bg-green-500 text-white border-0",
+        variant: "default",
       })
       // Reset the form
       setBaseName("")
