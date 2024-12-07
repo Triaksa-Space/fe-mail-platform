@@ -38,6 +38,13 @@ const CreateSingleEmail: React.FC = () => {
     e.preventDefault()
 
     try {
+      if (password.length < 6) {
+        toast({
+          description: "Password must be at least 6 characters long. Please try again.",
+          variant: "destructive",
+        })
+        return
+      }
       setIsLoading(true)
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
@@ -103,7 +110,10 @@ const CreateSingleEmail: React.FC = () => {
               <Input
                 type="text"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value.replace(/\s/g, '')); // Remove spaces
+                }}
                 placeholder="Password"
                 className="flex-1 h-12"
               />

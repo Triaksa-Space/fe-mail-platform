@@ -56,7 +56,14 @@ const CreateBulkEmail: React.FC = () => {
     }
     if (count < 2 || count > 100) {
       toast({
-        description: "Quantity must be between 2 and 100.",
+        description: "Quantity must be between 2 and 100. Please try again.",
+        variant: "destructive",
+      })
+      return
+    }
+    if (password.length < 6) {
+      toast({
+        description: "Password must be at least 6 characters long. Please try again.",
         variant: "destructive",
       })
       return
@@ -173,7 +180,10 @@ const CreateBulkEmail: React.FC = () => {
                 value={isRandom ? "random" : baseName}
                 placeholder="Email (numeric)"
                 className={isRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
-                onChange={(e) => setBaseName(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setBaseName(value.replace(/\s/g, '')); // Remove spaces
+                }}
                 disabled={isRandom}
               />
               <span className="text-lg">@</span>
@@ -188,7 +198,10 @@ const CreateBulkEmail: React.FC = () => {
               <Input
                 type="text"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value.replace(/\s/g, '')); // Remove spaces
+                }}
                 placeholder="Password"
                 className={isPasswordRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
                 disabled={isPasswordRandom}
@@ -205,7 +218,10 @@ const CreateBulkEmail: React.FC = () => {
             <Input
               type="email"
               value={receiveEmail}
-              onChange={(e) => setReceiveEmail(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setReceiveEmail(value.replace(/\s/g, '')); // Remove spaces
+              }}
               placeholder="Email for receiving list"
               className="h-12"
             />
