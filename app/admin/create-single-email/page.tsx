@@ -83,7 +83,7 @@ const CreateSingleEmail: React.FC = () => {
             <Input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="yono"
+              placeholder="Email"
               className="flex-1 h-12"
             />
             <span className="text-lg">@</span>
@@ -99,7 +99,7 @@ const CreateSingleEmail: React.FC = () => {
               type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="!@#DF3"
+              placeholder="Password"
               className="h-12 flex-1 bg-gray-100"
             />
             <Button
