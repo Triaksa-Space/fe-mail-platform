@@ -39,7 +39,7 @@ type SortField = 'lastActive' | 'created' | 'lastCreated'
 type SortOrder = 'asc' | 'desc'
 
 const UserAdminManagement: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState("");
+    // const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<AdminUser[]>([])
     const [sortField, setSortField] = useState<SortField>('lastActive')
     const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
@@ -58,9 +58,86 @@ const UserAdminManagement: React.FC = () => {
     const [newAdminEmail, setNewAdminEmail] = useState("");
     const [newAdminPassword, setNewAdminPassword] = useState("");
 
+    const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
+    const [passwordForAdmin, setPasswordForAdmin] = useState("");
+    const [confirmPasswordForAdmin, setConfirmPasswordForAdmin] = useState("");
+    const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
+
     const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
         setIsDialogDeleteOpen(true);
+    };
+
+    // Function to handle "Change Password" button click
+    const handleChangePasswordClick = (admin: AdminUser) => {
+        setSelectedAdmin(admin);
+        setIsChangePasswordDialogOpen(true);
+    };
+
+    // Function to handle password change submission
+    const handleChangePasswordSubmit = async () => {
+        if (!selectedAdmin) return;
+
+        if (passwordForAdmin !== confirmPasswordForAdmin) {
+            toast({
+                description: "Passwords do not match.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (passwordForAdmin.length < 6) {
+            toast({
+                description: "Password must be at least 6 characters long.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Regular expression to ensure password complexity
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+
+        if (!passwordRegex.test(passwordForAdmin)) {
+            toast({
+                description: "Password must include a number, lowercase, uppercase, and symbol.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        try {
+            await axios.put(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
+                { new_password: passwordForAdmin,
+                    user_id: selectedAdmin.id
+                 },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            toast({
+                description: "Password changed successfully.",
+                variant: "default",
+            });
+
+            // Reset state and close modal
+            setIsChangePasswordDialogOpen(false);
+            setPasswordForAdmin("");
+            setConfirmPasswordForAdmin("");
+            setSelectedAdmin(null);
+
+            // Optionally refresh the user list
+            fetchUsers();
+        } catch (error) {
+            console.error('Failed to change password:', error);
+            toast({
+                description: "Failed to change password. Please try again.",
+                variant: "destructive",
+            });
+        }
     };
 
     const handleDeleteConfirm = async () => {
@@ -139,14 +216,14 @@ const UserAdminManagement: React.FC = () => {
         }
     };
 
-    const handleSearch = (value: string) => {
-        setSearchTerm(value);
-        setCurrentPage(1); // Reset to first page when searching
-    };
+    // const handleSearch = (value: string) => {
+    //     setSearchTerm(value);
+    //     setCurrentPage(1); // Reset to first page when searching
+    // };
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin?email=` + searchTerm, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -173,7 +250,7 @@ const UserAdminManagement: React.FC = () => {
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [token, currentPage, pageSize, searchTerm])
+    }, [token, currentPage, pageSize])
 
     const sortedUsers = [...users].sort((a, b) => {
         if (sortField === 'lastActive') {
@@ -209,10 +286,10 @@ const UserAdminManagement: React.FC = () => {
     return (
         <div className="p-6 space-y-2">
             <div className="flex-1 overflow-auto pb-20">
-                <div className="flex justify-between items-center pl-4">
+                {/* <div className="flex justify-between items-center pl-4">
                     <Input placeholder="by username" className="max-w-xs" value={searchTerm}
                         onChange={(e) => handleSearch(e.target.value)} />
-                </div>
+                </div> */}
 
                 <div className="overflow-auto p-4 pb-20">
                     <Toaster />
@@ -260,6 +337,13 @@ const UserAdminManagement: React.FC = () => {
                                         <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
                                         <TableCell className="px-2 py-1 space-x-2 text-center">
                                             <Button
+                                                variant="secondary"
+                                                className="bg-yellow-200 hover:bg-yellow-300"
+                                                onClick={() => handleChangePasswordClick(user)}
+                                            >
+                                                Change Password
+                                            </Button>
+                                            <Button
                                                 variant="destructive"
                                                 className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                                 onClick={() => handleDeleteClick(user)}
@@ -272,6 +356,41 @@ const UserAdminManagement: React.FC = () => {
                             </TableBody>
                         </Table>
                     )}
+
+                    <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <Input
+                                    type="password"
+                                    placeholder="New Password"
+                                    value={passwordForAdmin}
+                                    onChange={(e) => setPasswordForAdmin(e.target.value.replace(/\s/g, ''))}
+                                />
+                                <Input
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    value={confirmPasswordForAdmin}
+                                    onChange={(e) => setConfirmPasswordForAdmin(e.target.value.replace(/\s/g, ''))}
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button variant="secondary" onClick={() => {
+                                    setIsChangePasswordDialogOpen(false);
+                                    setPasswordForAdmin("");
+                                    setConfirmPasswordForAdmin("");
+                                    setSelectedAdmin(null);
+                                }}>
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleChangePasswordSubmit}>
+                                    Submit
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
 
                     <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                         <DialogContent>
@@ -298,7 +417,7 @@ const UserAdminManagement: React.FC = () => {
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         setNewAdminEmail(value.replace(/\s/g, '')); // Remove spaces
-                                      }}
+                                    }}
                                 />
                                 <Input
                                     placeholder="Password"
@@ -307,7 +426,7 @@ const UserAdminManagement: React.FC = () => {
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         setNewAdminPassword(value.replace(/\s/g, '')); // Remove spaces
-                                      }}
+                                    }}
                                 />
                             </div>
                             <DialogFooter>
@@ -333,6 +452,12 @@ const UserAdminManagement: React.FC = () => {
                         >
                             Create Admin
                         </Button>
+                        {/* <Button
+                            className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                            onClick={() => setIsDialogCreateOpen(true)}
+                        >
+                            Change Password
+                        </Button> */}
                         <Button
                             className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
                             onClick={handleLogout}
