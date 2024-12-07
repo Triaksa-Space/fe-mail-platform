@@ -45,8 +45,10 @@ export default function LandingPage() {
           // Redirect based on role
           if (userData.RoleID === 0) {
             router.push("/admin");
-          } else {
+          } else if (userData.RoleID === 1) {
             router.push("/inbox");
+          } else if (userData.RoleID === 2) {
+            router.push("/admin");
           }
         } catch (error) {
           console.error("Token validation failed:", error);
@@ -114,11 +116,30 @@ export default function LandingPage() {
         setLockoutTime(Date.now() + 10 * 60 * 1000);
       }
 
-      // Show error toast
-      toast({
-        description: "Incorrect email or password.",
-        variant: "destructive",
-      });
+      // // Show error toast
+      // toast({
+      //   description: "Incorrect email or password.",
+      //   variant: "destructive",
+      // });
+      if (axios.isAxiosError(error) && error.response?.status === 429) {
+        // toast({
+        //   description: "This IP has to many failed login attempts. Try again in 9 minutes 59 second.",
+        //   variant: "destructive",
+        // });
+        let errorMessage = "Incorrect email or password. Please try again."
+        if (axios.isAxiosError(error) && error.response?.data?.error) {
+          errorMessage = error.response.data.error
+        }
+        toast({
+          description: errorMessage,
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          description: "Incorrect email or password.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -196,7 +217,7 @@ export default function LandingPage() {
             <Button
               className={`w-full h-12 text-base font-bold ${lockoutTime || !loginEmail || !password
                   ? "bg-gray-400 cursor-not-allowed text-black"
-                  : "bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black"
+                  : "bg-[#ffeeac] hover:bg-yellow-300 text-black"
                 }`}
               type="submit"
               disabled={isLoading || !!lockoutTime || !loginEmail || !password}

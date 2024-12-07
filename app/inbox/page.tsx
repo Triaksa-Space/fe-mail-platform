@@ -94,9 +94,15 @@ const InboxPageContent: React.FC = () => {
     fetchCountSentEmails();
     fetchEmails();
 
+    // const interval = setInterval(() => {
+    //   console.log("Fetching emails...");
+    //   fetchEmails(); // Fetch emails every 5 seconds
+    // }, 20000);
+
     return () => {
       isSubscribed = false;
       controller.abort();
+      // clearInterval(interval);
     };
   }, [sentStatus, token, router, setEmail]);
 
@@ -104,7 +110,7 @@ const InboxPageContent: React.FC = () => {
     <div className="space-y-2">
       <div className="flex-1 overflow-auto pb-20">
         <div className="space-y-0.5">
-          <div className="flex justify-between p-2 bg-[#ffeeac]">
+          <div className="flex justify-between items-center p-2 bg-[#ffeeac]">
             <h1 className="text-xl font-semibold tracking-tight">
               {email}
             </h1>
@@ -117,11 +123,11 @@ const InboxPageContent: React.FC = () => {
           ) : error ? (
             <div className="p-4 text-center">{error}</div>
           ) : emails.length > 0 ? (
-            <div className="divide-y divide-dashed">
+            <div className="divide-y">
               {emails.map((email) => (
                 <div
                   key={email.ID}
-                  className="p-4 hover:bg-gray-100 cursor-pointer"
+                  className={`p-4 hover:bg-gray-100 cursor-pointer ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
                   onClick={() => router.push(`/inbox/${email.ID}`)}
                 >
                   <div className="space-y-1">
@@ -138,7 +144,12 @@ const InboxPageContent: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="p-4 text-center">No emails found.</div>
+            <div
+              className="p-4 text-center cursor-pointer text-blue-500 underline"
+              onClick={() => window.location.reload()}
+            >
+              No emails found, Please Refresh your browser.
+            </div>
           )}
         </div>
       </div>

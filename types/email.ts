@@ -5,6 +5,7 @@ export interface Attachment {
 
 export interface Email {
   ID: number;
+  IsRead: boolean;
   UserID: number,
   SenderEmail: string;
   SenderName: string;

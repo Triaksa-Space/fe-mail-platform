@@ -118,7 +118,12 @@ export default function UserDetail() {
                 ))}
               </div>
             ) : (
-              <div className="p-4 text-center">No emails found.</div>
+              <div
+                className="p-4 text-center cursor-pointer text-blue-500 underline"
+                onClick={() => window.location.reload()}
+              >
+                No emails found, Please Refresh your browser.
+              </div>
             )}
           </div>
         </div>
