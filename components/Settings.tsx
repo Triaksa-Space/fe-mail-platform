@@ -101,8 +101,25 @@ const Settings: React.FC = () => {
         className: "bg-green-500 text-white border-0",
       });
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
-        setOldPasswordError("The password you entered is incorrect.");
+      if (axios.isAxiosError(err)) {
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          setOldPasswordError("The password you entered is incorrect.");
+        } else if (err.response?.data?.error) {
+          toast({
+            description: `Failed to update password. ${err.response.data.error}`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            description: `Failed to update password. ${err.message}`,
+            variant: "destructive",
+          });
+        }
+      } else {
+        toast({
+          description: "Failed to update password. Please try again.",
+          variant: "destructive",
+        });
       }
     } finally {
       setIsLoading(false);
@@ -160,11 +177,10 @@ const Settings: React.FC = () => {
             <div className="flex items-center justify-center">
               <Button
                 // className="w-3/4 bg-[#F7D65D] font-bold hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                className={`w-3/4 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-                  isLoading || !currentPassword || !newPassword || !confirmPassword
-                    ? 'bg-gray-300 text-black cursor-not-allowed'
-                    : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
-                }`}
+                className={`w-3/4 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${isLoading || !currentPassword || !newPassword || !confirmPassword
+                  ? 'bg-gray-300 text-black cursor-not-allowed'
+                  : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
+                  }`}
                 onClick={handleSubmit}
                 disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
               >
