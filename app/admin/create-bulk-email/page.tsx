@@ -11,6 +11,7 @@ import { useAuthStore } from "@/stores/useAuthStore"
 import axios from 'axios'
 import withAuth from "@/components/hoc/withAuth";
 import DomainSelector from "@/components/DomainSelector"
+import LoadingProcessingPage from "@/components/ProcessLoading"
 
 const CreateBulkEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
@@ -21,9 +22,11 @@ const CreateBulkEmail: React.FC = () => {
   const token = useAuthStore((state) => state.token)
   const [receiveEmail, setReceiveEmail] = useState("")
   const [isRandom, setIsRandom] = useState(false)
+  const [isPasswordRandom, setIsPasswordRandom] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const updateCount = (newCount: number) => {
-    if (newCount >= 2 && newCount <= 100) {
+    if (newCount >= 1 && newCount <= 100) {
       setCount(newCount)
     }
   }
@@ -39,6 +42,7 @@ const CreateBulkEmail: React.FC = () => {
       randomPassword += chars.charAt(Math.floor(Math.random() * chars.length))
     }
     setPassword(randomPassword)
+    setIsPasswordRandom(true)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,6 +54,14 @@ const CreateBulkEmail: React.FC = () => {
       })
       return
     }
+    if (count < 2 || count > 100) {
+      toast({
+        description: "Quantity must be between 2 and 100.",
+        variant: "destructive",
+      })
+      return
+    }
+    setIsLoading(true)
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/bulk`,
@@ -76,6 +88,7 @@ const CreateBulkEmail: React.FC = () => {
       setPassword("")
       setReceiveEmail("")
       setIsRandom(false)
+      setIsPasswordRandom(false)
     } catch (error) {
       let errorMessage = "Failed to create users. Please try again."
       if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -85,85 +98,81 @@ const CreateBulkEmail: React.FC = () => {
         description: errorMessage,
         variant: "destructive",
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       <div className="flex-1 overflow-auto pb-20">
         <div className="p-4 border-b flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {/* <h2 className="text-xl font-bold text-center mb-8">Create Bulk Email</h2> */}
-          </div>
-        </div>
-        <div className="max-w-xl mx-auto p-6 space-y-6">
           <Toaster />
+        </div>
+
+        <div className="max-w-md mx-auto p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex items-center gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                className="bg-[#ffeeac] font-bold hover:bg-yellow-300 border border-black/20 h-12 px-4 flex-1"
-                onClick={generateRandomNames}
-              >
-                Random Name
-              </Button>
+
+            <div className="flex items-start gap-4">
               <div className="flex items-center gap-2">
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-12 w-12 rounded-none border-black/20"
-                  onClick={() => updateCount(count - 1)}
-                  disabled={count <= 2}
+                  className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
+                  onClick={generateRandomNames}
                 >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Input
-                  type="number"
-                  value={count}
-                  onChange={(e) => updateCount(parseInt(e.target.value))}
-                  className="w-32 h-12 text-center border-black/20"
-                  min={2}
-                  max={100}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-12 w-12 rounded-none border-black/20"
-                  onClick={() => updateCount(count + 1)}
-                  disabled={count >= 100}
-                >
-                  <Plus className="h-4 w-4" />
+                  Random Name
                 </Button>
               </div>
-            </div>
-            <p className="text-center text-sm text-red-500">
-              Minimum 2, max 100
-            </p>
 
-            <div className="flex items-center gap-4">
-              <Input
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                className="flex-1 h-12 border-black/20"
-              />
-              <Button
-                type="button"
-                onClick={generateRandomPassword}
-                className="h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 border border-black/20 text-black"
-              >
-                Random Password
-              </Button>
+              <div className="flex flex-col items-center gap-2 mt-auto mb-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-12 w-12 rounded-none "
+                    onClick={() => updateCount(count - 1)}
+                    disabled={count <= 2}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Input
+                    type="text"
+                    value={count}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*$/.test(value)) { // Allow only digits
+                        const numericValue = parseInt(value, 10);
+                        if (numericValue < 101) {
+                          setCount(numericValue);
+                        } else if (value === "") {
+                          setCount(0); // Allow clearing the input
+                        }
+                      }
+                    }}
+                    className="w-full h-12 text-center"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-12 w-12 rounded-none"
+                    onClick={() => updateCount(count + 1)}
+                    disabled={count >= 100}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-center text-xs text-red-500">
+                  Minimum 2, max 100
+                </p>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Input
                 value={isRandom ? "random" : baseName}
-                placeholder="Base Name"
-                className="flex-1 h-12 border-black/20"
+                placeholder="Email (numeric)"
+                className={isRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
                 onChange={(e) => setBaseName(e.target.value)}
                 disabled={isRandom}
               />
@@ -175,30 +184,52 @@ const CreateBulkEmail: React.FC = () => {
               />
             </div>
 
+            <div className="flex items-center gap-4">
+              <Input
+                type="text"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className={isPasswordRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
+                disabled={isPasswordRandom}
+              />
+              <Button
+                type="button"
+                onClick={generateRandomPassword}
+                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 border text-black"
+              >
+                Random Password
+              </Button>
+            </div>
+
             <Input
               type="email"
               value={receiveEmail}
               onChange={(e) => setReceiveEmail(e.target.value)}
               placeholder="Email for receiving list"
-              className="h-12 border-black/20"
+              className="h-12"
             />
 
-            <Button
-              type="submit"
-              className={`h-12 w-full font-bold border border-black/20 text-black ${!receiveEmail || !password
+            <div className="flex justify-center">
+              <Button
+                type="submit"
+                className={`h-12 w-full max-w-xs font-bold border text-black ${!receiveEmail || !password
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-yellow-300 hover:bg-yellow-300"
-                }`}
-              disabled={!receiveEmail || !password}
-            >
-              Create
-            </Button>
+                  }`}
+                disabled={!receiveEmail || !password}
+              >
+                Create
+              </Button>
+            </div>
           </form>
         </div>
-        </div>
-        <FooterAdminNav />
       </div>
-    </>
+      {isLoading && (
+        <LoadingProcessingPage />
+      )}
+      <FooterAdminNav />
+    </div>
   )
 }
 

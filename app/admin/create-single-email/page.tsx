@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import DomainSelector from "@/components/DomainSelector"
 import withAuth from "@/components/hoc/withAuth";
+import LoadingProcessingPage from "@/components/ProcessLoading"
 
 // interface Domain {
 //   ID: number;
@@ -22,6 +23,7 @@ const CreateSingleEmail: React.FC = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
 
   const generateRandomPassword = () => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
@@ -36,6 +38,7 @@ const CreateSingleEmail: React.FC = () => {
     e.preventDefault()
 
     try {
+      setIsLoading(true)
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
         {
@@ -66,64 +69,71 @@ const CreateSingleEmail: React.FC = () => {
         description: errorMessage,
         className: "bg-red-500 text-white border-0",
       });
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-white">
       <div className="flex-1 overflow-auto pb-20">
-      <div className="p-4 border-b flex items-center justify-between">
-        <Toaster />
-      </div>
+        <div className="p-4 border-b flex items-center justify-between">
+          <Toaster />
+        </div>
 
-      <div className="max-w-md mx-auto p-6">
-        {/* <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2> */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex items-center gap-2">
-            <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Email"
-              className="flex-1 h-12"
-            />
-            <span className="text-lg">@</span>
-            <DomainSelector
-              value={selectedDomain}
-              onChange={(value) => setSelectedDomain(value)}
-              className="w-[180px] h-12"
-            />
-          </div>
+        <div className="max-w-md mx-auto p-6">
+          {/* <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2> */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex items-center gap-2">
+              <Input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Email"
+                className="flex-1 h-12"
+              />
+              <span className="text-lg">@</span>
+              <DomainSelector
+                value={selectedDomain}
+                onChange={(value) => setSelectedDomain(value)}
+                className="w-[180px] h-12"
+              />
+            </div>
 
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="h-12 flex-1 bg-gray-100"
-            />
-            <Button
+            <div className="flex items-center gap-2">
+              <Input
+                type="text"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="flex-1 h-12"
+              />
+              <Button
                 type="button"
                 onClick={generateRandomPassword}
-                className="h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 border border-black/20 text-black"
+                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300  text-black"
               >
                 Random Password
               </Button>
-          </div>
+            </div>
 
-          <Button
-              type="submit"
-              className={`h-12 w-full font-bold border border-black/20 text-black ${!username || !password
+            <div className="flex justify-center">
+              <Button
+                type="submit"
+                className={`h-11 w-3/4 max-w-xs font-bold  text-black ${!username || !password
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-yellow-300 hover:bg-yellow-300"
-                }`}
-              disabled={!username || !password}
-            >
-              Create
-            </Button>
-        </form>
+                  }`}
+                disabled={!username || !password}
+              >
+                Create
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
-      </div>
+      {isLoading && (
+        <LoadingProcessingPage/>
+      )}
       <FooterAdminNav />
     </div>
   )
