@@ -27,6 +27,7 @@ interface EmailUser {
     email: string
     lastActive: string
     created: string
+    createdByName: string
 }
 
 interface User {
@@ -34,6 +35,7 @@ interface User {
     Email: string
     LastLogin: string
     CreatedAt: string
+    CreatedByName: string
 }
 
 type SortField = 'lastActive' | 'created'
@@ -52,7 +54,7 @@ const EmailManagement: React.FC = () => {
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const { toast } = useToast();
-    
+
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<EmailUser | null>(null);
 
@@ -105,6 +107,7 @@ const EmailManagement: React.FC = () => {
                     email: user.Email,
                     lastActive: new Date(user.LastLogin).toLocaleString(),
                     created: new Date(user.CreatedAt).toLocaleDateString(),
+                    createdByName: user.CreatedByName,
                 }))
                 setUsers(data)
                 setTotalPages(response.data.total_pages)
@@ -144,96 +147,107 @@ const EmailManagement: React.FC = () => {
             setSortOrder('desc')
         }
     }
-    
+
     return (
         <div className="p-6 space-y-2">
             <div className="flex-1 overflow-auto pb-20">
-            <div className="flex justify-between items-center pl-4">
-                <Input placeholder="by username" className="max-w-xs" value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)} />
-                <Toaster />
-            </div>
+                <div className="flex justify-between items-center pl-4">
+                    <Input
+                        placeholder="by username"
+                        className="max-w-xs"
+                        value={searchTerm}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (/^[a-zA-Z0-9.,_]*$/.test(value)) {
+                                handleSearch(value);
+                            }
+                        }}
+                    />
+                    <Toaster />
+                </div>
 
-            <div className="overflow-x-auto p-4">
-                {isLoading ? (
-                    <div>Loading...</div>
-                ) : error ? (
-                    <div className="text-red-500">{error}</div>
-                ) : (
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                <TableHead className="text-center text-black font-bold">Name</TableHead>
-                                <TableHead className="text-center text-black font-bold">
-                                    <Button
-                                        variant="ghost"
-                                        onClick={() => toggleSort('lastActive')}
-                                        className="font-bold text-black hover:bg-gray-500"
-                                    >
-                                        Last Active
-                                        {sortField === 'lastActive' && (
-                                            sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                        )}
-                                    </Button>
-                                </TableHead>
-                                <TableHead className="text-center text-black font-bold">
-                                    <Button
-                                        variant="ghost"
-                                        onClick={() => toggleSort('created')}
-                                        className="font-bold text-black hover:bg-gray-500"
-                                    >
-                                        Created
-                                        {sortField === 'created' && (
-                                            sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                        )}
-                                    </Button>
-                                </TableHead>
-                                <TableHead className="text-center text-black font-bold">Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {sortedUsers.map((user) => (
-                                <TableRow key={user.email}>
-                                    <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 space-x-2 text-center">
-                                        <Button variant="secondary" className="bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
-                                            View
-                                        </Button>
+                <div className="overflow-x-auto p-4">
+                    {isLoading ? (
+                        <div>Loading...</div>
+                    ) : error ? (
+                        <div className="text-red-500">{error}</div>
+                    ) : (
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-gray-400 hover:bg-gray-400">
+                                    <TableHead className="text-center text-black font-bold">Name</TableHead>
+                                    <TableHead className="text-center text-black font-bold">
                                         <Button
-                                            variant="destructive"
-                                            className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
-                                            onClick={() => handleDeleteClick(user)}
+                                            variant="ghost"
+                                            onClick={() => toggleSort('lastActive')}
+                                            className="font-bold text-black hover:bg-gray-500"
                                         >
-                                            Delete
+                                            Last Active
+                                            {sortField === 'lastActive' && (
+                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
+                                            )}
                                         </Button>
-                                    </TableCell>
+                                    </TableHead>
+                                    <TableHead className="text-center text-black font-bold">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={() => toggleSort('created')}
+                                            className="font-bold text-black hover:bg-gray-500"
+                                        >
+                                            Created
+                                            {sortField === 'created' && (
+                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
+                                            )}
+                                        </Button>
+                                    </TableHead>
+                                    <TableHead className="text-center text-black font-bold">Created By Admin</TableHead>
+                                    <TableHead className="text-center text-black font-bold">Action</TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                )}
+                            </TableHeader>
+                            <TableBody>
+                                {sortedUsers.map((user) => (
+                                    <TableRow key={user.email}>
+                                        <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
+                                        <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
+                                        <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
+                                        <TableCell className="px-2 py-1 text-center">{user.createdByName}</TableCell>
+                                        <TableCell className="px-2 py-1 space-x-2 text-center">
+                                            <Button variant="secondary" className="bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
+                                                View
+                                            </Button>
+                                            <Button
+                                                variant="destructive"
+                                                className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                                onClick={() => handleDeleteClick(user)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
 
-                <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Delete Confirmation</DialogTitle>
-                        </DialogHeader>
-                        <p>Are you sure you want to delete user {selectedUser?.email}?</p>
-                        <DialogFooter>
-                            <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                            <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
+                    <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Delete Confirmation</DialogTitle>
+                            </DialogHeader>
+                            <p>Are you sure you want to delete user {selectedUser?.email}?</p>
+                            <DialogFooter>
+                                <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
+                                <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
 
-            <PaginationComponent
-                totalPages={totalPages}
-                currentPage={currentPage}
-                onPageChange={setCurrentPage}
-            />
+                <PaginationComponent
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                />
             </div>
 
             <FooterAdminNav />
