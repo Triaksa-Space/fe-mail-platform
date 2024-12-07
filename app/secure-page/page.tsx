@@ -10,7 +10,7 @@ const SecurePage: React.FC = () => {
 
   useEffect(() => {
     if (!token) {
-      router.push("/signin");
+      router.push("/");
     }
   }, [token, router]);
 

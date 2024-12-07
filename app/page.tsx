@@ -1,54 +1,244 @@
-import Link from "next/link"
-import { Mail } from 'lucide-react'
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Mail, Lock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import PasswordInput from "@/components/PasswordInput";
 
 export default function LandingPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number>(0);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { token, setToken, setEmail, setRoleId } = useAuthStore();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const checkToken = async () => {
+      if (token) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const userData = response.data;
+          setEmail(userData.Email);
+          setRoleId(userData.RoleID);
+
+          // Redirect based on role
+          if (userData.RoleID === 0) {
+            router.push("/admin");
+          } else {
+            router.push("/inbox");
+          }
+        } catch (error) {
+          console.error("Token validation failed:", error);
+        }
+      }
+    };
+
+    checkToken();
+  }, [token, setEmail, setRoleId, router]);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (lockoutTime) return;
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email")?.toString();
+    // const password = formData.get("password")?.toString();
+    console.log("password", password)
+
+    if (!email || !password) return;
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { token } = response.data;
+      setToken(token);
+
+      // // Get user details
+      // const userResponse = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
+
+      // const userData = userResponse.data;
+      // setEmail(userData.Email);
+      // setRoleId(userData.RoleID);
+
+      // // Redirect based on role
+      // if (userData.RoleID === 0) {
+      //   router.push("/admin");
+      // } else {
+      //   router.push("/inbox");
+      // }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setFailedAttempts((prev) => prev + 1);
+
+      if (failedAttempts + 1 >= 4) {
+        setLockoutTime(Date.now() + 10 * 60 * 1000);
+      }
+
+      // Show error toast
+      toast({
+        description: "Incorrect email or password.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!lockoutTime) return;
+
+    const interval = setInterval(() => {
+      const remaining = lockoutTime - Date.now();
+
+      if (remaining <= 0) {
+        clearInterval(interval);
+        setLockoutTime(null);
+        setFailedAttempts(0);
+        setCountdown(0);
+      } else {
+        setCountdown(Math.ceil(remaining / 1000));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lockoutTime]);
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
-        <Link className="flex items-center justify-center" href="#">
-          <Mail className="h-6 w-6" />
-          {/* <span className="ml-2 text-2xl font-bold">Mailria</span> */}
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Features
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            About
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/signin">
-            Sign In
-          </Link>
-        </nav>
-      </header>
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className=" px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className="space-y-2">
-                <h1 className="text-6xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-                Mailria
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Where Simplicity Meets Speed.
-                </p>
-              </div>
+    <>
+    <div className="flex flex-col min-h-screen justify-between bg-white p-4 pt-8">
+      <div className="w-full max-w-sm mx-auto space-y-8">
+        <div className="space-y-2 text-center">
+          <h1 className="text-xl font-semibold tracking-tight">
+            Where Simplicity Meets Speed.
+          </h1>
+        </div>
+        <form onSubmit={onSubmit} className="space-y-6 p-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-base">
+              Email
+            </Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <Input
+                id="email"
+                name="email"
+                placeholder="example@mailria.com"
+                required
+                type="text"
+                className="pl-10 h-12 text-base border-gray-200"
+              />
             </div>
           </div>
-        </section>
-      </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 Mailria. All rights reserved.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
-          </Link>
-        </nav>
-      </footer>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-base">
+              Password
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              {/* <Input
+                id="password"
+                name="password"
+                placeholder="Input password"
+                required
+                type="password"
+                className="pl-10 h-12 text-base border-gray-200"
+              /> */}
+              <PasswordInput
+              id="password"
+              placeholder="Input Password"
+              value={password}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value.replace(/\s/g, '')); // Remove spaces
+              }}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+            />
+            </div>
+          </div>
+          <Button
+            className={`w-full h-12 text-base font-medium ${
+              lockoutTime
+                ? "bg-gray-400"
+                : "bg-[#F7D65D] hover:bg-[#F7D65D]/90 text-black"
+            }`}
+            type="submit"
+            disabled={isLoading || !!lockoutTime}
+          >
+            {lockoutTime
+              ? `Login (${countdown})`
+              : isLoading
+              ? "Signing in..."
+              : "Login"}
+          </Button>
+          {failedAttempts === 3 && (
+            <p className="text-xs text-red-600 text-center">
+              Careful! One more failed attempt will disable login for 10 minutes.
+            </p>
+          )}
+          {lockoutTime ? (
+            <p className="text-xs text-red-600 text-left">
+              Too many failed attempts. Try again in {Math.ceil(countdown / 60)} minutes.
+            </p>
+          ) : null}
+        </form>
+      </div>
+      <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-4 text-left">
+        <h2 className="text-l font-semibold">
+          Looking for reliable email services?
+        </h2>
+        <p className="text-sm text-gray-600">
+          Mailria has you covered! Drop us a message at{" "}
+          <a
+            href="mailto:support@mailria.com"
+            className="text-blue-600 hover:underline"
+          >
+            support@mailria.com
+          </a>{" "}
+          for more details.
+        </p>
+      </div>
     </div>
-  )
+    <Toaster />
+    </>
+  );
 }
 

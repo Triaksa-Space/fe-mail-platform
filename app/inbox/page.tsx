@@ -60,7 +60,7 @@ const InboxPageContent: React.FC = () => {
 
     const fetchEmails = async () => {
       if (!token) {
-        router.replace("/signin");
+        router.replace("/");
         return;
       }
 

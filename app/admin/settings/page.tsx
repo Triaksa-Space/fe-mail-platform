@@ -203,7 +203,7 @@ const UserAdminManagement: React.FC = () => {
     const handleLogout = () => {
         // Clear token and redirect to login page
         useAuthStore.getState().setToken(null);
-        router.push('/signin');
+        router.push('/');
     }
 
     return (

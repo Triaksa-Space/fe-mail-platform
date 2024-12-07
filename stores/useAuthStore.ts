@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>()(
         if (typeof window !== 'undefined') {
           window.sessionStorage.removeItem('auth-storage')
           window.localStorage.removeItem('auth-storage')
-          window.location.href = '/signin'
+          window.location.href = '/'
         }
       },
       getStoredToken: () => {

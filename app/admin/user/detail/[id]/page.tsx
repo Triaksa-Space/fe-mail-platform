@@ -64,7 +64,7 @@ const EmailDetailPage: React.FC = () => {
   useEffect(() => {
     const fetchEmailDetail = async () => {
       if (!token) {
-        router.replace("/signin");
+        router.replace("/");
         return;
       }
 

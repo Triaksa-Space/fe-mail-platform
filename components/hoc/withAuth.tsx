@@ -13,7 +13,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
     useEffect(() => {
       const checkToken = async () => {
         if (!token) {
-          router.replace("/signin");
+          router.replace("/");
           return;
         }
 
@@ -33,7 +33,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
           setRoleId(userData.RoleID);
         } catch (error) {
           console.error("Token validation failed:", error);
-          router.replace("/signin");
+          router.replace("/");
         } finally {
           setIsLoading(false);
         }

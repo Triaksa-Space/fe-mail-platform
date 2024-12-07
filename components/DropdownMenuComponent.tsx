@@ -7,7 +7,7 @@ const DropdownMenuComponent: React.FC = () => {
   const router = useRouter()
 
   const handleLogout = () => {
-        router.push('/signin')
+        router.push('/')
     }
 
   return (
