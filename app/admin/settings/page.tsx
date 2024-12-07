@@ -45,7 +45,7 @@ const UserAdminManagement: React.FC = () => {
     const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const [currentPage, setCurrentPage] = useState(1)
+    // const [currentPage, setCurrentPage] = useState(1)
     const pageSize = 10
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
@@ -250,7 +250,7 @@ const UserAdminManagement: React.FC = () => {
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [token, currentPage, pageSize])
+    }, [token, pageSize])
 
     const sortedUsers = [...users].sort((a, b) => {
         if (sortField === 'lastActive') {
