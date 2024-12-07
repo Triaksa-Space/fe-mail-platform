@@ -20,6 +20,7 @@ import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 import withAuth from "@/components/hoc/withAuth";
+import PasswordInput from "@/components/PasswordInput";
 
 interface AdminUser {
     id: number
@@ -62,6 +63,8 @@ const UserAdminManagement: React.FC = () => {
     const [passwordForAdmin, setPasswordForAdmin] = useState("");
     const [confirmPasswordForAdmin, setConfirmPasswordForAdmin] = useState("");
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showCPassword, setShowCPassword] = useState(false);
 
     const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
@@ -108,9 +111,10 @@ const UserAdminManagement: React.FC = () => {
         try {
             await axios.put(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
-                { new_password: passwordForAdmin,
+                {
+                    new_password: passwordForAdmin,
                     user_id: selectedAdmin.id
-                 },
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -144,7 +148,7 @@ const UserAdminManagement: React.FC = () => {
         if (!selectedUser) return;
 
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${selectedUser.id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin/${selectedUser.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -174,6 +178,25 @@ const UserAdminManagement: React.FC = () => {
             toast({
                 title: "Error",
                 description: "Please fill all required fields",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (newAdminEmail.length < 6) {
+            toast({
+                description: "Password must be at least 6 characters long.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Regular expression to ensure password complexity
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+
+        if (!passwordRegex.test(newAdminEmail)) {
+            toast({
+                description: "Password must include a number, lowercase, uppercase, and symbol.",
                 variant: "destructive",
             });
             return;
@@ -363,17 +386,27 @@ const UserAdminManagement: React.FC = () => {
                                 <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
-                                <Input
-                                    type="password"
+                                <PasswordInput
+                                    id="password"
                                     placeholder="New Password"
                                     value={passwordForAdmin}
-                                    onChange={(e) => setPasswordForAdmin(e.target.value.replace(/\s/g, ''))}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
                                 />
-                                <Input
-                                    type="password"
+                                <PasswordInput
+                                    id="password"
                                     placeholder="Confirm Password"
                                     value={confirmPasswordForAdmin}
-                                    onChange={(e) => setConfirmPasswordForAdmin(e.target.value.replace(/\s/g, ''))}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setConfirmPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showCPassword}
+                                    setShowPassword={setShowCPassword}
                                 />
                             </div>
                             <DialogFooter>

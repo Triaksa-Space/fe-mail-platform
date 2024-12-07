@@ -45,6 +45,16 @@ const CreateSingleEmail: React.FC = () => {
         })
         return
       }
+      // Regular expression to ensure password complexity
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+
+      if (!passwordRegex.test(password)) {
+          toast({
+              description: "Password must include a number, lowercase, uppercase, and symbol.",
+              variant: "destructive",
+          });
+          return;
+      }
       setIsLoading(true)
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
