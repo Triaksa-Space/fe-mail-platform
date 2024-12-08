@@ -240,7 +240,7 @@ export default function LandingPage() {
             ) : null}
           </form>
         </div>
-        <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-4 text-left fixed bottom-0 left-0 right-0" >
+        <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-8 text-left fixed bottom-0 left-0 right-0" >
           <h2 className="text-l font-semibold">
             Looking for reliable email services?
           </h2>
