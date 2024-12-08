@@ -82,7 +82,10 @@ const Send: React.FC = () => {
           variant: "destructive",
         });
       } else {
-        const errorMessage = error.response?.data?.error || "Failed to send email. Please try again.";
+        let errorMessage = "Failed to send email. Please try again."
+        if (axios.isAxiosError(error) && error.response?.data?.error) {
+          errorMessage = error.response.data.error
+        }
         toast({
           description: `Failed to send email. ${errorMessage}`,
           variant: "destructive",
