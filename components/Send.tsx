@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
@@ -43,7 +43,7 @@ const Send: React.FC = () => {
       return;
     }
 
-    for (let file of attachments) {
+    for (const file of attachments) {
       if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
         toast({
           description: `The file "${file.name}" cannot be uploaded because it exceeds 10 MB.`,
@@ -62,7 +62,7 @@ const Send: React.FC = () => {
       formData.append('subject', subject);
       formData.append('body', message);
 
-      attachments.forEach((file, index) => {
+      attachments.forEach((file) => {
         formData.append('attachments', file);
       });
 
@@ -74,12 +74,12 @@ const Send: React.FC = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
-          onUploadProgress: (progressEvent) => {
-            // const percentCompleted = Math.round(
-            //   (progressEvent.loaded * 100) / (progressEvent.total || 1)
-            // );
-            // setUploadProgress(percentCompleted);
-          },
+          // onUploadProgress: (progressEvent) => {
+          //   // const percentCompleted = Math.round(
+          //   //   (progressEvent.loaded * 100) / (progressEvent.total || 1)
+          //   // );
+          //   // setUploadProgress(percentCompleted);
+          // },
         }
       );
 
@@ -124,7 +124,7 @@ const Send: React.FC = () => {
       }
 
       // Check each file size
-      for (let file of selectedFiles) {
+      for (const file of selectedFiles) {
         if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
           toast({
             description: `The file "${file.name}" cannot be uploaded because it exceeds 10 MB.`,
