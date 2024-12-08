@@ -12,7 +12,7 @@ const PasswordInput: React.FC<{
     <div className="mb-4">
       <div className="relative">
         <input
-          className={`shadow appearance-none border ${error ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10`}
+          className={`placeholder-gray shadow appearance-none border ${error ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10`}
           id={id}
           type={showPassword ? "text" : "password"}
           placeholder={placeholder}
