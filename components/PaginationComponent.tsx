@@ -12,7 +12,7 @@ interface PaginationComponentProps {
   onPageChange: (page: number) => void;
 }
 
-const PaginationComponent: React.FC<PaginationComponentProps> = ({ totalCount, currentPage, pageSize, totalPages, onPageChange }) => {
+const PaginationComponent: React.FC<PaginationComponentProps> = ({ totalCount, currentPage, totalPages, onPageChange }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageInput, setPageInput] = useState("");
 
