@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 import { Input } from './ui/input';
 import LoadingProcessingPage from './ProcessLoading';
 
@@ -74,7 +74,7 @@ const Send: React.FC = () => {
       });
 
       router.push("/inbox?sent=success");
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       if (axios.isAxiosError(error) && error.response?.status === 429) {
         toast({
@@ -107,7 +107,7 @@ const Send: React.FC = () => {
         return;
       }
 
-      for (let file of selectedFiles) {
+      for (const file of selectedFiles) {
         // Check file size
         if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
           toast({
@@ -159,7 +159,7 @@ const Send: React.FC = () => {
           //   description: `Uploaded "${file.name}" successfully.`,
           //   variant: "default",
           // });
-        } catch (error: any) {
+        } catch (error) {
           console.log(error);
           let errorMsg = `Failed to upload "${file.name}". Please try again.`;
           if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -197,7 +197,7 @@ const Send: React.FC = () => {
       );
 
       setAttachments(attachments.filter((_, i) => i !== index));
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       let errorMsg = `Failed to remove "${attachmentToRemove.name}". Please try again.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -230,7 +230,7 @@ const Send: React.FC = () => {
       //   description: "All attachments removed successfully.",
       //   variant: "default",
       // });
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       let errorMsg = `Failed to remove attachments. Please try again.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
