@@ -151,7 +151,7 @@ const EmailDetailPage: React.FC = () => {
         </div>
 
         <div className="space-y-2 pl-4 pr-4">
-          <div className="border bg-white shadow-sm flex h-40" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
+          <div className="border bg-white shadow-sm flex" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
             <div
               className={`prose max-w-none p-2 text-sm overflow-hidden ${email.Body ? '' : 'min-h-[200px]'}`}
               dangerouslySetInnerHTML={{ __html: email.Body }}
