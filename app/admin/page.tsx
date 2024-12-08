@@ -49,6 +49,7 @@ const EmailManagement: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
+    const [totalCount, setTotalCount] = useState(0)
     const pageSize = 10
     const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
@@ -111,6 +112,7 @@ const EmailManagement: React.FC = () => {
                 }))
                 setUsers(data)
                 setTotalPages(response.data.total_pages)
+                setTotalCount(response.data.total_count)
                 setError(null)
             } catch (err) {
                 console.error('Failed to fetch users:', err)
@@ -247,6 +249,8 @@ const EmailManagement: React.FC = () => {
                     totalPages={totalPages}
                     currentPage={currentPage}
                     onPageChange={setCurrentPage}
+                    totalCount={totalCount}
+                    pageSize={pageSize}
                 />
             </div>
 

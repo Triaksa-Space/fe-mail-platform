@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationEllipsis } from "@/components/ui/pagination";
 
-const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; onPageChange: (page: number) => void }> = ({ totalPages, currentPage, onPageChange }) => {
+interface PaginationComponentProps {
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+const PaginationComponent: React.FC<PaginationComponentProps> = ({ totalCount, currentPage, pageSize, totalPages, onPageChange }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageInput, setPageInput] = useState("");
+
+  useEffect(() => {
+    setPageInput("");
+  }, [currentPage]);
 
   const handlePageInputSubmit = () => {
     const page = parseInt(pageInput);
@@ -126,46 +138,50 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pl-4">
-      <span className="text-sm text-gray-500 w-full">Page {currentPage} of {totalPages}</span>
+      <span className="text-sm text-gray-500 w-full">Show data {totalCount}</span>
       <Pagination>
         <PaginationContent>
-          <PaginationItem>
-            <PaginationLink 
-              onClick={() => onPageChange(1)}
-              // disabled={currentPage === 1}
-              aria-label="Go to first page"
-            >
-              &lt;&lt;
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink 
-              onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-              // disabled={currentPage === 1}
-              aria-label="Go to previous page"
-            >
-              &lt;
-            </PaginationLink>
-          </PaginationItem>
+          {currentPage > 1 && (
+            <>
+              <PaginationItem>
+                <PaginationLink 
+                  onClick={() => onPageChange(1)}
+                  aria-label="Go to first page"
+                >
+                  &lt;&lt;
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink 
+                  onClick={() => onPageChange(currentPage - 1)}
+                  aria-label="Go to previous page"
+                >
+                  &lt;
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
           {renderPaginationItems()}
-          <PaginationItem>
-            <PaginationLink 
-              onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-              // disabled={currentPage === totalPages}
-              aria-label="Go to next page"
-            >
-              &gt;
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink 
-              onClick={() => onPageChange(totalPages)}
-              // disabled={currentPage === totalPages}
-              aria-label="Go to last page"
-            >
-              &gt;&gt;
-            </PaginationLink>
-          </PaginationItem>
+          {currentPage < totalPages && (
+            <>
+              <PaginationItem>
+                <PaginationLink 
+                  onClick={() => onPageChange(currentPage + 1)}
+                  aria-label="Go to next page"
+                >
+                  &gt;
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink 
+                  onClick={() => onPageChange(totalPages)}
+                  aria-label="Go to last page"
+                >
+                  &gt;&gt;
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
         </PaginationContent>
       </Pagination>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -191,4 +207,3 @@ const PaginationComponent: React.FC<{ totalPages: number; currentPage: number; o
 };
 
 export default PaginationComponent;
-
