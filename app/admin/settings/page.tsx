@@ -198,7 +198,7 @@ const UserAdminManagement: React.FC = () => {
             return;
         }
 
-        if (newAdminEmail.length < 6) {
+        if (newAdminPassword.length < 6) {
             toast({
                 description: "Password must be at least 6 characters long.",
                 variant: "destructive",
@@ -209,7 +209,7 @@ const UserAdminManagement: React.FC = () => {
         // Regular expression to ensure password complexity
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-        if (!passwordRegex.test(newAdminEmail)) {
+        if (!passwordRegex.test(newAdminPassword)) {
             toast({
                 description: "Password must include a number, lowercase, uppercase, and symbol.",
                 variant: "destructive",
