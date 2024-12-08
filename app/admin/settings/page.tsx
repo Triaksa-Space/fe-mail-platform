@@ -60,10 +60,13 @@ const UserAdminManagement: React.FC = () => {
     const [newAdminPassword, setNewAdminPassword] = useState("");
 
     const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
+    const [isChangePasswordMyselfDialogOpen, setIsChangePasswordMyselfDialogOpen] = useState(false);
     const [passwordForAdmin, setPasswordForAdmin] = useState("");
+    const [oldPasswordForAdmin, setOldPasswordForAdmin] = useState("");
     const [confirmPasswordForAdmin, setConfirmPasswordForAdmin] = useState("");
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+    const [showOPassword, setShowOPassword] = useState(false);
     const [showCPassword, setShowCPassword] = useState(false);
 
     const handleDeleteClick = (user: AdminUser) => {
@@ -75,6 +78,11 @@ const UserAdminManagement: React.FC = () => {
     const handleChangePasswordClick = (admin: AdminUser) => {
         setSelectedAdmin(admin);
         setIsChangePasswordDialogOpen(true);
+    };
+
+    const handleChangeMyselfPasswordClick = (admin: AdminUser) => {
+        setSelectedAdmin(admin);
+        setIsChangePasswordMyselfDialogOpen(true);
     };
 
     // Function to handle password change submission
@@ -113,6 +121,7 @@ const UserAdminManagement: React.FC = () => {
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
                 {
                     new_password: passwordForAdmin,
+                    old_password: oldPasswordForAdmin,
                     user_id: selectedAdmin.id
                 },
                 {
@@ -129,7 +138,9 @@ const UserAdminManagement: React.FC = () => {
 
             // Reset state and close modal
             setIsChangePasswordDialogOpen(false);
+            setIsChangePasswordMyselfDialogOpen(false);
             setPasswordForAdmin("");
+            setOldPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
 
@@ -137,6 +148,10 @@ const UserAdminManagement: React.FC = () => {
             fetchUsers();
         } catch (error) {
             console.error('Failed to change password:', error);
+            setPasswordForAdmin("");
+            setOldPasswordForAdmin("");
+            setConfirmPasswordForAdmin("");
+            setSelectedAdmin(null);
             toast({
                 description: "Failed to change password. Please try again.",
                 variant: "destructive",
@@ -425,6 +440,62 @@ const UserAdminManagement: React.FC = () => {
                         </DialogContent>
                     </Dialog>
 
+                    <Dialog open={isChangePasswordMyselfDialogOpen} onOpenChange={setIsChangePasswordMyselfDialogOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                            <PasswordInput
+                                    id="old-password"
+                                    placeholder="Old Password"
+                                    value={oldPasswordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setOldPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showOPassword}
+                                    setShowPassword={setShowOPassword}
+                                />
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="New Password"
+                                    value={passwordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
+                                />
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="Confirm Password"
+                                    value={confirmPasswordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setConfirmPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showCPassword}
+                                    setShowPassword={setShowCPassword}
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button variant="secondary" onClick={() => {
+                                    setIsChangePasswordDialogOpen(false);
+                                    setPasswordForAdmin("");
+                                    setConfirmPasswordForAdmin("");
+                                    setSelectedAdmin(null);
+                                }}>
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleChangePasswordSubmit}>
+                                    Submit
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
                     <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                         <DialogContent>
                             <DialogHeader>
@@ -496,6 +567,12 @@ const UserAdminManagement: React.FC = () => {
                             onClick={handleLogout}
                         >
                             Logout
+                        </Button>
+                        <Button
+                            className="w-[150px] bg-gray-800 hover:bg-gray-700 text-white py-3"
+                            onClick={() => handleChangeMyselfPasswordClick({ id: 0, email: "Myself", lastActive: "", created: "" })}
+                        >
+                            Change Password
                         </Button>
                     </div>
                 </div>
