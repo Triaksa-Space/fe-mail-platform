@@ -98,57 +98,52 @@ const EmailManagement: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/?page=` + currentPage + '&page_size=' + pageSize + '&email=' + searchTerm, {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                })
+                    params: {
+                        page: currentPage,
+                        page_size: pageSize,
+                        email: searchTerm,
+                        sort_by: sortField,
+                        sort_order: sortOrder,
+                    },
+                });
                 const data = response.data.users.map((user: User) => ({
                     id: user.ID,
                     email: user.Email,
                     lastActive: new Date(user.LastLogin).toLocaleString(),
                     created: new Date(user.CreatedAt).toLocaleDateString(),
                     createdByName: user.CreatedByName,
-                }))
-                setUsers(data)
-                setTotalPages(response.data.total_pages)
-                setTotalCount(response.data.total_count)
-                setError(null)
+                }));
+                setUsers(data);
+                setTotalPages(response.data.total_pages);
+                setTotalCount(response.data.total_count);
+                setError(null);
             } catch (err) {
-                console.error('Failed to fetch users:', err)
-                setError('Failed to load users')
+                console.error('Failed to fetch users:', err);
+                setError('Failed to load users');
             } finally {
-                setIsLoading(false)
+                setIsLoading(false);
             }
-        }
+        };
 
         const timeoutId = setTimeout(() => {
             fetchUsers();
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [token, currentPage, pageSize, searchTerm])
-
-    const sortedUsers = [...users].sort((a, b) => {
-        if (sortField === 'lastActive') {
-            return sortOrder === 'asc'
-                ? a.lastActive.localeCompare(b.lastActive)
-                : b.lastActive.localeCompare(a.lastActive)
-        } else {
-            return sortOrder === 'asc'
-                ? a.created.localeCompare(b.created)
-                : b.created.localeCompare(a.created)
-        }
-    })
+    }, [token, currentPage, pageSize, searchTerm, sortField, sortOrder]);
 
     const toggleSort = (field: SortField) => {
         if (sortField === field) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
         } else {
-            setSortField(field)
-            setSortOrder('desc')
+            setSortField(field);
+            setSortOrder('desc');
         }
-    }
+    };
 
     return (
         <div className="p-6 space-y-2">
@@ -207,7 +202,7 @@ const EmailManagement: React.FC = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {sortedUsers.map((user) => (
+                                {users.map((user) => (
                                     <TableRow key={user.email}>
                                         <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
                                         <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
