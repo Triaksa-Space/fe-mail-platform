@@ -191,7 +191,7 @@ export default function LandingPage() {
                     setLoginEmail(value.replace(/\s/g, '')); // Remove spaces
                   }}
                   type="text"
-                  className="pl-10 h-12 text-base border-gray-200"
+                  className="pl-10 h-12 text-base border-gray-200 shadow appearance-non"
                 />
               </div>
             </div>
@@ -215,7 +215,7 @@ export default function LandingPage() {
               </div>
             </div>
             <Button
-              className={`w-full h-12 text-base font-bold ${lockoutTime || !loginEmail || !password
+              className={`shadow appearance-non w-full h-12 text-base font-bold ${lockoutTime || !loginEmail || !password
                   ? "bg-gray-400 cursor-not-allowed text-black"
                   : "bg-[#ffeeac] hover:bg-yellow-300 text-black"
                 }`}

@@ -254,7 +254,7 @@ const Send: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+              className="shadow appearance-non h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
               onClick={() => {
                 handleCancel();
                 router.push('/inbox')
@@ -283,7 +283,7 @@ const Send: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+              className="shadow appearance-non h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
               onClick={handleSendEmail}
               disabled={isLoading || uploading.length > 0 || attachments.length === 0}
             >
