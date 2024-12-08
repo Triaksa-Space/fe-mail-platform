@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
 }
 
 .placeholder-gray {
