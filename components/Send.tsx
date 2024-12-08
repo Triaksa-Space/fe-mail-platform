@@ -6,9 +6,21 @@ import { useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 import { Input } from './ui/input';
 import LoadingProcessingPage from './ProcessLoading';
+
+interface UploadedAttachment {
+  name: string;
+  url: string;
+}
+
+interface UploadingFile {
+  id: string;
+  name: string;
+  progress: number;
+  url: string;
+}
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
@@ -18,14 +30,14 @@ const Send: React.FC = () => {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [attachments, setAttachments] = useState<File[]>([]);
+  const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
   const { toast } = useToast();
   const token = useAuthStore((state) => state.token);
   const email = useAuthStore((state) => state.email);
   const [isLoading, setIsLoading] = useState(false);
-  // const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploading, setUploading] = useState<UploadingFile[]>([]); // Track uploading files
 
-  // Handle sending email with FormData
+  // Handle sending email with JSON payload
   const handleSendEmail = async () => {
     if (!to || !subject || !message) {
       toast({
@@ -35,51 +47,24 @@ const Send: React.FC = () => {
       return;
     }
 
-    if (attachments.length > MAX_FILES) {
-      toast({
-        description: "You can only send up to 10 files.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    for (const file of attachments) {
-      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        toast({
-          description: `The file "${file.name}" cannot be uploaded because it exceeds 10 MB.`,
-          variant: "destructive",
-        });
-        return;
-      }
-    }
-
     setIsLoading(true);
-    // setUploadProgress(0);
 
     try {
-      const formData = new FormData();
-      formData.append('to', to);
-      formData.append('subject', subject);
-      formData.append('body', message);
-
-      attachments.forEach((file) => {
-        formData.append('attachments', file);
-      });
+      const payload = {
+        to,
+        subject,
+        body: message,
+        attachments: attachments.map(att => att.url),
+      };
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`,
-        formData,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
-          // onUploadProgress: (progressEvent) => {
-          //   // const percentCompleted = Math.round(
-          //   //   (progressEvent.loaded * 100) / (progressEvent.total || 1)
-          //   // );
-          //   // setUploadProgress(percentCompleted);
-          // },
         }
       );
 
@@ -89,7 +74,7 @@ const Send: React.FC = () => {
       });
 
       router.push("/inbox?sent=success");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       if (axios.isAxiosError(error) && error.response?.status === 429) {
         toast({
@@ -97,10 +82,7 @@ const Send: React.FC = () => {
           variant: "destructive",
         });
       } else {
-        let errorMessage = "Failed to send email. Please try again."
-        if (axios.isAxiosError(error) && error.response?.data?.error) {
-          errorMessage = error.response.data.error
-        }
+        const errorMessage = error.response?.data?.error || "Failed to send email. Please try again.";
         toast({
           description: `Failed to send email. ${errorMessage}`,
           variant: "destructive",
@@ -108,17 +90,16 @@ const Send: React.FC = () => {
       }
     } finally {
       setIsLoading(false);
-      // setUploadProgress(0);
     }
   };
 
-  // Handle file selection with validation
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle file selection with validation and upload to S3
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
 
       // Check total number of files
-      if (attachments.length + selectedFiles.length > MAX_FILES) {
+      if (attachments.length + uploading.length + selectedFiles.length > MAX_FILES) {
         toast({
           description: "You can only send up to 10 files.",
           variant: "destructive",
@@ -126,24 +107,140 @@ const Send: React.FC = () => {
         return;
       }
 
-      // Check each file size
-      for (const file of selectedFiles) {
+      for (let file of selectedFiles) {
+        // Check file size
         if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
           toast({
             description: `The file "${file.name}" cannot be uploaded because it exceeds 10 MB.`,
             variant: "destructive",
           });
-          return;
+          continue;
+        }
+
+        const fileId = `${file.name}-${Date.now()}`; // Unique identifier
+
+        // Add to uploading state
+        setUploading(prev => [...prev, { id: fileId, name: file.name, progress: 0, url: '' }]);
+
+        // Prepare FormData
+        const formData = new FormData();
+        formData.append('attachment', file);
+
+        try {
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/upload/attachment`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
+              onUploadProgress: (progressEvent) => {
+                const percentCompleted = Math.round(
+                  (progressEvent.loaded * 100) / (progressEvent.total || 1)
+                );
+                setUploading(prevUploading =>
+                  prevUploading.map(upload =>
+                    upload.id === fileId ? { ...upload, progress: percentCompleted } : upload
+                  )
+                );
+              },
+            }
+          );
+
+          // Assuming the response contains the file URL
+          const fileUrl = response.data.url;
+
+          // Move from uploading to attachments
+          setAttachments(prev => [...prev, { name: file.name, url: fileUrl }]);
+          setUploading(prevUploading => prevUploading.filter(upload => upload.id !== fileId));
+
+          // toast({
+          //   description: `Uploaded "${file.name}" successfully.`,
+          //   variant: "default",
+          // });
+        } catch (error: any) {
+          console.log(error);
+          let errorMsg = `Failed to upload "${file.name}". Please try again.`;
+          if (axios.isAxiosError(error) && error.response?.data?.error) {
+            errorMsg = `Failed to upload "${file.name}". ${error.response.data.error}`;
+          }
+          toast({
+            description: errorMsg,
+            variant: "destructive",
+          });
+
+          // Remove from uploading if failed
+          setUploading(prevUploading => prevUploading.filter(upload => upload.id !== fileId));
         }
       }
 
-      setAttachments([...attachments, ...selectedFiles]);
+      // Reset the input value to allow re-uploading the same file if needed
+      e.target.value = '';
     }
   };
 
-  // Remove attachment
-  const handleRemoveAttachment = (index: number) => {
-    setAttachments(attachments.filter((_, i) => i !== index));
+  // Remove uploaded attachment
+  const handleRemoveAttachment = async (index: number) => {
+    const attachmentToRemove = attachments[index];
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
+        { url: [attachmentToRemove.url] },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setAttachments(attachments.filter((_, i) => i !== index));
+    } catch (error: any) {
+      console.log(error);
+      let errorMsg = `Failed to remove "${attachmentToRemove.name}". Please try again.`;
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        errorMsg = `Failed to remove "${attachmentToRemove.name}". ${error.response.data.error}`;
+      }
+      toast({
+        description: errorMsg,
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Remove all uploaded attachments
+  const handleCancel = async () => {
+    try {
+      const urls = attachments.map(att => att.url);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
+        { url: urls },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setAttachments([]);
+      // toast({
+      //   description: "All attachments removed successfully.",
+      //   variant: "default",
+      // });
+    } catch (error: any) {
+      console.log(error);
+      let errorMsg = `Failed to remove attachments. Please try again.`;
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        errorMsg = `Failed to remove attachments. ${error.response.data.error}`;
+      }
+      toast({
+        description: errorMsg,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -155,7 +252,10 @@ const Send: React.FC = () => {
               variant="ghost"
               size="icon"
               className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
-              onClick={() => router.push('/inbox')}
+              onClick={() => {
+                handleCancel();
+                router.push('/inbox')
+              }}
             >
               <CircleXIcon className="h-5 w-5" />
             </Button>
@@ -182,21 +282,15 @@ const Send: React.FC = () => {
               size="icon"
               className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
               onClick={handleSendEmail}
-              disabled={isLoading}
+              disabled={isLoading || uploading.length > 0 || attachments.length === 0}
             >
               <SendIcon className="h-5 w-5" />
             </Button>
           </div>
         </div>
 
-        {/* Upload Progress */}
+        {/* Send Email Loading Indicator */}
         {isLoading && (
-          // <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-          //   <div
-          //     className="bg-blue-600 h-2.5 rounded-full"
-          //     style={{ width: `${uploadProgress}%` }}
-          //   ></div>
-          // </div>
           <LoadingProcessingPage />
         )}
 
@@ -255,6 +349,22 @@ const Send: React.FC = () => {
               />
             </div>
             <div className="mt-4 space-y-2">
+
+              {/* Uploading Files with Individual Progress Bars */}
+              {uploading.length > 0 && (
+                <div className="space-y-2">
+                  {uploading.map(file => (
+                    <div key={file.id} className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className="bg-blue-600 h-2.5 rounded-full"
+                        style={{ width: `${file.progress}%` }}
+                      ></div>
+                    </div>
+                  ))}
+                  <span className="text-sm text-gray-600">Uploading attachments...</span>
+                </div>
+              )}
+
               {attachments.map((file, index) => (
                 <div
                   key={index}
