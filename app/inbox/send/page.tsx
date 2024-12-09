@@ -7,10 +7,8 @@ import { theme } from "@/app/theme";
 
 const Page: React.FC = () => {
   return (
-    <div className="space-y-2" style={{ backgroundColor: theme.colors.background }}>
-      <div className="flex-1 overflow-auto pb-20">
-        <Send />
-      </div>
+    <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
+      <Send />
       <FooterNav />
     </div>
   );

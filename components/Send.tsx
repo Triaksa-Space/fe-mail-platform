@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
 import { Input } from './ui/input';
 import LoadingProcessingPage from './ProcessLoading';
+import { theme } from '@/app/theme';
 
 interface UploadedAttachment {
   name: string;
@@ -249,150 +250,153 @@ const Send: React.FC = () => {
 
   return (
     <>
-      <div className="p-4 space-y-4">
-        <div className="flex justify-between items-center p-2 bg-white">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shadow appearance-non h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
-              onClick={() => {
-                handleCancel();
-                router.push('/inbox')
-              }}
-            >
-              <CircleXIcon className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className='flex items-center gap-2'>
-            <div>
-              <input
-                className="hidden"
-                id="attachments"
-                type="file"
-                multiple
-                onChange={handleFileChange}
-                accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.gif,.txt,.zip,.rar" // Optional: restrict file types
-              />
-              <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-gray-100 p-2 rounded">
-                <Paperclip className="h-5 w-5" />
-                {/* <span className="text-sm text-gray-700">Attach Files</span> */}
-              </label>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shadow appearance-non h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
-              onClick={handleSendEmail}
-              disabled={isLoading || uploading.length > 0}
-            >
-              <SendIcon className="h-5 w-5" />
-            </Button>
+      {/* Fixed Header */}
+      <header className="flex justify-between items-center p-2">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className=" h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+            onClick={() => {
+              handleCancel();
+              router.push('/inbox')
+            }}
+          >
+            <CircleXIcon className="h-5 w-5" />
+          </Button>
+        </div>
+        <div className='flex items-center gap-2'>
+          <div>
+            <input
+              className="hidden"
+              id="attachments"
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.gif,.txt,.zip,.rar" // Optional: restrict file types
+            />
+            <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-gray-100 p-2 rounded">
+              <Paperclip className="h-5 w-5" />
+              {/* <span className="text-sm text-gray-700">Attach Files</span> */}
+            </label>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className=" h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+            onClick={handleSendEmail}
+            disabled={isLoading || uploading.length > 0}
+          >
+            <SendIcon className="h-5 w-5" />
+          </Button>
+        </div>
+      </header>
+      <main className="flex-1 overflow-y-auto">
+        <div className="p-4 space-y-4">
 
-        {/* Send Email Loading Indicator */}
-        {isLoading && (
-          <LoadingProcessingPage />
-        )}
+          {/* Send Email Loading Indicator */}
+          {isLoading && (
+            <LoadingProcessingPage />
+          )}
 
-        <div className="flex justify-center h-screen pl-4 pr-4">
-          <form className="w-full max-w-lg">
-            <div className="flex bg-white text-sm">
-              <div className="flex items-center gap-2 w-12">
-                <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="from">
-                  From:
-                </label>
+          <div className="flex justify-center h-screen pl-4 pr-4">
+            <form className="w-full max-w-lg">
+              <div className="flex bg-white text-sm">
+                <div className="flex items-center gap-2 w-12">
+                  <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="from">
+                    From:
+                  </label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="ml-4 text-gray-700 text-sm" htmlFor="from">
+                    {email}
+                  </label>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <label className="ml-4 text-gray-700 text-sm" htmlFor="from">
-                  {email}
-                </label>
+              <div className="flex bg-white text-sm w-full">
+                <div className="flex items-center gap-2 w-12">
+                  <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
+                    To:
+                  </label>
+                </div>
+                <div className="mt-2 flex-1">
+                  <Input
+                    className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="to"
+                    type="text"
+                    placeholder=""
+                    value={to}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setTo(value.replace(/\s/g, '')); // Remove spaces
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex bg-white text-sm w-full">
-              <div className="flex items-center gap-2 w-12">
-                <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
-                  To:
-                </label>
-              </div>
-              <div className="mt-2 flex-1">
+              <div className="mb-2 mt-2">
                 <Input
-                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="to"
+                  className="text-sm shadow appearance-none border w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="subject"
                   type="text"
-                  placeholder=""
-                  value={to}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setTo(value.replace(/\s/g, '')); // Remove spaces
-                  }}
+                  placeholder="Subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
                 />
               </div>
-            </div>
-            <div className="mb-2 mt-2">
-              <Input
-                className="text-sm shadow appearance-none border w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="subject"
-                type="text"
-                placeholder="Subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <textarea
-                className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="message"
-                rows={14}
-                placeholder="Compose email"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-            </div>
-            <div className="mt-4 space-y-2">
+              <div className="mb-4">
+                <textarea
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="message"
+                  rows={13}
+                  placeholder="Compose email"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </div>
+              <div className="mt-4 space-y-2">
 
-              {/* Uploading Files with Individual Progress Bars */}
-              {uploading.length > 0 && (
-                <div className="space-y-2">
-                  {uploading.map(file => (
-                    <div key={file.id} className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div
-                        className="bg-blue-600 h-2.5 rounded-full"
-                        style={{ width: `${file.progress}%` }}
-                      ></div>
-                    </div>
-                  ))}
-                  <span className="text-sm text-gray-600">Uploading attachments...</span>
-                </div>
-              )}
+                {/* Uploading Files with Individual Progress Bars */}
+                {uploading.length > 0 && (
+                  <div className="space-y-2">
+                    {uploading.map(file => (
+                      <div key={file.id} className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div
+                          className="bg-blue-600 h-2.5 rounded-full"
+                          style={{ width: `${file.progress}%` }}
+                        ></div>
+                      </div>
+                    ))}
+                    <span className="text-sm text-gray-600">Uploading attachments...</span>
+                  </div>
+                )}
 
-              {attachments.map((file, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-2 bg-gray-50"
-                >
-                  <span className="text-sm text-gray-600 truncate">
-                    {file.name}
-                  </span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
-                    onClick={() => handleRemoveAttachment(index)}
+                {attachments.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 bg-gray-50"
                   >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </form>
+                    <span className="text-sm text-gray-600 truncate">
+                      {file.name}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
+                      onClick={() => handleRemoveAttachment(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-      <Toaster />
+        <Toaster />
+      </main>
     </>
   );
 };

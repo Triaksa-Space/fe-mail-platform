@@ -102,17 +102,19 @@ const InboxPageContent: React.FC = () => {
   }, [sentStatus, token, router, setEmail]);
 
   return (
-    <div className="space-y-2" style={{ backgroundColor: theme.colors.background }}>
-      <div className="flex-1 overflow-auto pb-20">
+    <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
+      {/* Fixed Header */}
+      <header className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
+        <h1 className="text-xl font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
+          {email}
+        </h1>
+        <h1 className="text-sm font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
+          Daily Send {sentEmails}/3
+        </h1>
+      </header>
+      <main className="flex-1 overflow-y-auto">
         <div className="space-y-0.5">
-          <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
-            <h1 className="text-xl font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
-              {email}
-            </h1>
-            <h1 className="text-sm font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
-              Daily Send {sentEmails}/3
-            </h1>
-          </div>
+
           {isLoading ? (
             <div className="p-4 text-center">Loading...</div>
           ) : error ? (
@@ -148,7 +150,7 @@ const InboxPageContent: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
       <FooterNav />
       <Toaster />
     </div>

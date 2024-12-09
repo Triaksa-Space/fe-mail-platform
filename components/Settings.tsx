@@ -91,15 +91,14 @@ const Settings: React.FC = () => {
 
   return (
     <>
-      <div className="p-4 space-y-4">
-        <div className="flex justify-between items-center p-2 bg-white">
-          <div className="flex items-center gap-2">
-            <label className="text-xl font-bold">
-              Change Password
-            </label>
-          </div>
+      <header className="flex justify-between items-center p-2" >
+        <div className="flex items-center gap-2">
+          <label className="text-xl font-bold">
+            Change Password
+          </label>
         </div>
-
+      </header>
+      <main className="flex-1 overflow-y-auto">
         <div className="flex justify-center items-start p-4">
           <form className="w-full max-w-lg text-sm" onSubmit={(e) => e.preventDefault()}>
             <PasswordInput
@@ -163,7 +162,7 @@ const Settings: React.FC = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </main>
       <Toaster />
     </>
   );
