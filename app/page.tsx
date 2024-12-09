@@ -231,11 +231,11 @@ export default function LandingPage() {
                 Careful! One more failed attempt will disable login for 10 minutes.
               </p>
             )}
-            {lockoutTime ? (
+            {/* {lockoutTime ? (
               <p className="text-xs text-red-600 text-left">
                 Too many failed attempts. Try again in {Math.ceil(countdown / 60)} minutes.
               </p>
-            ) : null}
+            ) : null} */}
           </form>
         </div>
         <div className="w-full max-w-sm mx-auto mb-2 space-y-4 p-8 text-left fixed bottom-0 left-0 right-0" >
