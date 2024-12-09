@@ -62,7 +62,7 @@ const Send: React.FC = () => {
       };
 
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/send/url_attachment`,
         payload,
         {
           headers: {

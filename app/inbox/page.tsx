@@ -59,7 +59,7 @@ const InboxPageContent: React.FC = () => {
       }
     };
 
-    const fetchEmails = async () => {
+    const fetchEmails = async (signal?: AbortSignal) => {
       if (!token) {
         router.replace("/");
         return;
@@ -72,7 +72,7 @@ const InboxPageContent: React.FC = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            signal: controller.signal,
+            signal,
           }
         );
 
@@ -93,11 +93,20 @@ const InboxPageContent: React.FC = () => {
     };
 
     fetchCountSentEmails();
-    fetchEmails();
+    fetchEmails(controller.signal);
 
+    // Set up interval for auto-refresh
+    const intervalId = setInterval(() => {
+      fetchCountSentEmails();
+      fetchEmails(); // Optionally, pass a new AbortController if necessary
+    }, 3000); // 3000ms = 3 seconds
+
+
+    // Cleanup function
     return () => {
       isSubscribed = false;
-      controller.abort();
+      controller.abort(); // Cancel ongoing requests
+      clearInterval(intervalId); // Clear the interval
     };
   }, [sentStatus, token, router, setEmail]);
 

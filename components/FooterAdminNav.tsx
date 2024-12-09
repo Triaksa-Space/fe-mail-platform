@@ -1,8 +1,13 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from 'next/navigation';
 import { Settings, Plus, Database, LayoutGrid } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
+
+const buttonClass = (isActive: boolean) => `
+  flex-1 flex flex-col items-center justify-center py-2 text-black transition-colors
+  ${isActive ? 'bg-[#ffeeac]' : 'bg-transparent'}
+  hover:bg-[#ffeeac] active:bg-[#ffeeac]
+`;
 
 const FooterAdminNav = () => {
   const router = useRouter();
@@ -30,51 +35,40 @@ const FooterAdminNav = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 border-t bg-background">
-      <div className="container mx-auto flex justify-around py-4">
-        <Button
-          variant="ghost"
-          className={`flex flex-col items-center gap-1 hover:bg-[#ffeeac] ${
-            isAdminActive ? 'bg-[#ffeeac]' : ''
-          }`}
+    <footer className="fixed bottom-0 left-0 right-0 border-t bg-background">
+      <div className="flex">
+        <button
+          className={buttonClass(isAdminActive)}
           onClick={() => handleNavigation('/admin')}
         >
           <LayoutGrid className="h-5 w-5" />
-          <span className="text-xs">Dashboard</span>
-        </Button>
-        <Button
-          variant="ghost"
-          className={`flex flex-col items-center gap-1 hover:bg-[#ffeeac] ${
-            pathname === '/admin/create-single-email' ? 'bg-[#ffeeac]' : ''
-          }`}
+          <span className="text-xs mt-1">Dashboard</span>
+        </button>
+        <button
+          className={buttonClass(pathname === '/admin/create-single-email')}
           onClick={() => handleNavigation('/admin/create-single-email')}
         >
           <Plus className="h-5 w-5" />
-          <span className="text-xs">Create Single</span>
-        </Button>
-        <Button
-          variant="ghost"
-          className={`flex flex-col items-center gap-1 hover:bg-[#ffeeac] ${
-            pathname === '/admin/create-bulk-email' ? 'bg-[#ffeeac]' : ''
-          }`}
+          <span className="text-xs mt-1">Create Single</span>
+        </button>
+        <button
+          className={buttonClass(pathname === '/admin/create-bulk-email')}
           onClick={() => handleNavigation('/admin/create-bulk-email')}
         >
           <Database className="h-5 w-5" />
-          <span className="text-xs">Create Bulk</span>
-        </Button>
-        <Button
-          variant="ghost"
-          className={`flex flex-col items-center gap-1 hover:bg-[#ffeeac] ${
-            pathname === '/admin/settings' ? 'bg-[#ffeeac]' : ''
-          }`}
+          <span className="text-xs mt-1">Create Bulk</span>
+        </button>
+        <button
+          className={buttonClass(pathname === '/admin/settings')}
           onClick={() => handleNavigation('/admin/settings')}
         >
           <Settings className="h-5 w-5" />
-          <span className="text-xs">Settings</span>
-        </Button>
+          <span className="text-xs mt-1">Settings</span>
+        </button>
       </div>
-    </div>
+    </footer>
   );
 };
 
 export default FooterAdminNav;
+
