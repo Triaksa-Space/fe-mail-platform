@@ -22,6 +22,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 import withAuth from "@/components/hoc/withAuth";
 import PasswordInput from '@/components/PasswordInput'
+import { theme } from '../theme'
 
 interface EmailUser {
     id: number
@@ -254,7 +255,7 @@ const EmailManagement: React.FC = () => {
     return (
         <div className="p-6 space-y-2">
             <div className="flex-1 overflow-auto pb-20">
-                <div className="flex justify-between items-center pl-4">
+                <div className="flex justify-between items-center pt-2 pl-4">
                     <Input
                         placeholder="by username"
                         className="max-w-xs placeholder-gray"
@@ -312,19 +313,19 @@ const EmailManagement: React.FC = () => {
                                         <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
                                         <TableCell className="px-2 py-1 text-center">{user.createdByName}</TableCell>
                                         <TableCell className="px-2 py-1 space-x-2 text-center">
-                                            <Button variant="secondary" className="bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
+                                            <Button variant="secondary" className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
                                                 View
                                             </Button>
                                             <Button
                                                 variant="secondary"
-                                                className="bg-yellow-200 hover:bg-yellow-300"
+                                                className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
                                                 onClick={() => handleChangePasswordClick(user)}
                                             >
                                                 Change Password
                                             </Button>
                                             <Button
                                                 variant="destructive"
-                                                className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                                className="shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                                 onClick={() => handleDeleteClick(user)}
                                             >
                                                 Delete
@@ -368,7 +369,7 @@ const EmailManagement: React.FC = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button className="shadow appearance-non" variant="secondary" onClick={() => {
+                                <Button className="shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100" variant="secondary" onClick={() => {
                                     setIsChangePasswordDialogOpen(false);
                                     setPasswordForAdmin("");
                                     setConfirmPasswordForAdmin("");
@@ -376,7 +377,14 @@ const EmailManagement: React.FC = () => {
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button className="shadow appearance-non" onClick={handleChangePasswordSubmit}>
+                                <Button 
+                                variant="default"
+                                    className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!passwordForAdmin || !confirmPasswordForAdmin
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-[#ffeeac] hover:bg-yellow-300"
+                                        }`}
+                                    disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                    onClick={handleChangePasswordSubmit}>
                                     Submit
                                 </Button>
                             </DialogFooter>
@@ -389,8 +397,8 @@ const EmailManagement: React.FC = () => {
                             </DialogHeader>
                             <p>Are you sure you want to delete user {selectedUser?.email}?</p>
                             <DialogFooter>
-                                <Button className='shadow appearance-non ' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                                <Button className='shadow appearance-non ' variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
+                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
+                                <Button variant="destructive" className='shadow appearance-non w-1/2' onClick={handleDeleteConfirm}>Confirm</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>

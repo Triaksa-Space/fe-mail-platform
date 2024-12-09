@@ -9,6 +9,7 @@ import FooterAdminNav from "@/components/FooterAdminNav";
 import axios from "axios";
 import { saveAs } from 'file-saver';
 import LoadingDownloadPage from "@/components/DownloadLoading";
+import { theme } from "@/app/theme";
 
 interface EmailDetail {
   ID: number;
@@ -100,9 +101,9 @@ const EmailDetailPage: React.FC = () => {
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className=" space-y-4 flex-1 overflow-auto">
-        <div className="flex justify-between items-center bg-white p-2 shadow-sm">
+    <div className="space-y-2" style={{ backgroundColor: theme.colors.background }}>
+      <div className="flex-1 overflow-auto pb-20">
+        <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
           <Button
             variant="ghost"
             size="icon"
@@ -117,42 +118,44 @@ const EmailDetailPage: React.FC = () => {
 
         </div>
 
-        <div className="space-y-2 pl-4 pr-4">
-          <div className="border space-y-2 text-xs">
-            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4 ">
+        <div className="space-y-2 p-4">
+          <div className="border space-y-2 text-xs" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
+            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
               <span className="text-gray-500">From</span>
-              <span className="font-medium">
+              <span className="font-medium" style={{ color: theme.colors.textPrimary }}>
                 {email.SenderName} - {email.SenderEmail}
               </span>
             </div>
-            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4 ">
+            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
               <span className="text-gray-500">Subject</span>
-              <span className="font-medium">{email.Subject}</span>
+              <span className="font-medium" style={{ color: theme.colors.textPrimary }}>{email.Subject}</span>
             </div>
-            <div className="pl-1 pr-1 ">
-              <span className="font-medium">{email.RelativeTime}</span>
+            <div className="pl-1 pr-1">
+              <span className="font-medium" style={{ color: theme.colors.textSecondary }}>{email.RelativeTime}</span>
             </div>
           </div>
         </div>
 
         <div className="space-y-2 pl-4 pr-4">
-          <div className="border bg-white shadow-sm flex">
+          <div className="border bg-white shadow-sm flex" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
             <div
-              className="prose max-w-none p-2 text-sm overflow-hidden"
+              className={`prose max-w-none p-2 text-sm overflow-hidden ${email.Body ? '' : 'min-h-[200px]'}`}
               dangerouslySetInnerHTML={{ __html: email.Body }}
+              style={{ color: theme.colors.textPrimary }}
             />
           </div>
         </div>
 
         {/* Attachments Section */}
         {email.ListAttachments && email.ListAttachments.length > 0 && (
-          <div className="pl-5 pr-5">
-            {/* <h5 className="font-medium">Attachments:</h5> */}
+          <div className="pl-5 pr-5 pt-4">
+            {/* <h5 className="font-medium" style={{ color: theme.colors.textPrimary }}>Attachments:</h5> */}
             <div className="space-y-1">
               {email.ListAttachments.map((attachment, index) => (
                 <div
                   key={index}
-                  className="flex items-center"
+                  className="flex items-center justify-between p-2 bg-gray-50"
+                  style={{ borderColor: theme.colors.border }}
                 >
                   <span className="text-sm text-gray-700 pr-4">
                     {attachment.Filename.split('_').pop()}
@@ -160,6 +163,7 @@ const EmailDetailPage: React.FC = () => {
                   <button
                     onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
                     aria-label={`Download ${attachment.Filename.split('_').pop()}`}
+                    className="hover:bg-gray-100 p-2 rounded"
                   >
                     <Download className="h-4 w-4" />
                   </button>

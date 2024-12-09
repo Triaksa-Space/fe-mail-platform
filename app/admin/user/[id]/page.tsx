@@ -8,6 +8,7 @@ import FooterAdminNav from "@/components/FooterAdminNav"
 import { Toaster } from "@/components/ui/toaster"
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { theme } from '@/app/theme'
 
 interface UserEmail {
   ID: number
@@ -74,10 +75,11 @@ export default function UserDetail() {
 
   return (
     <>
-      <div className="space-y-2">
-        <div className="flex-1 overflow-auto pb-20">
+    <div className="space-y-2" style={{ backgroundColor: theme.colors.background }}>
+      <div className="flex-1 overflow-auto pb-20">
+        
           <div className="space-y-0.5">
-            <div className="flex justify-between items-center bg-white p-2 shadow-sm">
+          <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
               <h1 className="text-xl font-semibold tracking-tight">
                 <Button
                   variant="ghost"
