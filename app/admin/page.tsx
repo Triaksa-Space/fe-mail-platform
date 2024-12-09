@@ -46,15 +46,16 @@ interface AdminUser {
     created: string
 }
 
-type SortField = 'lastActive' | 'created'
+type SortField = 'last_login' | 'created_at'
 type SortOrder = 'asc' | 'desc'
 
 const EmailManagement: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<EmailUser[]>([])
-    const [sortField, setSortField] = useState<SortField>('lastActive')
-    const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-    const [createdSortOrder, setCreatedSortOrder] = useState<SortOrder>('asc')
+    const [sortFields, setSortFields] = useState<{ field: SortField, order: SortOrder }[]>([
+        { field: 'last_login', order: 'desc' },
+        { field: 'created_at', order: 'asc' },
+    ]);
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
@@ -190,6 +191,11 @@ const EmailManagement: React.FC = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
+                setIsLoading(true);
+                const sortFieldsString = sortFields
+                    .map(({ field, order }) => `${field} ${order}`)
+                    .join(', ');
+
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -198,8 +204,7 @@ const EmailManagement: React.FC = () => {
                         page: currentPage,
                         page_size: pageSize,
                         email: searchTerm,
-                        sort_by: sortField,
-                        sort_order: sortOrder,
+                        sort_fields: sortFieldsString,
                     },
                 });
                 const data = response.data.users.map((user: User) => ({
@@ -227,15 +232,23 @@ const EmailManagement: React.FC = () => {
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [token, currentPage, pageSize, searchTerm, sortField, sortOrder]);
+    }, [token, currentPage, pageSize, searchTerm, sortFields]);
 
     const toggleSort = (field: SortField) => {
-        if (field === 'lastActive') {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        } else if (field === 'created') {
-            setCreatedSortOrder(createdSortOrder === 'asc' ? 'desc' : 'asc');
-        }
-        setSortField(field);
+        setSortFields((prevSortFields) => {
+            const newSortFields = prevSortFields.map((sortField) => {
+                if (sortField.field === field) {
+                    return { field, order: sortField.order === 'asc' ? 'desc' : 'asc' as SortOrder };
+                }
+                return sortField;
+            });
+
+            // Move the clicked field to the front
+            const clickedField = newSortFields.find((sortField) => sortField.field === field);
+            const otherFields = newSortFields.filter((sortField) => sortField.field !== field);
+
+            return [clickedField!, ...otherFields];
+        });
     };
 
     return (
@@ -257,40 +270,41 @@ const EmailManagement: React.FC = () => {
                 </div>
 
                 <div className="overflow-x-auto p-4">
-                    {isLoading ? (
-                        <div>Loading...</div>
-                    ) : error ? (
-                        <div className="text-red-500">{error}</div>
-                    ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                    <TableHead className="text-center text-black font-bold">Name</TableHead>
-                                    <TableHead className="text-center text-black font-bold">
-                                        <Button
-                                            variant="ghost"
-                                            onClick={() => toggleSort('lastActive')}
-                                            className="font-bold text-black hover:bg-gray-500"
-                                        >
-                                            Last Active
-                                            {sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
-                                        </Button>
-                                    </TableHead>
-                                    <TableHead className="text-center text-black font-bold">
-                                        <Button
-                                            variant="ghost"
-                                            onClick={() => toggleSort('created')}
-                                            className="font-bold text-black hover:bg-gray-500"
-                                        >
-                                            Created
-                                            {createdSortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
-                                        </Button>
-                                    </TableHead>
-                                    <TableHead className="text-center text-black font-bold">Created By Admin</TableHead>
-                                    <TableHead className="text-center text-black font-bold">Action</TableHead>
-                                </TableRow>
-                            </TableHeader>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="bg-gray-400 hover:bg-gray-400">
+                                <TableHead className="text-center text-black font-bold">Name</TableHead>
+                                <TableHead className="text-center text-black font-bold">
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => toggleSort('last_login')}
+                                        className="font-bold text-black hover:bg-gray-500"
+                                    >
+                                        Last Active
+                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                    </Button>
+                                </TableHead>
+                                <TableHead className="text-center text-black font-bold">
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => toggleSort('created_at')}
+                                        className="font-bold text-black hover:bg-gray-500"
+                                    >
+                                        Created
+                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                    </Button>
+                                </TableHead>
+                                <TableHead className="text-center text-black font-bold">Created By Admin</TableHead>
+                                <TableHead className="text-center text-black font-bold">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        {isLoading ? (
+                            <div>Loading...</div>
+                        ) : error ? (
+                            <div className="text-red-500">{error}</div>
+                        ) : (
                             <TableBody>
+
                                 {users.map((user) => (
                                     <TableRow key={user.email}>
                                         <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
@@ -318,11 +332,13 @@ const EmailManagement: React.FC = () => {
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                            </TableBody>
-                        </Table>
-                    )}
 
-<Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+                            </TableBody>
+                        )}
+                    </Table>
+
+
+                    <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
