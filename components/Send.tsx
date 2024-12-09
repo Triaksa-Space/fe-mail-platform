@@ -273,7 +273,7 @@ const Send: React.FC = () => {
               type="file"
               multiple
               onChange={handleFileChange}
-              accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.gif,.txt,.zip,.rar" // Optional: restrict file types
+              accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .mp3, .wav, .aac, .ogg, .mp4, .mov, .avi, .mkv, .zip, .rar, .7z, .tar, .gz" // Optional: restrict file types
             />
             <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-gray-100 p-2 rounded">
               <Paperclip className="h-5 w-5" />
