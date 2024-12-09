@@ -21,6 +21,7 @@ import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 import withAuth from "@/components/hoc/withAuth";
+import PasswordInput from '@/components/PasswordInput'
 
 interface EmailUser {
     id: number
@@ -36,6 +37,13 @@ interface User {
     LastLogin: string
     CreatedAt: string
     CreatedByName: string
+}
+
+interface AdminUser {
+    id: number
+    email: string
+    lastActive: string
+    created: string
 }
 
 type SortField = 'lastActive' | 'created'
@@ -55,13 +63,95 @@ const EmailManagement: React.FC = () => {
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const { toast } = useToast();
+    const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
+    const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
 
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<EmailUser | null>(null);
 
+    const [passwordForAdmin, setPasswordForAdmin] = useState("");
+    const [confirmPasswordForAdmin, setConfirmPasswordForAdmin] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showCPassword, setShowCPassword] = useState(false);
+
     const handleDeleteClick = (user: EmailUser) => {
         setSelectedUser(user);
         setIsDialogDeleteOpen(true);
+    };
+
+    // Function to handle "Change Password" button click
+    const handleChangePasswordClick = (admin: AdminUser) => {
+        setSelectedAdmin(admin);
+        setIsChangePasswordDialogOpen(true);
+    };
+
+    // Function to handle password change submission
+    const handleChangePasswordSubmit = async () => {
+        if (!selectedAdmin) return;
+
+        if (passwordForAdmin !== confirmPasswordForAdmin) {
+            toast({
+                description: "Passwords do not match.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (passwordForAdmin.length < 6) {
+            toast({
+                description: "Password must be at least 6 characters long.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Regular expression to ensure password complexity
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+
+        if (!passwordRegex.test(passwordForAdmin)) {
+            toast({
+                description: "Password must include a number, lowercase, uppercase, and symbol.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        try {
+            await axios.put(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
+                {
+                    new_password: passwordForAdmin,
+                    old_password: "",
+                    user_id: selectedAdmin.id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            toast({
+                description: "Password changed successfully.",
+                variant: "default",
+            });
+
+            // Reset state and close modal
+            setIsChangePasswordDialogOpen(false);
+            setPasswordForAdmin("");
+            setConfirmPasswordForAdmin("");
+            setSelectedAdmin(null);
+
+        } catch (error) {
+            console.error('Failed to change password:', error);
+            setPasswordForAdmin("");
+            setConfirmPasswordForAdmin("");
+            setSelectedAdmin(null);
+            toast({
+                description: "Failed to change password. Please try again.",
+                variant: "destructive",
+            });
+        }
     };
 
     const handleDeleteConfirm = async () => {
@@ -151,7 +241,7 @@ const EmailManagement: React.FC = () => {
                 <div className="flex justify-between items-center pl-4">
                     <Input
                         placeholder="by username"
-                        className="max-w-xs"
+                        className="placeholder-gray max-w-xs"
                         value={searchTerm}
                         onChange={(e) => {
                             const value = e.target.value;
@@ -213,6 +303,13 @@ const EmailManagement: React.FC = () => {
                                                 View
                                             </Button>
                                             <Button
+                                                variant="secondary"
+                                                className="bg-yellow-200 hover:bg-yellow-300"
+                                                onClick={() => handleChangePasswordClick(user)}
+                                            >
+                                                Change Password
+                                            </Button>
+                                            <Button
                                                 variant="destructive"
                                                 className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                                 onClick={() => handleDeleteClick(user)}
@@ -226,6 +323,50 @@ const EmailManagement: React.FC = () => {
                         </Table>
                     )}
 
+<Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="New Password"
+                                    value={passwordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
+                                />
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="Confirm Password"
+                                    value={confirmPasswordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setConfirmPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showCPassword}
+                                    setShowPassword={setShowCPassword}
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button variant="secondary" onClick={() => {
+                                    setIsChangePasswordDialogOpen(false);
+                                    setPasswordForAdmin("");
+                                    setConfirmPasswordForAdmin("");
+                                    setSelectedAdmin(null);
+                                }}>
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleChangePasswordSubmit}>
+                                    Submit
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                     <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                         <DialogContent>
                             <DialogHeader>
