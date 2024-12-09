@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 import withAuth from "@/components/hoc/withAuth";
 import PasswordInput from '@/components/PasswordInput'
-import { theme } from '../theme'
+// import { theme } from '../theme'
 
 interface EmailUser {
     id: number
