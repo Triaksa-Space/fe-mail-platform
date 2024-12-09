@@ -115,7 +115,7 @@ const EmailDetailPage: React.FC = () => {
         <LoadingDownloadPage />
       )}
       <div className="flex-1 overflow-auto pb-20">
-        <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
+        <div className="flex justify-between items-center p-2">
           <Button
             variant="ghost"
             size="icon"

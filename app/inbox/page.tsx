@@ -110,8 +110,9 @@ const InboxPageContent: React.FC = () => {
     };
   }, [sentStatus, token, router, setEmail]);
 
-  return (
-    <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
+  // Replace the return statement in InboxPageContent component
+return (
+  <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
       {/* Fixed Header */}
       <header className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
         <h1 className="text-xl font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
@@ -121,48 +122,74 @@ const InboxPageContent: React.FC = () => {
           Daily Send {sentEmails}/3
         </h1>
       </header>
-      <main className="flex-1 overflow-y-auto">
-        <div className="space-y-0.5">
 
-          {isLoading ? (
-            <div className="p-4 text-center">Loading...</div>
-          ) : error ? (
-            <div className="p-4 text-center" style={{ color: theme.colors.error }}>{error}</div>
-          ) : emails.length > 0 ? (
-            <div className="divide-y">
-              {emails.map((email) => (
-                <div
-                  key={email.ID}
-                  className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
-                    ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
-                  onClick={() => router.push(`/inbox/${email.ID}`)}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold truncate" style={{ color: theme.colors.textPrimary }}>{email.SenderName}</h3>
-                      <span className="text-sm" style={{ color: theme.colors.textSecondary }}>
-                        {email.RelativeTime}
-                      </span>
-                    </div>
-                    <h4 className="font-medium truncate" style={{ color: theme.colors.textPrimary }}>{email.Subject}</h4>
-                    <p className="text-sm truncate" style={{ color: theme.colors.textSecondary }}>{email.Preview}</p>
+    {/* Scrollable Content Area */}
+    <main className="flex-1 overflow-y-auto">
+      <div className="space-y-0.5">
+        {isLoading ? (
+          <div className="p-4 text-center">Loading...</div>
+        ) : error ? (
+          <div className="p-4 text-center" style={{ color: theme.colors.error }}>
+            {error}
+          </div>
+        ) : emails.length > 0 ? (
+          <div className="divide-y">
+            {emails.map((email) => (
+              <div
+                key={email.ID}
+                className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
+                  ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
+                onClick={() => router.push(`/inbox/${email.ID}`)}
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <h3 
+                      className="font-semibold truncate" 
+                      style={{ color: theme.colors.textPrimary }}
+                    >
+                      {email.SenderName}
+                    </h3>
+                    <span 
+                      className="text-sm" 
+                      style={{ color: theme.colors.textSecondary }}
+                    >
+                      {email.RelativeTime}
+                    </span>
                   </div>
+                  <h4 
+                    className="font-medium truncate" 
+                    style={{ color: theme.colors.textPrimary }}
+                  >
+                    {email.Subject}
+                  </h4>
+                  <p 
+                    className="text-sm truncate" 
+                    style={{ color: theme.colors.textSecondary }}
+                  >
+                    {email.Preview}
+                  </p>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div
-              className="p-4 text-center cursor-pointer text-blue-500 underline"
-              onClick={() => window.location.reload()}
-            >
-              No emails found, Please Refresh your browser.
-            </div>
-          )}
-        </div>
-      </main>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div
+            className="p-4 text-center cursor-pointer text-blue-500 underline"
+            onClick={() => window.location.reload()}
+          >
+            No emails found, Please Refresh your browser.
+          </div>
+        )}
+      </div>
+    </main>
+
+    {/* Fixed Footer */}
+    <footer className="w-full z-10">
       <FooterNav />
-      <Toaster />
-    </div>
+    </footer>
+
+    <Toaster />
+  </div>
   );
 };
 

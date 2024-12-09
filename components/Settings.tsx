@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useState } from 'react';
 import { Button } from './ui/button';
 import axios from 'axios';
@@ -19,7 +20,7 @@ const Settings: React.FC = () => {
   const [oldPasswordError, setOldPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
   const token = useAuthStore((state) => state.token);
-  const logout = useAuthStore((state) => state.logout);
+
   const { toast } = useToast();
 
   const validatePasswords = () => {
@@ -91,15 +92,15 @@ const Settings: React.FC = () => {
 
   return (
     <>
-      <header className="flex justify-between items-center p-2" >
+      <header className="flex justify-between items-center p-2">
         <div className="flex items-center gap-2">
           <label className="text-xl font-bold">
             Change Password
           </label>
         </div>
       </header>
-      <main className="flex-1 overflow-y-auto">
-        <div className="flex justify-center items-start p-4">
+      <main className="flex-1">
+        <div className="flex justify-center items-start p-4 overflow-auto">
           <form className="w-full max-w-lg text-sm p-4" onSubmit={(e) => e.preventDefault()}>
             <PasswordInput
               id="current-password"
@@ -136,13 +137,13 @@ const Settings: React.FC = () => {
               setShowPassword={setShowConfirmPassword}
               error={confirmPasswordError}
             />
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center mt-6">
               <Button
-                // className="w-3/4 bg-[#F7D65D] font-bold hover:bg-[#F7D65D]/90 text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                className={`w-3/4 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${isLoading || !currentPassword || !newPassword || !confirmPassword
-                  ? 'bg-gray-300 text-black cursor-not-allowed'
-                  : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
-                  }`}
+                className={`w-3/4 py-2 px-4 shadow appearance-non font-bold rounded focus:outline-none focus:shadow-outline ${
+                  isLoading || !currentPassword || !newPassword || !confirmPassword
+                    ? 'bg-gray-300 text-black cursor-not-allowed'
+                    : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
+                }`}
                 onClick={handleSubmit}
                 disabled={isLoading || !currentPassword || !newPassword || !confirmPassword}
               >
@@ -150,17 +151,6 @@ const Settings: React.FC = () => {
               </Button>
             </div>
           </form>
-        </div>
-
-        <div className="p-4">
-          <div className="fixed bottom-24 left-0 right-0 w-3/4 flex items-center justify-center max-w-lg mx-auto">
-            <Button
-              className="w-3/4 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={logout}
-            >
-              Logout
-            </Button>
-          </div>
         </div>
       </main>
       <Toaster />
