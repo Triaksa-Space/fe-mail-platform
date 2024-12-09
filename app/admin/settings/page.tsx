@@ -362,11 +362,6 @@ const UserAdminManagement: React.FC = () => {
                                     <TableHead className="text-center text-black font-bold">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
-                            {isLoading ? (
-                        <div>Loading...</div>
-                    ) : error ? (
-                        <div className="text-red-500">{error}</div>
-                    ) : (
                             <TableBody>
                                 {users.map((user) => (
                                     <TableRow key={user.email}>
@@ -392,7 +387,6 @@ const UserAdminManagement: React.FC = () => {
                                     </TableRow>
                                 ))}
                             </TableBody>
-                            )}
                         </Table>
                     
 

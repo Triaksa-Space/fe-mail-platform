@@ -101,7 +101,10 @@ const EmailDetailPage: React.FC = () => {
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
   return (
-    <div className="space-y-2" style={{ backgroundColor: theme.colors.background }}>
+    <div style={{ backgroundColor: theme.colors.background }}>
+      {isDownloading && (
+        <LoadingDownloadPage/>
+      )}
       <div className="flex-1 overflow-auto pb-20">
         <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
           <Button
@@ -174,9 +177,6 @@ const EmailDetailPage: React.FC = () => {
         )}
         {/* End of Attachments Section */}
       </div>
-      {isDownloading && (
-        <LoadingDownloadPage/>
-      )}
       <FooterAdminNav />
     </div>
   );

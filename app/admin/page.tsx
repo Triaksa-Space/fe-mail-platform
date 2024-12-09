@@ -299,43 +299,37 @@ const EmailManagement: React.FC = () => {
                                 <TableHead className="text-center text-black font-bold">Action</TableHead>
                             </TableRow>
                         </TableHeader>
-                        {isLoading ? (
-                            <div>Loading...</div>
-                        ) : error ? (
-                            <div className="text-red-500">{error}</div>
-                        ) : (
-                            <TableBody>
+                        <TableBody>
 
-                                {users.map((user) => (
-                                    <TableRow key={user.email}>
-                                        <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
-                                        <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
-                                        <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
-                                        <TableCell className="px-2 py-1 text-center">{user.createdByName}</TableCell>
-                                        <TableCell className="px-2 py-1 space-x-2 text-center">
-                                            <Button variant="secondary" className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
-                                                View
-                                            </Button>
-                                            <Button
-                                                variant="secondary"
-                                                className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
-                                                onClick={() => handleChangePasswordClick(user)}
-                                            >
-                                                Change Password
-                                            </Button>
-                                            <Button
-                                                variant="destructive"
-                                                className="shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
-                                                onClick={() => handleDeleteClick(user)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                            {users.map((user) => (
+                                <TableRow key={user.email}>
+                                    <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center">{user.createdByName}</TableCell>
+                                    <TableCell className="px-2 py-1 space-x-2 text-center">
+                                        <Button variant="secondary" className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
+                                            View
+                                        </Button>
+                                        <Button
+                                            variant="secondary"
+                                            className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
+                                            onClick={() => handleChangePasswordClick(user)}
+                                        >
+                                            Change Password
+                                        </Button>
+                                        <Button
+                                            variant="destructive"
+                                            className="shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                            onClick={() => handleDeleteClick(user)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
 
-                            </TableBody>
-                        )}
+                        </TableBody>
                     </Table>
 
 
@@ -377,8 +371,8 @@ const EmailManagement: React.FC = () => {
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button 
-                                variant="default"
+                                <Button
+                                    variant="default"
                                     className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!passwordForAdmin || !confirmPasswordForAdmin
                                         ? "bg-gray-300 cursor-not-allowed"
                                         : "bg-[#ffeeac] hover:bg-yellow-300"
