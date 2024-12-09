@@ -22,7 +22,6 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 import withAuth from "@/components/hoc/withAuth";
 import PasswordInput from '@/components/PasswordInput'
-// import { theme } from '../theme'
 
 interface EmailUser {
     id: number
@@ -122,7 +121,7 @@ const EmailManagement: React.FC = () => {
 
         try {
             await axios.put(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
                 {
                     new_password: passwordForAdmin,
                     old_password: "",
@@ -147,14 +146,18 @@ const EmailManagement: React.FC = () => {
             setSelectedAdmin(null);
 
         } catch (error) {
-            console.error('Failed to change password:', error);
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
+            
+            let errorMessage = "Failed to change password. Please try again."
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error
+            }
             toast({
-                description: "Failed to change password. Please try again.",
+                description: errorMessage,
                 variant: "destructive",
-            });
+            })
         }
     };
 
@@ -179,8 +182,19 @@ const EmailManagement: React.FC = () => {
                 description: "User deleted successfully!",
                 variant: "default",
             });
+
+            // Fetch users again to refresh the list
+            fetchUsers();
         } catch (error) {
             console.error('Failed to delete user:', error);
+            let errorMessage = "Failed to change password. Please try again."
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error
+            }
+            toast({
+                description: errorMessage,
+                variant: "destructive",
+            })
         }
     };
 
@@ -189,45 +203,55 @@ const EmailManagement: React.FC = () => {
         setCurrentPage(1); // Reset to first page when searching
     };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                setIsLoading(true);
-                const sortFieldsString = sortFields
-                    .map(({ field, order }) => `${field} ${order}`)
-                    .join(', ');
+    const fetchUsers = async () => {
+        try {
+            setIsLoading(true);
+            const sortFieldsString = sortFields
+                .map(({ field, order }) => `${field} ${order}`)
+                .join(', ');
 
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    params: {
-                        page: currentPage,
-                        page_size: pageSize,
-                        email: searchTerm,
-                        sort_fields: sortFieldsString,
-                    },
-                });
-                const data = response.data.users.map((user: User) => ({
-                    id: user.ID,
-                    email: user.Email,
-                    lastActive: new Date(user.LastLogin).toLocaleString(),
-                    created: new Date(user.CreatedAt).toLocaleDateString(),
-                    createdByName: user.CreatedByName,
-                }));
-                setUsers(data);
-                setTotalPages(response.data.total_pages);
-                setTotalCount(response.data.total_count);
-                setActiveCount(response.data.active_count);
-                setError(null);
-            } catch (err) {
-                console.error('Failed to fetch users:', err);
-                setError('Failed to load users');
-            } finally {
-                setIsLoading(false);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    page: currentPage,
+                    page_size: pageSize,
+                    email: searchTerm,
+                    sort_fields: sortFieldsString,
+                },
+            });
+
+            if (!response.data || !response.data.users) {
+                setUsers([]);
+                setTotalPages(1);
+                setTotalCount(0);
+                setActiveCount(0);
+                setError('No users found');
+                return;
             }
-        };
 
+            const data = response.data.users.map((user: User) => ({
+                id: user.ID,
+                email: user.Email,
+                lastActive: new Date(user.LastLogin).toLocaleString(),
+                created: new Date(user.CreatedAt).toLocaleDateString(),
+                createdByName: user.CreatedByName,
+            }));
+            setUsers(data);
+            setTotalPages(response.data.total_pages || 1);
+            setTotalCount(response.data.total_count || 0);
+            setActiveCount(response.data.active_count || 0);
+            setError(null);
+        } catch (err) {
+            console.error('Failed to fetch users:', err);
+            setError('Failed to load users');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         const timeoutId = setTimeout(() => {
             fetchUsers();
         }, 500);

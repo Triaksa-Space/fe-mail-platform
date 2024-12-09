@@ -26,12 +26,28 @@ const CreateSingleEmail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const generateRandomPassword = () => {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
-    let password = ""
-    for (let i = 0; i < 8; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length))
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    const symbols = "!@#$%^&*";
+    const allChars = lower + upper + numbers + symbols;
+
+    // Ensure at least one character from each category
+    let password = "";
+    password += lower.charAt(Math.floor(Math.random() * lower.length));
+    password += upper.charAt(Math.floor(Math.random() * upper.length));
+    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+
+    // Fill the remaining characters
+    for (let i = 4; i < 8; i++) {
+      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
     }
-    setPassword(password)
+
+    // Shuffle the password to randomize character positions
+    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+    setPassword(password);
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,11 +65,11 @@ const CreateSingleEmail: React.FC = () => {
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
       if (!passwordRegex.test(password)) {
-          toast({
-              description: "Password must include a number, lowercase, uppercase, and symbol.",
-              variant: "destructive",
-          });
-          return;
+        toast({
+          description: "Password must include a number, lowercase, uppercase, and symbol.",
+          variant: "destructive",
+        });
+        return;
       }
       setIsLoading(true)
       await axios.post(
@@ -104,9 +120,12 @@ const CreateSingleEmail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Input
                 value={username}
+                minLength={4}
                 onChange={(e) => {
                   const value = e.target.value;
                   setUsername(value.replace(/\s/g, '')); // Remove spaces
+                  const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+                  setUsername(sanitizedValue);
                 }}
                 placeholder="Email"
                 className="shadow appearance-non flex-1 h-12"
@@ -156,7 +175,7 @@ const CreateSingleEmail: React.FC = () => {
         </div>
       </div>
       {isLoading && (
-        <LoadingProcessingPage/>
+        <LoadingProcessingPage />
       )}
       <FooterAdminNav />
     </div>

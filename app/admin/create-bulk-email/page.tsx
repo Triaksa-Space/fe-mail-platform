@@ -36,14 +36,30 @@ const CreateBulkEmail: React.FC = () => {
   }
 
   const generateRandomPassword = () => {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
-    let randomPassword = ""
-    for (let i = 0; i < 8; i++) {
-      randomPassword += chars.charAt(Math.floor(Math.random() * chars.length))
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    const symbols = "!@#$%^&*";
+    const allChars = lower + upper + numbers + symbols;
+
+    // Ensure at least one character from each category
+    let password = "";
+    password += lower.charAt(Math.floor(Math.random() * lower.length));
+    password += upper.charAt(Math.floor(Math.random() * upper.length));
+    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+
+    // Fill the remaining characters
+    for (let i = 4; i < 8; i++) {
+        password += allChars.charAt(Math.floor(Math.random() * allChars.length));
     }
-    setPassword(randomPassword)
+
+    // Shuffle the password to randomize character positions
+    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+    setPassword(password);
     setIsPasswordRandom(true)
-  }
+}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -178,11 +194,14 @@ const CreateBulkEmail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Input
                 value={isRandom ? "random" : baseName}
+                minLength={4}
                 placeholder="Email (numeric)"
                 className={isRandom ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
                 onChange={(e) => {
                   const value = e.target.value;
                   setBaseName(value.replace(/\s/g, '')); // Remove spaces
+                  const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+                  setBaseName(sanitizedValue);
                 }}
                 disabled={isRandom}
               />

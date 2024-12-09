@@ -10,6 +10,7 @@ import axios from "axios";
 import { saveAs } from 'file-saver';
 import LoadingDownloadPage from "@/components/DownloadLoading";
 import { theme } from "@/app/theme";
+import { useToast } from "@/hooks/use-toast"
 
 interface EmailDetail {
   ID: number;
@@ -32,6 +33,7 @@ const EmailDetailPage: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
+  const { toast } = useToast();
 
   // Function to handle file download
   const handleDownload = async (url: string, filename: string) => {
@@ -56,9 +58,16 @@ const EmailDetailPage: React.FC = () => {
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
       saveAs(blob, filename);
     } catch (error) {
-      console.error('Failed to download file:', error);
+      let errorMessage = "Failed to download file. Please try again."
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        errorMessage = error.response.data.error
+      }
+      toast({
+        description: errorMessage,
+        variant: "destructive",
+      })
     } finally {
-      setIsDownloading(false); 
+      setIsDownloading(false);
     }
   };
 
@@ -103,7 +112,7 @@ const EmailDetailPage: React.FC = () => {
   return (
     <div style={{ backgroundColor: theme.colors.background }}>
       {isDownloading && (
-        <LoadingDownloadPage/>
+        <LoadingDownloadPage />
       )}
       <div className="flex-1 overflow-auto pb-20">
         <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>

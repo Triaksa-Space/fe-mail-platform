@@ -109,7 +109,6 @@ export default function LandingPage() {
       //   router.push("/inbox");
       // }
     } catch (error) {
-      console.error("Login failed:", error);
       setFailedAttempts((prev) => prev + 1);
 
       if (failedAttempts + 1 >= 4) {

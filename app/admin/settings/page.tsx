@@ -150,15 +150,19 @@ const UserAdminManagement: React.FC = () => {
             // Optionally refresh the user list
             fetchUsers();
         } catch (error) {
-            console.error('Failed to change password:', error);
             setPasswordForAdmin("");
             setOldPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
+            
+            let errorMessage = "Failed to change password. Please try again."
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error
+            }
             toast({
-                description: "Failed to change password. Please try again.",
+                description: errorMessage,
                 variant: "destructive",
-            });
+            })
         }
     };
 
@@ -183,11 +187,14 @@ const UserAdminManagement: React.FC = () => {
                 variant: "default",
             });
         } catch (error) {
-            console.error('Failed to delete admin:', error);
+            let errorMessage = "Failed to delete admin. Please try again."
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error
+            }
             toast({
-                description: "Failed to delete admin. Please try again.",
+                description: errorMessage,
                 variant: "destructive",
-            });
+            })
         }
     };
 
@@ -249,11 +256,14 @@ const UserAdminManagement: React.FC = () => {
             // Refresh the user list
             fetchUsers();
         } catch (error) {
-            console.error('Failed to create admin:', error);
+            let errorMessage = "Failed to create admin. Please try again."
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error
+            }
             toast({
-                description: "Failed to create admin. Please try again.",
+                description: errorMessage,
                 variant: "destructive",
-            });
+            })
         }
     };
 
@@ -266,8 +276,8 @@ const UserAdminManagement: React.FC = () => {
         try {
             setIsLoading(true)
             const sortFieldsString = sortFields
-                    .map(({ field, order }) => `${field} ${order}`)
-                    .join(', ');
+                .map(({ field, order }) => `${field} ${order}`)
+                .join(', ');
 
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
                 headers: {
@@ -334,12 +344,12 @@ const UserAdminManagement: React.FC = () => {
 
                 <div className="overflow-auto p-4 pb-20 ">
                     <Toaster />
-                    
-                        <Table>
-                            <TableHeader>
-                                <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                    <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
-                                    <TableHead className="text-center text-black font-bold">
+
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="bg-gray-400 hover:bg-gray-400">
+                                <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
+                                <TableHead className="text-center text-black font-bold">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('last_login')}
@@ -348,8 +358,8 @@ const UserAdminManagement: React.FC = () => {
                                         Last Active
                                         {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
                                     </Button>
-                                    </TableHead>
-                                    <TableHead className="text-center text-black font-bold">
+                                </TableHead>
+                                <TableHead className="text-center text-black font-bold">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('created_at')}
@@ -358,37 +368,37 @@ const UserAdminManagement: React.FC = () => {
                                         Created
                                         {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
                                     </Button>
-                                    </TableHead>
-                                    <TableHead className="text-center text-black font-bold">Action</TableHead>
+                                </TableHead>
+                                <TableHead className="text-center text-black font-bold">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {users.map((user) => (
+                                <TableRow key={user.email}>
+                                    <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
+                                    <TableCell className="px-2 py-1 space-x-2 text-center">
+                                        <Button
+                                            variant="secondary"
+                                            className=" shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
+                                            onClick={() => handleChangePasswordClick(user)}
+                                        >
+                                            Change Password
+                                        </Button>
+                                        <Button
+                                            variant="destructive"
+                                            className=" shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                            onClick={() => handleDeleteClick(user)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {users.map((user) => (
-                                    <TableRow key={user.email}>
-                                        <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
-                                        <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
-                                        <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
-                                        <TableCell className="px-2 py-1 space-x-2 text-center">
-                                            <Button
-                                                variant="secondary"
-                                                className=" shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
-                                                onClick={() => handleChangePasswordClick(user)}
-                                            >
-                                                Change Password
-                                            </Button>
-                                            <Button
-                                                variant="destructive"
-                                                className=" shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
-                                                onClick={() => handleDeleteClick(user)}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    
+                            ))}
+                        </TableBody>
+                    </Table>
+
 
                     <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
                         <DialogContent>
@@ -428,12 +438,12 @@ const UserAdminManagement: React.FC = () => {
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button 
+                                <Button
                                     type="submit"
                                     className={`shadow appearance-non w-1/2 max-w-xs font-bold text-black ${!passwordForAdmin || !confirmPasswordForAdmin
-                                    ? "bg-gray-300 cursor-not-allowed"
-                                    : "bg-[#ffeeac] hover:bg-yellow-300"
-                                    }`}
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-[#ffeeac] hover:bg-yellow-300"
+                                        }`}
                                     disabled={!passwordForAdmin || !confirmPasswordForAdmin}
                                     onClick={handleChangePasswordSubmit}>
                                     Submit
@@ -448,7 +458,7 @@ const UserAdminManagement: React.FC = () => {
                                 <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
-                            <PasswordInput
+                                <PasswordInput
                                     id="old-password"
                                     placeholder="Old Password"
                                     value={oldPasswordForAdmin}
@@ -492,12 +502,12 @@ const UserAdminManagement: React.FC = () => {
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button 
+                                <Button
                                     type="submit"
                                     className={`shadow appearance-non w-1/2 max-w-xs font-bold text-black ${!passwordForAdmin || !oldPasswordForAdmin || !confirmPasswordForAdmin
-                                    ? "bg-gray-300 cursor-not-allowed"
-                                    : "bg-[#ffeeac] hover:bg-yellow-300"
-                                    }`}
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-[#ffeeac] hover:bg-yellow-300"
+                                        }`}
                                     disabled={!passwordForAdmin || !oldPasswordForAdmin || !confirmPasswordForAdmin}
                                     onClick={handleChangePasswordSubmit}>
                                     Submit

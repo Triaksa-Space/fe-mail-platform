@@ -166,7 +166,6 @@ const Send: React.FC = () => {
           //   variant: "default",
           // });
         } catch (error) {
-          console.log(error);
           let errorMsg = `Failed to upload "${file.name}". Please try again.`;
           if (axios.isAxiosError(error) && error.response?.data?.error) {
             errorMsg = `Failed to upload "${file.name}". ${error.response.data.error}`;
@@ -237,7 +236,6 @@ const Send: React.FC = () => {
       //   variant: "default",
       // });
     } catch (error) {
-      console.log(error);
       let errorMsg = `Failed to remove attachments. Please try again.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         errorMsg = `Failed to remove attachments. ${error.response.data.error}`;
