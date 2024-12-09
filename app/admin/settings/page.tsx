@@ -36,14 +36,12 @@ interface User {
     CreatedAt: string
 }
 
-type SortField = 'lastActive' | 'created' | 'lastCreated'
+type SortField = 'last_login' | 'created_at'
 type SortOrder = 'asc' | 'desc'
 
 const UserAdminManagement: React.FC = () => {
     // const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<AdminUser[]>([])
-    const [sortField, setSortField] = useState<SortField>('lastActive')
-    const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     // const [currentPage, setCurrentPage] = useState(1)
@@ -68,6 +66,11 @@ const UserAdminManagement: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showOPassword, setShowOPassword] = useState(false);
     const [showCPassword, setShowCPassword] = useState(false);
+
+    const [sortFields, setSortFields] = useState<{ field: SortField, order: SortOrder }[]>([
+        { field: 'last_login', order: 'desc' },
+        { field: 'created_at', order: 'asc' },
+    ]);
 
     const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
@@ -261,10 +264,18 @@ const UserAdminManagement: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
+            setIsLoading(true)
+            const sortFieldsString = sortFields
+                    .map(({ field, order }) => `${field} ${order}`)
+                    .join(', ');
+
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
+                params: {
+                    sort_fields: sortFieldsString,
+                }
             })
             const data = response.data.users.map((user: User) => ({
                 id: user.ID,
@@ -290,30 +301,22 @@ const UserAdminManagement: React.FC = () => {
         return () => clearTimeout(timeoutId);
     }, [token, pageSize])
 
-    const sortedUsers = [...users].sort((a, b) => {
-        if (sortField === 'lastActive') {
-            return sortOrder === 'asc'
-                ? a.lastActive.localeCompare(b.lastActive)
-                : b.lastActive.localeCompare(a.lastActive)
-        } else if (sortField === 'created') {
-            return sortOrder === 'asc'
-                ? a.created.localeCompare(b.created)
-                : b.created.localeCompare(a.created)
-        } else {
-            return sortOrder === 'asc'
-                ? a.created.localeCompare(b.created)
-                : b.created.localeCompare(a.created)
-        }
-    })
-
     const toggleSort = (field: SortField) => {
-        if (sortField === field) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-        } else {
-            setSortField(field)
-            setSortOrder('desc')
-        }
-    }
+        setSortFields((prevSortFields) => {
+            const newSortFields = prevSortFields.map((sortField) => {
+                if (sortField.field === field) {
+                    return { field, order: sortField.order === 'asc' ? 'desc' : 'asc' as SortOrder };
+                }
+                return sortField;
+            });
+
+            // Move the clicked field to the front
+            const clickedField = newSortFields.find((sortField) => sortField.field === field);
+            const otherFields = newSortFields.filter((sortField) => sortField.field !== field);
+
+            return [clickedField!, ...otherFields];
+        });
+    };
 
     const handleLogout = () => {
         // Clear token and redirect to login page
@@ -331,44 +334,41 @@ const UserAdminManagement: React.FC = () => {
 
                 <div className="overflow-auto p-4 pb-20">
                     <Toaster />
-                    {isLoading ? (
-                        <div>Loading...</div>
-                    ) : error ? (
-                        <div className="text-red-500">{error}</div>
-                    ) : (
+                    
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-gray-400 hover:bg-gray-400">
                                     <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
                                     <TableHead className="text-center text-black font-bold">
-                                        <Button
-                                            variant="ghost"
-                                            onClick={() => toggleSort('lastActive')}
-                                            className="font-bold text-black hover:bg-gray-500"
-                                        >
-                                            Last Active
-                                            {sortField === 'lastActive' && (
-                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                            )}
-                                        </Button>
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => toggleSort('last_login')}
+                                        className="font-bold text-black hover:bg-gray-500"
+                                    >
+                                        Last Active
+                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                    </Button>
                                     </TableHead>
                                     <TableHead className="text-center text-black font-bold">
-                                        <Button
-                                            variant="ghost"
-                                            onClick={() => toggleSort('created')}
-                                            className="font-bold text-black hover:bg-gray-500"
-                                        >
-                                            Created
-                                            {sortField === 'created' && (
-                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                            )}
-                                        </Button>
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => toggleSort('created_at')}
+                                        className="font-bold text-black hover:bg-gray-500"
+                                    >
+                                        Created
+                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                    </Button>
                                     </TableHead>
                                     <TableHead className="text-center text-black font-bold">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
+                            {isLoading ? (
+                        <div>Loading...</div>
+                    ) : error ? (
+                        <div className="text-red-500">{error}</div>
+                    ) : (
                             <TableBody>
-                                {sortedUsers.map((user) => (
+                                {users.map((user) => (
                                     <TableRow key={user.email}>
                                         <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
                                         <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
@@ -392,8 +392,9 @@ const UserAdminManagement: React.FC = () => {
                                     </TableRow>
                                 ))}
                             </TableBody>
+                            )}
                         </Table>
-                    )}
+                    
 
                     <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
                         <DialogContent>
