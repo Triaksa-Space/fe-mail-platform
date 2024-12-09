@@ -100,7 +100,7 @@ const Settings: React.FC = () => {
       </header>
       <main className="flex-1 overflow-y-auto">
         <div className="flex justify-center items-start p-4">
-          <form className="w-full max-w-lg text-sm" onSubmit={(e) => e.preventDefault()}>
+          <form className="w-full max-w-lg text-sm p-4" onSubmit={(e) => e.preventDefault()}>
             <PasswordInput
               id="current-password"
               placeholder="Old Password"
