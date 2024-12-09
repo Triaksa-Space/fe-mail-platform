@@ -332,7 +332,7 @@ const UserAdminManagement: React.FC = () => {
                         onChange={(e) => handleSearch(e.target.value)} />
                 </div> */}
 
-                <div className="overflow-auto p-4 pb-20">
+                <div className="overflow-auto p-4 pb-20 ">
                     <Toaster />
                     
                         <Table>
@@ -376,14 +376,14 @@ const UserAdminManagement: React.FC = () => {
                                         <TableCell className="px-2 py-1 space-x-2 text-center">
                                             <Button
                                                 variant="secondary"
-                                                className="bg-yellow-200 hover:bg-yellow-300"
+                                                className=" shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
                                                 onClick={() => handleChangePasswordClick(user)}
                                             >
                                                 Change Password
                                             </Button>
                                             <Button
                                                 variant="destructive"
-                                                className="bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                                className=" shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                                 onClick={() => handleDeleteClick(user)}
                                             >
                                                 Delete
@@ -426,7 +426,7 @@ const UserAdminManagement: React.FC = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button variant="secondary" onClick={() => {
+                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => {
                                     setIsChangePasswordDialogOpen(false);
                                     setPasswordForAdmin("");
                                     setConfirmPasswordForAdmin("");
@@ -434,7 +434,14 @@ const UserAdminManagement: React.FC = () => {
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button onClick={handleChangePasswordSubmit}>
+                                <Button 
+                                    type="submit"
+                                    className={`shadow appearance-non w-1/2 max-w-xs font-bold text-black ${!passwordForAdmin || !confirmPasswordForAdmin
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-[#ffeeac] hover:bg-yellow-300"
+                                    }`}
+                                    disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                    onClick={handleChangePasswordSubmit}>
                                     Submit
                                 </Button>
                             </DialogFooter>
@@ -482,15 +489,23 @@ const UserAdminManagement: React.FC = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button variant="secondary" onClick={() => {
+                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => {
                                     setIsChangePasswordDialogOpen(false);
+                                    setIsChangePasswordMyselfDialogOpen(false);
                                     setPasswordForAdmin("");
                                     setConfirmPasswordForAdmin("");
                                     setSelectedAdmin(null);
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button onClick={handleChangePasswordSubmit}>
+                                <Button 
+                                    type="submit"
+                                    className={`shadow appearance-non w-1/2 max-w-xs font-bold text-black ${!passwordForAdmin || !oldPasswordForAdmin || !confirmPasswordForAdmin
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-[#ffeeac] hover:bg-yellow-300"
+                                    }`}
+                                    disabled={!passwordForAdmin || !oldPasswordForAdmin || !confirmPasswordForAdmin}
+                                    onClick={handleChangePasswordSubmit}>
                                     Submit
                                 </Button>
                             </DialogFooter>
@@ -504,8 +519,8 @@ const UserAdminManagement: React.FC = () => {
                             </DialogHeader>
                             <p>Are you sure you want to delete admin {selectedUser?.email}?</p>
                             <DialogFooter>
-                                <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                                <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
+                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
+                                <Button variant="destructive" className='shadow appearance-non w-1/2' onClick={handleDeleteConfirm}>Confirm</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -517,6 +532,7 @@ const UserAdminManagement: React.FC = () => {
                             </DialogHeader>
                             <div className="space-y-4">
                                 <Input
+                                    className='shadow appearance-non '
                                     placeholder="Username"
                                     value={newAdminEmail}
                                     onChange={(e) => {
@@ -525,6 +541,7 @@ const UserAdminManagement: React.FC = () => {
                                     }}
                                 />
                                 <Input
+                                    className='shadow appearance-non '
                                     placeholder="Password"
                                     type="password"
                                     value={newAdminPassword}
@@ -535,12 +552,12 @@ const UserAdminManagement: React.FC = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button variant="secondary" className='w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' onClick={() => setIsDialogCreateOpen(false)}>Back</Button>
+                                <Button variant="secondary" className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' onClick={() => setIsDialogCreateOpen(false)}>Back</Button>
                                 <Button
                                     variant="default"
-                                    className={`w-1/2  font-bold border border-black/20 text-black ${!newAdminEmail || !newAdminPassword
+                                    className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!newAdminEmail || !newAdminPassword
                                         ? "bg-gray-300 cursor-not-allowed"
-                                        : "bg-yellow-300 hover:bg-yellow-300"
+                                        : "bg-[#ffeeac] hover:bg-yellow-300"
                                         }`}
                                     disabled={!newAdminEmail || !newAdminPassword}
                                     onClick={handleCreateAdmin}>Confirm</Button>
@@ -557,12 +574,6 @@ const UserAdminManagement: React.FC = () => {
                         >
                             Create Admin
                         </Button>
-                        {/* <Button
-                            className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
-                            onClick={() => setIsDialogCreateOpen(true)}
-                        >
-                            Change Password
-                        </Button> */}
                         <Button
                             className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
                             onClick={handleLogout}

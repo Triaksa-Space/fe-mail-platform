@@ -94,7 +94,7 @@ const CreateSingleEmail: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex-1 overflow-auto pb-20">
-        <div className="p-4 border-b flex items-center justify-between">
+        <div className="p-4 border-b flex items-center justify-between shadow appearance-non">
           <Toaster />
         </div>
 
@@ -109,13 +109,13 @@ const CreateSingleEmail: React.FC = () => {
                   setUsername(value.replace(/\s/g, '')); // Remove spaces
                 }}
                 placeholder="Email"
-                className="flex-1 h-12"
+                className="shadow appearance-non flex-1 h-12"
               />
               <span className="text-lg">@</span>
               <DomainSelector
                 value={selectedDomain}
                 onChange={(value) => setSelectedDomain(value)}
-                className="w-[180px] h-12"
+                className="shadow appearance-non w-[180px] h-12"
               />
             </div>
 
@@ -128,13 +128,13 @@ const CreateSingleEmail: React.FC = () => {
                   setPassword(value.replace(/\s/g, '')); // Remove spaces
                 }}
                 placeholder="Password"
-                className="flex-1 h-12"
+                className="shadow appearance-non flex-1 h-12"
               />
               <span className="text-lg text-white">@</span>
               <Button
                 type="button"
                 onClick={generateRandomPassword}
-                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300  text-black "
+                className="shadow appearance-non w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300  text-black "
               >
                 Random Password
               </Button>
@@ -143,7 +143,7 @@ const CreateSingleEmail: React.FC = () => {
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className={`h-11 w-3/4 max-w-xs font-bold  text-black ${!username || !password
+                className={`shadow appearance-non h-11 w-3/4 max-w-xs font-bold  text-black ${!username || !password
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-[#ffeeac] hover:bg-yellow-300"
                   }`}

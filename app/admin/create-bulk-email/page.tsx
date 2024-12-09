@@ -113,7 +113,7 @@ const CreateBulkEmail: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex-1 overflow-auto pb-20">
-        <div className="p-4 border-b flex items-center justify-between">
+        <div className="p-4 border-b flex items-center justify-between shadow appearance-non">
           <Toaster />
         </div>
 
@@ -125,7 +125,7 @@ const CreateBulkEmail: React.FC = () => {
                 <Button
                   type="button"
                   variant="ghost"
-                  className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
+                  className="shadow appearance-non w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
                   onClick={generateRandomNames}
                 >
                   Random Name
@@ -137,7 +137,7 @@ const CreateBulkEmail: React.FC = () => {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="h-12 w-12 rounded-none "
+                    className="shadow appearance-non h-12 w-12 rounded-none "
                     onClick={() => updateCount(count - 1)}
                     disabled={count <= 2}
                   >
@@ -157,12 +157,12 @@ const CreateBulkEmail: React.FC = () => {
                         }
                       }
                     }}
-                    className="w-full h-12 text-center"
+                    className="shadow appearance-non w-full h-12 text-center"
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    className="h-12 w-12 rounded-none"
+                    className="shadow appearance-non h-12 w-12 rounded-none"
                     onClick={() => updateCount(count + 1)}
                     disabled={count >= 100}
                   >
@@ -179,7 +179,7 @@ const CreateBulkEmail: React.FC = () => {
               <Input
                 value={isRandom ? "random" : baseName}
                 placeholder="Email (numeric)"
-                className={isRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
+                className={isRandom ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
                 onChange={(e) => {
                   const value = e.target.value;
                   setBaseName(value.replace(/\s/g, '')); // Remove spaces
@@ -190,7 +190,7 @@ const CreateBulkEmail: React.FC = () => {
               <DomainSelector
                 value={selectedDomain}
                 onChange={(value) => setSelectedDomain(value)}
-                className="w-[180px]"
+                className="shadow appearance-non w-[180px]"
               />
             </div>
 
@@ -203,14 +203,14 @@ const CreateBulkEmail: React.FC = () => {
                   setPassword(value.replace(/\s/g, '')); // Remove spaces
                 }}
                 placeholder="Password"
-                className={isPasswordRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
+                className={isPasswordRandom ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
                 disabled={isPasswordRandom}
               />
               <span className="text-lg text-white">@</span>
               <Button
                 type="button"
                 onClick={generateRandomPassword}
-                className="w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
+                className="shadow appearance-non w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
               >
                 Random Password
               </Button>
@@ -224,13 +224,13 @@ const CreateBulkEmail: React.FC = () => {
                 setReceiveEmail(value.replace(/\s/g, '')); // Remove spaces
               }}
               placeholder="Email for receiving list"
-              className="h-12"
+              className="shadow appearance-non h-12"
             />
 
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className={`h-12 w-full max-w-xs font-bold text-black ${!receiveEmail || !password
+                className={`shadow appearance-non h-12 w-full max-w-xs font-bold text-black ${!receiveEmail || !password
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-[#ffeeac] hover:bg-yellow-300"
                   }`}

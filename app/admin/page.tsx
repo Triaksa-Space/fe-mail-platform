@@ -368,7 +368,7 @@ const EmailManagement: React.FC = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button variant="secondary" onClick={() => {
+                                <Button className="shadow appearance-non" variant="secondary" onClick={() => {
                                     setIsChangePasswordDialogOpen(false);
                                     setPasswordForAdmin("");
                                     setConfirmPasswordForAdmin("");
@@ -376,7 +376,7 @@ const EmailManagement: React.FC = () => {
                                 }}>
                                     Cancel
                                 </Button>
-                                <Button onClick={handleChangePasswordSubmit}>
+                                <Button className="shadow appearance-non" onClick={handleChangePasswordSubmit}>
                                     Submit
                                 </Button>
                             </DialogFooter>
@@ -389,8 +389,8 @@ const EmailManagement: React.FC = () => {
                             </DialogHeader>
                             <p>Are you sure you want to delete user {selectedUser?.email}?</p>
                             <DialogFooter>
-                                <Button variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                                <Button variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
+                                <Button className='shadow appearance-non ' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
+                                <Button className='shadow appearance-non ' variant="destructive" onClick={handleDeleteConfirm}>Confirm</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
