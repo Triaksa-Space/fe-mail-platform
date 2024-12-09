@@ -130,6 +130,7 @@ const CreateSingleEmail: React.FC = () => {
                 placeholder="Password"
                 className="flex-1 h-12"
               />
+              <span className="text-lg text-white">@</span>
               <Button
                 type="button"
                 onClick={generateRandomPassword}

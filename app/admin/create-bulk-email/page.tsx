@@ -194,7 +194,7 @@ const CreateBulkEmail: React.FC = () => {
               />
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Input
                 type="text"
                 value={password}
@@ -206,6 +206,7 @@ const CreateBulkEmail: React.FC = () => {
                 className={isPasswordRandom ? "flex-1 h-12 bg-gray-300" : "flex-1 h-12"}
                 disabled={isPasswordRandom}
               />
+              <span className="text-lg text-white">@</span>
               <Button
                 type="button"
                 onClick={generateRandomPassword}
