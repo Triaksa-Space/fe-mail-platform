@@ -54,10 +54,12 @@ const EmailManagement: React.FC = () => {
     const [users, setUsers] = useState<EmailUser[]>([])
     const [sortField, setSortField] = useState<SortField>('lastActive')
     const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+    const [createdSortOrder, setCreatedSortOrder] = useState<SortOrder>('asc')
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const [totalCount, setTotalCount] = useState(0)
+    const [activeCount, setActiveCount] = useState(0)
     const pageSize = 10
     const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
@@ -210,6 +212,7 @@ const EmailManagement: React.FC = () => {
                 setUsers(data);
                 setTotalPages(response.data.total_pages);
                 setTotalCount(response.data.total_count);
+                setActiveCount(response.data.active_count);
                 setError(null);
             } catch (err) {
                 console.error('Failed to fetch users:', err);
@@ -227,12 +230,12 @@ const EmailManagement: React.FC = () => {
     }, [token, currentPage, pageSize, searchTerm, sortField, sortOrder]);
 
     const toggleSort = (field: SortField) => {
-        if (sortField === field) {
+        if (field === 'lastActive') {
             setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortField(field);
-            setSortOrder('desc');
+        } else if (field === 'created') {
+            setCreatedSortOrder(createdSortOrder === 'asc' ? 'desc' : 'asc');
         }
+        setSortField(field);
     };
 
     return (
@@ -241,7 +244,7 @@ const EmailManagement: React.FC = () => {
                 <div className="flex justify-between items-center pl-4">
                     <Input
                         placeholder="by username"
-                        className="placeholder-gray max-w-xs"
+                        className="max-w-xs placeholder-gray"
                         value={searchTerm}
                         onChange={(e) => {
                             const value = e.target.value;
@@ -270,9 +273,7 @@ const EmailManagement: React.FC = () => {
                                             className="font-bold text-black hover:bg-gray-500"
                                         >
                                             Last Active
-                                            {sortField === 'lastActive' && (
-                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                            )}
+                                            {sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
                                         </Button>
                                     </TableHead>
                                     <TableHead className="text-center text-black font-bold">
@@ -282,9 +283,7 @@ const EmailManagement: React.FC = () => {
                                             className="font-bold text-black hover:bg-gray-500"
                                         >
                                             Created
-                                            {sortField === 'created' && (
-                                                sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />
-                                            )}
+                                            {createdSortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
                                         </Button>
                                     </TableHead>
                                     <TableHead className="text-center text-black font-bold">Created By Admin</TableHead>
@@ -386,6 +385,7 @@ const EmailManagement: React.FC = () => {
                     currentPage={currentPage}
                     onPageChange={setCurrentPage}
                     totalCount={totalCount}
+                    activeCount={activeCount}
                     pageSize={pageSize}
                 />
             </div>

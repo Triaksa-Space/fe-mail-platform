@@ -6,13 +6,14 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 interface PaginationComponentProps {
   totalCount: number;
+  activeCount: number;
   currentPage: number;
   pageSize: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 
-const PaginationComponent: React.FC<PaginationComponentProps> = ({ totalCount, currentPage, totalPages, onPageChange }) => {
+const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, totalCount, currentPage, totalPages, onPageChange }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageInput, setPageInput] = useState("");
 
@@ -138,7 +139,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ totalCount, c
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pl-4">
-      <span className="text-sm text-gray-500 w-full">Show data {totalCount}</span>
+      <span className="text-sm text-gray-500 w-full">Showing {activeCount} of {totalCount}</span>
       <Pagination>
         <PaginationContent>
           {currentPage > 1 && (
