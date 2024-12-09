@@ -72,6 +72,8 @@ const UserAdminManagement: React.FC = () => {
         { field: 'created_at', order: 'asc' },
     ]);
 
+    const [isMounted, setIsMounted] = useState(true);
+
     const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
         setIsDialogDeleteOpen(true);
@@ -287,13 +289,16 @@ const UserAdminManagement: React.FC = () => {
                     sort_fields: sortFieldsString,
                 }
             })
-            const data = response.data.users.map((user: User) => ({
-                id: user.ID,
-                email: user.Email,
-                lastActive: new Date(user.LastLogin).toLocaleString(),
-                created: new Date(user.CreatedAt).toLocaleDateString(),
-            }))
-            setUsers(data)
+
+            if (isMounted) {
+                const data = response.data.users.map((user: User) => ({
+                    id: user.ID,
+                    email: user.Email,
+                    lastActive: new Date(user.LastLogin).toLocaleString(),
+                    created: new Date(user.CreatedAt).toLocaleDateString(),
+                }))
+                setUsers(data)
+            };
             // setError(null)
         } catch (err) {
             console.error('Failed to fetch users:', err)
@@ -304,13 +309,27 @@ const UserAdminManagement: React.FC = () => {
         // }
     }
 
+    // Replace the existing useEffect with this updated version
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            fetchUsers();
-        }, 500);
+        // Set mounted flag
+        setIsMounted(true);
 
-        return () => clearTimeout(timeoutId);
-    }, [token, pageSize])
+        // Initial fetch
+        fetchUsers();
+
+        // Set up interval for periodic fetching
+        const intervalId = setInterval(() => {
+            if (isMounted) {
+                fetchUsers();
+            }
+        }, 3000); // Fetch every 3 seconds
+
+        // Cleanup function
+        return () => {
+            setIsMounted(false);
+            clearInterval(intervalId);
+        };
+    }, [token]); // Only depend on token
 
     const toggleSort = (field: SortField) => {
         setSortFields((prevSortFields) => {
