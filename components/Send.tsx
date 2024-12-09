@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
@@ -27,8 +27,11 @@ const MAX_FILE_SIZE_MB = 10;
 
 const Send: React.FC = () => {
   const router = useRouter();
-  const [to, setTo] = useState('');
-  const [subject, setSubject] = useState('');
+  const searchParams = useSearchParams();
+  const initialTo = searchParams.get('to') || '';
+  const initialSubject = searchParams.get('subject') || '';
+  const [to, setTo] = useState(initialTo);
+  const [subject, setSubject] = useState(initialSubject);
   const [message, setMessage] = useState('');
   const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
   const { toast } = useToast();
@@ -285,7 +288,7 @@ const Send: React.FC = () => {
               size="icon"
               className="shadow appearance-non h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
               onClick={handleSendEmail}
-              disabled={isLoading || uploading.length > 0 || attachments.length === 0}
+              disabled={isLoading || uploading.length > 0}
             >
               <SendIcon className="h-5 w-5" />
             </Button>

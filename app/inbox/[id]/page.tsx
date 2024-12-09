@@ -163,13 +163,12 @@ const EmailDetailPage: React.FC = () => {
         {/* Attachments Section */}
         {email.ListAttachments && email.ListAttachments.length > 0 && (
           <div className="pl-5 pr-5 pt-4">
-            {/* <h5 className="font-medium" style={{ color: theme.colors.textPrimary }}>Attachments:</h5> */}
+            {/* <h5 className="font-medium">Attachments:</h5> */}
             <div className="space-y-1">
               {email.ListAttachments.map((attachment, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-2 bg-gray-50"
-                  style={{ borderColor: theme.colors.border }}
+                  className="flex items-center"
                 >
                   <span className="text-sm text-gray-700 pr-4">
                     {attachment.Filename.split('_').pop()}
@@ -177,7 +176,6 @@ const EmailDetailPage: React.FC = () => {
                   <button
                     onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
                     aria-label={`Download ${attachment.Filename.split('_').pop()}`}
-                    className="hover:bg-gray-100 p-2 rounded"
                   >
                     <Download className="h-4 w-4" />
                   </button>

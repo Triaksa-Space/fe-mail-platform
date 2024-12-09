@@ -141,8 +141,7 @@ const InboxPageContent: React.FC = () => {
             </div>
           ) : (
             <div
-              className="p-4 text-center cursor-pointer"
-              style={{ textDecoration: 'underline' }}
+              className="p-4 text-center cursor-pointer text-blue-500 underline"
               onClick={() => window.location.reload()}
             >
               No emails found, Please Refresh your browser.
