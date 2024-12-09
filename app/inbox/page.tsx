@@ -124,7 +124,8 @@ const InboxPageContent: React.FC = () => {
               {emails.map((email) => (
                 <div
                   key={email.ID}
-                  className={`p-4 hover:bg-gray-100 cursor-pointer ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
+                  className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
+                    ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
                   onClick={() => router.push(`/inbox/${email.ID}`)}
                 >
                   <div className="space-y-1">

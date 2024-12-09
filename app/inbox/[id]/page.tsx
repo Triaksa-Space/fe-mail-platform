@@ -57,7 +57,7 @@ const EmailDetailPage: React.FC = () => {
     } catch (error) {
       console.error('Failed to download file:', error);
     } finally {
-      setIsDownloading(false); 
+      setIsDownloading(false);
     }
   };
 
@@ -111,12 +111,12 @@ const EmailDetailPage: React.FC = () => {
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
   return (
-    <div style={{ backgroundColor: theme.colors.background }}>
-      {isDownloading && (
-        <LoadingDownloadPage/>
+      
+      <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
+        {isDownloading && (
+        <LoadingDownloadPage />
       )}
-      <div className="flex-1 overflow-auto pb-20">
-        <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
+        <header className="flex justify-between items-center p-2">
           <Button
             variant="ghost"
             size="icon"
@@ -133,65 +133,65 @@ const EmailDetailPage: React.FC = () => {
           >
             <Reply className="h-6 w-6" />
           </Button>
-        </div>
-
-        <div className="space-y-2 p-4">
-          <div className="border space-y-2 text-xs" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
-            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
-              <span className="text-gray-500">From</span>
-              <span className="font-medium" style={{ color: theme.colors.textPrimary }}>
-                {email.SenderName} - {email.SenderEmail}
-              </span>
-            </div>
-            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
-              <span className="text-gray-500">Subject</span>
-              <span className="font-medium" style={{ color: theme.colors.textPrimary }}>{email.Subject}</span>
-            </div>
-            <div className="pl-1 pr-1">
-              <span className="font-medium" style={{ color: theme.colors.textSecondary }}>{email.RelativeTime}</span>
+        </header>
+        <main className="flex-1 overflow-y-auto">
+          <div className="space-y-2 p-4">
+            <div className="border space-y-2 text-xs" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
+              <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
+                <span className="text-gray-500">From</span>
+                <span className="font-medium" style={{ color: theme.colors.textPrimary }}>
+                  {email.SenderName} - {email.SenderEmail}
+                </span>
+              </div>
+              <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
+                <span className="text-gray-500">Subject</span>
+                <span className="font-medium" style={{ color: theme.colors.textPrimary }}>{email.Subject}</span>
+              </div>
+              <div className="pl-1 pr-1">
+                <span className="font-medium" style={{ color: theme.colors.textSecondary }}>{email.RelativeTime}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-2 pl-4 pr-4">
-          <div className="border bg-white shadow-sm flex" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
-            <div
-              className={`prose max-w-none p-2 text-sm overflow-hidden ${email.Body ? '' : 'min-h-[200px]'}`}
-              dangerouslySetInnerHTML={{ __html: email.Body }}
-              style={{ color: theme.colors.textPrimary }}
-            />
+          <div className="space-y-2 pl-4 pr-4">
+            <div className="border bg-white shadow-sm flex" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
+              <div
+                className={`prose max-w-none p-2 text-sm overflow-hidden ${email.Body ? '' : 'min-h-[200px]'}`}
+                dangerouslySetInnerHTML={{ __html: email.Body }}
+                style={{ color: theme.colors.textPrimary }}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Attachments Section */}
-        {email.ListAttachments && email.ListAttachments.length > 0 && (
-          <div className="pl-5 pr-5 pt-4">
-            {/* <h5 className="font-medium">Attachments:</h5> */}
-            <div className="space-y-1">
-              {email.ListAttachments.map((attachment, index) => (
-                <div
-                  key={index}
-                  className="flex items-center"
-                >
-                  <span className="text-sm text-gray-700 pr-4">
-                    {attachment.Filename.split('_').pop()}
-                  </span>
-                  <button
-                    onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
-                    aria-label={`Download ${attachment.Filename.split('_').pop()}`}
+          {/* Attachments Section */}
+          {email.ListAttachments && email.ListAttachments.length > 0 && (
+            <div className="pl-5 pr-5 pt-4">
+              {/* <h5 className="font-medium">Attachments:</h5> */}
+              <div className="space-y-1">
+                {email.ListAttachments.map((attachment, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center"
                   >
-                    <Download className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
+                    <span className="text-sm text-gray-700 pr-4">
+                      {attachment.Filename.split('_').pop()}
+                    </span>
+                    <button
+                      onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
+                      aria-label={`Download ${attachment.Filename.split('_').pop()}`}
+                    >
+                      <Download className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-        {/* End of Attachments Section */}
+          )}
+          {/* End of Attachments Section */}
+        </main>
+        <FooterNav />
       </div>
-      <FooterNav />
-    </div>
-  );
+      );
 };
 
-export default EmailDetailPage;
+      export default EmailDetailPage;
