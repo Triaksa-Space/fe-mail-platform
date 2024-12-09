@@ -6,12 +6,6 @@ body {
   font-family: Roboto, sans-serif;
 }
 
-.placeholder-gray {
-  ::placeholder {
-    color: #D6D6D6;
-  }
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;

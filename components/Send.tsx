@@ -8,8 +8,8 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
 import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
-import { theme } from '@/app/theme';
 
 interface UploadedAttachment {
   name: string;
@@ -337,16 +337,15 @@ const Send: React.FC = () => {
               </div>
               <div className="mb-2 mt-2">
                 <Input
-                  className="text-sm shadow appearance-none border w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="subject"
-                  type="text"
                   placeholder="Subject"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                 />
               </div>
               <div className="mb-4">
-                <textarea
+                <Textarea
                   className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="message"
                   rows={13}
