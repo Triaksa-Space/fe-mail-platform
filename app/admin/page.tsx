@@ -56,8 +56,8 @@ const EmailManagement: React.FC = () => {
         { field: 'last_login', order: 'desc' },
         { field: 'created_at', order: 'asc' },
     ]);
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    // const [isLoading, setIsLoading] = useState(true)
+    // const [error, setError] = useState<string | null>(null)
     const [currentPage, setCurrentPage] = useState(1)
     const [totalCount, setTotalCount] = useState(0)
     const [activeCount, setActiveCount] = useState(0)
@@ -205,7 +205,7 @@ const EmailManagement: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            setIsLoading(true);
+            // setIsLoading(true);
             const sortFieldsString = sortFields
                 .map(({ field, order }) => `${field} ${order}`)
                 .join(', ');
@@ -227,7 +227,7 @@ const EmailManagement: React.FC = () => {
                 setTotalPages(1);
                 setTotalCount(0);
                 setActiveCount(0);
-                setError('No users found');
+                // setError('No users found');
                 return;
             }
 
@@ -242,13 +242,14 @@ const EmailManagement: React.FC = () => {
             setTotalPages(response.data.total_pages || 1);
             setTotalCount(response.data.total_count || 0);
             setActiveCount(response.data.active_count || 0);
-            setError(null);
+            // setError(null);
         } catch (err) {
             console.error('Failed to fetch users:', err);
-            setError('Failed to load users');
-        } finally {
-            setIsLoading(false);
-        }
+            // setError('Failed to load users');
+        } 
+        // finally {
+            // setIsLoading(false);
+        // }
     };
 
     useEffect(() => {

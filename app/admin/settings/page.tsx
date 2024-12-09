@@ -42,8 +42,8 @@ type SortOrder = 'asc' | 'desc'
 const UserAdminManagement: React.FC = () => {
     // const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<AdminUser[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    // const [isLoading, setIsLoading] = useState(true)
+    // const [error, setError] = useState<string | null>(null)
     // const [currentPage, setCurrentPage] = useState(1)
     const pageSize = 10
     const router = useRouter();
@@ -274,7 +274,7 @@ const UserAdminManagement: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            setIsLoading(true)
+            // setIsLoading(true)
             const sortFieldsString = sortFields
                 .map(({ field, order }) => `${field} ${order}`)
                 .join(', ');
@@ -294,13 +294,14 @@ const UserAdminManagement: React.FC = () => {
                 created: new Date(user.CreatedAt).toLocaleDateString(),
             }))
             setUsers(data)
-            setError(null)
+            // setError(null)
         } catch (err) {
             console.error('Failed to fetch users:', err)
-            setError('Failed to load users')
-        } finally {
-            setIsLoading(false)
-        }
+            // setError('Failed to load users')
+        } 
+        // finally {
+            // setIsLoading(false)
+        // }
     }
 
     useEffect(() => {
