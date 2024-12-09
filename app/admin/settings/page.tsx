@@ -12,7 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ChevronUp, ChevronDown } from 'lucide-react'
+import { ChevronUp, ChevronDown, Plus, Key, LogOut, Trash } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -154,7 +154,7 @@ const UserAdminManagement: React.FC = () => {
             setOldPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
-            
+
             let errorMessage = "Failed to change password. Please try again."
             if (axios.isAxiosError(error) && error.response?.data?.error) {
                 errorMessage = error.response.data.error
@@ -298,9 +298,9 @@ const UserAdminManagement: React.FC = () => {
         } catch (err) {
             console.error('Failed to fetch users:', err)
             // setError('Failed to load users')
-        } 
+        }
         // finally {
-            // setIsLoading(false)
+        // setIsLoading(false)
         // }
     }
 
@@ -382,9 +382,10 @@ const UserAdminManagement: React.FC = () => {
                                     <TableCell className="px-2 py-1 space-x-2 text-center">
                                         <Button
                                             variant="secondary"
-                                            className=" shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
+                                            className=" shadow appearance-non bg-blue-100 hover:bg-blue-200 text-blue-800"
                                             onClick={() => handleChangePasswordClick(user)}
                                         >
+                                            <Key className="w-4 h-4 mr-2" />
                                             Change Password
                                         </Button>
                                         <Button
@@ -392,6 +393,7 @@ const UserAdminManagement: React.FC = () => {
                                             className=" shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                             onClick={() => handleDeleteClick(user)}
                                         >
+                                            <Trash className="w-4 h-4 mr-2" />
                                             Delete
                                         </Button>
                                     </TableCell>
@@ -572,25 +574,30 @@ const UserAdminManagement: React.FC = () => {
                 </div>
 
                 <div className="fixed bottom-10 left-0 right-0 p-4">
-                    <div className="flex justify-center gap-4 mt-4 mb-8">
-                        <Button
-                            className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
-                            onClick={() => setIsDialogCreateOpen(true)}
-                        >
-                            Create Admin
-                        </Button>
-                        <Button
-                            className="w-[400px] bg-gray-800 hover:bg-gray-700 text-white py-3"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </Button>
-                        <Button
-                            className="w-[150px] bg-gray-800 hover:bg-gray-700 text-white py-3"
-                            onClick={() => handleChangeMyselfPasswordClick({ id: 0, email: "Myself", lastActive: "", created: "" })}
-                        >
-                            Change Password
-                        </Button>
+                    <div className="container mx-auto px-4 py-3">
+                        <div className="flex justify-center items-center gap-4">
+                            <Button
+                                className="flex-1 max-w-[300px] shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-semibold py-2.5 rounded-lg transition-colors"
+                                onClick={() => setIsDialogCreateOpen(true)}
+                            >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Create Admin
+                            </Button>
+                            <Button
+                                className="flex-1 max-w-[300px] shadow appearance-non bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold py-2.5 rounded-lg border border-gray-300 transition-colors"
+                                onClick={() => handleChangeMyselfPasswordClick({ id: 0, email: "Myself", lastActive: "", created: "" })}
+                            >
+                                <Key className="w-4 h-4 mr-2" />
+                                Change Password
+                            </Button>
+                            <Button
+                                className="flex-1 max-w-[300px] shadow appearance-non bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-2.5 rounded-lg border border-red-200 transition-colors"
+                                onClick={handleLogout}
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                Logout
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

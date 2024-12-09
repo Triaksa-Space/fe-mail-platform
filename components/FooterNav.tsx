@@ -10,8 +10,8 @@ const FooterNav = () => {
 
   const buttonClass = (isActive: boolean) => `
     flex-1 flex flex-col items-center justify-center py-2 text-black transition-colors
-    ${isActive ? 'bg-[#ffeeac]' : 'bg-transparent'}
-    hover:bg-[#ffeeac] active:bg-[#ffeeac]
+    ${isActive ? 'bg-[#ffeeac]' : 'bg-transparent hover:bg-[#F5E193]'}
+  active:bg-[#ffeeac]
   `;
 
   return (

@@ -13,7 +13,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import PaginationComponent from "@/components/PaginationComponent"
-import { ChevronUp, ChevronDown } from 'lucide-react'
+import { ChevronUp, ChevronDown, Key, Trash, ZoomIn } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -333,14 +333,16 @@ const EmailManagement: React.FC = () => {
                                     <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
                                     <TableCell className="px-2 py-1 text-center">{user.createdByName}</TableCell>
                                     <TableCell className="px-2 py-1 space-x-2 text-center">
-                                        <Button variant="secondary" className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300" onClick={() => router.push(`/admin/user/${user.id}`)}>
+                                        <Button variant="secondary" className="shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800" onClick={() => router.push(`/admin/user/${user.id}`)}>
+                                            <ZoomIn className="w-4 h-4 mr-2" />
                                             View
                                         </Button>
                                         <Button
                                             variant="secondary"
-                                            className="shadow appearance-non bg-yellow-200 hover:bg-yellow-300"
+                                            className="shadow appearance-non bg-blue-100 hover:bg-blue-200 text-blue-800"
                                             onClick={() => handleChangePasswordClick(user)}
                                         >
+                                            <Key className="w-4 h-4 mr-2" />
                                             Change Password
                                         </Button>
                                         <Button
@@ -348,6 +350,7 @@ const EmailManagement: React.FC = () => {
                                             className="shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                             onClick={() => handleDeleteClick(user)}
                                         >
+                                            <Trash className="w-4 h-4 mr-2" />
                                             Delete
                                         </Button>
                                     </TableCell>
