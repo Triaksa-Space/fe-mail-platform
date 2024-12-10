@@ -12,7 +12,7 @@ import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
-import LoadingPage from "@/components/Loading";
+// import LoadingPage from "@/components/Loading";
 
 interface UploadedAttachment {
   name: string;
@@ -26,16 +26,16 @@ interface UploadingFile {
   url: string;
 }
 
-interface EmailDetail {
-  ID: number;
-  SenderEmail: string;
-  SenderName: string;
-  Subject: string;
-  Body: string;
-  BodyEml: string;
-  RelativeTime: string;
-  ListAttachments: { Filename: string; URL: string }[];
-}
+// interface EmailDetail {
+//   ID: number;
+//   SenderEmail: string;
+//   SenderName: string;
+//   Subject: string;
+//   Body: string;
+//   BodyEml: string;
+//   RelativeTime: string;
+//   ListAttachments: { Filename: string; URL: string }[];
+// }
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
@@ -71,38 +71,38 @@ const Send: React.FC = () => {
       return;
     }
 
-    const fetchEmailDetail = async () => {
-      if (!token) return;
+  //   const fetchEmailDetail = async () => {
+  //     if (!token) return;
+      
+  //     try {
+  //       setIsLoading(true);
+  //       const response = await fetch(
+  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
 
-      try {
-        setIsLoading(true);
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  //       if (!response.ok) {
+  //         if (response.status === 404) {
+  //           router.push('/inbox'); // Only redirect on 404
+  //           return;
+  //         }
+  //         throw new Error("Failed to fetch email");
+  //       }
 
-        if (!response.ok) {
-          if (response.status === 404) {
-            router.push('/inbox'); // Only redirect on 404
-            return;
-          }
-          throw new Error("Failed to fetch email");
-        }
+  //       const data = await response.json();
+  //       // setEmail(data);
+  //     } catch (err) {
+  //       console.error("Failed to fetch email:", err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-        const data = await response.json();
-        // setEmail(data);
-      } catch (err) {
-        console.error("Failed to fetch email:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEmailDetail();
+  //   fetchEmailDetail();
   }, [emailId, token, router]);
 
   // // Remove this condition since we want to show the form even without email data
@@ -394,7 +394,7 @@ const Send: React.FC = () => {
                   <Input
                     className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="to"
-                    type="email"
+                    type="text"
                     placeholder=""
                     value={to}
                     onChange={(e) => {
