@@ -29,7 +29,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (!token) return; // Skip if no token
-    
+
     const checkToken = async () => {
       try {
         const response = await axios.get(
@@ -178,7 +178,7 @@ export default function LandingPage() {
                 Email
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
                   id="email"
                   name="email"
@@ -190,7 +190,7 @@ export default function LandingPage() {
                     setLoginEmail(value.replace(/\s/g, '')); // Remove spaces
                   }}
                   type="text"
-                  className="pl-10 h-12 text-base border-gray-200 shadow appearance-non"
+                  className="pl-10 h-12 text-base border-gray-200 shadow appearance-none"
                 />
               </div>
             </div>
@@ -214,8 +214,8 @@ export default function LandingPage() {
             </div>
             <Button
               className={`shadow appearance-non w-full h-12 text-base font-bold ${lockoutTime || !loginEmail || !password
-                  ? "bg-gray-400 cursor-not-allowed text-black"
-                  : "bg-[#ffeeac] hover:bg-yellow-300 text-black"
+                ? "bg-gray-400 cursor-not-allowed text-black"
+                : "bg-[#ffeeac] hover:bg-yellow-300 text-black"
                 }`}
               type="submit"
               disabled={isLoading || !!lockoutTime || !loginEmail || !password}
