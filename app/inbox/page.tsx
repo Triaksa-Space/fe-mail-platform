@@ -23,6 +23,29 @@ const InboxPageContent: React.FC = () => {
 
   const { setEmail } = useAuthStore();
 
+  const fetchCountSentEmails = async () => {
+    if (!token) return;
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        setSentEmails(response.data.SentEmails);
+        setEmail(response.data.Email);
+        setEmailLocal(response.data.Email);
+      }
+    } catch (err) {
+      console.error("Failed to fetch sent emails count:", err);
+    }
+  };
+
   useEffect(() => {
     let isSubscribed = true;
     const controller = new AbortController();
@@ -35,29 +58,6 @@ const InboxPageContent: React.FC = () => {
       // Remove the query parameter from the URL
       router.replace('/inbox');
     }
-
-    const fetchCountSentEmails = async () => {
-      if (!token) return;
-
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.data) {
-          setSentEmails(response.data.SentEmails);
-          setEmail(response.data.Email);
-          setEmailLocal(response.data.Email);
-        }
-      } catch (err) {
-        console.error("Failed to fetch sent emails count:", err);
-      }
-    };
 
     const fetchEmails = async (signal?: AbortSignal) => {
       if (!token) {
@@ -97,7 +97,6 @@ const InboxPageContent: React.FC = () => {
 
     // Set up interval for auto-refresh
     const intervalId = setInterval(() => {
-      fetchCountSentEmails();
       fetchEmails(); // Optionally, pass a new AbortController if necessary
     }, 3000); // 3000ms = 3 seconds
 

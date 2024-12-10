@@ -34,8 +34,40 @@ export default function UserDetail() {
     router.push(`/admin/user/detail/${uemail.ID}/?email=${email}`);
   }
 
+  const fetchUserEmailsWhenNotFound = async () => {
+    if (!token) return;
+  
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      setEmails(response.data);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch user emails:', err);
+      setError('Failed to load user emails');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserEmails = async () => {
+    let isSubscribed = true;
+    const controller = new AbortController();
+  
+    // Separate function to fetch user details (runs only once)
+    const fetchUserDetails = async (signal?: AbortSignal) => {
+      if (!token) {
+        router.replace("/");
+        return;
+      }
+  
       try {
         const responseDetailUser = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${params.id}`,
@@ -43,35 +75,65 @@ export default function UserDetail() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            signal,
           }
         );
-
-        if (responseDetailUser.data) {
+  
+        if (responseDetailUser.data && isSubscribed) {
           setEmail(responseDetailUser.data.Email);
         }
-
+      } catch (err) {
+        // console.error('Failed to fetch user details:', err);
+      }
+    };
+  
+    // Function to fetch only emails (will be called repeatedly)
+    const fetchUserEmails = async (signal?: AbortSignal) => {
+      if (!token) return;
+  
+      try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            signal,
           }
-        )
-        setEmails(response.data)
-        // setEmail(response.data[0]?.SenderEmail || "")
-        // setSentEmails(response.data.length)
-        setError(null)
+        );
+  
+        if (isSubscribed) {
+          setEmails(response.data);
+          setError(null);
+        }
       } catch (err) {
-        console.error('Failed to fetch user emails:', err)
-        setError('Failed to load user emails')
+        if (isSubscribed) {
+          console.error('Failed to fetch user emails:', err);
+          setError('Failed to load user emails');
+        }
       } finally {
-        setIsLoading(false)
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
       }
-    }
-
-    fetchUserEmails()
-  }, [params.id, token])
+    };
+  
+    // Initial fetch for both user details and emails
+    fetchUserDetails(controller.signal);
+    fetchUserEmails(controller.signal);
+  
+    // Set up interval for auto-refresh of emails only
+    const intervalId = setInterval(() => {
+      fetchUserEmails();
+    }, 3000);
+  
+    // Cleanup function
+    return () => {
+      isSubscribed = false;
+      controller.abort();
+      clearInterval(intervalId);
+    };
+  }, [params.id, token, router]); // Only include essential dependencies
 
   return (
     <>
@@ -122,7 +184,7 @@ export default function UserDetail() {
             ) : (
               <div
                 className="p-4 text-center cursor-pointer text-blue-500 underline"
-                onClick={() => window.location.reload()}
+                onClick={fetchUserEmailsWhenNotFound}
               >
                 No emails found, Please Refresh your browser.
               </div>

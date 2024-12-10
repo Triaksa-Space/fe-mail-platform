@@ -67,8 +67,6 @@ export default function LandingPage() {
     // const formData = new FormData(e.currentTarget);
     // const email = formData.get("email")?.toString();
     // const password = formData.get("password")?.toString();
-    console.log("loginEmail", loginEmail)
-    console.log("password", password)
 
     if (!loginEmail || !password) return;
 
