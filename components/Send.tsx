@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
@@ -31,77 +31,61 @@ interface UploadingFile {
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
 
-// Child Component to Handle Search Params
-const SearchParamsComponent: React.FC<{ setInitialValues: (to: string, subject: string, email: string) => void }> = ({ setInitialValues }) => {
-  const searchParams = useSearchParams();
-  const initialTo = searchParams.get('to') || '';
-  const initialSubject = searchParams.get('subject') || '';
-  const initialEmail = searchParams.get('email') || '';
-
-  useEffect(() => {
-    setInitialValues(initialTo, initialSubject, initialEmail);
-  }, [initialTo, initialSubject, initialEmail, setInitialValues]);
-
-  return null; // No visible UI
-};
-
 const Send: React.FC = () => {
-  const params = useParams();
   const router = useRouter();
-  const emailId = params?.id as string;
+  const searchParams = useSearchParams();
+  const emailId = searchParams.get('emailId');
   const [isLoading, setIsLoading] = useState(true);
 
   const email = useAuthStore((state) => state.email);
 
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
-  // const [initialEmail, setInitialEmail] = useState('');
-
-  const setInitialValues = (to: string, subject: string) => {
-    setTo(to);
-    setSubject(subject);
-    // setInitialEmail(email);
-  };
-
   const [message, setMessage] = useState('');
   const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
   const { toast } = useToast();
   const [uploading, setUploading] = useState<UploadingFile[]>([]);
 
   const token = useAuthStore.getState().getStoredToken();
-  // const emailStored = useAuthStore.getState().getStoredEmail();
-  
-  // const fetchEmailDetail = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  
-  //     if (!response.ok) {
-  //       if (response.status === 404) {
-  //         router.push('/inbox'); // Only redirect on 404
-  //         return;
-  //       }
-  //       throw new Error("Failed to fetch email");
-  //     }
-  
-  //     const data = await response.json();
-  //     console.log('Fetched Email Data:', data); // Inspect the data structure
-  
-  //     // Example: If data has an 'email' field
-  //     setInitialEmail(data.email); // Adjust based on actual field name
-  //   } catch (err) {
-  //     console.error("Failed to fetch email:", err);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+
+  // Function to Fetch Email Details for Reply
+  const fetchEmailDetail = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        console.log('Fetched Email Data:', data);
+
+        setTo(data.SenderEmail || ''); // Set 'To' as the original sender
+        setSubject(data.Subject ? `Re: ${data.Subject}` : 'Re:'); // Prefix subject with 'Re:'
+        // setMessage(`\n\n--- Original Message ---\n${data.body || ''}`); // Include original message
+      } else {
+        toast({
+          description: "Failed to fetch email details.",
+          variant: "destructive",
+        });
+        router.push('/inbox');
+      }
+    } catch (error) {
+      console.error("Failed to fetch email:", error);
+      toast({
+        description: "An error occurred while fetching email details.",
+        variant: "destructive",
+      });
+      router.push('/inbox');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!token) {
@@ -109,13 +93,12 @@ const Send: React.FC = () => {
       return;
     }
 
-    // Set loading to false if there's no emailId (new email composition)
-    if (!emailId) {
+    if (emailId) {
+      console.log('Fetching Email Details...', emailId);
+      fetchEmailDetail();
+    } else {
       setIsLoading(false);
-      return;
     }
-
-    // fetchEmailDetail();
   }, [emailId, token, router]);
 
   // Handle sending email with JSON payload
@@ -123,6 +106,15 @@ const Send: React.FC = () => {
     if (!to || !subject || !message) {
       toast({
         description: "Please fill all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
+    if (!isValidEmail(to)) {
+      toast({
+        description: "Please enter a valid email address.",
         variant: "destructive",
       });
       return;
@@ -181,7 +173,6 @@ const Send: React.FC = () => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
 
-      // Check total number of files
       if (attachments.length + uploading.length + selectedFiles.length > MAX_FILES) {
         toast({
           description: "You can only send up to 10 files.",
@@ -191,21 +182,18 @@ const Send: React.FC = () => {
       }
 
       for (const file of selectedFiles) {
-        // Check file size
         if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
           toast({
-            description: `The file "${file.name}" cannot be uploaded because it exceeds 10 MB.`,
+            description: `The file "${file.name}" exceeds 10 MB.`,
             variant: "destructive",
           });
           continue;
         }
 
-        const fileId = `${file.name}-${Date.now()}`; // Unique identifier
+        const fileId = `${file.name}-${Date.now()}`;
 
-        // Add to uploading state
         setUploading(prev => [...prev, { id: fileId, name: file.name, progress: 0, url: '' }]);
 
-        // Prepare FormData
         const formData = new FormData();
         formData.append('attachment', file);
 
@@ -231,34 +219,25 @@ const Send: React.FC = () => {
             }
           );
 
-          // Assuming the response contains the file URL
           const fileUrl = response.data.url;
 
-          // Move from uploading to attachments
           setAttachments(prev => [...prev, { name: file.name, url: fileUrl }]);
           setUploading(prevUploading => prevUploading.filter(upload => upload.id !== fileId));
 
-          // Optionally, show a success toast
-          // toast({
-          //   description: `Uploaded "${file.name}" successfully.`,
-          //   variant: "default",
-          // });
         } catch (error) {
-          let errorMsg = `Failed to upload "${file.name}". Please try again.`;
+          let errorMsg = `Failed to upload "${file.name}".`;
           if (axios.isAxiosError(error) && error.response?.data?.error) {
-            errorMsg = `Failed to upload "${file.name}". ${error.response.data.error}`;
+            errorMsg += ` ${error.response.data.error}`;
           }
           toast({
             description: errorMsg,
             variant: "destructive",
           });
 
-          // Remove from uploading if failed
           setUploading(prevUploading => prevUploading.filter(upload => upload.id !== fileId));
         }
       }
 
-      // Reset the input value to allow re-uploading the same file if needed
       e.target.value = '';
     }
   };
@@ -281,9 +260,9 @@ const Send: React.FC = () => {
 
       setAttachments(attachments.filter((_, i) => i !== index));
     } catch (error) {
-      let errorMsg = `Failed to remove "${attachmentToRemove.name}". Please try again.`;
+      let errorMsg = `Failed to remove "${attachmentToRemove.name}".`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMsg = `Failed to remove "${attachmentToRemove.name}". ${error.response.data.error}`;
+        errorMsg += ` ${error.response.data.error}`;
       }
       toast({
         description: errorMsg,
@@ -308,15 +287,10 @@ const Send: React.FC = () => {
       );
 
       setAttachments([]);
-      // Optionally, show a success toast
-      // toast({
-      //   description: "All attachments removed successfully.",
-      //   variant: "default",
-      // });
     } catch (error) {
-      let errorMsg = `Failed to remove attachments. Please try again.`;
+      let errorMsg = `Failed to remove attachments.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMsg = `Failed to remove attachments. ${error.response.data.error}`;
+        errorMsg += ` ${error.response.data.error}`;
       }
       toast({
         description: errorMsg,
@@ -350,11 +324,10 @@ const Send: React.FC = () => {
               type="file"
               multiple
               onChange={handleFileChange}
-              accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .mp3, .wav, .aac, .ogg, .mp4, .mov, .avi, .mkv, .zip, .rar, .7z, .tar, .gz" // Optional: restrict file types
+              accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .mp3, .wav, .aac, .ogg, .mp4, .mov, .avi, .mkv, .zip, .rar, .7z, .tar, .gz"
             />
             <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-gray-100 p-2 rounded">
               <Paperclip className="h-5 w-5" />
-              {/* <span className="text-sm text-gray-700">Attach Files</span> */}
             </label>
           </div>
         </div>
@@ -382,41 +355,31 @@ const Send: React.FC = () => {
           <div className="flex justify-center h-screen pl-4 pr-4">
             <form className="w-full max-w-lg">
 
-              {/* Suspense Boundary for Search Parameters */}
-              <Suspense fallback={<div className="flex justify-center items-center h-full">Loading...</div>}>
-                <SearchParamsComponent setInitialValues={setInitialValues} />
-              </Suspense>
-
               {/* Email Composition Form */}
               <div className="flex bg-white text-sm">
                 <div className="flex items-center gap-2 w-12">
-                  <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="from">
-                    From:
+                  <label className="mt-2 text-gray-700 text-sm mb-2" htmlFor="from">
+                    From
                   </label>
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="ml-4 text-gray-700 text-sm" htmlFor="from">
-                    {email}
-                  </label>
+                  <span className="ml-2 text-gray-700 text-sm">{email}</span>
                 </div>
               </div>
               <div className="flex bg-white text-sm w-full">
                 <div className="flex items-center gap-2 w-12">
                   <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
-                    To:
+                    To
                   </label>
                 </div>
                 <div className="mt-2 flex-1">
                   <Input
                     className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="to"
-                    type="text"
-                    placeholder=""
+                    type="email"
+                    placeholder="Recipient's email"
                     value={to}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setTo(value.replace(/\s/g, '')); // Remove spaces
-                    }}
+                    onChange={(e) => setTo(e.target.value)}
                   />
                 </div>
               </div>

@@ -119,12 +119,12 @@ const EmailDetailPage: React.FC = () => {
   const handleReply = () => {
     if (!email) return;
 
-    const replyParams = new URLSearchParams({
-      to: email.SenderEmail,
-      subject: `Re: ${email.Subject}`,
-    }).toString();
+    // const replyParams = new URLSearchParams({
+    //   to: email.SenderEmail,
+    //   subject: `Re: ${email.Subject}`,
+    // }).toString();
 
-    router.push(`/inbox/send?${replyParams}`);
+    router.push(`/inbox/send?emailId=${params.id}`);
   };
 
   if (isLoading) return <div className="p-4 text-center">Loading...</div>;
