@@ -110,7 +110,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageSize, tot
     <div className="grid grid-cols-2 items-center gap-4 px-4">
       {/* Left column - Showing text */}
       <div className="text-sm text-gray-500 justify-self-start">
-        Showing {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
+        Showing {totalCount === 0 ? '0' : `${(currentPage - 1) * pageSize + 1}`}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
       </div>
 
       {/* Right column - Pagination */}
