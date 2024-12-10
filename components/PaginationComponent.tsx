@@ -26,7 +26,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
 
   const renderPaginationItems = () => {
     const pages = [];
-    const maxPagesToShow = 5; // Number of page links to display (excluding first and last pages)
+    // const maxPagesToShow = 5; // Number of page links to display (excluding first and last pages)
 
     let startPage = Math.max(2, currentPage - 2);
     let endPage = Math.min(totalPages - 1, currentPage + 2);
