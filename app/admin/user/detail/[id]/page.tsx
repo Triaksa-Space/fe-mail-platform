@@ -28,6 +28,7 @@ const EmailDetailPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false); // State for loading indicator
+  const [iframeHeight, setIframeHeight] = useState('0px');
 
   const searchParams = useSearchParams();
   const params = useParams();
@@ -109,6 +110,44 @@ const EmailDetailPage: React.FC = () => {
   if (error) return <div className="p-4 text-red-500 text-center">{error}</div>;
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
+  // Add this function to handle iframe load
+  const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
+    const iframe = e.target as HTMLIFrameElement;
+    if (iframe.contentWindow) {
+      // Add padding for better appearance
+      const height = iframe.contentWindow.document.body.scrollHeight + 32;
+      setIframeHeight(`${height}px`);
+
+      // Apply styles to iframe content
+      const style = document.createElement('style');
+      style.textContent = `
+        body {
+          margin: 0;
+          padding: 16px;
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 14px;
+          line-height: 1.5;
+          color: ${theme.colors.textPrimary};
+          width: 100%;
+          box-sizing: border-box;
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          word-break: break-word;
+        }
+        img, table {
+          max-width: 100%;
+          height: auto;
+        }
+        pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          overflow-x: auto;
+        }
+      `;
+      iframe.contentWindow.document.head.appendChild(style);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: theme.colors.background }}>
       {isDownloading && (
@@ -149,16 +188,19 @@ const EmailDetailPage: React.FC = () => {
         </div>
 
         <div className="space-y-2 pl-4 pr-4">
-          <div className="border bg-white shadow-sm flex justify-center" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
-            <div
-              className={`prose max-w-none p-2 text-sm overflow-hidden w-full flex ${email.Body ? '' : 'min-h-[200px]'}`}
-            >
-              <div
-                className="max-w-3xl w-full" // Add max-width container
-                dangerouslySetInnerHTML={{ __html: email.Body }}
-                style={{ color: theme.colors.textPrimary }}
-              />
-            </div>
+          <div className="border bg-white shadow-sm" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
+            <iframe
+              srcDoc={email.Body}
+              className="w-full"
+              style={{
+                height: iframeHeight,
+                border: 'none',
+                display: 'block'
+              }}
+              onLoad={handleIframeLoad}
+              title="Email content"
+              sandbox="allow-same-origin"
+            />
           </div>
         </div>
 
