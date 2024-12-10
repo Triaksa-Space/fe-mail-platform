@@ -39,7 +39,7 @@ const EmailDetailPage: React.FC = () => {
 
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false); // State for loading indicator
   const [iframeHeight, setIframeHeight] = useState('0px');
 
@@ -128,7 +128,7 @@ const EmailDetailPage: React.FC = () => {
   };
 
   if (isLoading) return <div className="p-4 text-center">Loading...</div>;
-  if (error) return <div className="p-4 text-red-500 text-center">{error}</div>;
+  // if (error) return <div className="p-4 text-red-500 text-center">{error}</div>;
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
