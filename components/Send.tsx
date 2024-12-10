@@ -55,12 +55,12 @@ const Send: React.FC = () => {
 
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
-  const [initialEmail, setInitialEmail] = useState('');
+  // const [initialEmail, setInitialEmail] = useState('');
 
   const setInitialValues = (to: string, subject: string, email: string) => {
     setTo(to);
     setSubject(subject);
-    setInitialEmail(email);
+    // setInitialEmail(email);
   };
 
   const [message, setMessage] = useState('');
@@ -69,7 +69,7 @@ const Send: React.FC = () => {
   const [uploading, setUploading] = useState<UploadingFile[]>([]);
 
   const token = useAuthStore.getState().getStoredToken();
-  const emailStored = useAuthStore.getState().getStoredEmail();
+  // const emailStored = useAuthStore.getState().getStoredEmail();
   
   // const fetchEmailDetail = async () => {
   //   try {
