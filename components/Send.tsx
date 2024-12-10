@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, Suspense } from 'react';
 import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -12,8 +13,8 @@ import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
-// import LoadingPage from "@/components/Loading";
 
+// Interfaces
 interface UploadedAttachment {
   name: string;
   url: string;
@@ -26,38 +27,81 @@ interface UploadingFile {
   url: string;
 }
 
-// interface EmailDetail {
-//   ID: number;
-//   SenderEmail: string;
-//   SenderName: string;
-//   Subject: string;
-//   Body: string;
-//   BodyEml: string;
-//   RelativeTime: string;
-//   ListAttachments: { Filename: string; URL: string }[];
-// }
-
+// Constants
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
+
+// Child Component to Handle Search Params
+const SearchParamsComponent: React.FC<{ setInitialValues: (to: string, subject: string, email: string) => void }> = ({ setInitialValues }) => {
+  const searchParams = useSearchParams();
+  const initialTo = searchParams.get('to') || '';
+  const initialSubject = searchParams.get('subject') || '';
+  const initialEmail = searchParams.get('email') || '';
+
+  useEffect(() => {
+    setInitialValues(initialTo, initialSubject, initialEmail);
+  }, [initialTo, initialSubject, initialEmail, setInitialValues]);
+
+  return null; // No visible UI
+};
 
 const Send: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const emailId = params?.id as string;
   const [isLoading, setIsLoading] = useState(true);
-  // const [email, setEmail] = useState<EmailDetail | null>(null);
-  const token = useAuthStore.getState().getStoredToken();
 
-  const searchParams = useSearchParams();
-  const initialTo = searchParams.get('to') || '';
-  const initialSubject = searchParams.get('subject') || '';
-  const initialEmail = searchParams.get('email') || '';  // Add this line
-  const [to, setTo] = useState(initialTo);
-  const [subject, setSubject] = useState(initialSubject);
+  const email = useAuthStore((state) => state.email);
+
+  const [to, setTo] = useState('');
+  const [subject, setSubject] = useState('');
+  const [initialEmail, setInitialEmail] = useState('');
+
+  const setInitialValues = (to: string, subject: string, email: string) => {
+    setTo(to);
+    setSubject(subject);
+    setInitialEmail(email);
+  };
+
   const [message, setMessage] = useState('');
   const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
   const { toast } = useToast();
-  const [uploading, setUploading] = useState<UploadingFile[]>([]); // Track uploading files
+  const [uploading, setUploading] = useState<UploadingFile[]>([]);
+
+  const token = useAuthStore.getState().getStoredToken();
+  const emailStored = useAuthStore.getState().getStoredEmail();
+  
+  // const fetchEmailDetail = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  
+  //     if (!response.ok) {
+  //       if (response.status === 404) {
+  //         router.push('/inbox'); // Only redirect on 404
+  //         return;
+  //       }
+  //       throw new Error("Failed to fetch email");
+  //     }
+  
+  //     const data = await response.json();
+  //     console.log('Fetched Email Data:', data); // Inspect the data structure
+  
+  //     // Example: If data has an 'email' field
+  //     setInitialEmail(data.email); // Adjust based on actual field name
+  //   } catch (err) {
+  //     console.error("Failed to fetch email:", err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (!token) {
@@ -71,44 +115,8 @@ const Send: React.FC = () => {
       return;
     }
 
-  //   const fetchEmailDetail = async () => {
-  //     if (!token) return;
-      
-  //     try {
-  //       setIsLoading(true);
-  //       const response = await fetch(
-  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-
-  //       if (!response.ok) {
-  //         if (response.status === 404) {
-  //           router.push('/inbox'); // Only redirect on 404
-  //           return;
-  //         }
-  //         throw new Error("Failed to fetch email");
-  //       }
-
-  //       const data = await response.json();
-  //       // setEmail(data);
-  //     } catch (err) {
-  //       console.error("Failed to fetch email:", err);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchEmailDetail();
+    // fetchEmailDetail();
   }, [emailId, token, router]);
-
-  // // Remove this condition since we want to show the form even without email data
-  // if (isLoading) {
-  //   return <LoadingPage />
-  // }
 
   // Handle sending email with JSON payload
   const handleSendEmail = async () => {
@@ -148,16 +156,15 @@ const Send: React.FC = () => {
 
       router.push("/inbox?sent=success");
     } catch (error) {
-      console.log(error);
       if (axios.isAxiosError(error) && error.response?.status === 429) {
         toast({
           description: "Daily send email limit reached. Try again tomorrow.",
           variant: "destructive",
         });
       } else {
-        let errorMessage = "Failed to send email. Please try again."
+        let errorMessage = "Failed to send email. Please try again.";
         if (axios.isAxiosError(error) && error.response?.data?.error) {
-          errorMessage = error.response.data.error
+          errorMessage = error.response.data.error;
         }
         toast({
           description: errorMessage,
@@ -231,6 +238,7 @@ const Send: React.FC = () => {
           setAttachments(prev => [...prev, { name: file.name, url: fileUrl }]);
           setUploading(prevUploading => prevUploading.filter(upload => upload.id !== fileId));
 
+          // Optionally, show a success toast
           // toast({
           //   description: `Uploaded "${file.name}" successfully.`,
           //   variant: "default",
@@ -273,7 +281,6 @@ const Send: React.FC = () => {
 
       setAttachments(attachments.filter((_, i) => i !== index));
     } catch (error) {
-      console.log(error);
       let errorMsg = `Failed to remove "${attachmentToRemove.name}". Please try again.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         errorMsg = `Failed to remove "${attachmentToRemove.name}". ${error.response.data.error}`;
@@ -301,6 +308,7 @@ const Send: React.FC = () => {
       );
 
       setAttachments([]);
+      // Optionally, show a success toast
       // toast({
       //   description: "All attachments removed successfully.",
       //   variant: "default",
@@ -325,10 +333,10 @@ const Send: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            className=" h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+            className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
             onClick={() => {
               handleCancel();
-              router.push('/inbox')
+              router.push('/inbox');
             }}
           >
             <CircleXIcon className="h-5 w-5" />
@@ -354,7 +362,7 @@ const Send: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            className=" h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+            className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
             onClick={handleSendEmail}
             disabled={isLoading || uploading.length > 0}
           >
@@ -362,6 +370,7 @@ const Send: React.FC = () => {
           </Button>
         </div>
       </header>
+
       <main className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-4">
 
@@ -372,6 +381,13 @@ const Send: React.FC = () => {
 
           <div className="flex justify-center h-screen pl-4 pr-4">
             <form className="w-full max-w-lg">
+
+              {/* Suspense Boundary for Search Parameters */}
+              <Suspense fallback={<div className="flex justify-center items-center h-full">Loading...</div>}>
+                <SearchParamsComponent setInitialValues={setInitialValues} />
+              </Suspense>
+
+              {/* Email Composition Form */}
               <div className="flex bg-white text-sm">
                 <div className="flex items-center gap-2 w-12">
                   <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="from">
@@ -380,7 +396,7 @@ const Send: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <label className="ml-4 text-gray-700 text-sm" htmlFor="from">
-                    {initialEmail}
+                    {email}
                   </label>
                 </div>
               </div>
@@ -427,7 +443,7 @@ const Send: React.FC = () => {
 
                 {/* Uploading Files with Individual Progress Bars */}
                 {uploading.length > 0 && (
-                  <LoadingUploadingPage/>
+                  <LoadingUploadingPage />
                 )}
 
                 {attachments.map((file, index) => (
