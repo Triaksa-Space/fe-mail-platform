@@ -111,14 +111,13 @@ const EmailDetailPage: React.FC = () => {
   if (error) return <div className="p-4 text-red-500 text-center">{error}</div>;
   if (!email) return <div className="p-4 text-center">Email not found</div>;
 
-  // Add this function to handle iframe load
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
     if (iframe.contentWindow) {
       // Add padding for better appearance
       const height = iframe.contentWindow.document.body.scrollHeight + 32;
       setIframeHeight(`${height}px`);
-
+  
       // Apply styles to iframe content
       const style = document.createElement('style');
       style.textContent = `
@@ -131,9 +130,7 @@ const EmailDetailPage: React.FC = () => {
           color: ${theme.colors.textPrimary};
           width: 100%;
           box-sizing: border-box;
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          word-break: break-word;
+          overflow: hidden !important; /* Prevent scroll */
         }
         img, table {
           max-width: 100%;
@@ -142,7 +139,7 @@ const EmailDetailPage: React.FC = () => {
         pre {
           white-space: pre-wrap;
           word-wrap: break-word;
-          overflow-x: auto;
+          overflow: hidden !important; /* Prevent scroll */
         }
       `;
       iframe.contentWindow.document.head.appendChild(style);
