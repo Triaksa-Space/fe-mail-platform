@@ -249,7 +249,7 @@ const CreateBulkEmail: React.FC = () => {
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className={`shadow appearance-non h-11 w-full max-w-xs font-bold text-black ${!receiveEmail || !password
+                className={`shadow appearance-non h-11 w-3/4 max-w-xs font-bold text-black ${!receiveEmail || !password
                   ? "bg-gray-300 cursor-not-allowed"
                   : "bg-[#ffeeac] hover:bg-yellow-300"
                   }`}
