@@ -57,7 +57,7 @@ const Send: React.FC = () => {
   const [subject, setSubject] = useState('');
   // const [initialEmail, setInitialEmail] = useState('');
 
-  const setInitialValues = (to: string, subject: string, email: string) => {
+  const setInitialValues = (to: string, subject: string) => {
     setTo(to);
     setSubject(subject);
     // setInitialEmail(email);
