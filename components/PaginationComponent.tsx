@@ -14,15 +14,34 @@ interface PaginationComponentProps {
   onPageChange: (page: number) => void;
 }
 
-const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageSize, totalCount, currentPage, totalPages, onPageChange }) => {
+const PaginationComponent: React.FC<PaginationComponentProps> = ({
+  pageSize,
+  totalCount,
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageInput, setPageInput] = useState("");
 
   const renderPaginationItems = () => {
     const pages = [];
-    const maxPagesToShow = 3;
-    const showBefore = Math.floor(maxPagesToShow / 2);
-    const showAfter = maxPagesToShow - showBefore - 1;
+    const maxPagesToShow = 5; // Number of page links to display (excluding first and last pages)
+
+    let startPage = Math.max(2, currentPage - 2);
+    let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    // Adjust if near the start
+    if (currentPage <= 3) {
+      startPage = 2;
+      endPage = Math.min(5, totalPages - 1);
+    }
+
+    // Adjust if near the end
+    if (currentPage >= totalPages - 2) {
+      startPage = Math.max(totalPages - 4, 2);
+      endPage = totalPages - 1;
+    }
 
     // Always show first page
     pages.push(
@@ -30,35 +49,30 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageSize, tot
         <PaginationLink
           onClick={() => onPageChange(1)}
           isActive={1 === currentPage}
-          className="hover:bg-gray-100 cursor-pointer" // Added these classes
+          className="hover:bg-gray-100 cursor-pointer"
         >
           1
         </PaginationLink>
       </PaginationItem>
     );
 
-
-    // Calculate range around current page
-    const startPage = Math.max(2, currentPage - showBefore);
-    const endPage = Math.min(totalPages - 1, currentPage + showAfter);
-
-    // Add first ellipsis if needed
+    // Show start ellipsis if needed
     if (startPage > 2) {
       pages.push(
-        <PaginationItem key="ellipsis-start">
+        <PaginationItem key="start-ellipsis">
           <PaginationEllipsis onClick={() => setIsDialogOpen(true)} className="cursor-pointer" />
         </PaginationItem>
       );
     }
 
-    // Add pages around current page
+    // Add page numbers around the current page
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <PaginationItem key={i}>
           <PaginationLink
             onClick={() => onPageChange(i)}
             isActive={i === currentPage}
-            className="hover:bg-gray-100 cursor-pointer" // Added these classes
+            className="hover:bg-gray-100 cursor-pointer"
           >
             {i}
           </PaginationLink>
@@ -66,23 +80,23 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageSize, tot
       );
     }
 
-    // Add last ellipsis if needed
+    // Show end ellipsis if needed
     if (endPage < totalPages - 1) {
       pages.push(
-        <PaginationItem key="ellipsis-end">
+        <PaginationItem key="end-ellipsis">
           <PaginationEllipsis onClick={() => setIsDialogOpen(true)} className="cursor-pointer" />
         </PaginationItem>
       );
     }
 
-    // Always show last page
+    // Always show last page if totalPages > 1
     if (totalPages > 1) {
       pages.push(
         <PaginationItem key={totalPages}>
           <PaginationLink
             onClick={() => onPageChange(totalPages)}
             isActive={totalPages === currentPage}
-            className="hover:bg-gray-100 cursor-pointer" // Added these classes
+            className="hover:bg-gray-100 cursor-pointer"
           >
             {totalPages}
           </PaginationLink>
@@ -110,11 +124,15 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageSize, tot
     <div className="grid grid-cols-2 items-center gap-4 px-4">
       {/* Left column - Showing text */}
       <div className="text-sm text-gray-500 justify-self-start">
-        Showing {totalCount === 0 ? '0' : `${(currentPage - 1) * pageSize + 1}`}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
+        Showing{" "}
+        {totalCount === 0
+          ? "0"
+          : `${(currentPage - 1) * pageSize + 1}-${Math.min(currentPage * pageSize, totalCount)}`}{" "}
+        of {totalCount}
       </div>
 
       {/* Right column - Pagination */}
-      <div className="flex justify-end space-x-2 ml-auto w-1/2">
+      <div className="flex justify-end space-x-2 ml-auto w-1/5">
         <Pagination>
           <PaginationContent className="flex justify-end">
             {currentPage > 1 && (
