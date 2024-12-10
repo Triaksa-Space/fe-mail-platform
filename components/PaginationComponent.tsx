@@ -39,7 +39,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
       for (let i = 1; i <= totalPages; i++) {
         pages.push(
           <PaginationItem key={i}>
-            <PaginationLink 
+            <PaginationLink
               onClick={() => onPageChange(i)}
               isActive={i === currentPage}
             >
@@ -53,7 +53,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
       for (let i = 1; i <= maxPagesToShow; i++) {
         pages.push(
           <PaginationItem key={i}>
-            <PaginationLink 
+            <PaginationLink
               onClick={() => onPageChange(i)}
               isActive={i === currentPage}
             >
@@ -87,7 +87,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
       for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
         pages.push(
           <PaginationItem key={i}>
-            <PaginationLink 
+            <PaginationLink
               onClick={() => onPageChange(i)}
               isActive={i === currentPage}
             >
@@ -111,7 +111,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
       for (let i = currentPage; i < currentPage + maxPagesToShow && i < totalPages; i++) {
         pages.push(
           <PaginationItem key={i}>
-            <PaginationLink 
+            <PaginationLink
               onClick={() => onPageChange(i)}
               isActive={i === currentPage}
             >
@@ -138,53 +138,61 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
   };
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pl-4">
-      <span className="text-sm text-gray-500 w-full">Showing {activeCount} of {totalCount}</span>
-      <Pagination>
-        <PaginationContent>
-          {currentPage > 1 && (
-            <>
-              <PaginationItem>
-                <PaginationLink 
-                  onClick={() => onPageChange(1)}
-                  aria-label="Go to first page"
-                >
-                  &lt;&lt;
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink 
-                  onClick={() => onPageChange(currentPage - 1)}
-                  aria-label="Go to previous page"
-                >
-                  &lt;
-                </PaginationLink>
-              </PaginationItem>
-            </>
-          )}
-          {renderPaginationItems()}
-          {currentPage < totalPages && (
-            <>
-              <PaginationItem>
-                <PaginationLink 
-                  onClick={() => onPageChange(currentPage + 1)}
-                  aria-label="Go to next page"
-                >
-                  &gt;
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink 
-                  onClick={() => onPageChange(totalPages)}
-                  aria-label="Go to last page"
-                >
-                  &gt;&gt;
-                </PaginationLink>
-              </PaginationItem>
-            </>
-          )}
-        </PaginationContent>
-      </Pagination>
+    <div className="grid grid-cols-2 items-center gap-4 px-4">
+      {/* Left column - Showing text */}
+      <div className="text-sm text-gray-500 justify-self-start">
+        Showing {activeCount} of {totalCount}
+      </div>
+
+      {/* Right column - Pagination with right alignment */}
+      <div className="flex justify-end space-x-2 ml-auto w-1/2">
+        <Pagination>
+          <PaginationContent className="flex justify-end">
+            {currentPage > 1 && (
+              <>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(1)}
+                    aria-label="Go to first page"
+                  >
+                    &lt;&lt;
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(currentPage - 1)}
+                    aria-label="Go to previous page"
+                  >
+                    &lt;
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+            {renderPaginationItems()}
+            {currentPage < totalPages && (
+              <>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(currentPage + 1)}
+                    aria-label="Go to next page"
+                  >
+                    &gt;
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(totalPages)}
+                    aria-label="Go to last page"
+                  >
+                    &gt;&gt;
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+          </PaginationContent>
+        </Pagination>
+      </div>
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
