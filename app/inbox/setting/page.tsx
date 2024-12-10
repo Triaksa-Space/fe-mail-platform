@@ -17,7 +17,7 @@ const SettingPage: React.FC = () => {
         <Settings />
       </div>
       <div className="w-full bg-white pl-4 pr-4">
-        <div className="container mx-auto px-4 py-3">
+        <div className="w-full max-w-lg mx-auto px-4 py-3">
           <Button
             className="w-3/4 max-w-md mx-auto bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-2.5 rounded-lg border border-red-200 transition-colors flex items-center justify-center gap-2"
             onClick={logout}
