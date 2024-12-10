@@ -109,15 +109,15 @@ const EmailManagement: React.FC = () => {
         }
 
         // Regular expression to ensure password complexity
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-        if (!passwordRegex.test(passwordForAdmin)) {
-            toast({
-                description: "Password must include a number, lowercase, uppercase, and symbol.",
-                variant: "destructive",
-            });
-            return;
-        }
+        // if (!passwordRegex.test(passwordForAdmin)) {
+        //     toast({
+        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
+        //         variant: "destructive",
+        //     });
+        //     return;
+        // }
 
         try {
             await axios.put(

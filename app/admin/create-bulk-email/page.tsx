@@ -194,7 +194,6 @@ const CreateBulkEmail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Input
                 value={isRandom ? "random" : baseName}
-                minLength={4}
                 placeholder="Email (numeric)"
                 className={isRandom ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
                 onChange={(e) => {

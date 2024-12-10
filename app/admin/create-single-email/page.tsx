@@ -61,16 +61,16 @@ const CreateSingleEmail: React.FC = () => {
         })
         return
       }
-      // Regular expression to ensure password complexity
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+      // // Regular expression to ensure password complexity
+      // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-      if (!passwordRegex.test(password)) {
-        toast({
-          description: "Password must include a number, lowercase, uppercase, and symbol.",
-          variant: "destructive",
-        });
-        return;
-      }
+      // if (!passwordRegex.test(password)) {
+      //   toast({
+      //     description: "Password must include a number, lowercase, uppercase, and symbol.",
+      //     variant: "destructive",
+      //   });
+      //   return;
+      // }
       setIsLoading(true)
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
@@ -120,7 +120,6 @@ const CreateSingleEmail: React.FC = () => {
             <div className="flex items-center gap-2">
               <Input
                 value={username}
-                minLength={4}
                 onChange={(e) => {
                   const value = e.target.value;
                   setUsername(value.replace(/\s/g, '')); // Remove spaces

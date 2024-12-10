@@ -12,7 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { ChevronUp, ChevronDown, Plus, Key, LogOut, Trash } from 'lucide-react'
+import { ChevronUp, ChevronDown, Plus, Key, LogOut, Trash, UserCircle } from 'lucide-react'
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -91,7 +91,7 @@ const UserAdminManagement: React.FC = () => {
         setIsChangePasswordMyselfDialogOpen(true);
     };
 
-    const handleChangeMyPasswordSubmit  = async () => {
+    const handleChangeMyPasswordSubmit = async () => {
         if (!selectedSuperAdmin) return;
 
         if (passwordForAdmin !== confirmPasswordForAdmin) {
@@ -111,15 +111,15 @@ const UserAdminManagement: React.FC = () => {
         }
 
         // Regular expression to ensure password complexity
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-        if (!passwordRegex.test(passwordForAdmin)) {
-            toast({
-                description: "Password must include a number, lowercase, uppercase, and symbol.",
-                variant: "destructive",
-            });
-            return;
-        }
+        // if (!passwordRegex.test(passwordForAdmin)) {
+        //     toast({
+        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
+        //         variant: "destructive",
+        //     });
+        //     return;
+        // }
 
         try {
             await axios.put(
@@ -188,15 +188,15 @@ const UserAdminManagement: React.FC = () => {
         }
 
         // Regular expression to ensure password complexity
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-        if (!passwordRegex.test(passwordForAdmin)) {
-            toast({
-                description: "Password must include a number, lowercase, uppercase, and symbol.",
-                variant: "destructive",
-            });
-            return;
-        }
+        // if (!passwordRegex.test(passwordForAdmin)) {
+        //     toast({
+        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
+        //         variant: "destructive",
+        //     });
+        //     return;
+        // }
 
         try {
             await axios.put(
@@ -296,15 +296,15 @@ const UserAdminManagement: React.FC = () => {
         }
 
         // Regular expression to ensure password complexity
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-        if (!passwordRegex.test(newAdminPassword)) {
-            toast({
-                description: "Password must include a number, lowercase, uppercase, and symbol.",
-                variant: "destructive",
-            });
-            return;
-        }
+        // if (!passwordRegex.test(newAdminPassword)) {
+        //     toast({
+        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
+        //         variant: "destructive",
+        //     });
+        //     return;
+        // }
 
         try {
             await axios.post(
@@ -634,16 +634,32 @@ const UserAdminManagement: React.FC = () => {
                                 <DialogTitle>Create Admin</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
-                                <Input
-                                    className='shadow appearance-non '
-                                    placeholder="Username"
-                                    value={newAdminEmail}
+                                <div className="mb-4">
+                                    <div className="relative flex items-center">
+                                        <UserCircle className="absolute left-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                                        <Input
+                                            className="pl-10 shadow-sm border border-gray-200 w-full"
+                                            placeholder="Username"
+                                            value={newAdminEmail}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setNewAdminEmail(value.replace(/\s/g, '')); // Remove spaces
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="Password"
+                                    value={newAdminPassword}
                                     onChange={(e) => {
                                         const value = e.target.value;
-                                        setNewAdminEmail(value.replace(/\s/g, '')); // Remove spaces
+                                        setNewAdminPassword(value.replace(/\s/g, '')); // Remove spaces
                                     }}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
                                 />
-                                <Input
+                                {/* <PasswordInput
                                     className='shadow appearance-non '
                                     placeholder="Password"
                                     type="password"
@@ -652,17 +668,17 @@ const UserAdminManagement: React.FC = () => {
                                         const value = e.target.value;
                                         setNewAdminPassword(value.replace(/\s/g, '')); // Remove spaces
                                     }}
-                                />
+                                /> */}
                             </div>
                             <DialogFooter>
-                                <Button variant="secondary" className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' 
+                                <Button variant="secondary" className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100'
                                     onClick={() => {
                                         setIsDialogCreateOpen(false);
                                         setNewAdminEmail("");
                                         setNewAdminPassword("");
-                                        }
+                                    }
                                     }>
-                                        Back
+                                    Back
                                 </Button>
                                 <Button
                                     variant="default"
