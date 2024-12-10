@@ -10,6 +10,8 @@ import axios from "axios";
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
+import FooterNav from './FooterNav';
+import LoadingUploadingPage from './UploadLoading ';
 
 interface UploadedAttachment {
   name: string;
@@ -358,17 +360,7 @@ const Send: React.FC = () => {
 
                 {/* Uploading Files with Individual Progress Bars */}
                 {uploading.length > 0 && (
-                  <div className="space-y-2">
-                    {uploading.map(file => (
-                      <div key={file.id} className="w-full bg-gray-200 rounded-full h-2.5">
-                        <div
-                          className="bg-blue-600 h-2.5 rounded-full"
-                          style={{ width: `${file.progress}%` }}
-                        ></div>
-                      </div>
-                    ))}
-                    <span className="text-sm text-gray-600">Uploading attachments...</span>
-                  </div>
+                  <LoadingUploadingPage/>
                 )}
 
                 {attachments.map((file, index) => (
@@ -396,6 +388,7 @@ const Send: React.FC = () => {
         </div>
         <Toaster />
       </main>
+      <FooterNav />
     </>
   );
 };
