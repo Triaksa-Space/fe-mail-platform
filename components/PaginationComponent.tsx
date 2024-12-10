@@ -18,22 +18,25 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageInput, setPageInput] = useState("");
 
-   const renderPaginationItems = () => {
+  const renderPaginationItems = () => {
     const pages = [];
     const maxPagesToShow = 3;
     const showBefore = Math.floor(maxPagesToShow / 2);
     const showAfter = maxPagesToShow - showBefore - 1;
+    
     // Always show first page
     pages.push(
       <PaginationItem key={1}>
         <PaginationLink
           onClick={() => onPageChange(1)}
           isActive={1 === currentPage}
+          className="hover:bg-gray-100 cursor-pointer" // Added these classes
         >
           1
         </PaginationLink>
       </PaginationItem>
     );
+  
 
     // Calculate range around current page
     let startPage = Math.max(2, currentPage - showBefore);
@@ -49,18 +52,19 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
     }
 
     // Add pages around current page
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <PaginationItem key={i}>
-          <PaginationLink
-            onClick={() => onPageChange(i)}
-            isActive={i === currentPage}
-          >
-            {i}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(
+      <PaginationItem key={i}>
+        <PaginationLink
+          onClick={() => onPageChange(i)}
+          isActive={i === currentPage}
+          className="hover:bg-gray-100 cursor-pointer" // Added these classes
+        >
+          {i}
+        </PaginationLink>
+      </PaginationItem>
+    );
+  }
 
     // Add last ellipsis if needed
     if (endPage < totalPages - 1) {
@@ -72,18 +76,19 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
     }
 
     // Always show last page
-    if (totalPages > 1) {
-      pages.push(
-        <PaginationItem key={totalPages}>
-          <PaginationLink
-            onClick={() => onPageChange(totalPages)}
-            isActive={totalPages === currentPage}
-          >
-            {totalPages}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
+  if (totalPages > 1) {
+    pages.push(
+      <PaginationItem key={totalPages}>
+        <PaginationLink
+          onClick={() => onPageChange(totalPages)}
+          isActive={totalPages === currentPage}
+          className="hover:bg-gray-100 cursor-pointer" // Added these classes
+        >
+          {totalPages}
+        </PaginationLink>
+      </PaginationItem>
+    );
+  }
 
     return pages;
   };
