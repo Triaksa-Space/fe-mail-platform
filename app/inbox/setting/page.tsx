@@ -1,15 +1,25 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import FooterNav from '@/components/FooterNav';
 import Settings from '@/components/Settings';
-import withAuth from "@/components/hoc/withAuth";
 import { theme } from '@/app/theme';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useRouter } from "next/navigation";
 
 const SettingPage: React.FC = () => {
   const logout = useAuthStore((state) => state.logout);
+  const router = useRouter();
+
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
 
   return (
     <div className="flex h-[100dvh] flex-col" style={{ backgroundColor: theme.colors.background }}>
@@ -34,4 +44,4 @@ const SettingPage: React.FC = () => {
   );
 };
 
-export default withAuth(SettingPage);
+export default SettingPage;

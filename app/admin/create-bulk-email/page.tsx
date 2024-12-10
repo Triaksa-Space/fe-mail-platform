@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Minus, Plus } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,9 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
 import axios from 'axios'
-import withAuth from "@/components/hoc/withAuth";
 import DomainSelector from "@/components/DomainSelector"
 import LoadingProcessingPage from "@/components/ProcessLoading"
+import { useRouter } from "next/dist/client/components/navigation"
 
 const CreateBulkEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
@@ -19,7 +19,18 @@ const CreateBulkEmail: React.FC = () => {
   const [password, setPassword] = useState("")
   const [baseName, setBaseName] = useState("")
   const { toast } = useToast()
+  const router = useRouter();
   const token = useAuthStore((state) => state.token)
+
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
+
   const [receiveEmail, setReceiveEmail] = useState("")
   const [isRandom, setIsRandom] = useState(false)
   const [isPasswordRandom, setIsPasswordRandom] = useState(false)
@@ -268,4 +279,4 @@ const CreateBulkEmail: React.FC = () => {
   )
 }
 
-export default withAuth(CreateBulkEmail)
+export default CreateBulkEmail

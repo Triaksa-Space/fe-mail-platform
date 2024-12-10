@@ -1,13 +1,14 @@
 "use client";
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from './PasswordInput';
+import { useRouter } from "next/navigation";
 
 const Settings: React.FC = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -19,7 +20,16 @@ const Settings: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [oldPasswordError, setOldPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+  const router = useRouter();
   const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
 
   const { toast } = useToast();
 

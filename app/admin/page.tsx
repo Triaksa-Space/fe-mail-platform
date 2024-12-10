@@ -20,7 +20,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
-import withAuth from "@/components/hoc/withAuth";
 import PasswordInput from '@/components/PasswordInput'
 
 interface EmailUser {
@@ -65,6 +64,16 @@ const EmailManagement: React.FC = () => {
     const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
+
+    // Move the token check to useEffect
+    useEffect(() => {
+        const storedToken = useAuthStore.getState().getStoredToken();
+        if (!storedToken) {
+            router.replace("/");
+            return;
+        }
+    }, [router]);
+
     const { toast } = useToast();
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
     const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
@@ -149,7 +158,7 @@ const EmailManagement: React.FC = () => {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
-            
+
             let errorMessage = "Failed to change password. Please try again."
             if (axios.isAxiosError(error) && error.response?.data?.error) {
                 errorMessage = error.response.data.error
@@ -246,9 +255,9 @@ const EmailManagement: React.FC = () => {
         } catch (err) {
             console.error('Failed to fetch users:', err);
             // setError('Failed to load users');
-        } 
+        }
         // finally {
-            // setIsLoading(false);
+        // setIsLoading(false);
         // }
     };
 
@@ -439,4 +448,4 @@ const EmailManagement: React.FC = () => {
     )
 }
 
-export default withAuth(EmailManagement);
+export default EmailManagement;

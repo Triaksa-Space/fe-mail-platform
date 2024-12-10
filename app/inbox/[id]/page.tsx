@@ -52,6 +52,8 @@ const EmailDetailPage: React.FC = () => {
 
     // Fetch email details immediately after token check
     const fetchEmailDetail = async () => {
+      if (!token) return;
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
@@ -85,6 +87,8 @@ const EmailDetailPage: React.FC = () => {
 
   // Function to handle file download
   const handleDownload = async (url: string, filename: string) => {
+    if (!token) return;
+
     setIsDownloading(true);
     try {
       const payload = {

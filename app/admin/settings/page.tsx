@@ -19,7 +19,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
-import withAuth from "@/components/hoc/withAuth";
 import PasswordInput from "@/components/PasswordInput";
 
 interface AdminUser {
@@ -48,6 +47,16 @@ const UserAdminManagement: React.FC = () => {
     // const pageSize = 10
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
+
+    // Move the token check to useEffect
+    useEffect(() => {
+        const storedToken = useAuthStore.getState().getStoredToken();
+        if (!storedToken) {
+            router.replace("/");
+            return;
+        }
+    }, [router]);
+
     const { toast } = useToast();
 
     const [isDialogDeleteOpen, setIsDialogDeleteOpen] = useState(false);
@@ -353,6 +362,7 @@ const UserAdminManagement: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
+            if (!token) return;
             // setIsLoading(true)
             const sortFieldsString = sortFields
                 .map(({ field, order }) => `${field} ${order}`)
@@ -727,4 +737,4 @@ const UserAdminManagement: React.FC = () => {
     )
 }
 
-export default withAuth(UserAdminManagement);
+export default UserAdminManagement;

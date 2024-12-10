@@ -1,8 +1,7 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import FooterAdminNav from '@/components/FooterAdminNav';
 import Settings from '@/components/Settings';
-import withAuth from "@/components/hoc/withAuth";
 import { Button } from '@/components/ui/button';
 import { LogOut } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -11,6 +10,15 @@ import { theme } from '@/app/theme';
 
 const AccountPage: React.FC = () => {
   const router = useRouter();
+
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
 
   const handleLogout = () => {
     // Clear token and redirect to login page
@@ -43,4 +51,4 @@ const AccountPage: React.FC = () => {
   );
 };
 
-export default withAuth(AccountPage);
+export default AccountPage;

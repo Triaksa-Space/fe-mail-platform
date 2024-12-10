@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,6 +12,7 @@ import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
+import LoadingPage from "@/components/Loading";
 
 interface UploadedAttachment {
   name: string;
@@ -25,23 +26,89 @@ interface UploadingFile {
   url: string;
 }
 
+interface EmailDetail {
+  ID: number;
+  SenderEmail: string;
+  SenderName: string;
+  Subject: string;
+  Body: string;
+  BodyEml: string;
+  RelativeTime: string;
+  ListAttachments: { Filename: string; URL: string }[];
+}
+
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
 
 const Send: React.FC = () => {
+  const params = useParams();
   const router = useRouter();
+  const emailId = params?.id as string;
+  const [isLoading, setIsLoading] = useState(true);
+  // const [email, setEmail] = useState<EmailDetail | null>(null);
+  const token = useAuthStore.getState().getStoredToken();
+
   const searchParams = useSearchParams();
   const initialTo = searchParams.get('to') || '';
   const initialSubject = searchParams.get('subject') || '';
+  const initialEmail = searchParams.get('email') || '';  // Add this line
   const [to, setTo] = useState(initialTo);
   const [subject, setSubject] = useState(initialSubject);
   const [message, setMessage] = useState('');
   const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
   const { toast } = useToast();
-  const token = useAuthStore((state) => state.token);
-  const email = useAuthStore((state) => state.email);
-  const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState<UploadingFile[]>([]); // Track uploading files
+
+  useEffect(() => {
+    if (!token) {
+      router.replace("/");
+      return;
+    }
+
+    // Set loading to false if there's no emailId (new email composition)
+    if (!emailId) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchEmailDetail = async () => {
+      if (!token) return;
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            router.push('/inbox'); // Only redirect on 404
+            return;
+          }
+          throw new Error("Failed to fetch email");
+        }
+
+        const data = await response.json();
+        // setEmail(data);
+      } catch (err) {
+        console.error("Failed to fetch email:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEmailDetail();
+  }, [emailId, token, router]);
+
+  // // Remove this condition since we want to show the form even without email data
+  // if (isLoading) {
+  //   return <LoadingPage />
+  // }
 
   // Handle sending email with JSON payload
   const handleSendEmail = async () => {
@@ -93,7 +160,7 @@ const Send: React.FC = () => {
           errorMessage = error.response.data.error
         }
         toast({
-          description: `Failed to send email. ${errorMessage}`,
+          description: errorMessage,
           variant: "destructive",
         });
       }
@@ -313,7 +380,7 @@ const Send: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <label className="ml-4 text-gray-700 text-sm" htmlFor="from">
-                    {email}
+                    {initialEmail}
                   </label>
                 </div>
               </div>
@@ -327,7 +394,7 @@ const Send: React.FC = () => {
                   <Input
                     className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="to"
-                    type="text"
+                    type="email"
                     placeholder=""
                     value={to}
                     onChange={(e) => {

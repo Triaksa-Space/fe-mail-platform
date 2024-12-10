@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import FooterAdminNav from "@/components/FooterAdminNav"
@@ -9,8 +9,8 @@ import axios from 'axios'
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import DomainSelector from "@/components/DomainSelector"
-import withAuth from "@/components/hoc/withAuth";
 import LoadingProcessingPage from "@/components/ProcessLoading"
+import { useRouter } from "next/navigation"
 
 // interface Domain {
 //   ID: number;
@@ -19,7 +19,18 @@ import LoadingProcessingPage from "@/components/ProcessLoading"
 
 const CreateSingleEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
+  const router = useRouter();
   const token = useAuthStore((state) => state.token);
+
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const { toast } = useToast()
@@ -181,4 +192,4 @@ const CreateSingleEmail: React.FC = () => {
   )
 }
 
-export default withAuth(CreateSingleEmail);
+export default CreateSingleEmail;

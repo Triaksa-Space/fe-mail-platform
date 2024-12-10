@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import Send from '@/components/Send';
-import withAuth from "@/components/hoc/withAuth";
 import { theme } from "@/app/theme";
 
 const Page: React.FC = () => {
@@ -12,4 +11,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default withAuth(Page);
+export default Page;
