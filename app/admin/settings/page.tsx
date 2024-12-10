@@ -63,6 +63,7 @@ const UserAdminManagement: React.FC = () => {
     const [oldPasswordForAdmin, setOldPasswordForAdmin] = useState("");
     const [confirmPasswordForAdmin, setConfirmPasswordForAdmin] = useState("");
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
+    const [selectedSuperAdmin, setSelectedSuperAdmin] = useState<AdminUser | null>(null);
     const [showPassword, setShowPassword] = useState(false);
     const [showOPassword, setShowOPassword] = useState(false);
     const [showCPassword, setShowCPassword] = useState(false);
@@ -86,8 +87,84 @@ const UserAdminManagement: React.FC = () => {
     };
 
     const handleChangeMyselfPasswordClick = (admin: AdminUser) => {
-        setSelectedAdmin(admin);
+        setSelectedSuperAdmin(admin);
         setIsChangePasswordMyselfDialogOpen(true);
+    };
+
+    const handleChangeMyPasswordSubmit  = async () => {
+        if (!selectedSuperAdmin) return;
+
+        if (passwordForAdmin !== confirmPasswordForAdmin) {
+            toast({
+                description: "Passwords do not match.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (passwordForAdmin.length < 6) {
+            toast({
+                description: "Password must be at least 6 characters long.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Regular expression to ensure password complexity
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+
+        if (!passwordRegex.test(passwordForAdmin)) {
+            toast({
+                description: "Password must include a number, lowercase, uppercase, and symbol.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        try {
+            await axios.put(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
+                {
+                    new_password: passwordForAdmin,
+                    old_password: oldPasswordForAdmin,
+                    user_id: selectedSuperAdmin.id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            toast({
+                description: "Your password changed successfully.",
+                variant: "default",
+            });
+
+            // Reset state and close modal
+            setIsChangePasswordMyselfDialogOpen(false);
+            setPasswordForAdmin("");
+            setOldPasswordForAdmin("");
+            setConfirmPasswordForAdmin("");
+            setSelectedSuperAdmin(null);
+
+            // Optionally refresh the user list
+            fetchUsers();
+        } catch (error) {
+            setPasswordForAdmin("");
+            setOldPasswordForAdmin("");
+            setConfirmPasswordForAdmin("");
+            // setSelectedSuperAdmin(null);
+
+            let errorMessage = "Failed to change your password. Please try again."
+            if (axios.isAxiosError(error) && error.response?.data?.error) {
+                errorMessage = error.response.data.error
+            }
+            toast({
+                description: errorMessage,
+                variant: "destructive",
+            })
+        }
     };
 
     // Function to handle password change submission
@@ -477,7 +554,7 @@ const UserAdminManagement: React.FC = () => {
                     <Dialog open={isChangePasswordMyselfDialogOpen} onOpenChange={setIsChangePasswordMyselfDialogOpen}>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
+                                <DialogTitle>Change Password for {selectedSuperAdmin?.email}</DialogTitle>
                             </DialogHeader>
                             <div className="space-y-4">
                                 <PasswordInput
@@ -520,7 +597,7 @@ const UserAdminManagement: React.FC = () => {
                                     setIsChangePasswordMyselfDialogOpen(false);
                                     setPasswordForAdmin("");
                                     setConfirmPasswordForAdmin("");
-                                    setSelectedAdmin(null);
+                                    setSelectedSuperAdmin(null);
                                 }}>
                                     Cancel
                                 </Button>
@@ -531,7 +608,7 @@ const UserAdminManagement: React.FC = () => {
                                         : "bg-[#ffeeac] hover:bg-yellow-300"
                                         }`}
                                     disabled={!passwordForAdmin || !oldPasswordForAdmin || !confirmPasswordForAdmin}
-                                    onClick={handleChangePasswordSubmit}>
+                                    onClick={handleChangeMyPasswordSubmit}>
                                     Submit
                                 </Button>
                             </DialogFooter>
