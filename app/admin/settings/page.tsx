@@ -655,7 +655,15 @@ const UserAdminManagement: React.FC = () => {
                                 />
                             </div>
                             <DialogFooter>
-                                <Button variant="secondary" className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' onClick={() => setIsDialogCreateOpen(false)}>Back</Button>
+                                <Button variant="secondary" className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' 
+                                    onClick={() => {
+                                        setIsDialogCreateOpen(false);
+                                        setNewAdminEmail("");
+                                        setNewAdminPassword("");
+                                        }
+                                    }>
+                                        Back
+                                </Button>
                                 <Button
                                     variant="default"
                                     className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!newAdminEmail || !newAdminPassword
