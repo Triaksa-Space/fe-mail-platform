@@ -16,7 +16,7 @@ export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
   // const [failedAttempts, setFailedAttempts] = useState(0);
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
-  const [countdown, setCountdown] = useState<number>(0);
+  // const [countdown, setCountdown] = useState<number>(0);
   const [loginEmail, setLoginEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -132,10 +132,11 @@ export default function LandingPage() {
         clearInterval(interval);
         setLockoutTime(null);
         // setFailedAttempts(0);
-        setCountdown(0);
-      } else {
-        setCountdown(Math.ceil(remaining / 1000));
-      }
+        // setCountdown(0);
+      } 
+      // else {
+      //   // setCountdown(Math.ceil(remaining / 1000));
+      // }
     }, 1000);
 
     return () => clearInterval(interval);
