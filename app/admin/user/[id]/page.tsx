@@ -175,8 +175,8 @@ export default function UserDetail() {
                           {email.RelativeTime}
                         </span>
                       </div>
-                      <h4 className="font-medium">{email.Subject}</h4>
-                      <p className="text-sm text-gray-500">{email.Preview}</p>
+                      <h4 className="font-medium truncate">{email.Subject}</h4>
+                      <p className="text-sm text-gray-500 truncate">{email.Preview}</p>
                     </div>
                   </div>
                 ))}

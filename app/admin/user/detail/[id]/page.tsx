@@ -149,39 +149,43 @@ const EmailDetailPage: React.FC = () => {
         </div>
 
         <div className="space-y-2 pl-4 pr-4">
-          <div className="border bg-white shadow-sm flex" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
+          <div className="border bg-white shadow-sm flex justify-center" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
             <div
-              className={`prose max-w-none p-2 text-sm overflow-hidden ${email.Body ? '' : 'min-h-[200px]'}`}
-              dangerouslySetInnerHTML={{ __html: email.Body }}
-              style={{ color: theme.colors.textPrimary }}
-            />
+              className={`prose max-w-none p-2 text-sm overflow-hidden w-full flex ${email.Body ? '' : 'min-h-[200px]'}`}
+            >
+              <div
+                className="max-w-3xl w-full" // Add max-width container
+                dangerouslySetInnerHTML={{ __html: email.Body }}
+                style={{ color: theme.colors.textPrimary }}
+              />
+            </div>
           </div>
         </div>
 
         {/* Attachments Section */}
         {email.ListAttachments && email.ListAttachments.length > 0 && (
-            <div className="pl-5 pr-5 pt-4">
-              {/* <h5 className="font-medium">Attachments:</h5> */}
-              <div className="space-y-1">
-                {email.ListAttachments.map((attachment, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center"
+          <div className="pl-5 pr-5 pt-4">
+            {/* <h5 className="font-medium">Attachments:</h5> */}
+            <div className="space-y-1">
+              {email.ListAttachments.map((attachment, index) => (
+                <div
+                  key={index}
+                  className="flex items-center"
+                >
+                  <span className="text-sm text-gray-700 pr-4">
+                    {attachment.Filename.split('_').pop()}
+                  </span>
+                  <button
+                    onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
+                    aria-label={`Download ${attachment.Filename.split('_').pop()}`}
                   >
-                    <span className="text-sm text-gray-700 pr-4">
-                      {attachment.Filename.split('_').pop()}
-                    </span>
-                    <button
-                      onClick={() => handleDownload(attachment.URL, attachment.Filename.split('_').pop()!)}
-                      aria-label={`Download ${attachment.Filename.split('_').pop()}`}
-                    >
-                      <Download className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+                    <Download className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
       </div>
       <FooterAdminNav />
     </div>
