@@ -235,7 +235,7 @@ const EmailManagement: React.FC = () => {
                 id: user.ID,
                 email: user.Email,
                 lastActive: new Date(user.LastLogin).toLocaleString(),
-                created: new Date(user.CreatedAt).toLocaleDateString(),
+                created: new Date(user.CreatedAt).toLocaleString(),
                 createdByName: user.CreatedByName,
             }));
             setUsers(data);
@@ -287,9 +287,7 @@ const EmailManagement: React.FC = () => {
                         value={searchTerm}
                         onChange={(e) => {
                             const value = e.target.value;
-                            if (/^[a-zA-Z0-9.,_]*$/.test(value)) {
-                                handleSearch(value);
-                            }
+                            handleSearch(value);
                         }}
                     />
                     <Toaster />

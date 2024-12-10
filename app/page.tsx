@@ -21,38 +21,40 @@ export default function LandingPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const { token, setToken, setEmail, setRoleId } = useAuthStore();
+  const { setToken, setEmail, setRoleId } = useAuthStore();
+  const token = useAuthStore(state => state.token)
+
   const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
+    if (!token) return; // Skip if no token
+    
     const checkToken = async () => {
-      if (token) {
-        try {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-
-          const userData = response.data;
-          setEmail(userData.Email);
-          setRoleId(userData.RoleID);
-
-          // Redirect based on role
-          if (userData.RoleID === 0) {
-            router.push("/admin");
-          } else if (userData.RoleID === 1) {
-            router.push("/inbox");
-          } else if (userData.RoleID === 2) {
-            router.push("/admin");
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        } catch (error) {
-          console.error("Token validation failed:", error);
+        );
+
+        const userData = response.data;
+        setEmail(userData.Email);
+        setRoleId(userData.RoleID);
+
+        // Redirect based on role
+        if (userData.RoleID === 0 || userData.RoleID === 2) {
+          router.push("/admin");
+        } else if (userData.RoleID === 1) {
+          router.push("/inbox");
         }
+      } catch (error) {
+        // If token is invalid, clear it
+        setToken(null);
+        console.error("Token validation failed:", error);
       }
     };
 

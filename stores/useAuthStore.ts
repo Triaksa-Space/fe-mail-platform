@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState>()(
       setRoleId: (roleId) => set({ roleId }),
       logout: () => {
         // Clear zustand state
-        set({ token: null, email: null })
+        set({ token: null, email: null, roleId: null })
         
         // Clear storage
         if (typeof window !== 'undefined') {
@@ -35,10 +35,15 @@ export const useAuthStore = create<AuthState>()(
       },
       getStoredToken: () => {
         if (typeof window === 'undefined') return null
-        
-        const stored = window.sessionStorage.getItem('auth-storage')
+      
+        // Check session storage first
+        let stored = window.sessionStorage.getItem('auth-storage')
+        if (!stored) {
+          // Fallback to local storage if not found in session storage
+          stored = window.localStorage.getItem('auth-storage')
+        }
         if (!stored) return null
-        
+      
         try {
           const parsed = JSON.parse(stored)
           return parsed.state?.token || null
@@ -64,7 +69,7 @@ export const useAuthStore = create<AuthState>()(
       name: 'auth-storage',
       storage: createJSONStorage(() => {
         if (typeof window !== 'undefined') {
-          return sessionStorage
+          return localStorage  // Changed from sessionStorage to localStorage
         }
         return {
           getItem: () => null,
