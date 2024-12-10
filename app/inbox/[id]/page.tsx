@@ -10,6 +10,7 @@ import axios from "axios";
 import { saveAs } from 'file-saver';
 import LoadingDownloadPage from "@/components/DownloadLoading";
 import { theme } from "@/app/theme";
+import LoadingPage from "@/components/Loading";
 
 interface EmailDetail {
   ID: number;
@@ -23,15 +24,64 @@ interface EmailDetail {
 }
 
 const EmailDetailPage: React.FC = () => {
+  const params = useParams();
+  const router = useRouter();
+  const token = useAuthStore((state) => state.token);
+
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
+
   const [email, setEmail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false); // State for loading indicator
   const [iframeHeight, setIframeHeight] = useState('0px');
 
-  const params = useParams();
-  const router = useRouter();
-  const token = useAuthStore((state) => state.token);
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+
+    // Fetch email details immediately after token check
+    const fetchEmailDetail = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${storedToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch email");
+        }
+
+        const data = await response.json();
+        setEmail(data);
+      } catch (err) {
+        console.error("Failed to fetch email:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEmailDetail();
+  }, [params.id, router]);
+
+  // Show loading state while checking auth and fetching data
+  if (isLoading) {
+    return <LoadingPage />
+  }
 
   // Function to handle file download
   const handleDownload = async (url: string, filename: string) => {
@@ -61,40 +111,6 @@ const EmailDetailPage: React.FC = () => {
       setIsDownloading(false);
     }
   };
-
-  useEffect(() => {
-    const fetchEmailDetail = async () => {
-      if (!token) {
-        router.replace("/");
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch email");
-        }
-
-        const data = await response.json();
-        setEmail(data);
-      } catch (err) {
-        console.error("Failed to fetch email:", err);
-        setError("Failed to load email");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEmailDetail();
-  }, [params.id, token, router]);
 
   const handleReply = () => {
     if (!email) return;
