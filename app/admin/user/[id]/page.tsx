@@ -83,7 +83,7 @@ export default function UserDetail() {
           setEmail(responseDetailUser.data.Email);
         }
       } catch (err) {
-        // console.error('Failed to fetch user details:', err);
+        console.error('Failed to fetch user details:', err);
       }
     };
   
