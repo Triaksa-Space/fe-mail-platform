@@ -143,7 +143,7 @@ const CreateSingleEmail: React.FC = () => {
               <Input
                 value={username}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.toLowerCase();
                   setUsername(value.replace(/\s/g, '')); // Remove spaces
                   const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
                   setUsername(sanitizedValue);

@@ -237,7 +237,7 @@ const CreateBulkEmail: React.FC = () => {
                     : "shadow appearance-none flex-1 h-12"
                 }
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.toLowerCase();
                   setBaseName(value.replace(/\s/g, '')); // Remove spaces
                   const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
                   setBaseName(sanitizedValue);
