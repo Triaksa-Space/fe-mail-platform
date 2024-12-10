@@ -35,6 +35,17 @@ const CreateSingleEmail: React.FC = () => {
   const [password, setPassword] = useState("")
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
+
+  const toggleRandomPassword = () => {
+    if (!isRandomPasswordActive) {
+      generateRandomPassword();
+      setIsRandomPasswordActive(true);
+    } else {
+      setPassword("");
+      setIsRandomPasswordActive(false);
+    }
+  };
 
   const generateRandomPassword = () => {
     const lower = "abcdefghijklmnopqrstuvwxyz";
@@ -149,7 +160,7 @@ const CreateSingleEmail: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <Input
+            <Input
                 type="text"
                 value={password}
                 onChange={(e) => {
@@ -157,15 +168,19 @@ const CreateSingleEmail: React.FC = () => {
                   setPassword(value.replace(/\s/g, '')); // Remove spaces
                 }}
                 placeholder="Password"
-                className="shadow appearance-non flex-1 h-12"
+                className={isRandomPasswordActive ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
+                disabled={isRandomPasswordActive}
               />
               <span className="text-lg text-white">@</span>
               <Button
                 type="button"
-                onClick={generateRandomPassword}
-                className="shadow appearance-non w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300  text-black "
+                onClick={toggleRandomPassword}
+                className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomPasswordActive
+                  ? "bg-yellow-300 hover:bg-yellow-400"
+                  : "bg-[#ffeeac] hover:bg-yellow-300"
+                  }`}
               >
-                Random Password
+                {isRandomPasswordActive ? "Random Password" : "Random Password"}
               </Button>
             </div>
 

@@ -32,9 +32,30 @@ const CreateBulkEmail: React.FC = () => {
   }, [router]);
 
   const [receiveEmail, setReceiveEmail] = useState("")
-  const [isRandom, setIsRandom] = useState(false)
-  const [isPasswordRandom, setIsPasswordRandom] = useState(false)
+  // const [isRandom, setIsRandom] = useState(false)
+  // const [isPasswordRandom, setIsPasswordRandom] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
+  const [isRandomNameActive, setIsRandomNameActive] = useState(false);
+
+  const toggleRandomPassword = () => {
+    if (!isRandomPasswordActive) {
+      generateRandomPassword();
+      setIsRandomPasswordActive(true);
+    } else {
+      setPassword("");
+      setIsRandomPasswordActive(false);
+    }
+  };
+
+  const toggleRandomName = () => {
+    if (!isRandomNameActive) {
+      setIsRandomNameActive(true);
+    } else {
+      setIsRandomNameActive(false);
+      setBaseName("");
+    }
+  };
 
   const updateCount = (newCount: number) => {
     if (newCount >= 1 && newCount <= 100) {
@@ -42,9 +63,9 @@ const CreateBulkEmail: React.FC = () => {
     }
   }
 
-  const generateRandomNames = () => {
-    setIsRandom(true)
-  }
+  // const generateRandomNames = () => {
+  //   setIsRandom(true)
+  // }
 
   const generateRandomPassword = () => {
     const lower = "abcdefghijklmnopqrstuvwxyz";
@@ -62,15 +83,15 @@ const CreateBulkEmail: React.FC = () => {
 
     // Fill the remaining characters
     for (let i = 4; i < 8; i++) {
-        password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
     }
 
     // Shuffle the password to randomize character positions
     password = password.split('').sort(() => 0.5 - Math.random()).join('');
 
     setPassword(password);
-    setIsPasswordRandom(true)
-}
+    // setIsPasswordRandom(true)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -121,8 +142,8 @@ const CreateBulkEmail: React.FC = () => {
       setBaseName("")
       setPassword("")
       setReceiveEmail("")
-      setIsRandom(false)
-      setIsPasswordRandom(false)
+      // setIsRandom(false)
+      // setIsPasswordRandom(false)
     } catch (error) {
       let errorMessage = "Failed to create users. Please try again."
       if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -134,6 +155,8 @@ const CreateBulkEmail: React.FC = () => {
       })
     } finally {
       setIsLoading(false)
+      setIsRandomPasswordActive(false)
+      setIsRandomNameActive(false)
     }
   }
 
@@ -151,11 +174,13 @@ const CreateBulkEmail: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Button
                   type="button"
-                  variant="ghost"
-                  className="shadow appearance-non w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
-                  onClick={generateRandomNames}
+                  onClick={toggleRandomName}
+                  className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomNameActive
+                      ? "bg-yellow-300 hover:bg-yellow-400"
+                      : "bg-[#ffeeac] hover:bg-yellow-300"
+                    }`}
                 >
-                  Random Name
+                  {isRandomNameActive ? "Random Name" : "Random Name"}
                 </Button>
               </div>
 
@@ -204,16 +229,20 @@ const CreateBulkEmail: React.FC = () => {
 
             <div className="flex items-center gap-2">
               <Input
-                value={isRandom ? "random" : baseName}
+                value={isRandomNameActive ? "random" : baseName}
                 placeholder="Email (numeric)"
-                className={isRandom ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
+                className={
+                  isRandomNameActive
+                    ? "shadow appearance-none flex-1 h-12 bg-gray-300"
+                    : "shadow appearance-none flex-1 h-12"
+                }
                 onChange={(e) => {
                   const value = e.target.value;
                   setBaseName(value.replace(/\s/g, '')); // Remove spaces
                   const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
                   setBaseName(sanitizedValue);
                 }}
-                disabled={isRandom}
+                disabled={isRandomNameActive}
               />
               <span className="text-lg">@</span>
               <DomainSelector
@@ -232,16 +261,19 @@ const CreateBulkEmail: React.FC = () => {
                   setPassword(value.replace(/\s/g, '')); // Remove spaces
                 }}
                 placeholder="Password"
-                className={isPasswordRandom ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
-                disabled={isPasswordRandom}
+                className={isRandomPasswordActive ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
+                disabled={isRandomPasswordActive}
               />
               <span className="text-lg text-white">@</span>
               <Button
                 type="button"
-                onClick={generateRandomPassword}
-                className="shadow appearance-non w-[180px] h-12 font-bold bg-[#ffeeac] hover:bg-yellow-300 text-black"
+                onClick={toggleRandomPassword}
+                className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomPasswordActive
+                  ? "bg-yellow-300 hover:bg-yellow-400"
+                  : "bg-[#ffeeac] hover:bg-yellow-300"
+                  }`}
               >
-                Random Password
+                {isRandomPasswordActive ? "Random Password" : "Random Password"}
               </Button>
             </div>
 
