@@ -14,7 +14,7 @@ import PasswordInput from "@/components/PasswordInput";
 
 export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [failedAttempts, setFailedAttempts] = useState(0);
+  // const [failedAttempts, setFailedAttempts] = useState(0);
   const [lockoutTime, setLockoutTime] = useState<number | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
   const [loginEmail, setLoginEmail] = useState('');
@@ -109,22 +109,6 @@ export default function LandingPage() {
       //   router.push("/inbox");
       // }
     } catch (error) {
-      setFailedAttempts((prev) => prev + 1);
-
-      if (failedAttempts + 1 >= 4) {
-        setLockoutTime(Date.now() + 10 * 60 * 1000);
-      }
-
-      // // Show error toast
-      // toast({
-      //   description: "Incorrect email or password.",
-      //   variant: "destructive",
-      // });
-      if (axios.isAxiosError(error) && error.response?.status === 429) {
-        // toast({
-        //   description: "This IP has to many failed login attempts. Try again in 9 minutes 59 second.",
-        //   variant: "destructive",
-        // });
         let errorMessage = "Incorrect email or password. Please try again."
         if (axios.isAxiosError(error) && error.response?.data?.error) {
           errorMessage = error.response.data.error
@@ -133,12 +117,6 @@ export default function LandingPage() {
           description: errorMessage,
           variant: "destructive",
         })
-      } else {
-        toast({
-          description: "Incorrect email or password.",
-          variant: "destructive",
-        });
-      }
     } finally {
       setIsLoading(false);
     }
@@ -153,7 +131,7 @@ export default function LandingPage() {
       if (remaining <= 0) {
         clearInterval(interval);
         setLockoutTime(null);
-        setFailedAttempts(0);
+        // setFailedAttempts(0);
         setCountdown(0);
       } else {
         setCountdown(Math.ceil(remaining / 1000));
@@ -213,24 +191,22 @@ export default function LandingPage() {
               </div>
             </div>
             <Button
-              className={`shadow appearance-non w-full h-12 text-base font-bold ${lockoutTime || !loginEmail || !password
+              className={`shadow appearance-non w-full h-12 text-base font-bold ${ !loginEmail || !password
                 ? "bg-gray-400 cursor-not-allowed text-black"
                 : "bg-[#ffeeac] hover:bg-yellow-300 text-black"
                 }`}
               type="submit"
-              disabled={isLoading || !!lockoutTime || !loginEmail || !password}
+              disabled={isLoading || !loginEmail || !password}
             >
-              {lockoutTime
-                ? `Login (${countdown})`
-                : isLoading
+              {isLoading
                   ? "Signing in..."
                   : "Login"}
             </Button>
-            {failedAttempts === 3 && (
+            {/* {failedAttempts === 3 && (
               <p className="text-xs text-red-600 text-center">
                 Careful! One more failed attempt will disable login for 10 minutes.
               </p>
-            )}
+            )} */}
             {/* {lockoutTime ? (
               <p className="text-xs text-red-600 text-left">
                 Too many failed attempts. Try again in {Math.ceil(countdown / 60)} minutes.
