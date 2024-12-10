@@ -14,7 +14,7 @@ interface PaginationComponentProps {
   onPageChange: (page: number) => void;
 }
 
-const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, pageSize, totalCount, currentPage, totalPages, onPageChange }) => {
+const PaginationComponent: React.FC<PaginationComponentProps> = ({ pageSize, totalCount, currentPage, totalPages, onPageChange }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageInput, setPageInput] = useState("");
 
@@ -23,7 +23,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
     const maxPagesToShow = 3;
     const showBefore = Math.floor(maxPagesToShow / 2);
     const showAfter = maxPagesToShow - showBefore - 1;
-    
+
     // Always show first page
     pages.push(
       <PaginationItem key={1}>
@@ -36,11 +36,11 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
         </PaginationLink>
       </PaginationItem>
     );
-  
+
 
     // Calculate range around current page
-    let startPage = Math.max(2, currentPage - showBefore);
-    let endPage = Math.min(totalPages - 1, currentPage + showAfter);
+    const startPage = Math.max(2, currentPage - showBefore);
+    const endPage = Math.min(totalPages - 1, currentPage + showAfter);
 
     // Add first ellipsis if needed
     if (startPage > 2) {
@@ -52,19 +52,19 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
     }
 
     // Add pages around current page
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(
-      <PaginationItem key={i}>
-        <PaginationLink
-          onClick={() => onPageChange(i)}
-          isActive={i === currentPage}
-          className="hover:bg-gray-100 cursor-pointer" // Added these classes
-        >
-          {i}
-        </PaginationLink>
-      </PaginationItem>
-    );
-  }
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <PaginationItem key={i}>
+          <PaginationLink
+            onClick={() => onPageChange(i)}
+            isActive={i === currentPage}
+            className="hover:bg-gray-100 cursor-pointer" // Added these classes
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
 
     // Add last ellipsis if needed
     if (endPage < totalPages - 1) {
@@ -76,19 +76,19 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
     }
 
     // Always show last page
-  if (totalPages > 1) {
-    pages.push(
-      <PaginationItem key={totalPages}>
-        <PaginationLink
-          onClick={() => onPageChange(totalPages)}
-          isActive={totalPages === currentPage}
-          className="hover:bg-gray-100 cursor-pointer" // Added these classes
-        >
-          {totalPages}
-        </PaginationLink>
-      </PaginationItem>
-    );
-  }
+    if (totalPages > 1) {
+      pages.push(
+        <PaginationItem key={totalPages}>
+          <PaginationLink
+            onClick={() => onPageChange(totalPages)}
+            isActive={totalPages === currentPage}
+            className="hover:bg-gray-100 cursor-pointer" // Added these classes
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
 
     return pages;
   };
@@ -107,64 +107,64 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({ activeCount, 
   };
 
   return (
-      <div className="grid grid-cols-2 items-center gap-4 px-4">
-        {/* Left column - Showing text */}
-        <div className="text-sm text-gray-500 justify-self-start">
-          Showing {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
-        </div>
-  
-        {/* Right column - Pagination */}
-        <div className="flex justify-end space-x-2 ml-auto w-1/2">
-          <Pagination>
-            <PaginationContent className="flex justify-end">
-              {currentPage > 1 && (
-                <>
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => onPageChange(1)}
-                      aria-label="Go to first page"
-                      className="hover:bg-gray-100"
-                    >
-                      <ChevronFirst className="h-4 w-4" />
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => onPageChange(currentPage - 1)}
-                      aria-label="Go to previous page"
-                      className="hover:bg-gray-100"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </PaginationLink>
-                  </PaginationItem>
-                </>
-              )}
-              {renderPaginationItems()}
-              {currentPage < totalPages && (
-                <>
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => onPageChange(currentPage + 1)}
-                      aria-label="Go to next page"
-                      className="hover:bg-gray-100"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => onPageChange(totalPages)}
-                      aria-label="Go to last page"
-                      className="hover:bg-gray-100"
-                    >
-                      <ChevronLast className="h-4 w-4" />
-                    </PaginationLink>
-                  </PaginationItem>
-                </>
-              )}
-            </PaginationContent>
-          </Pagination>
-        </div>
+    <div className="grid grid-cols-2 items-center gap-4 px-4">
+      {/* Left column - Showing text */}
+      <div className="text-sm text-gray-500 justify-self-start">
+        Showing {(currentPage - 1) * pageSize + 1}-{Math.min(currentPage * pageSize, totalCount)} of {totalCount}
+      </div>
+
+      {/* Right column - Pagination */}
+      <div className="flex justify-end space-x-2 ml-auto w-1/2">
+        <Pagination>
+          <PaginationContent className="flex justify-end">
+            {currentPage > 1 && (
+              <>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(1)}
+                    aria-label="Go to first page"
+                    className="hover:bg-gray-100"
+                  >
+                    <ChevronFirst className="h-4 w-4" />
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(currentPage - 1)}
+                    aria-label="Go to previous page"
+                    className="hover:bg-gray-100"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+            {renderPaginationItems()}
+            {currentPage < totalPages && (
+              <>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(currentPage + 1)}
+                    aria-label="Go to next page"
+                    className="hover:bg-gray-100"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => onPageChange(totalPages)}
+                    aria-label="Go to last page"
+                    className="hover:bg-gray-100"
+                  >
+                    <ChevronLast className="h-4 w-4" />
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+          </PaginationContent>
+        </Pagination>
+      </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
