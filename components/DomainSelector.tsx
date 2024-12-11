@@ -24,9 +24,7 @@ interface DomainSelectorProps {
 export default function DomainSelector({ value, onChange, className }: DomainSelectorProps) {
   const [domains, setDomains] = useState<Domain[]>([])
   const token = useAuthStore((state) => state.token)
-  const roleId = useAuthStore((state) => state.roleId)
-  const router = useRouter();
-
+  
   useEffect(() => {
     const fetchDomains = async () => {
       try {
