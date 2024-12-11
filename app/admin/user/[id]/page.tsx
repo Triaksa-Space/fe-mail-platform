@@ -30,12 +30,10 @@ export default function UserDetail() {
   const router = useRouter()
   // const token = useAuthStore((state) => state.token)
   const [token, setToken] = useState("")
-  console.log("token", token)
 
   // Move the token check to useEffect
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
-    console.log("storedToken", storedToken)
     if (!storedToken) {
       router.replace("/");
       return;
@@ -45,7 +43,6 @@ export default function UserDetail() {
 
     const storedRoleID = useAuthStore.getState().getStoredRoleID();
     // Redirect based on role
-    console.log("storedRoleID", storedRoleID)
     if (storedRoleID === 1) {
       router.push("/not-found");
     }

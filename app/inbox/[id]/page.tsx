@@ -50,7 +50,7 @@ const EmailDetailPage: React.FC = () => {
       router.replace("/");
       return;
     }
-  
+
     if (!token) {
       setIsLoading(false); // Ensure loading state is updated
       return;
@@ -60,8 +60,13 @@ const EmailDetailPage: React.FC = () => {
     if (roleId === 0 || roleId === 2) {
       router.push("/not-found");
     }
-  
+
     const fetchEmailDetail = async () => {
+      // Redirect based on role
+      if (roleId === 0 || roleId === 2) {
+        router.push("/not-found");
+      }
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
@@ -71,11 +76,11 @@ const EmailDetailPage: React.FC = () => {
             },
           }
         );
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch email");
         }
-  
+
         const data = await response.json();
         setEmail(data);
       } catch (err) {
@@ -84,7 +89,7 @@ const EmailDetailPage: React.FC = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchEmailDetail();
   }, [params.id, router, token]);
 
@@ -143,13 +148,13 @@ const EmailDetailPage: React.FC = () => {
     const iframe = e.target as HTMLIFrameElement;
     if (iframe.contentWindow) {
       const iframeDoc = iframe.contentWindow.document;
-  
+
       // Add meta viewport tag
       const meta = iframeDoc.createElement('meta');
       meta.name = 'viewport';
       meta.content = 'width=device-width, initial-scale=1';
       iframeDoc.head.appendChild(meta);
-  
+
       // Apply styles to iframe content
       const style = iframeDoc.createElement('style');
       style.textContent = `
@@ -182,7 +187,7 @@ const EmailDetailPage: React.FC = () => {
         }
       `;
       iframeDoc.head.appendChild(style);
-  
+
       // Adjust iframe height
       const height = iframeDoc.body.scrollHeight + 32;
       setIframeHeight(`${height}px`);

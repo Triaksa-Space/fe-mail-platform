@@ -63,7 +63,6 @@ const Send: React.FC = () => {
 
       if (response.status === 200) {
         const data = response.data;
-        console.log('Fetched Email Data:', data);
 
         setTo(data.SenderEmail || ''); // Set 'To' as the original sender
         setSubject(data.Subject ? `Re: ${data.Subject}` : 'Re:'); // Prefix subject with 'Re:'
@@ -94,7 +93,6 @@ const Send: React.FC = () => {
     }
 
     if (emailId) {
-      console.log('Fetching Email Details...', emailId);
       fetchEmailDetail();
     } else {
       setIsLoading(false);

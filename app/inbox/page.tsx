@@ -22,11 +22,6 @@ const InboxPageContent: React.FC = () => {
       router.replace("/");
       return;
     }
-console.log("ROLE ID INBOX  1", roleId)
-    // // Redirect based on role
-    // if (roleId === 0  || roleId === 2) {
-    //   router.push("/not-found");
-    // }
   }, [router]);
 
   const searchParams = useSearchParams();
@@ -41,6 +36,11 @@ console.log("ROLE ID INBOX  1", roleId)
 
   const fetchCountSentEmails = async () => {
     if (!token) return;
+
+    // Redirect based on role
+    if (roleId === 0  || roleId === 2) {
+      router.push("/not-found");
+    }
 
     try {
       const response = await axios.get(
@@ -85,6 +85,11 @@ console.log("ROLE ID INBOX  1", roleId)
         router.replace("/");
         return;
       }
+
+      // Redirect based on role
+    if (roleId === 0  || roleId === 2) {
+      router.push("/not-found");
+    }
 
       try {
         const response = await axios.get(

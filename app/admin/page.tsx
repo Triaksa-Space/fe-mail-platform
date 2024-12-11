@@ -65,7 +65,6 @@ const EmailManagement: React.FC = () => {
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
-    // console.log("roleId", roleId)
 
     // Move the token check to useEffect
     useEffect(() => {
