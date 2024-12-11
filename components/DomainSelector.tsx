@@ -8,7 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useAuthStore } from "@/stores/useAuthStore"
-import { useRouter } from "next/navigation";
 
 interface Domain {
   ID: number
