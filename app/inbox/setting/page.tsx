@@ -21,6 +21,12 @@ const SettingPage: React.FC = () => {
     }
   }, [router]);
 
+  const roleId = useAuthStore((state) => state.roleId);
+  // Redirect based on role
+  if (roleId === 0 || roleId === 2) {
+    router.push("/not-found");
+  }
+
   return (
     <div className="flex h-[100dvh] flex-col" style={{ backgroundColor: theme.colors.background }}>
       <div className="flex-1 overflow-y-auto">

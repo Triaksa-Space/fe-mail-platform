@@ -11,6 +11,18 @@ import PasswordInput from './PasswordInput';
 import { useRouter } from "next/navigation";
 
 const Settings: React.FC = () => {
+  const router = useRouter();
+  const token = useAuthStore((state) => state.token);
+  // const roleId = useAuthStore((state) => state.roleId);
+
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -20,16 +32,6 @@ const Settings: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [oldPasswordError, setOldPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
-  const router = useRouter();
-  const token = useAuthStore((state) => state.token);
-
-  useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
-    if (!storedToken) {
-      router.replace("/");
-      return;
-    }
-  }, [router]);
 
   const { toast } = useToast();
 
@@ -107,6 +109,13 @@ const Settings: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   // Redirect based on role
+  //   if (roleId === 0  || roleId === 2) {
+  //     router.push("/not-found");
+  //   }
+  // }, [router]);
 
   return (
     <>

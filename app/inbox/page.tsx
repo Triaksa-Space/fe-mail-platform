@@ -11,15 +11,26 @@ import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
 
 const InboxPageContent: React.FC = () => {
+  const token = useAuthStore((state) => state.token);
+  const roleId = useAuthStore((state) => state.roleId);
+  const router = useRouter();
+
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
+
+  const searchParams = useSearchParams();
+  const sentStatus = searchParams.get('sent');
   const [sentEmails, setSentEmails] = useState(0);
   const [email, setEmailLocal] = useState("");
   const [emails, setEmails] = useState<Email[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const token = useAuthStore((state) => state.token);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const sentStatus = searchParams.get('sent');
 
   const { setEmail } = useAuthStore();
 
@@ -47,6 +58,11 @@ const InboxPageContent: React.FC = () => {
   };
 
   useEffect(() => {
+    // Redirect based on role
+    if (roleId === 0  || roleId === 2) {
+      router.push("/not-found");
+    }
+
     let isSubscribed = true;
     const controller = new AbortController();
 

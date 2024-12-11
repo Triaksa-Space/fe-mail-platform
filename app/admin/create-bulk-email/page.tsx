@@ -21,7 +21,6 @@ const CreateBulkEmail: React.FC = () => {
   const { toast } = useToast()
   const router = useRouter();
   const token = useAuthStore((state) => state.token)
-  const roleId = useAuthStore((state) => state.roleId)
 
   // Move the token check to useEffect
   useEffect(() => {

@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import FooterNav from "@/components/FooterNav";
+import FooterAdminNav from "@/components/FooterAdminNav";
+import { useAuthStore } from "@/stores/useAuthStore"
 
 export default function NotFound() {
+  const roleId = useAuthStore((state) => state.roleId)
+
   return (
     <div className="flex flex-col min-h-screen">
       
@@ -21,7 +25,11 @@ export default function NotFound() {
       </main>
 
       {/* Footer */}
-      <FooterNav />
+      {roleId === 1 ? (
+        <FooterNav />
+      ) : roleId === 0 || roleId === 2 ? (
+        <FooterAdminNav />
+      ) : null}
     </div>
   );
 }
