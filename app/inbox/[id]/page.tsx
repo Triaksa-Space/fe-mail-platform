@@ -157,7 +157,7 @@ const EmailDetailPage: React.FC = () => {
           color: ${theme.colors.textPrimary};
           width: 100%;
           box-sizing: border-box;
-          overflow: hidden !important; /* Prevent scroll */
+          overflow-y: auto !important;
         }
         img, table {
           max-width: 100%;

@@ -125,23 +125,28 @@ const EmailDetailPage: React.FC = () => {
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
     if (iframe.contentWindow) {
-      // Add padding for better appearance
-      const height = iframe.contentWindow.document.body.scrollHeight + 32;
-      setIframeHeight(`${height}px`);
+      const iframeDoc = iframe.contentWindow.document;
+  
+      // Add meta viewport tag
+      const meta = iframeDoc.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, initial-scale=1';
+      iframeDoc.head.appendChild(meta);
   
       // Apply styles to iframe content
-      const style = document.createElement('style');
+      const style = iframeDoc.createElement('style');
       style.textContent = `
+        /* General styles */
         body {
           margin: 0;
           padding: 16px;
-          font-family: system-ui, -apple-system, sans-serif;
+          font-family: system-ui, -apple-system, roboto;
           font-size: 14px;
           line-height: 1.5;
           color: ${theme.colors.textPrimary};
           width: 100%;
           box-sizing: border-box;
-          overflow: hidden !important; /* Prevent scroll */
+          overflow-y: auto !important;
         }
         img, table {
           max-width: 100%;
@@ -152,8 +157,18 @@ const EmailDetailPage: React.FC = () => {
           word-wrap: break-word;
           overflow: hidden !important; /* Prevent scroll */
         }
+        /* Override fixed widths */
+        table, tr, td, th, div, p, img {
+          max-width: 100% !important;
+          width: auto !important;
+          box-sizing: border-box;
+        }
       `;
-      iframe.contentWindow.document.head.appendChild(style);
+      iframeDoc.head.appendChild(style);
+  
+      // Adjust iframe height
+      const height = iframeDoc.body.scrollHeight + 32;
+      setIframeHeight(`${height}px`);
     }
   };
 
