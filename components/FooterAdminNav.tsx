@@ -59,7 +59,7 @@ const FooterAdminNav = () => {
           <span className="text-xs mt-1">Create Bulk</span>
         </button>
         <button
-          className={buttonClass(pathname === '/admin/settings')}
+          className={buttonClass(pathname === '/admin/settings' || pathname === '/admin/settings/account')}
           onClick={() => handleNavigation('/admin/settings')}
         >
           <Settings className="h-5 w-5" />
