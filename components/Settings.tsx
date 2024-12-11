@@ -46,6 +46,14 @@ const Settings: React.FC = () => {
     setOldPasswordError(null);
     setConfirmPasswordError(null);
 
+  if (newPassword.length < 6) {
+      toast({
+          description: "Password must be at least 6 characters long.",
+          variant: "destructive",
+      });
+      return;
+  }
+
     if (!validatePasswords()) return;
 
     setIsLoading(true);
