@@ -85,6 +85,17 @@ const EmailDetailPage: React.FC = () => {
   };
 
   useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  
+    if (!token) {
+      setIsLoading(false); // Ensure loading state is updated
+      return;
+    }
+    
     const fetchEmailDetail = async () => {
       if (!token) {
         router.replace("/");

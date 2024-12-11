@@ -30,6 +30,15 @@ export default function UserDetail() {
   const router = useRouter()
   const token = useAuthStore((state) => state.token)
 
+  // Move the token check to useEffect
+  useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  }, [router]);
+
   const handleEmailClick = (uemail: UserEmail) => {
     router.push(`/admin/user/detail/${uemail.ID}/?email=${email}`);
   }
@@ -58,6 +67,17 @@ export default function UserDetail() {
   };
 
   useEffect(() => {
+    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!storedToken) {
+      router.replace("/");
+      return;
+    }
+  
+    if (!token) {
+      setIsLoading(false); // Ensure loading state is updated
+      return;
+    }
+    
     let isSubscribed = true;
     const controller = new AbortController();
   
