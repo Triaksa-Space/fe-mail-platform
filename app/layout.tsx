@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mailsaja",
+  title: "Mailria",
   description: "Where Simplicity Meets Speed.",
 };
 

@@ -196,7 +196,7 @@ const EmailManagement: React.FC = () => {
             fetchUsers();
         } catch (error) {
             console.error('Failed to delete user:', error);
-            let errorMessage = "Failed to change password. Please try again."
+            let errorMessage = "Failed to delete user. Please try again."
             if (axios.isAxiosError(error) && error.response?.data?.error) {
                 errorMessage = error.response.data.error
             }
@@ -208,8 +208,10 @@ const EmailManagement: React.FC = () => {
     };
 
     const handleSearch = (value: string) => {
-        setSearchTerm(value);
-        setCurrentPage(1); // Reset to first page when searching
+        if (value !== searchTerm) {
+            setSearchTerm(value);
+            setCurrentPage(1); // Reset to first page when searching
+        }
     };
 
     const fetchUsers = async () => {
