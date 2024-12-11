@@ -27,6 +27,7 @@ const EmailDetailPage: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
+  const roleId = useAuthStore((state) => state.roleId);
 
   // Move the token check to useEffect
   useEffect(() => {
@@ -53,6 +54,11 @@ const EmailDetailPage: React.FC = () => {
     if (!token) {
       setIsLoading(false); // Ensure loading state is updated
       return;
+    }
+
+    // Redirect based on role
+    if (roleId === 0 || roleId === 2) {
+      router.push("/not-found");
     }
   
     const fetchEmailDetail = async () => {

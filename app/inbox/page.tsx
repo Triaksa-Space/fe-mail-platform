@@ -22,6 +22,11 @@ const InboxPageContent: React.FC = () => {
       router.replace("/");
       return;
     }
+console.log("ROLE ID INBOX  1", roleId)
+    // // Redirect based on role
+    // if (roleId === 0  || roleId === 2) {
+    //   router.push("/not-found");
+    // }
   }, [router]);
 
   const searchParams = useSearchParams();
