@@ -55,6 +55,12 @@ const UserAdminManagement: React.FC = () => {
             router.replace("/");
             return;
         }
+
+        const storedRoleID = useAuthStore.getState().getStoredRoleID();
+        // Redirect based on role
+        if (storedRoleID === 1) {
+            router.push("/not-found");
+        }
     }, [router]);
 
     const { toast } = useToast();

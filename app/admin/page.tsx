@@ -64,6 +64,8 @@ const EmailManagement: React.FC = () => {
     const [totalPages, setTotalPages] = useState(1)
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
+    const roleId = useAuthStore((state) => state.roleId);
+    // console.log("roleId", roleId)
 
     // Move the token check to useEffect
     useEffect(() => {
@@ -71,6 +73,11 @@ const EmailManagement: React.FC = () => {
         if (!storedToken) {
             router.replace("/");
             return;
+        }
+
+        // Redirect based on role
+        if (roleId === 1) {
+            router.push("/not-found");
         }
     }, [router]);
 
@@ -264,6 +271,11 @@ const EmailManagement: React.FC = () => {
     };
 
     useEffect(() => {
+        // Redirect based on role
+        if (roleId === 1) {
+            router.push("/not-found");
+        }
+
         const timeoutId = setTimeout(() => {
             fetchUsers();
         }, 500);

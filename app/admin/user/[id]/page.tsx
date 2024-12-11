@@ -28,14 +28,26 @@ export default function UserDetail() {
   // const [sentEmails, setSentEmails] = useState(0)
   const params = useParams()
   const router = useRouter()
-  const token = useAuthStore((state) => state.token)
+  // const token = useAuthStore((state) => state.token)
+  const [token, setToken] = useState("")
+  console.log("token", token)
 
   // Move the token check to useEffect
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
+    console.log("storedToken", storedToken)
     if (!storedToken) {
       router.replace("/");
       return;
+    }
+
+    setToken(storedToken)
+
+    const storedRoleID = useAuthStore.getState().getStoredRoleID();
+    // Redirect based on role
+    console.log("storedRoleID", storedRoleID)
+    if (storedRoleID === 1) {
+      router.push("/not-found");
     }
   }, [router]);
 

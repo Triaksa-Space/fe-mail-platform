@@ -11,6 +11,7 @@ interface AuthState {
   logout: () => void
   getStoredToken: () => string | null
   getStoredEmail: () => string | null
+  getStoredRoleID: () => number | null
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -60,6 +61,24 @@ export const useAuthStore = create<AuthState>()(
         try {
           const parsed = JSON.parse(stored)
           return parsed.state?.email || null
+        } catch {
+          return null
+        }
+      },
+      getStoredRoleID: () => {
+        if (typeof window === 'undefined') return null
+      
+        // Check session storage first
+        let stored = window.sessionStorage.getItem('auth-storage')
+        if (!stored) {
+          // Fallback to local storage if not found in session storage
+          stored = window.localStorage.getItem('auth-storage')
+        }
+        if (!stored) return null
+      
+        try {
+          const parsed = JSON.parse(stored)
+          return parsed.state?.roleId || null
         } catch {
           return null
         }

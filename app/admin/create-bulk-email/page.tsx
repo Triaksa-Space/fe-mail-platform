@@ -21,6 +21,7 @@ const CreateBulkEmail: React.FC = () => {
   const { toast } = useToast()
   const router = useRouter();
   const token = useAuthStore((state) => state.token)
+  const roleId = useAuthStore((state) => state.roleId)
 
   // Move the token check to useEffect
   useEffect(() => {
@@ -28,6 +29,12 @@ const CreateBulkEmail: React.FC = () => {
     if (!storedToken) {
       router.replace("/");
       return;
+    }
+
+    const storedRoleID = useAuthStore.getState().getStoredRoleID();
+    // Redirect based on role
+    if (storedRoleID === 1) {
+      router.push("/not-found");
     }
   }, [router]);
 

@@ -21,6 +21,7 @@ const CreateSingleEmail: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
+  const roleId = useAuthStore((state) => state.roleId);
 
   // Move the token check to useEffect
   useEffect(() => {
@@ -28,6 +29,12 @@ const CreateSingleEmail: React.FC = () => {
     if (!storedToken) {
       router.replace("/");
       return;
+    }
+
+    const storedRoleID = useAuthStore.getState().getStoredRoleID();
+    // Redirect based on role
+    if (storedRoleID === 1) {
+      router.push("/not-found");
     }
   }, [router]);
 
@@ -76,6 +83,11 @@ const CreateSingleEmail: React.FC = () => {
     e.preventDefault()
 
     try {
+      // Redirect based on role
+      if (roleId === 1) {
+        router.push("/not-found");
+      }
+
       if (password.length < 6) {
         toast({
           description: "Password must be at least 6 characters long. Please try again.",
@@ -83,16 +95,7 @@ const CreateSingleEmail: React.FC = () => {
         })
         return
       }
-      // // Regular expression to ensure password complexity
-      // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-      // if (!passwordRegex.test(password)) {
-      //   toast({
-      //     description: "Password must include a number, lowercase, uppercase, and symbol.",
-      //     variant: "destructive",
-      //   });
-      //   return;
-      // }
       setIsLoading(true)
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
@@ -160,7 +163,7 @@ const CreateSingleEmail: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-            <Input
+              <Input
                 type="text"
                 value={password}
                 onChange={(e) => {
