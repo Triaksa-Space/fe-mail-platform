@@ -62,12 +62,12 @@ const EmailDetailPage: React.FC = () => {
     }
 
     const fetchEmailDetail = async () => {
-      // Redirect based on role
-      if (roleId === 0 || roleId === 2) {
-        router.push("/not-found");
-      }
-
       try {
+        // Redirect based on role
+        if (roleId === 0 || roleId === 2) {
+          router.push("/not-found");
+        }
+
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
           {

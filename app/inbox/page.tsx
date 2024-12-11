@@ -37,12 +37,12 @@ const InboxPageContent: React.FC = () => {
   const fetchCountSentEmails = async () => {
     if (!token) return;
 
-    // Redirect based on role
-    if (roleId === 0  || roleId === 2) {
-      router.push("/not-found");
-    }
-
     try {
+      // Redirect based on role
+      if (roleId === 0 || roleId === 2) {
+        router.push("/not-found");
+      }
+
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
         {
@@ -64,7 +64,7 @@ const InboxPageContent: React.FC = () => {
 
   useEffect(() => {
     // Redirect based on role
-    if (roleId === 0  || roleId === 2) {
+    if (roleId === 0 || roleId === 2) {
       router.push("/not-found");
     }
 
@@ -87,9 +87,9 @@ const InboxPageContent: React.FC = () => {
       }
 
       // Redirect based on role
-    if (roleId === 0  || roleId === 2) {
-      router.push("/not-found");
-    }
+      if (roleId === 0 || roleId === 2) {
+        router.push("/not-found");
+      }
 
       try {
         const response = await axios.get(
@@ -136,8 +136,8 @@ const InboxPageContent: React.FC = () => {
   }, [sentStatus, token, router, setEmail]);
 
   // Replace the return statement in InboxPageContent component
-return (
-  <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
+  return (
+    <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
       {/* Fixed Header */}
       <header className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
         <h1 className="text-xl font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
@@ -148,73 +148,73 @@ return (
         </h1>
       </header>
 
-    {/* Scrollable Content Area */}
-    <main className="flex-1 overflow-y-auto">
-      <div className="space-y-0.5">
-        {isLoading ? (
-          <div className="p-4 text-center">Loading...</div>
-        ) : error ? (
-          <div className="p-4 text-center" style={{ color: theme.colors.error }}>
-            {error}
-          </div>
-        ) : emails.length > 0 ? (
-          <div className="divide-y">
-            {emails.map((email) => (
-              <div
-                key={email.ID}
-                className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
+      {/* Scrollable Content Area */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="space-y-0.5">
+          {isLoading ? (
+            <div className="p-4 text-center">Loading...</div>
+          ) : error ? (
+            <div className="p-4 text-center" style={{ color: theme.colors.error }}>
+              {error}
+            </div>
+          ) : emails.length > 0 ? (
+            <div className="divide-y">
+              {emails.map((email) => (
+                <div
+                  key={email.ID}
+                  className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
                   ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
-                onClick={() => router.push(`/inbox/${email.ID}`)}
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <h3 
-                      className="font-semibold truncate" 
+                  onClick={() => router.push(`/inbox/${email.ID}`)}
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <h3
+                        className="font-semibold truncate"
+                        style={{ color: theme.colors.textPrimary }}
+                      >
+                        {email.SenderName}
+                      </h3>
+                      <span
+                        className="text-sm"
+                        style={{ color: theme.colors.textSecondary }}
+                      >
+                        {email.RelativeTime}
+                      </span>
+                    </div>
+                    <h4
+                      className="font-medium truncate"
                       style={{ color: theme.colors.textPrimary }}
                     >
-                      {email.SenderName}
-                    </h3>
-                    <span 
-                      className="text-sm" 
+                      {email.Subject}
+                    </h4>
+                    <p
+                      className="text-sm truncate"
                       style={{ color: theme.colors.textSecondary }}
                     >
-                      {email.RelativeTime}
-                    </span>
+                      {email.Preview}
+                    </p>
                   </div>
-                  <h4 
-                    className="font-medium truncate" 
-                    style={{ color: theme.colors.textPrimary }}
-                  >
-                    {email.Subject}
-                  </h4>
-                  <p 
-                    className="text-sm truncate" 
-                    style={{ color: theme.colors.textSecondary }}
-                  >
-                    {email.Preview}
-                  </p>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div
-            className="p-4 text-center cursor-pointer text-blue-500 underline"
-            onClick={() => window.location.reload()}
-          >
-            No emails found, Please Refresh your browser.
-          </div>
-        )}
-      </div>
-    </main>
+              ))}
+            </div>
+          ) : (
+            <div
+              className="p-4 text-center cursor-pointer text-blue-500 underline"
+              onClick={() => window.location.reload()}
+            >
+              No emails found, Please Refresh your browser.
+            </div>
+          )}
+        </div>
+      </main>
 
-    {/* Fixed Footer */}
-    <footer className="w-full z-10">
-      <FooterNav />
-    </footer>
+      {/* Fixed Footer */}
+      <footer className="w-full z-10">
+        <FooterNav />
+      </footer>
 
-    <Toaster />
-  </div>
+      <Toaster />
+    </div>
   );
 };
 
