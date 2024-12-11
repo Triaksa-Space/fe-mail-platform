@@ -49,11 +49,13 @@ const EmailDetailPage: React.FC = () => {
       router.replace("/");
       return;
     }
-
-    // Fetch email details immediately after token check
+  
+    if (!token) {
+      setIsLoading(false); // Ensure loading state is updated
+      return;
+    }
+  
     const fetchEmailDetail = async () => {
-      if (!token) return;
-
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${params.id}`,
@@ -63,11 +65,11 @@ const EmailDetailPage: React.FC = () => {
             },
           }
         );
-
+  
         if (!response.ok) {
           throw new Error("Failed to fetch email");
         }
-
+  
         const data = await response.json();
         setEmail(data);
       } catch (err) {
@@ -76,9 +78,9 @@ const EmailDetailPage: React.FC = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchEmailDetail();
-  }, [params.id, router]);
+  }, [params.id, router, token]);
 
   // Show loading state while checking auth and fetching data
   if (isLoading) {
@@ -144,7 +146,7 @@ const EmailDetailPage: React.FC = () => {
         body {
           margin: 0;
           padding: 16px;
-          font-family: system-ui, -apple-system, sans-serif;
+          font-family: system-ui, -apple-system, roboto;
           font-size: 14px;
           line-height: 1.5;
           color: ${theme.colors.textPrimary};
