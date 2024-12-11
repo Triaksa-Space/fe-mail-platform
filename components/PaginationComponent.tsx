@@ -141,18 +141,18 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
                   <PaginationLink
                     onClick={() => onPageChange(1)}
                     aria-label="Go to first page"
-                    className="hover:bg-gray-100"
+                    className="hover:bg-gray-100 cursor-pointer"
                   >
-                    <ChevronFirst className="h-4 w-4" />
+                    <ChevronFirst className="h-4 w-4 cursor-pointer" />
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink
                     onClick={() => onPageChange(currentPage - 1)}
                     aria-label="Go to previous page"
-                    className="hover:bg-gray-100"
+                    className="hover:bg-gray-100 cursor-pointer"
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-4 w-4 cursor-pointer" />
                   </PaginationLink>
                 </PaginationItem>
               </>
@@ -164,18 +164,18 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
                   <PaginationLink
                     onClick={() => onPageChange(currentPage + 1)}
                     aria-label="Go to next page"
-                    className="hover:bg-gray-100"
+                    className="hover:bg-gray-100 cursor-pointer"
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4 cursor-pointer" />
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink
                     onClick={() => onPageChange(totalPages)}
                     aria-label="Go to last page"
-                    className="hover:bg-gray-100"
+                    className="hover:bg-gray-100 cursor-pointer"
                   >
-                    <ChevronLast className="h-4 w-4" />
+                    <ChevronLast className="h-4 w-4 cursor-pointer" />
                   </PaginationLink>
                 </PaginationItem>
               </>
