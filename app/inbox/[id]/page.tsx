@@ -11,6 +11,7 @@ import { saveAs } from "file-saver";
 import LoadingDownloadPage from "@/components/DownloadLoading";
 import { theme } from "@/app/theme";
 import LoadingPage from "@/components/Loading";
+import Link from "next/link";
 
 interface EmailDetail {
   ID: number;
@@ -130,9 +131,9 @@ const EmailDetailPageContent: React.FC = () => {
     return <LoadingPage />;
   }
 
-  if (!email) {
-    return <div className="p-4 text-center">Email not found</div>;
-  }
+  // if (!email) {
+  //   return <div className="p-4 text-center">Email not found</div>;
+  // }
 
   return (
     <div
@@ -159,75 +160,90 @@ const EmailDetailPageContent: React.FC = () => {
         </Button>
       </header>
       <main className="flex-1 overflow-y-auto">
-        <div className="space-y-2 p-4">
-          <div
-            className="border space-y-2 text-xs"
-            style={{
-              borderColor: theme.colors.border,
-              borderRadius: theme.borders.radius,
-              boxShadow: theme.shadows.card,
-            }}
-          >
-            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
-              <span className="text-gray-500">From</span>
-              <span
-                className="font-medium"
-                style={{ color: theme.colors.textPrimary }}
-              >
-                {email.SenderName} - {email.SenderEmail}
-              </span>
-            </div>
-            <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
-              <span className="text-gray-500">Subject</span>
-              <span
-                className="font-medium"
-                style={{ color: theme.colors.textPrimary }}
-              >
-                {email.Subject}
-              </span>
-            </div>
-            <div className="pl-1 pr-1">
-              <span
-                className="font-medium"
-                style={{ color: theme.colors.textSecondary }}
-              >
-                {email.RelativeTime}
-              </span>
-            </div>
+        {!email ? (
+          <div className="flex justify-center items-center h-full">
+          <div className="text-center">
+            <h1 className="text-7xl font-bold text-gray-900">404</h1>
+            <h2 className="text-3xl font-semibold text-gray-800">Email Not Found</h2>
+            <p className="text-center text-gray-600">
+              The email you&apos;re looking for doesn&apos;t exist or has been moved.
+            </p>
+            <Button asChild className="mt-6 bg-[#ffeeac] font-bold hover:bg-yellow-300 text-black">
+              <Link href="/">Go to Inbox</Link>
+            </Button>
           </div>
         </div>
+        ) : (
+          <>
+            <div className="space-y-2 p-4">
+              <div
+                className="border space-y-2 text-xs"
+                style={{
+                  borderColor: theme.colors.border,
+                  borderRadius: theme.borders.radius,
+                  boxShadow: theme.shadows.card,
+                }}
+              >
+                <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
+                  <span className="text-gray-500">From</span>
+                  <span
+                    className="font-medium"
+                    style={{ color: theme.colors.textPrimary }}
+                  >
+                    {email.SenderName} - {email.SenderEmail}
+                  </span>
+                </div>
+                <div className="grid grid-cols-[50px_1fr] pl-1 pr-4">
+                  <span className="text-gray-500">Subject</span>
+                  <span
+                    className="font-medium"
+                    style={{ color: theme.colors.textPrimary }}
+                  >
+                    {email.Subject}
+                  </span>
+                </div>
+                <div className="pl-1 pr-1">
+                  <span
+                    className="font-medium"
+                    style={{ color: theme.colors.textSecondary }}
+                  >
+                    {email.RelativeTime}
+                  </span>
+                </div>
+              </div>
+            </div>
 
-        <div className="space-y-2 pl-4 pr-4">
-          <div
-            className="border bg-white shadow-sm"
-            style={{
-              borderColor: theme.colors.border,
-              borderRadius: theme.borders.radius,
-              boxShadow: theme.shadows.card,
-            }}
-          >
-            <iframe
-              srcDoc={email.Body}
-              className="w-full"
-              style={{
-                height: iframeHeight,
-                border: "none",
-                display: "block",
-              }}
-              onLoad={(e) => {
-                const iframe = e.target as HTMLIFrameElement;
-                if (iframe.contentWindow) {
-                  const iframeDoc = iframe.contentWindow.document;
+            <div className="space-y-2 pl-4 pr-4">
+              <div
+                className="border bg-white shadow-sm"
+                style={{
+                  borderColor: theme.colors.border,
+                  borderRadius: theme.borders.radius,
+                  boxShadow: theme.shadows.card,
+                }}
+              >
+                <iframe
+                  srcDoc={email.Body}
+                  className="w-full"
+                  style={{
+                    height: iframeHeight,
+                    border: "none",
+                    display: "block",
+                  }}
+                  onLoad={(e) => {
+                    const iframe = e.target as HTMLIFrameElement;
+                    if (iframe.contentWindow) {
+                      const iframeDoc = iframe.contentWindow.document;
 
-                  // Add meta viewport tag
-                  const meta = iframeDoc.createElement("meta");
-                  meta.name = "viewport";
-                  meta.content = "width=device-width, initial-scale=1";
-                  iframeDoc.head.appendChild(meta);
+                      // Add meta viewport tag
+                      const meta = iframeDoc.createElement("meta");
+                      meta.name = "viewport";
+                      meta.content = "width=device-width, initial-scale=1";
+                      iframeDoc.head.appendChild(meta);
 
-                  // Apply styles to iframe content
-                  const style = iframeDoc.createElement("style");
-                  style.textContent = `
+                      // Apply styles to iframe content
+                      const style = iframeDoc.createElement("style");
+                      style.textContent = `
                     body {
                       margin: 0;
                       padding: 16px;
@@ -254,44 +270,46 @@ const EmailDetailPageContent: React.FC = () => {
                       box-sizing: border-box;
                     }
                   `;
-                  iframeDoc.head.appendChild(style);
+                      iframeDoc.head.appendChild(style);
 
-                  // Adjust iframe height
-                  const height = iframeDoc.body.scrollHeight + 32;
-                  setIframeHeight(`${height}px`);
-                }
-              }}
-              title="Email content"
-              sandbox="allow-same-origin"
-            />
-          </div>
-        </div>
-
-        {email.ListAttachments && email.ListAttachments.length > 0 && (
-          <div className="pl-5 pr-5 pt-4">
-            <div className="space-y-1">
-              {email.ListAttachments.map((attachment, index) => (
-                <div key={index} className="flex items-center">
-                  <span className="text-sm text-gray-700 pr-4">
-                    {attachment.Filename.split("_").pop()}
-                  </span>
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        attachment.URL,
-                        attachment.Filename.split("_").pop()!
-                      )
+                      // Adjust iframe height
+                      const height = iframeDoc.body.scrollHeight + 32;
+                      setIframeHeight(`${height}px`);
                     }
-                    aria-label={`Download ${attachment.Filename
-                      .split("_")
-                      .pop()}`}
-                  >
-                    <Download className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
+                  }}
+                  title="Email content"
+                  sandbox="allow-same-origin"
+                />
+              </div>
             </div>
-          </div>
+
+            {email.ListAttachments && email.ListAttachments.length > 0 && (
+              <div className="pl-5 pr-5 pt-4">
+                <div className="space-y-1">
+                  {email.ListAttachments.map((attachment, index) => (
+                    <div key={index} className="flex items-center">
+                      <span className="text-sm text-gray-700 pr-4">
+                        {attachment.Filename.split("_").pop()}
+                      </span>
+                      <button
+                        onClick={() =>
+                          handleDownload(
+                            attachment.URL,
+                            attachment.Filename.split("_").pop()!
+                          )
+                        }
+                        aria-label={`Download ${attachment.Filename
+                          .split("_")
+                          .pop()}`}
+                      >
+                        <Download className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
       <FooterNav />
