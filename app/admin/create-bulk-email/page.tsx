@@ -74,7 +74,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
   const toggleRandomName = () => {
     if (!isRandomNameActive) {
       setIsRandomNameActive(true);
-      setBaseName("Random");
+      setBaseName("random");
     } else {
       setIsRandomNameActive(false);
       setBaseName("");
