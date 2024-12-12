@@ -51,7 +51,7 @@ export default function UserDetail() {
   }, [router]);
 
   const handleEmailClick = (uemail: UserEmail) => {
-    router.push(`/admin/user/detail/${uemail.email_encode_id}/?email=${email}`);
+    router.push(`/admin/user/detail/${uemail.email_encode_id}`);
   }
 
   const fetchUserEmailsWhenNotFound = async () => {

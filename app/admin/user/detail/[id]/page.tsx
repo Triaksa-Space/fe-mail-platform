@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { CircleX, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -16,6 +16,7 @@ interface EmailDetail {
   ID: number;
   SenderEmail: string;
   SenderName: string;
+  From: string;
   Subject: string;
   Body: string;
   BodyEml: string;
@@ -24,7 +25,6 @@ interface EmailDetail {
 }
 
 const EmailDetailPage: React.FC = () => {
-  const searchParams = useSearchParams();
   const params = useParams();
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
@@ -205,7 +205,7 @@ const EmailDetailPage: React.FC = () => {
             <CircleX className="h-6 w-6" />
           </Button>
           <h1 className="text-sm font-semibold tracking-tight">
-            {searchParams.get('email')}
+            {email.From}
           </h1>
 
         </div>

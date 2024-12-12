@@ -371,7 +371,7 @@ const EmailManagementPageContent: React.FC = () => {
                                     <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.email}</TableCell>
                                     <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.lastActive}</TableCell>
                                     <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.user_encode_id}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.createdByName}</TableCell>
                                     <TableCell className="px-2 py-1 space-x-2 text-center" style={{ width: '300px' }}>
                                         <Button variant="secondary" className="shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800" onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}>
                                             <ZoomIn className="w-4 h-4 mr-2" />

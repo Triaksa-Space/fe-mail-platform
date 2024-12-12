@@ -171,7 +171,7 @@ const InboxPageContent: React.FC = () => {
                   key={email.ID}
                   className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
                       ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
-                  onClick={() => router.push(`/inbox/${email.encode_id}`)}
+                  onClick={() => router.push(`/inbox/${email.email_encode_id}`)}
                 >
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
