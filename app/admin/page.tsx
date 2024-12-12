@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect, Suspense } from 'react';
+import axios from 'axios';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -11,74 +11,87 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import PaginationComponent from "@/components/PaginationComponent"
-import { ChevronUp, ChevronDown, Key, Trash, ZoomIn } from 'lucide-react'
+} from "@/components/ui/table";
+import PaginationComponent from "@/components/PaginationComponent";
+import { ChevronUp, ChevronDown, Key, Trash, ZoomIn } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import FooterAdminNav from "@/components/FooterAdminNav"
-import { useToast } from "@/hooks/use-toast"
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog";
+import FooterAdminNav from "@/components/FooterAdminNav";
+import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import PasswordInput from '@/components/PasswordInput'
+import PasswordInput from '@/components/PasswordInput';
 
 interface EmailUser {
-    id: number
-    email: string
-    lastActive: string
-    created: string
-    createdByName: string
+    id: number;
+    email: string;
+    lastActive: string;
+    created: string;
+    createdByName: string;
 }
 
 interface User {
-    ID: number
-    Email: string
-    LastLogin: string
-    CreatedAt: string
-    CreatedByName: string
+    ID: number;
+    Email: string;
+    LastLogin: string;
+    CreatedAt: string;
+    CreatedByName: string;
 }
 
 interface AdminUser {
-    id: number
-    email: string
-    lastActive: string
-    created: string
+    id: number;
+    email: string;
+    lastActive: string;
+    created: string;
 }
 
-type SortField = 'last_login' | 'created_at'
-type SortOrder = 'asc' | 'desc'
+type SortField = 'last_login' | 'created_at';
+type SortOrder = 'asc' | 'desc';
 
-const EmailManagement: React.FC = () => {
+const EmailManagementPageContent: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState<EmailUser[]>([])
-    const [sortFields, setSortFields] = useState<{ field: SortField, order: SortOrder }[]>([
+    const [users, setUsers] = useState<EmailUser[]>([]);
+    const [sortFields, setSortFields] = useState<{ field: SortField; order: SortOrder }[]>([
         { field: 'last_login', order: 'desc' },
         { field: 'created_at', order: 'asc' },
     ]);
-    // const [isLoading, setIsLoading] = useState(true)
-    // const [error, setError] = useState<string | null>(null)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [totalCount, setTotalCount] = useState(0)
-    const [activeCount, setActiveCount] = useState(0)
-    const pageSize = 10
-    const [totalPages, setTotalPages] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const [activeCount, setActiveCount] = useState(0);
+    const pageSize = 10;
+    const [totalPages, setTotalPages] = useState(1);
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
 
-    // Move the token check to useEffect
+    // New state to manage auth loading
+    const [authLoaded, setAuthLoaded] = useState(false);
+
     useEffect(() => {
+        // Wait for the auth store to load and set the state
+        setAuthLoaded(true);
+    }, []);
+
+    // Use effect for redirection logic
+    useEffect(() => {
+        if (!authLoaded) return;
+
         const storedToken = useAuthStore.getState().getStoredToken();
         if (!storedToken) {
             router.replace("/");
             return;
         }
 
-        // Redirect based on role
         if (roleId === 1) {
-            router.push("/not-found");
+            router.replace("/not-found");
         }
-    }, [router]);
+    }, [authLoaded, roleId, router]);
 
     const { toast } = useToast();
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
@@ -123,24 +136,13 @@ const EmailManagement: React.FC = () => {
             return;
         }
 
-        // Regular expression to ensure password complexity
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-
-        // if (!passwordRegex.test(passwordForAdmin)) {
-        //     toast({
-        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
-        //         variant: "destructive",
-        //     });
-        //     return;
-        // }
-
         try {
             await axios.put(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
                 {
                     new_password: passwordForAdmin,
                     old_password: "",
-                    user_id: selectedAdmin.id
+                    user_id: selectedAdmin.id,
                 },
                 {
                     headers: {
@@ -159,20 +161,19 @@ const EmailManagement: React.FC = () => {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
-
         } catch (error) {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
 
-            let errorMessage = "Failed to change password. Please try again."
+            let errorMessage = "Failed to change password. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
-                errorMessage = error.response.data.error
+                errorMessage = error.response.data.error;
             }
             toast({
                 description: errorMessage,
                 variant: "destructive",
-            })
+            });
         }
     };
 
@@ -180,11 +181,14 @@ const EmailManagement: React.FC = () => {
         if (!selectedUser) return;
 
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${selectedUser.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await axios.delete(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${selectedUser.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             // Remove the deleted user from the state
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
@@ -202,14 +206,14 @@ const EmailManagement: React.FC = () => {
             fetchUsers();
         } catch (error) {
             console.error('Failed to delete user:', error);
-            let errorMessage = "Failed to delete user. Please try again."
+            let errorMessage = "Failed to delete user. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
-                errorMessage = error.response.data.error
+                errorMessage = error.response.data.error;
             }
             toast({
                 description: errorMessage,
                 variant: "destructive",
-            })
+            });
         }
     };
 
@@ -222,7 +226,6 @@ const EmailManagement: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            // setIsLoading(true);
             const sortFieldsString = sortFields
                 .map(({ field, order }) => `${field} ${order}`)
                 .join(', ');
@@ -244,7 +247,6 @@ const EmailManagement: React.FC = () => {
                 setTotalPages(1);
                 setTotalCount(0);
                 setActiveCount(0);
-                // setError('No users found');
                 return;
             }
 
@@ -259,34 +261,29 @@ const EmailManagement: React.FC = () => {
             setTotalPages(response.data.total_pages || 1);
             setTotalCount(response.data.total_count || 0);
             setActiveCount(response.data.active_count || 0);
-            // setError(null);
         } catch (err) {
             console.error('Failed to fetch users:', err);
-            // setError('Failed to load users');
         }
-        // finally {
-        // setIsLoading(false);
-        // }
     };
 
     useEffect(() => {
-        // Redirect based on role
-        if (roleId === 1) {
-            router.push("/not-found");
-        }
+        if (!authLoaded || roleId === 1) return;
 
         const timeoutId = setTimeout(() => {
             fetchUsers();
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [token, currentPage, pageSize, searchTerm, sortFields]);
+    }, [authLoaded, token, currentPage, pageSize, searchTerm, sortFields, roleId]);
 
     const toggleSort = (field: SortField) => {
         setSortFields((prevSortFields) => {
             const newSortFields = prevSortFields.map((sortField) => {
                 if (sortField.field === field) {
-                    return { field, order: sortField.order === 'asc' ? 'desc' : 'asc' as SortOrder };
+                    return {
+                        field,
+                        order: sortField.order === 'asc' ? 'desc' : 'asc' as SortOrder,
+                    };
                 }
                 return sortField;
             });
@@ -298,6 +295,15 @@ const EmailManagement: React.FC = () => {
             return [clickedField!, ...otherFields];
         });
     };
+
+    // Conditional rendering based on authLoaded and roleId
+    if (!authLoaded) {
+        return <div>Loading...</div>;
+    }
+
+    if (roleId === 1) {
+        return null;
+    }
 
     return (
         <div className="p-6 space-y-2">
@@ -316,7 +322,7 @@ const EmailManagement: React.FC = () => {
                 </div>
 
                 <div className="overflow-x-auto p-4">
-                    <Table>
+                <Table>
                         <TableHeader>
                             <TableRow className="bg-gray-400 hover:bg-gray-400">
                                 <TableHead className="text-center text-black font-bold">Name</TableHead>
@@ -379,71 +385,6 @@ const EmailManagement: React.FC = () => {
 
                         </TableBody>
                     </Table>
-
-
-                    <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                                <PasswordInput
-                                    id="password"
-                                    placeholder="New Password"
-                                    value={passwordForAdmin}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        setPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
-                                    }}
-                                    showPassword={showPassword}
-                                    setShowPassword={setShowPassword}
-                                />
-                                <PasswordInput
-                                    id="password"
-                                    placeholder="Confirm Password"
-                                    value={confirmPasswordForAdmin}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        setConfirmPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
-                                    }}
-                                    showPassword={showCPassword}
-                                    setShowPassword={setShowCPassword}
-                                />
-                            </div>
-                            <DialogFooter>
-                                <Button className="shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100" variant="secondary" onClick={() => {
-                                    setIsChangePasswordDialogOpen(false);
-                                    setPasswordForAdmin("");
-                                    setConfirmPasswordForAdmin("");
-                                    setSelectedAdmin(null);
-                                }}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="default"
-                                    className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!passwordForAdmin || !confirmPasswordForAdmin
-                                        ? "bg-gray-300 cursor-not-allowed"
-                                        : "bg-[#ffeeac] hover:bg-yellow-300"
-                                        }`}
-                                    disabled={!passwordForAdmin || !confirmPasswordForAdmin}
-                                    onClick={handleChangePasswordSubmit}>
-                                    Submit
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                    <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Delete Confirmation</DialogTitle>
-                            </DialogHeader>
-                            <p>Are you sure you want to delete user {selectedUser?.email}?</p>
-                            <DialogFooter>
-                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                                <Button variant="destructive" className='shadow appearance-non w-1/2' onClick={handleDeleteConfirm}>Confirm</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
                 </div>
 
                 <PaginationComponent
@@ -458,7 +399,15 @@ const EmailManagement: React.FC = () => {
 
             <FooterAdminNav />
         </div>
-    )
-}
+    );
+};
 
-export default EmailManagement;
+const EmailManagementPage: React.FC = () => {
+    return (
+        <Suspense fallback={<div></div>}>
+            <EmailManagementPageContent />
+        </Suspense>
+    );
+};
+
+export default EmailManagementPage;

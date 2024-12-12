@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
@@ -14,6 +14,15 @@ const InboxPageContent: React.FC = () => {
   const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sentStatus = searchParams.get('sent');
+  const [sentEmails, setSentEmails] = useState(0);
+  const [email, setEmailLocal] = useState("");
+  const [emails, setEmails] = useState<Email[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const storedToken = useAuthStore.getState().getStoredToken();
+  const { setEmail } = useAuthStore();
 
   // Check if the auth store is ready
   const [authLoaded, setAuthLoaded] = useState(false);
@@ -23,38 +32,16 @@ const InboxPageContent: React.FC = () => {
     setAuthLoaded(true);
   }, []);
 
-  // If the auth store hasn't loaded yet, show a loading indicator
-  if (!authLoaded) {
-    return <div>Loading...</div>;
-  }
-
-  // Redirect immediately if roleId is 0 or 2
-  if (roleId === 0 || roleId === 2) {
-    // Ensure this code runs on the client side
-    if (typeof window !== "undefined") {
-      router.replace("/not-found");
-    }
-    return null; // Prevent rendering the rest of the page
-  }
-
-  // Move the token check to useEffect
+  // Redirect logic inside useEffect
   useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!authLoaded) return; // Wait until auth is loaded
+
     if (!storedToken) {
       router.replace("/");
-      return;
+    } else if (roleId === 0 || roleId === 2) {
+      router.replace("/not-found");
     }
-  }, [router]);
-
-  const searchParams = useSearchParams();
-  const sentStatus = searchParams.get('sent');
-  const [sentEmails, setSentEmails] = useState(0);
-  const [email, setEmailLocal] = useState("");
-  const [emails, setEmails] = useState<Email[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const { setEmail } = useAuthStore();
+  }, [authLoaded, storedToken, roleId, router]);
 
   const fetchCountSentEmails = async () => {
     if (!token) return;
@@ -80,6 +67,9 @@ const InboxPageContent: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!authLoaded) return; // Wait until auth is loaded
+    if (!storedToken || roleId === 0 || roleId === 2) return; // Don't proceed if not authorized
+
     let isSubscribed = true;
     const controller = new AbortController();
 
@@ -93,11 +83,6 @@ const InboxPageContent: React.FC = () => {
     }
 
     const fetchEmails = async (signal?: AbortSignal) => {
-      if (!token) {
-        router.replace("/");
-        return;
-      }
-
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
@@ -130,26 +115,44 @@ const InboxPageContent: React.FC = () => {
 
     // Set up interval for auto-refresh
     const intervalId = setInterval(() => {
-      fetchEmails(); // Optionally, pass a new AbortController if necessary
-    }, 3000); // 3000ms = 3 seconds
+      fetchEmails();
+    }, 3000);
 
     // Cleanup function
     return () => {
       isSubscribed = false;
-      controller.abort(); // Cancel ongoing requests
-      clearInterval(intervalId); // Clear the interval
+      controller.abort();
+      clearInterval(intervalId);
     };
-  }, [sentStatus, token, router, setEmail]);
+  }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail]);
 
-  // Replace the return statement in InboxPageContent component
+  // If auth is not loaded yet, show loading
+  if (!authLoaded) {
+    return <div></div>;
+  }
+
+  // If user is not authorized, do not render the inbox
+  if (!storedToken || roleId === 0 || roleId === 2) {
+    return null;
+  }
+
   return (
     <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
       {/* Fixed Header */}
-      <header className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
-        <h1 className="text-xl font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
+      <header
+        className="flex justify-between items-center p-2"
+        style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}
+      >
+        <h1
+          className="text-xl font-semibold tracking-tight"
+          style={{ color: theme.colors.textPrimary }}
+        >
           {email}
         </h1>
-        <h1 className="text-sm font-semibold tracking-tight" style={{ color: theme.colors.textPrimary }}>
+        <h1
+          className="text-sm font-semibold tracking-tight"
+          style={{ color: theme.colors.textPrimary }}
+        >
           Daily Send {sentEmails}/3
         </h1>
       </header>
@@ -169,7 +172,7 @@ const InboxPageContent: React.FC = () => {
                 <div
                   key={email.ID}
                   className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
-                  ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
+                      ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
                   onClick={() => router.push(`/inbox/${email.ID}`)}
                 >
                   <div className="space-y-1">
@@ -224,12 +227,4 @@ const InboxPageContent: React.FC = () => {
   );
 };
 
-const InboxPage: React.FC = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <InboxPageContent />
-    </Suspense>
-  );
-};
-
-export default InboxPage;
+export default InboxPageContent;
