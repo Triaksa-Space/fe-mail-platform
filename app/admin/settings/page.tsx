@@ -49,7 +49,7 @@ const UserAdminManagementPageContent: React.FC = () => {
     const [users, setUsers] = useState<AdminUser[]>([]);
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
-    const [isLoading, setIsLoading] = useState(false)
+    // const [isLoading, setIsLoading] = useState(false)
 
     const { toast } = useToast();
 
@@ -101,7 +101,7 @@ const UserAdminManagementPageContent: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            setIsLoading(true);
+            // setIsLoading(true);
             if (!token) return;
             const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
@@ -125,9 +125,10 @@ const UserAdminManagementPageContent: React.FC = () => {
             }
         } catch (err) {
             console.error('Failed to fetch users:', err);
-        } finally {
-            setIsLoading(false)
-        }
+        } 
+        // finally {
+        //     setIsLoading(false)
+        // }
     };
 
     useEffect(() => {
@@ -715,9 +716,9 @@ const UserAdminManagementPageContent: React.FC = () => {
                     </div>
                 </div>
             </div>
-            {isLoading && (
+            {/* {isLoading && (
                 <LoadingProcessingPage />
-            )}
+            )} */}
             <FooterAdminNav />
         </div>
     )
