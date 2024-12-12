@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
-  <div className="flex justify-center items-center h-full">Loading...</div>
+  <div className="flex justify-center items-center h-full"></div>
 );
 
 const CreateSingleEmailPageContent: React.FC = () => {

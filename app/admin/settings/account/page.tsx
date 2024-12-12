@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import FooterAdminNav from '@/components/FooterAdminNav';
 import Settings from '@/components/Settings';
 import { Button } from '@/components/ui/button';
@@ -10,26 +10,39 @@ import { theme } from '@/app/theme';
 
 const AccountPage: React.FC = () => {
   const router = useRouter();
+  const [authLoaded, setAuthLoaded] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  // Move the token check to useEffect
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
+    const storedRoleID = useAuthStore.getState().getStoredRoleID();
+
     if (!storedToken) {
       router.replace("/");
       return;
     }
 
-    const storedRoleID = useAuthStore.getState().getStoredRoleID();
-    // Redirect based on role
     if (storedRoleID === 1) {
-      router.push("/not-found");
+      router.replace("/not-found");
+      return;
     }
+
+    setIsAuthorized(true);
+    setAuthLoaded(true);
   }, [router]);
 
   const handleLogout = () => {
     // Clear token and redirect to login page
     useAuthStore.getState().setToken(null);
     router.push('/');
+  }
+
+  if (!authLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null;
   }
 
   return (

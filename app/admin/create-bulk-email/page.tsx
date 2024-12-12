@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { Minus, Plus } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,7 +13,12 @@ import DomainSelector from "@/components/DomainSelector"
 import LoadingProcessingPage from "@/components/ProcessLoading"
 import { useRouter } from "next/dist/client/components/navigation"
 
-const CreateBulkEmail: React.FC = () => {
+// Loading fallback component
+const LoadingFallback: React.FC = () => (
+  <div className="flex justify-center items-center h-full"></div>
+);
+
+const CreateBulkEmailPageContent: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
   const [count, setCount] = useState(2)
   const [password, setPassword] = useState("")
@@ -21,28 +26,40 @@ const CreateBulkEmail: React.FC = () => {
   const { toast } = useToast()
   const router = useRouter();
   const token = useAuthStore((state) => state.token)
+  const roleId = useAuthStore((state) => state.roleId);
+  const storedToken = useAuthStore.getState().getStoredToken();
 
-  // Move the token check to useEffect
+  const [receiveEmail, setReceiveEmail] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
+  const [isRandomNameActive, setIsRandomNameActive] = useState(false);
+
+  // Authentication loaded state
+  const [authLoaded, setAuthLoaded] = useState(false);
+
+  // Initialize authLoaded on component mount
   useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
+    setAuthLoaded(true);
+  }, []);
+
+  // Redirect users based on authentication and role
+  useEffect(() => {
+    if (!authLoaded) return;
+
     if (!storedToken) {
       router.replace("/");
       return;
     }
 
-    const storedRoleID = useAuthStore.getState().getStoredRoleID();
-    // Redirect based on role
-    if (storedRoleID === 1) {
-      router.push("/not-found");
+    if (roleId === 1) {
+      router.replace("/not-found");
     }
-  }, [router]);
+  }, [authLoaded, storedToken, roleId, router]);
 
-  const [receiveEmail, setReceiveEmail] = useState("")
-  // const [isRandom, setIsRandom] = useState(false)
-  // const [isPasswordRandom, setIsPasswordRandom] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
-  const [isRandomNameActive, setIsRandomNameActive] = useState(false);
+  // If auth is not loaded yet or user is not authorized, show loading
+  if (!authLoaded || roleId === 1) {
+    return <LoadingFallback />;
+  }
 
   const toggleRandomPassword = () => {
     if (!isRandomPasswordActive) {
@@ -182,8 +199,8 @@ const CreateBulkEmail: React.FC = () => {
                   type="button"
                   onClick={toggleRandomName}
                   className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomNameActive
-                      ? "bg-yellow-300 hover:bg-yellow-400"
-                      : "bg-[#ffeeac] hover:bg-yellow-300"
+                    ? "bg-yellow-300 hover:bg-yellow-400"
+                    : "bg-[#ffeeac] hover:bg-yellow-300"
                     }`}
                 >
                   {isRandomNameActive ? "Random Name" : "Random Name"}
@@ -317,4 +334,11 @@ const CreateBulkEmail: React.FC = () => {
   )
 }
 
-export default CreateBulkEmail
+// Wrap the content component with Suspense
+const CreateBulkEmailPage: React.FC = () => (
+  <Suspense fallback={<LoadingFallback />}>
+    <CreateBulkEmailPageContent />
+  </Suspense>
+);
+
+export default CreateBulkEmailPage
