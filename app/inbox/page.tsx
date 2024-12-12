@@ -1,5 +1,6 @@
 "use client";
 
+import React, { Suspense } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -9,6 +10,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from '@/hooks/use-toast';
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
+
+// Loading fallback component
+const LoadingFallback: React.FC = () => (
+  <div className="flex justify-center items-center h-full">Loading...</div>
+);
 
 const InboxPageContent: React.FC = () => {
   const token = useAuthStore((state) => state.token);
@@ -126,18 +132,10 @@ const InboxPageContent: React.FC = () => {
     };
   }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail]);
 
-  // If auth is not loaded yet, show loading
-  if (!authLoaded) {
-    return <div></div>;
-  }
-
-  // If user is not authorized, do not render the inbox
-  if (!storedToken || roleId === 0 || roleId === 2) {
-    return null;
-  }
+  // Conditional rendering based on authLoaded and roleId is handled inside useEffect
 
   return (
-    <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
+    <div className="flex h-[100dvh] flex-col" style={{ backgroundColor: theme.colors.background }}>
       {/* Fixed Header */}
       <header
         className="flex justify-between items-center p-2"
@@ -227,4 +225,11 @@ const InboxPageContent: React.FC = () => {
   );
 };
 
-export default InboxPageContent;
+// Wrap InboxPageContent with Suspense
+const InboxPage: React.FC = () => (
+  <Suspense fallback={<LoadingFallback />}>
+    <InboxPageContent />
+  </Suspense>
+);
+
+export default InboxPage;
