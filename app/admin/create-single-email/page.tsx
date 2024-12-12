@@ -1,49 +1,64 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import FooterAdminNav from "@/components/FooterAdminNav"
+import React, { useEffect, useState, Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import FooterAdminNav from "@/components/FooterAdminNav";
 import { useAuthStore } from "@/stores/useAuthStore";
-import axios from 'axios'
-import { useToast } from "@/hooks/use-toast"
-import { Toaster } from "@/components/ui/toaster"
-import DomainSelector from "@/components/DomainSelector"
-import LoadingProcessingPage from "@/components/ProcessLoading"
-import { useRouter } from "next/navigation"
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import DomainSelector from "@/components/DomainSelector";
+import LoadingProcessingPage from "@/components/ProcessLoading";
+import { useRouter } from "next/navigation";
 
-// interface Domain {
-//   ID: number;
-//   Domain: string;
-// }
+// Loading fallback component
+const LoadingFallback: React.FC = () => (
+  <div className="flex justify-center items-center h-full">Loading...</div>
+);
 
-const CreateSingleEmail: React.FC = () => {
-  const [selectedDomain, setSelectedDomain] = useState("mailria.com")
+const CreateSingleEmailPageContent: React.FC = () => {
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
+  const storedToken = useAuthStore.getState().getStoredToken();
+  const { toast } = useToast();
 
-  // Move the token check to useEffect
+  // State variables
+  const [selectedDomain, setSelectedDomain] = useState("mailria.com");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
+
+  // Authentication loaded state
+  const [authLoaded, setAuthLoaded] = useState(false);
+
+  // Initialize authLoaded on component mount
   useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
+    setAuthLoaded(true);
+  }, []);
+
+  // Redirect users based on authentication and role
+  useEffect(() => {
+    if (!authLoaded) return;
+
     if (!storedToken) {
       router.replace("/");
       return;
     }
 
-    const storedRoleID = useAuthStore.getState().getStoredRoleID();
-    // Redirect based on role
-    if (storedRoleID === 1) {
-      router.push("/not-found");
+    if (roleId === 1) {
+      router.replace("/not-found");
     }
-  }, [router]);
+  }, [authLoaded, storedToken, roleId, router]);
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
+  // If auth is not loaded yet or user is not authorized, show loading
+  if (!authLoaded || roleId === 1) {
+    return <LoadingFallback />;
+  }
 
+  // Toggle random password generation
   const toggleRandomPassword = () => {
     if (!isRandomPasswordActive) {
       generateRandomPassword();
@@ -54,6 +69,7 @@ const CreateSingleEmail: React.FC = () => {
     }
   };
 
+  // Generate a random password
   const generateRandomPassword = () => {
     const lower = "abcdefghijklmnopqrstuvwxyz";
     const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -62,28 +78,29 @@ const CreateSingleEmail: React.FC = () => {
     const allChars = lower + upper + numbers + symbols;
 
     // Ensure at least one character from each category
-    let password = "";
-    password += lower.charAt(Math.floor(Math.random() * lower.length));
-    password += upper.charAt(Math.floor(Math.random() * upper.length));
-    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
-    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+    let pwd = "";
+    pwd += lower.charAt(Math.floor(Math.random() * lower.length));
+    pwd += upper.charAt(Math.floor(Math.random() * upper.length));
+    pwd += numbers.charAt(Math.floor(Math.random() * numbers.length));
+    pwd += symbols.charAt(Math.floor(Math.random() * symbols.length));
 
     // Fill the remaining characters
-    for (let i = 4; i < 8; i++) {
-      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    for (let i = 4; i < 12; i++) {
+      pwd += allChars.charAt(Math.floor(Math.random() * allChars.length));
     }
 
     // Shuffle the password to randomize character positions
-    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+    pwd = pwd.split('').sort(() => 0.5 - Math.random()).join('');
 
-    setPassword(password);
-  }
+    setPassword(pwd);
+  };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      // Redirect based on role
+      // Additional role check in case the roleId changes after component mount
       if (roleId === 1) {
         router.push("/not-found");
       }
@@ -92,11 +109,13 @@ const CreateSingleEmail: React.FC = () => {
         toast({
           description: "Password must be at least 6 characters long. Please try again.",
           variant: "destructive",
-        })
-        return
+        });
+        return;
       }
 
-      setIsLoading(true)
+      setIsLoading(true);
+
+      // API call to create the user
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
         {
@@ -105,22 +124,30 @@ const CreateSingleEmail: React.FC = () => {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
-      )
+      );
 
       // Show success toast
       toast({
-        description: `email: ${username}@${selectedDomain} password: ${password} successfully created!`,
+        description: `Email: ${username}@${selectedDomain} Password: ${password} successfully created!`,
         variant: "default",
-      })
-      setUsername("")
-      setPassword("")
+      });
+
+      // Reset form fields
+      setUsername("");
+      setPassword("");
+      setIsRandomPasswordActive(false);
     } catch (error) {
       let errorMessage = "Failed to create user. Please try again.";
-      if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.data &&
+        error.response.data.error
+      ) {
         errorMessage = error.response.data.error;
       }
       toast({
@@ -128,9 +155,9 @@ const CreateSingleEmail: React.FC = () => {
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -140,19 +167,22 @@ const CreateSingleEmail: React.FC = () => {
         </div>
 
         <div className="max-w-md mx-auto p-6">
+          {/* You can uncomment the heading if needed */}
           {/* <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2> */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email Input */}
             <div className="flex items-center gap-2">
               <Input
                 value={username}
                 onChange={(e) => {
-                  const value = e.target.value.toLowerCase();
-                  setUsername(value.replace(/\s/g, '')); // Remove spaces
-                  const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
-                  setUsername(sanitizedValue);
+                  let value = e.target.value.toLowerCase();
+                  value = value.replace(/\s/g, ''); // Remove spaces
+                  value = value.replace(/[^a-zA-Z0-9]/g, ''); // Remove special chars
+                  setUsername(value);
                 }}
                 placeholder="Email"
                 className="shadow appearance-non flex-1 h-12"
+                required
               />
               <span className="text-lg">@</span>
               <DomainSelector
@@ -162,38 +192,46 @@ const CreateSingleEmail: React.FC = () => {
               />
             </div>
 
+            {/* Password Input */}
             <div className="flex items-center gap-2">
               <Input
                 type="text"
                 value={password}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setPassword(value.replace(/\s/g, '')); // Remove spaces
+                  const value = e.target.value.replace(/\s/g, ''); // Remove spaces
+                  setPassword(value);
                 }}
                 placeholder="Password"
-                className={isRandomPasswordActive ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
+                className={
+                  isRandomPasswordActive
+                    ? "shadow appearance-non flex-1 h-12 bg-gray-300"
+                    : "shadow appearance-non flex-1 h-12"
+                }
                 disabled={isRandomPasswordActive}
+                required
               />
-              <span className="text-lg text-white">@</span>
               <Button
                 type="button"
                 onClick={toggleRandomPassword}
-                className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomPasswordActive
-                  ? "bg-yellow-300 hover:bg-yellow-400"
-                  : "bg-[#ffeeac] hover:bg-yellow-300"
-                  }`}
+                className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${
+                  isRandomPasswordActive
+                    ? "bg-yellow-300 hover:bg-yellow-400"
+                    : "bg-[#ffeeac] hover:bg-yellow-300"
+                }`}
               >
                 {isRandomPasswordActive ? "Random Password" : "Random Password"}
               </Button>
             </div>
 
+            {/* Submit Button */}
             <div className="flex justify-center">
               <Button
                 type="submit"
-                className={`shadow appearance-non h-11 w-3/4 max-w-xs font-bold  text-black ${!username || !password
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-[#ffeeac] hover:bg-yellow-300"
-                  }`}
+                className={`shadow appearance-none h-11 w-3/4 max-w-xs font-bold text-black ${
+                  !username || !password
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-[#ffeeac] hover:bg-yellow-300"
+                }`}
                 disabled={!username || !password}
               >
                 Create
@@ -202,12 +240,21 @@ const CreateSingleEmail: React.FC = () => {
           </form>
         </div>
       </div>
-      {isLoading && (
-        <LoadingProcessingPage />
-      )}
+
+      {/* Loading Indicator */}
+      {isLoading && <LoadingProcessingPage />}
+
+      {/* Footer */}
       <FooterAdminNav />
     </div>
-  )
-}
+  );
+};
 
-export default CreateSingleEmail;
+// Wrap the content component with Suspense
+const CreateSingleEmailPage: React.FC = () => (
+  <Suspense fallback={<LoadingFallback />}>
+    <CreateSingleEmailPageContent />
+  </Suspense>
+);
+
+export default CreateSingleEmailPage;
