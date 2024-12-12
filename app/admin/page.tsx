@@ -29,6 +29,8 @@ import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from '@/components/PasswordInput';
 
 interface EmailUser {
+    user_encode_id: string;
+    email_encode_id: string;
     id: number;
     email: string;
     lastActive: string;
@@ -37,6 +39,8 @@ interface EmailUser {
 }
 
 interface User {
+    user_encode_id: string;
+    email_encode_id: string;
     ID: number;
     Email: string;
     LastLogin: string;
@@ -45,6 +49,8 @@ interface User {
 }
 
 interface AdminUser {
+    user_encode_id: string;
+    email_encode_id: string;
     id: number;
     email: string;
     lastActive: string;
@@ -252,6 +258,7 @@ const EmailManagementPageContent: React.FC = () => {
                 lastActive: new Date(user.LastLogin).toLocaleString(),
                 created: new Date(user.CreatedAt).toLocaleString(),
                 createdByName: user.CreatedByName,
+                user_encode_id: user.user_encode_id,
             }));
             setUsers(data);
             setTotalPages(response.data.total_pages || 1);
@@ -364,9 +371,9 @@ const EmailManagementPageContent: React.FC = () => {
                                     <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.email}</TableCell>
                                     <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.lastActive}</TableCell>
                                     <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.createdByName}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.user_encode_id}</TableCell>
                                     <TableCell className="px-2 py-1 space-x-2 text-center" style={{ width: '300px' }}>
-                                        <Button variant="secondary" className="shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800" onClick={() => router.push(`/admin/user/${user.id}`)}>
+                                        <Button variant="secondary" className="shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800" onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}>
                                             <ZoomIn className="w-4 h-4 mr-2" />
                                             View
                                         </Button>

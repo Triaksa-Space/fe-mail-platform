@@ -34,6 +34,7 @@ interface AdminUser {
 }
 
 interface User {
+    UserEncodeID: string;
     ID: number;
     Email: string;
     LastLogin: string;

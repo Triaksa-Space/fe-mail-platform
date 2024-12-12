@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button'
 import { theme } from '@/app/theme'
 
 interface UserEmail {
+  user_encode_id: string;
+  email_encode_id: string;
   ID: number
   SenderEmail: string
   SenderName: string
@@ -49,7 +51,7 @@ export default function UserDetail() {
   }, [router]);
 
   const handleEmailClick = (uemail: UserEmail) => {
-    router.push(`/admin/user/detail/${uemail.ID}/?email=${email}`);
+    router.push(`/admin/user/detail/${uemail.email_encode_id}/?email=${email}`);
   }
 
   const fetchUserEmailsWhenNotFound = async () => {
