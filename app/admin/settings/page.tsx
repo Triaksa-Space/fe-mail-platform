@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useState, useEffect, Suspense } from 'react'
-import axios from 'axios'
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect, Suspense } from 'react';
+import axios from 'axios';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -11,13 +11,13 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { ChevronUp, ChevronDown, Plus, Key, LogOut, Trash, UserCircle } from 'lucide-react'
+} from "@/components/ui/table";
+import { ArrowUpDown, ArrowUp, ArrowDown, Plus, Key, LogOut, Trash, UserCircle } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import FooterAdminNav from "@/components/FooterAdminNav"
-import { useToast } from "@/hooks/use-toast"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import FooterAdminNav from "@/components/FooterAdminNav";
+import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from "@/components/PasswordInput";
 
@@ -27,24 +27,24 @@ const LoadingFallback: React.FC = () => (
 );
 
 interface AdminUser {
-    id: number
-    email: string
-    lastActive: string
-    created: string
+    id: number;
+    email: string;
+    lastActive: string;
+    created: string;
 }
 
 interface User {
-    ID: number
-    Email: string
-    LastLogin: string
-    CreatedAt: string
+    ID: number;
+    Email: string;
+    LastLogin: string;
+    CreatedAt: string;
 }
 
-type SortField = 'last_login' | 'created_at'
-type SortOrder = 'asc' | 'desc'
+type SortField = 'last_login' | 'created_at';
+type SortOrder = 'asc' | 'desc' | '';
 
 const UserAdminManagementPageContent: React.FC = () => {
-    const [users, setUsers] = useState<AdminUser[]>([])
+    const [users, setUsers] = useState<AdminUser[]>([]);
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
 
@@ -71,10 +71,8 @@ const UserAdminManagementPageContent: React.FC = () => {
     const storedToken = useAuthStore.getState().getStoredToken();
     const [isMounted, setIsMounted] = useState(true);
 
-    const [sortFields, setSortFields] = useState<{ field: SortField, order: SortOrder }[]>([
-        { field: 'last_login', order: 'desc' },
-        { field: 'created_at', order: 'asc' },
-    ]);
+    const [sortField, setSortField] = useState<SortField | null>(null);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('');
 
     // Authentication loaded state
     const [authLoaded, setAuthLoaded] = useState(false);
@@ -101,10 +99,7 @@ const UserAdminManagementPageContent: React.FC = () => {
     const fetchUsers = async () => {
         try {
             if (!token) return;
-            // setIsLoading(true)
-            const sortFieldsString = sortFields
-                .map(({ field, order }) => `${field} ${order}`)
-                .join(', ');
+            const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
                 headers: {
@@ -113,7 +108,7 @@ const UserAdminManagementPageContent: React.FC = () => {
                 params: {
                     sort_fields: sortFieldsString,
                 }
-            })
+            });
 
             if (isMounted) {
                 const data = response.data.users.map((user: User) => ({
@@ -121,18 +116,13 @@ const UserAdminManagementPageContent: React.FC = () => {
                     email: user.Email,
                     lastActive: new Date(user.LastLogin).toLocaleString(),
                     created: new Date(user.CreatedAt).toLocaleString(),
-                }))
-                setUsers(data)
-            };
-            // setError(null)
+                }));
+                setUsers(data);
+            }
         } catch (err) {
-            console.error('Failed to fetch users:', err)
-            // setError('Failed to load users')
+            console.error('Failed to fetch users:', err);
         }
-        // finally {
-        // setIsLoading(false)
-        // }
-    }
+    };
 
     useEffect(() => {
         // Set mounted flag
@@ -153,7 +143,7 @@ const UserAdminManagementPageContent: React.FC = () => {
             setIsMounted(false);
             clearInterval(intervalId);
         };
-    }, [token]); // Only depend on token
+    }, [token, sortField, sortOrder]); // Only depend on token, sortField, and sortOrder
 
     // If auth is not loaded yet or user is not authorized, show loading
     if (!authLoaded || roleId === 1) {
@@ -195,17 +185,6 @@ const UserAdminManagementPageContent: React.FC = () => {
             return;
         }
 
-        // Regular expression to ensure password complexity
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-
-        // if (!passwordRegex.test(passwordForAdmin)) {
-        //     toast({
-        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
-        //         variant: "destructive",
-        //     });
-        //     return;
-        // }
-
         try {
             await axios.put(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
@@ -239,7 +218,6 @@ const UserAdminManagementPageContent: React.FC = () => {
             setPasswordForAdmin("");
             setOldPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
-            // setSelectedSuperAdmin(null);
 
             let errorMessage = "Failed to change your password. Please try again."
             if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -271,17 +249,6 @@ const UserAdminManagementPageContent: React.FC = () => {
             });
             return;
         }
-
-        // Regular expression to ensure password complexity
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-
-        // if (!passwordRegex.test(passwordForAdmin)) {
-        //     toast({
-        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
-        //         variant: "destructive",
-        //     });
-        //     return;
-        // }
 
         try {
             await axios.put(
@@ -380,17 +347,6 @@ const UserAdminManagementPageContent: React.FC = () => {
             return;
         }
 
-        // Regular expression to ensure password complexity
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-
-        // if (!passwordRegex.test(newAdminPassword)) {
-        //     toast({
-        //         description: "Password must include a number, lowercase, uppercase, and symbol.",
-        //         variant: "destructive",
-        //     });
-        //     return;
-        // }
-
         try {
             await axios.post(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`,
@@ -431,28 +387,20 @@ const UserAdminManagementPageContent: React.FC = () => {
         }
     };
 
-    // const handleSearch = (value: string) => {
-    //     setSearchTerm(value);
-    //     setCurrentPage(1); // Reset to first page when searching
-    // };
-
-    
-
     const toggleSort = (field: SortField) => {
-        setSortFields((prevSortFields) => {
-            const newSortFields = prevSortFields.map((sortField) => {
-                if (sortField.field === field) {
-                    return { field, order: sortField.order === 'asc' ? 'desc' : 'asc' as SortOrder };
-                }
-                return sortField;
-            });
-
-            // Move the clicked field to the front
-            const clickedField = newSortFields.find((sortField) => sortField.field === field);
-            const otherFields = newSortFields.filter((sortField) => sortField.field !== field);
-
-            return [clickedField!, ...otherFields];
-        });
+        if (sortField === field) {
+            if (sortOrder === 'asc') {
+                setSortOrder('desc');
+            } else if (sortOrder === 'desc') {
+                setSortField(null);
+                setSortOrder('');
+            } else {
+                setSortOrder('asc');
+            }
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
     };
 
     const handleLogout = () => {
@@ -464,11 +412,6 @@ const UserAdminManagementPageContent: React.FC = () => {
     return (
         <div className="p-6 space-y-2">
             <div className="flex-1 overflow-auto pb-20">
-                {/* <div className="flex justify-between items-center pl-4">
-                    <Input placeholder="by username" className="max-w-xs" value={searchTerm}
-                        onChange={(e) => handleSearch(e.target.value)} />
-                </div> */}
-
                 <div className="overflow-auto p-4 pb-20 ">
                     <Toaster />
 
@@ -483,14 +426,13 @@ const UserAdminManagementPageContent: React.FC = () => {
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Last Active
-                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? (
-                                            <ChevronUp className="ml-2 h-4 w-4" />
-                                        ) : sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'desc' ? (
-                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        {sortField === 'last_login' && sortOrder === 'asc' ? (
+                                            <ArrowUp className="ml-2 h-4 w-4" />
+                                        ) : sortField === 'last_login' && sortOrder === 'desc' ? (
+                                            <ArrowDown className="ml-2 h-4 w-4" />
                                         ) : (
                                             <>
-                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
-                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
                                             </>
                                         )}
                                     </Button>
@@ -502,14 +444,13 @@ const UserAdminManagementPageContent: React.FC = () => {
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Created
-                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? (
-                                            <ChevronUp className="ml-2 h-4 w-4" />
-                                        ) : sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'desc' ? (
-                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        {sortField === 'created_at' && sortOrder === 'asc' ? (
+                                            <ArrowUp className="ml-2 h-4 w-4" />
+                                        ) : sortField === 'created_at' && sortOrder === 'desc' ? (
+                                            <ArrowDown className="ml-2 h-4 w-4" />
                                         ) : (
                                             <>
-                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
-                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
                                             </>
                                         )}
                                     </Button>
@@ -545,7 +486,6 @@ const UserAdminManagementPageContent: React.FC = () => {
                             ))}
                         </TableBody>
                     </Table>
-
 
                     <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
                         <DialogContent>

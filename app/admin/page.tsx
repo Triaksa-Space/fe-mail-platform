@@ -13,7 +13,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ChevronUp, ChevronDown, Key, Trash, ZoomIn } from 'lucide-react';
+import { ArrowUp, ArrowDown, Key, Trash, ZoomIn, ArrowUpDown } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -52,15 +52,13 @@ interface AdminUser {
 }
 
 type SortField = 'last_login' | 'created_at';
-type SortOrder = 'asc' | 'desc';
+type SortOrder = 'asc' | 'desc' | '';
 
 const EmailManagementPageContent: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<EmailUser[]>([]);
-    const [sortFields, setSortFields] = useState<{ field: SortField; order: SortOrder }[]>([
-        { field: 'last_login', order: 'desc' },
-        { field: 'created_at', order: 'asc' },
-    ]);
+    const [sortField, setSortField] = useState<SortField | null>(null);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
     const [activeCount, setActiveCount] = useState(0);
@@ -226,9 +224,7 @@ const EmailManagementPageContent: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
-            const sortFieldsString = sortFields
-                .map(({ field, order }) => `${field} ${order}`)
-                .join(', ');
+            const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
                 headers: {
@@ -274,26 +270,22 @@ const EmailManagementPageContent: React.FC = () => {
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [authLoaded, token, currentPage, pageSize, searchTerm, sortFields, roleId]);
+    }, [authLoaded, token, currentPage, pageSize, searchTerm, sortField, sortOrder, roleId]);
 
     const toggleSort = (field: SortField) => {
-        setSortFields((prevSortFields) => {
-            const newSortFields = prevSortFields.map((sortField) => {
-                if (sortField.field === field) {
-                    return {
-                        field,
-                        order: sortField.order === 'asc' ? 'desc' : 'asc' as SortOrder,
-                    };
-                }
-                return sortField;
-            });
-
-            // Move the clicked field to the front
-            const clickedField = newSortFields.find((sortField) => sortField.field === field);
-            const otherFields = newSortFields.filter((sortField) => sortField.field !== field);
-
-            return [clickedField!, ...otherFields];
-        });
+        if (sortField === field) {
+            if (sortOrder === 'asc') {
+                setSortOrder('desc');
+            } else if (sortOrder === 'desc') {
+                setSortField(null);
+                setSortOrder('');
+            } else {
+                setSortOrder('asc');
+            }
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
     };
 
     // Conditional rendering based on authLoaded and roleId
@@ -333,14 +325,13 @@ const EmailManagementPageContent: React.FC = () => {
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Last Active
-                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? (
-                                            <ChevronUp className="ml-2 h-4 w-4" />
-                                        ) : sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'desc' ? (
-                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        {sortField === 'last_login' && sortOrder === 'asc' ? (
+                                            <ArrowUp className="ml-2 h-4 w-4" />
+                                        ) : sortField === 'last_login' && sortOrder === 'desc' ? (
+                                            <ArrowDown className="ml-2 h-4 w-4" />
                                         ) : (
                                             <>
-                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
-                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
                                             </>
                                         )}
                                     </Button>
@@ -352,14 +343,13 @@ const EmailManagementPageContent: React.FC = () => {
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Created
-                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? (
-                                            <ChevronUp className="ml-2 h-4 w-4" />
-                                        ) : sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'desc' ? (
-                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        {sortField === 'created_at' && sortOrder === 'asc' ? (
+                                            <ArrowUp className="ml-2 h-4 w-4" />
+                                        ) : sortField === 'created_at' && sortOrder === 'desc' ? (
+                                            <ArrowDown className="ml-2 h-4 w-4" />
                                         ) : (
                                             <>
-                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
-                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
                                             </>
                                         )}
                                     </Button>
