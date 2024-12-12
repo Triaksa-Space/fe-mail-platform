@@ -120,7 +120,7 @@ const UserAdminManagementPageContent: React.FC = () => {
                     id: user.ID,
                     email: user.Email,
                     lastActive: new Date(user.LastLogin).toLocaleString(),
-                    created: new Date(user.CreatedAt).toLocaleDateString(),
+                    created: new Date(user.CreatedAt).toLocaleString(),
                 }))
                 setUsers(data)
             };
@@ -475,40 +475,58 @@ const UserAdminManagementPageContent: React.FC = () => {
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                <TableHead className="text-center text-black font-bold">Admin Name</TableHead>
-                                <TableHead className="text-center text-black font-bold">
+                                <TableHead className="text-center text-black font-bold" style={{ width: '150px' }}>Name</TableHead>
+                                <TableHead className="text-center text-black font-bold" style={{ width: '100px' }}>
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('last_login')}
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Last Active
-                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? (
+                                            <ChevronUp className="ml-2 h-4 w-4" />
+                                        ) : sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'desc' ? (
+                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        ) : (
+                                            <>
+                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                            </>
+                                        )}
                                     </Button>
                                 </TableHead>
-                                <TableHead className="text-center text-black font-bold">
+                                <TableHead className="text-center text-black font-bold" style={{ width: '100px' }}>
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('created_at')}
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Created
-                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? (
+                                            <ChevronUp className="ml-2 h-4 w-4" />
+                                        ) : sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'desc' ? (
+                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        ) : (
+                                            <>
+                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                            </>
+                                        )}
                                     </Button>
                                 </TableHead>
-                                <TableHead className="text-center text-black font-bold">Action</TableHead>
+                                <TableHead className="text-center text-black font-bold" style={{ width: '300px' }}>Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {users.map((user) => (
                                 <TableRow key={user.email}>
-                                    <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 space-x-2 text-center">
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.email}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.lastActive}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.created}</TableCell>
+                                    <TableCell className="px-2 py-1 space-x-2 text-center" style={{ width: '300px' }}>
                                         <Button
                                             variant="secondary"
-                                            className=" shadow appearance-non bg-blue-100 hover:bg-blue-200 text-blue-800"
+                                            className="shadow appearance-non bg-blue-100 hover:bg-blue-200 text-blue-800"
                                             onClick={() => handleChangePasswordClick(user)}
                                         >
                                             <Key className="w-4 h-4 mr-2" />
@@ -516,7 +534,7 @@ const UserAdminManagementPageContent: React.FC = () => {
                                         </Button>
                                         <Button
                                             variant="destructive"
-                                            className=" shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
+                                            className="shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
                                             onClick={() => handleDeleteClick(user)}
                                         >
                                             <Trash className="w-4 h-4 mr-2" />

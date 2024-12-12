@@ -322,43 +322,60 @@ const EmailManagementPageContent: React.FC = () => {
                 </div>
 
                 <div className="overflow-x-auto p-4">
-                <Table>
+                    <Table>
                         <TableHeader>
                             <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                <TableHead className="text-center text-black font-bold">Name</TableHead>
-                                <TableHead className="text-center text-black font-bold">
+                                <TableHead className="text-center text-black font-bold" style={{ width: '150px' }}>Name</TableHead>
+                                <TableHead className="text-center text-black font-bold" style={{ width: '100px' }}>
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('last_login')}
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Last Active
-                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                        {sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'asc' ? (
+                                            <ChevronUp className="ml-2 h-4 w-4" />
+                                        ) : sortFields.find((sortField) => sortField.field === 'last_login')?.order === 'desc' ? (
+                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        ) : (
+                                            <>
+                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                            </>
+                                        )}
                                     </Button>
                                 </TableHead>
-                                <TableHead className="text-center text-black font-bold">
+                                <TableHead className="text-center text-black font-bold" style={{ width: '100px' }}>
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('created_at')}
                                         className="font-bold text-black hover:bg-gray-500"
                                     >
                                         Created
-                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                                        {sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'asc' ? (
+                                            <ChevronUp className="ml-2 h-4 w-4" />
+                                        ) : sortFields.find((sortField) => sortField.field === 'created_at')?.order === 'desc' ? (
+                                            <ChevronDown className="ml-2 h-4 w-4" />
+                                        ) : (
+                                            <>
+                                                <ChevronUp className="ml-2 h-4 w-4 text-gray-400" />
+                                                <ChevronDown className="ml-2 h-4 w-4 text-gray-400" />
+                                            </>
+                                        )}
                                     </Button>
                                 </TableHead>
-                                <TableHead className="text-center text-black font-bold">Created By Admin</TableHead>
-                                <TableHead className="text-center text-black font-bold">Action</TableHead>
+                                <TableHead className="text-center text-black font-bold" style={{ width: '150px' }}>Created By Admin</TableHead>
+                                <TableHead className="text-center text-black font-bold" style={{ width: '300px' }}>Action</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-
                             {users.map((user) => (
                                 <TableRow key={user.email}>
-                                    <TableCell className="px-2 py-1 text-center">{user.email}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.lastActive}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center">{user.createdByName}</TableCell>
-                                    <TableCell className="px-2 py-1 space-x-2 text-center">
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.email}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.lastActive}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.created}</TableCell>
+                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.createdByName}</TableCell>
+                                    <TableCell className="px-2 py-1 space-x-2 text-center" style={{ width: '300px' }}>
                                         <Button variant="secondary" className="shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800" onClick={() => router.push(`/admin/user/${user.id}`)}>
                                             <ZoomIn className="w-4 h-4 mr-2" />
                                             View
@@ -382,7 +399,6 @@ const EmailManagementPageContent: React.FC = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
-
                         </TableBody>
                     </Table>
 
