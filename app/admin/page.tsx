@@ -143,6 +143,7 @@ const EmailManagementPageContent: React.FC = () => {
         }
 
         try {
+            setIsLoading(true);
             await axios.put(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
                 {
@@ -167,10 +168,12 @@ const EmailManagementPageContent: React.FC = () => {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
+            setSearchTerm(""); // Reset search term to refresh the list
         } catch (error) {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
+            setSearchTerm(""); // Reset search term to refresh the list
 
             let errorMessage = "Failed to change password. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -180,6 +183,8 @@ const EmailManagementPageContent: React.FC = () => {
                 description: errorMessage,
                 variant: "destructive",
             });
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -314,6 +319,7 @@ const EmailManagementPageContent: React.FC = () => {
             <div className="flex-1 overflow-auto pb-20">
                 <div className="flex justify-between items-center pt-2 pl-4">
                     <Input
+                        id="by_username"
                         placeholder="by username"
                         className="max-w-xs placeholder-gray"
                         value={searchTerm}
@@ -422,7 +428,7 @@ const EmailManagementPageContent: React.FC = () => {
                                     setShowPassword={setShowPassword}
                                 />
                                 <PasswordInput
-                                    id="password"
+                                    id="confirm_password"
                                     placeholder="Confirm Password"
                                     value={confirmPasswordForAdmin}
                                     onChange={(e) => {
