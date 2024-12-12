@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CircleX, Reply, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,11 +23,33 @@ interface EmailDetail {
   ListAttachments: { Filename: string; URL: string }[];
 }
 
-const EmailDetailPage: React.FC = () => {
+const EmailDetailPageContent: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
+
+  // Check if the auth store is ready
+  const [authLoaded, setAuthLoaded] = useState(false);
+
+  useEffect(() => {
+    // Wait for the auth store to load and set the state
+    setAuthLoaded(true);
+  }, []);
+
+  // If the auth store hasn't loaded yet, show a loading indicator
+  if (!authLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  // Redirect immediately if roleId is 0 or 2
+  if (roleId === 0 || roleId === 2) {
+    // Ensure this code runs on the client side
+    if (typeof window !== "undefined") {
+      router.replace("/not-found");
+    }
+    return null; // Prevent rendering the rest of the page
+  }
 
   // Move the token check to useEffect
   useEffect(() => {
@@ -282,6 +304,14 @@ const EmailDetailPage: React.FC = () => {
       </main>
       <FooterNav />
     </div>
+  );
+};
+
+const EmailDetailPage: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EmailDetailPageContent />
+    </Suspense>
   );
 };
 

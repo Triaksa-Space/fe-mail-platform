@@ -15,6 +15,28 @@ const InboxPageContent: React.FC = () => {
   const roleId = useAuthStore((state) => state.roleId);
   const router = useRouter();
 
+  // Check if the auth store is ready
+  const [authLoaded, setAuthLoaded] = useState(false);
+
+  useEffect(() => {
+    // Wait for the auth store to load and set the state
+    setAuthLoaded(true);
+  }, []);
+
+  // If the auth store hasn't loaded yet, show a loading indicator
+  if (!authLoaded) {
+    return <div>Loading...</div>;
+  }
+
+  // Redirect immediately if roleId is 0 or 2
+  if (roleId === 0 || roleId === 2) {
+    // Ensure this code runs on the client side
+    if (typeof window !== "undefined") {
+      router.replace("/not-found");
+    }
+    return null; // Prevent rendering the rest of the page
+  }
+
   // Move the token check to useEffect
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
@@ -38,11 +60,6 @@ const InboxPageContent: React.FC = () => {
     if (!token) return;
 
     try {
-      // Redirect based on role
-      if (roleId === 0 || roleId === 2) {
-        router.push("/not-found");
-      }
-
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
         {
@@ -63,11 +80,6 @@ const InboxPageContent: React.FC = () => {
   };
 
   useEffect(() => {
-    // Redirect based on role
-    if (roleId === 0 || roleId === 2) {
-      router.push("/not-found");
-    }
-
     let isSubscribed = true;
     const controller = new AbortController();
 
@@ -84,11 +96,6 @@ const InboxPageContent: React.FC = () => {
       if (!token) {
         router.replace("/");
         return;
-      }
-
-      // Redirect based on role
-      if (roleId === 0 || roleId === 2) {
-        router.push("/not-found");
       }
 
       try {
@@ -125,7 +132,6 @@ const InboxPageContent: React.FC = () => {
     const intervalId = setInterval(() => {
       fetchEmails(); // Optionally, pass a new AbortController if necessary
     }, 3000); // 3000ms = 3 seconds
-
 
     // Cleanup function
     return () => {
@@ -202,7 +208,7 @@ const InboxPageContent: React.FC = () => {
               className="p-4 text-center cursor-pointer text-blue-500 underline"
               onClick={() => window.location.reload()}
             >
-              No emails found, Please Refresh your browser.
+              No emails found. Please refresh your browser.
             </div>
           )}
         </div>
