@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import axios from 'axios'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -21,6 +21,11 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from "@/components/PasswordInput";
 
+// Loading fallback component
+const LoadingFallback: React.FC = () => (
+    <div className="flex justify-center items-center h-full"></div>
+);
+
 interface AdminUser {
     id: number
     email: string
@@ -38,30 +43,10 @@ interface User {
 type SortField = 'last_login' | 'created_at'
 type SortOrder = 'asc' | 'desc'
 
-const UserAdminManagement: React.FC = () => {
-    // const [searchTerm, setSearchTerm] = useState("");
+const UserAdminManagementPageContent: React.FC = () => {
     const [users, setUsers] = useState<AdminUser[]>([])
-    // const [isLoading, setIsLoading] = useState(true)
-    // const [error, setError] = useState<string | null>(null)
-    // const [currentPage, setCurrentPage] = useState(1)
-    // const pageSize = 10
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
-
-    // Move the token check to useEffect
-    useEffect(() => {
-        const storedToken = useAuthStore.getState().getStoredToken();
-        if (!storedToken) {
-            router.replace("/");
-            return;
-        }
-
-        const storedRoleID = useAuthStore.getState().getStoredRoleID();
-        // Redirect based on role
-        if (storedRoleID === 1) {
-            router.push("/not-found");
-        }
-    }, [router]);
 
     const { toast } = useToast();
 
@@ -82,13 +67,98 @@ const UserAdminManagement: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showOPassword, setShowOPassword] = useState(false);
     const [showCPassword, setShowCPassword] = useState(false);
+    const roleId = useAuthStore((state) => state.roleId);
+    const storedToken = useAuthStore.getState().getStoredToken();
+    const [isMounted, setIsMounted] = useState(true);
 
     const [sortFields, setSortFields] = useState<{ field: SortField, order: SortOrder }[]>([
         { field: 'last_login', order: 'desc' },
         { field: 'created_at', order: 'asc' },
     ]);
 
-    const [isMounted, setIsMounted] = useState(true);
+    // Authentication loaded state
+    const [authLoaded, setAuthLoaded] = useState(false);
+
+    // Initialize authLoaded on component mount
+    useEffect(() => {
+        setAuthLoaded(true);
+    }, []);
+
+    // Redirect users based on authentication and role
+    useEffect(() => {
+        if (!authLoaded) return;
+
+        if (!storedToken) {
+            router.replace("/");
+            return;
+        }
+
+        if (roleId === 1) {
+            router.replace("/not-found");
+        }
+    }, [authLoaded, storedToken, roleId, router]);
+
+    const fetchUsers = async () => {
+        try {
+            if (!token) return;
+            // setIsLoading(true)
+            const sortFieldsString = sortFields
+                .map(({ field, order }) => `${field} ${order}`)
+                .join(', ');
+
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    sort_fields: sortFieldsString,
+                }
+            })
+
+            if (isMounted) {
+                const data = response.data.users.map((user: User) => ({
+                    id: user.ID,
+                    email: user.Email,
+                    lastActive: new Date(user.LastLogin).toLocaleString(),
+                    created: new Date(user.CreatedAt).toLocaleDateString(),
+                }))
+                setUsers(data)
+            };
+            // setError(null)
+        } catch (err) {
+            console.error('Failed to fetch users:', err)
+            // setError('Failed to load users')
+        }
+        // finally {
+        // setIsLoading(false)
+        // }
+    }
+
+    useEffect(() => {
+        // Set mounted flag
+        setIsMounted(true);
+
+        // Initial fetch
+        fetchUsers();
+
+        // Set up interval for periodic fetching
+        const intervalId = setInterval(() => {
+            if (isMounted) {
+                fetchUsers();
+            }
+        }, 3000); // Fetch every 3 seconds
+
+        // Cleanup function
+        return () => {
+            setIsMounted(false);
+            clearInterval(intervalId);
+        };
+    }, [token]); // Only depend on token
+
+    // If auth is not loaded yet or user is not authorized, show loading
+    if (!authLoaded || roleId === 1) {
+        return <LoadingFallback />;
+    }
 
     const handleDeleteClick = (user: AdminUser) => {
         setSelectedUser(user);
@@ -366,63 +436,7 @@ const UserAdminManagement: React.FC = () => {
     //     setCurrentPage(1); // Reset to first page when searching
     // };
 
-    const fetchUsers = async () => {
-        try {
-            if (!token) return;
-            // setIsLoading(true)
-            const sortFieldsString = sortFields
-                .map(({ field, order }) => `${field} ${order}`)
-                .join(', ');
-
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                params: {
-                    sort_fields: sortFieldsString,
-                }
-            })
-
-            if (isMounted) {
-                const data = response.data.users.map((user: User) => ({
-                    id: user.ID,
-                    email: user.Email,
-                    lastActive: new Date(user.LastLogin).toLocaleString(),
-                    created: new Date(user.CreatedAt).toLocaleDateString(),
-                }))
-                setUsers(data)
-            };
-            // setError(null)
-        } catch (err) {
-            console.error('Failed to fetch users:', err)
-            // setError('Failed to load users')
-        }
-        // finally {
-        // setIsLoading(false)
-        // }
-    }
-
-    // Replace the existing useEffect with this updated version
-    useEffect(() => {
-        // Set mounted flag
-        setIsMounted(true);
-
-        // Initial fetch
-        fetchUsers();
-
-        // Set up interval for periodic fetching
-        const intervalId = setInterval(() => {
-            if (isMounted) {
-                fetchUsers();
-            }
-        }, 3000); // Fetch every 3 seconds
-
-        // Cleanup function
-        return () => {
-            setIsMounted(false);
-            clearInterval(intervalId);
-        };
-    }, [token]); // Only depend on token
+    
 
     const toggleSort = (field: SortField) => {
         setSortFields((prevSortFields) => {
@@ -743,4 +757,11 @@ const UserAdminManagement: React.FC = () => {
     )
 }
 
-export default UserAdminManagement;
+// Wrap the content component with Suspense
+const UserAdminManagementPage: React.FC = () => (
+    <Suspense fallback={<LoadingFallback />}>
+      <UserAdminManagementPageContent />
+    </Suspense>
+  );
+  
+export default UserAdminManagementPage
