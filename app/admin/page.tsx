@@ -27,6 +27,7 @@ import FooterAdminNav from "@/components/FooterAdminNav";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from '@/components/PasswordInput';
+import LoadingProcessingPage from '@/components/ProcessLoading';
 
 interface EmailUser {
     user_encode_id: string;
@@ -73,6 +74,7 @@ const EmailManagementPageContent: React.FC = () => {
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
+    const [isLoading, setIsLoading] = useState(false)
 
     // New state to manage auth loading
     const [authLoaded, setAuthLoaded] = useState(false);
@@ -230,6 +232,7 @@ const EmailManagementPageContent: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
+            setIsLoading(true);
             const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
@@ -266,6 +269,8 @@ const EmailManagementPageContent: React.FC = () => {
             setActiveCount(response.data.active_count || 0);
         } catch (err) {
             console.error('Failed to fetch users:', err);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -473,6 +478,9 @@ const EmailManagementPageContent: React.FC = () => {
                     pageSize={pageSize}
                 />
             </div>
+            {isLoading && (
+                <LoadingProcessingPage />
+            )}
 
             <FooterAdminNav />
         </div>

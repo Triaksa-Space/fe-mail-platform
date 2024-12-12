@@ -20,6 +20,7 @@ import FooterAdminNav from "@/components/FooterAdminNav";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from "@/components/PasswordInput";
+import LoadingProcessingPage from '@/components/ProcessLoading';
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -48,6 +49,7 @@ const UserAdminManagementPageContent: React.FC = () => {
     const [users, setUsers] = useState<AdminUser[]>([]);
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
+    const [isLoading, setIsLoading] = useState(false)
 
     const { toast } = useToast();
 
@@ -99,6 +101,7 @@ const UserAdminManagementPageContent: React.FC = () => {
 
     const fetchUsers = async () => {
         try {
+            setIsLoading(true);
             if (!token) return;
             const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
@@ -122,6 +125,8 @@ const UserAdminManagementPageContent: React.FC = () => {
             }
         } catch (err) {
             console.error('Failed to fetch users:', err);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -710,7 +715,9 @@ const UserAdminManagementPageContent: React.FC = () => {
                     </div>
                 </div>
             </div>
-
+            {isLoading && (
+                <LoadingProcessingPage />
+            )}
             <FooterAdminNav />
         </div>
     )
