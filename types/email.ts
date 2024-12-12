@@ -4,6 +4,7 @@ export interface Attachment {
 }
 
 export interface Email {
+  encode_id: string;
   ID: number;
   IsRead: boolean;
   UserID: number,

@@ -14,6 +14,7 @@ import LoadingPage from "@/components/Loading";
 import Link from "next/link";
 
 interface EmailDetail {
+  encode_id: string;
   ID: number;
   SenderEmail: string;
   SenderName: string;

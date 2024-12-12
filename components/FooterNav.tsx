@@ -6,7 +6,8 @@ const FooterNav = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isInboxActive = pathname === '/inbox' || /^\/inbox\/\d+$/.test(pathname);
+  // Update the regular expression to match /inbox and /inbox/randombase64, but not /inbox/setting or /inbox/send
+  const isInboxActive = pathname === '/inbox' || /^\/inbox\/(?!setting|send)[A-Za-z0-9+/=]+$/.test(pathname);
 
   const buttonClass = (isActive: boolean) => `
     flex-1 flex flex-col items-center justify-center py-2 text-black transition-colors
@@ -44,4 +45,3 @@ const FooterNav = () => {
 };
 
 export default FooterNav;
-
