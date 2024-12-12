@@ -385,6 +385,70 @@ const EmailManagementPageContent: React.FC = () => {
 
                         </TableBody>
                     </Table>
+
+                    <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="New Password"
+                                    value={passwordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
+                                />
+                                <PasswordInput
+                                    id="password"
+                                    placeholder="Confirm Password"
+                                    value={confirmPasswordForAdmin}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setConfirmPasswordForAdmin(value.replace(/\s/g, '')); // Remove spaces
+                                    }}
+                                    showPassword={showCPassword}
+                                    setShowPassword={setShowCPassword}
+                                />
+                            </div>
+                            <DialogFooter>
+                                <Button className="shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100" variant="secondary" onClick={() => {
+                                    setIsChangePasswordDialogOpen(false);
+                                    setPasswordForAdmin("");
+                                    setConfirmPasswordForAdmin("");
+                                    setSelectedAdmin(null);
+                                }}>
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="default"
+                                    className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!passwordForAdmin || !confirmPasswordForAdmin
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-[#ffeeac] hover:bg-yellow-300"
+                                        }`}
+                                    disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                    onClick={handleChangePasswordSubmit}>
+                                    Submit
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Delete Confirmation</DialogTitle>
+                            </DialogHeader>
+                            <p>Are you sure you want to delete user {selectedUser?.email}?</p>
+                            <DialogFooter>
+                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
+                                <Button variant="destructive" className='shadow appearance-non w-1/2' onClick={handleDeleteConfirm}>Confirm</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
 
                 <PaginationComponent
