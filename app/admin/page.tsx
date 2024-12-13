@@ -324,7 +324,7 @@ const EmailManagementPageContent: React.FC = () => {
     return (
         <div className="p-6 space-y-2">
             <div className="flex-1 overflow-auto pb-20">
-                <div className="flex justify-between items-center pt-2 pl-4">
+                <div className="flex justify-between items-center pt-2 pl-4 pr-4">
                     <Input
                         id="by_username"
                         placeholder="by username"
@@ -482,14 +482,16 @@ const EmailManagementPageContent: React.FC = () => {
                     </Dialog>
                 </div>
 
-                <PaginationComponent
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                    totalCount={totalCount}
-                    activeCount={activeCount}
-                    pageSize={pageSize}
-                />
+                <div className='overflow-x-auto p-4'>
+                    <PaginationComponent
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                        totalCount={totalCount}
+                        activeCount={activeCount}
+                        pageSize={pageSize}
+                    />
+                </div>
             </div>
             {isLoading && (
                 <LoadingProcessingPage />

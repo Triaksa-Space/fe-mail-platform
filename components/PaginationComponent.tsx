@@ -26,24 +26,19 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
 
   const renderPaginationItems = () => {
     const pages = [];
-    // const maxPagesToShow = 5; // Number of page links to display (excluding first and last pages)
-
     let startPage = Math.max(2, currentPage - 2);
     let endPage = Math.min(totalPages - 1, currentPage + 2);
 
-    // Adjust if near the start
     if (currentPage <= 3) {
       startPage = 2;
       endPage = Math.min(5, totalPages - 1);
     }
 
-    // Adjust if near the end
     if (currentPage >= totalPages - 2) {
       startPage = Math.max(totalPages - 4, 2);
       endPage = totalPages - 1;
     }
 
-    // Always show first page
     pages.push(
       <PaginationItem key={1}>
         <PaginationLink
@@ -56,7 +51,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
       </PaginationItem>
     );
 
-    // Show start ellipsis if needed
     if (startPage > 2) {
       pages.push(
         <PaginationItem key="start-ellipsis">
@@ -65,7 +59,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
       );
     }
 
-    // Add page numbers around the current page
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <PaginationItem key={i}>
@@ -80,7 +73,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
       );
     }
 
-    // Show end ellipsis if needed
     if (endPage < totalPages - 1) {
       pages.push(
         <PaginationItem key="end-ellipsis">
@@ -89,7 +81,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
       );
     }
 
-    // Always show last page if totalPages > 1
     if (totalPages > 1) {
       pages.push(
         <PaginationItem key={totalPages}>
@@ -121,9 +112,8 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-2 items-center gap-4 px-4">
-      {/* Left column - Showing text */}
-      <div className="text-sm text-gray-500 justify-self-start">
+    <div className="pagination-container gap-4 px-4">
+      <div className="pagination-info text-sm text-gray-500">
         Showing{" "}
         {totalCount === 0
           ? "0"
@@ -131,10 +121,9 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
         of {totalCount}
       </div>
 
-      {/* Right column - Pagination */}
-      <div className="flex justify-end space-x-2 ml-auto w-1/5">
+      <div className="pagination-controls flex space-x-2">
         <Pagination>
-          <PaginationContent className="flex justify-end">
+          <PaginationContent className="flex">
             {currentPage > 1 && (
               <>
                 <PaginationItem>

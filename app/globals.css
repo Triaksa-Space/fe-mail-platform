@@ -6,6 +6,42 @@ body {
   font-family: Roboto, sans-serif;
 }
 
+/* styles.css or a CSS module */
+.table-container {
+  overflow-x: auto;
+}
+
+.pagination-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pagination-info {
+  text-align: center;
+}
+
+.pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pagination-controls {
+    justify-content: center;
+    overflow-y: auto;
+    max-height: 200px; /* Adjust as needed */
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
