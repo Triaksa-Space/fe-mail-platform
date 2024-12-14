@@ -143,7 +143,7 @@ const UserAdminManagementPageContent: React.FC = () => {
             if (isMounted) {
                 fetchUsers();
             }
-        }, 3000); // Fetch every 3 seconds
+        }, 10000); // Fetch every 3 seconds
 
         // Cleanup function
         return () => {

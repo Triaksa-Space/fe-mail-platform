@@ -156,7 +156,7 @@ export default function UserDetail() {
     // Set up interval for auto-refresh of emails only
     const intervalId = setInterval(() => {
       fetchUserEmails();
-    }, 3000);
+    }, 10000);
   
     // Cleanup function
     return () => {

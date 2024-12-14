@@ -122,7 +122,7 @@ const InboxPageContent: React.FC = () => {
     // Set up interval for auto-refresh
     const intervalId = setInterval(() => {
       fetchEmails();
-    }, 3000);
+    }, 10000);
 
     // Cleanup function
     return () => {
