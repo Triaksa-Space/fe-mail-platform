@@ -643,7 +643,8 @@ const UserAdminManagementPageContent: React.FC = () => {
                                             placeholder="Username"
                                             value={newAdminEmail}
                                             onChange={(e) => {
-                                                const value = e.target.value;
+                                                let value = e.target.value;
+                                                value = value.replace(/[^a-zA-Z0-9]/g, ''); // Remove special chars
                                                 const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
                                                 setNewAdminEmail(sanitizedValue); // Remove spaces
                                             }}

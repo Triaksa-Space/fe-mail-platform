@@ -395,7 +395,7 @@ const Send: React.FC = () => {
                   value={subject}
                   onChange={(e) => {
                     const value = e.target.value;
-                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
+                    const sanitizedValue = DOMPurify.sanitize(value); // Sanitize
                     setSubject(sanitizedValue)
                   }}
                 />
