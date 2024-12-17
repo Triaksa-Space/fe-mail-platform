@@ -54,28 +54,29 @@ export default function UserDetail() {
     router.push(`/admin/user/detail/${uemail.email_encode_id}`);
   }
 
-  const fetchUserEmailsWhenNotFound = async () => {
-    if (!token) return;
+  // const fetchUserEmailsWhenNotFound = async () => {
+  //   if (!token) return;
   
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
   
-      setEmails(response.data);
-      setError(null);
-    } catch (err) {
-      console.error('Failed to fetch user emails:', err);
-      setError('Failed to load user emails');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     setEmails(response.data);
+  //     setError(null);
+  //   } catch (err) {
+  //     console.error('Failed to fetch user emails:', err);
+  //     setError('Failed to load user emails');
+  //   } finally {
+  //     setIsLoading(false);
+  //     window.location.reload();
+  //   }
+  // };
 
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
@@ -215,7 +216,7 @@ export default function UserDetail() {
             ) : (
               <div
                 className="p-4 text-center cursor-pointer text-blue-500 underline"
-                onClick={fetchUserEmailsWhenNotFound}
+                onClick={() => window.location.reload()}
               >
                 No emails found, Please Refresh your browser.
               </div>
