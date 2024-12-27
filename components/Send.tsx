@@ -307,7 +307,7 @@ const Send: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+            className="h-8 w-8 [&_svg]:size-5 hover:bg-[#F5E193]"
             onClick={() => {
               handleCancel();
               router.push('/inbox');
@@ -326,7 +326,7 @@ const Send: React.FC = () => {
               onChange={handleFileChange}
               accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .mp3, .wav, .aac, .ogg, .mp4, .mov, .avi, .mkv, .zip, .rar, .7z, .tar, .gz, .webp"
             />
-            <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-gray-100 p-2 rounded">
+            <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-[#F5E193] p-2 rounded">
               <Paperclip className="h-5 w-5" />
             </label>
           </div>
@@ -335,7 +335,7 @@ const Send: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+            className="h-8 w-8 [&_svg]:size-5 hover:bg-[#F5E193]"
             onClick={handleSendEmail}
             disabled={isLoading || uploading.length > 0}
           >

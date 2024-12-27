@@ -146,7 +146,7 @@ const EmailDetailPageContent: React.FC = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+          className="h-8 w-8 [&_svg]:size-5 hover:bg-[#F5E193]"
           onClick={() => router.push("/inbox")}
         >
           <CircleX className="h-6 w-6" />
@@ -154,7 +154,7 @@ const EmailDetailPageContent: React.FC = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 [&_svg]:size-5 hover:bg-gray-100"
+          className="h-8 w-8 [&_svg]:size-5 hover:bg-[#F5E193]"
           onClick={handleReply}
         >
           <Reply className="h-6 w-6" />

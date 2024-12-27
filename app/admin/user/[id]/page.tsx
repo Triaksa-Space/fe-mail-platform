@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import axios from 'axios'
 import FooterAdminNav from "@/components/FooterAdminNav"
 import { Toaster } from "@/components/ui/toaster"
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { theme } from '@/app/theme'
 
@@ -176,6 +176,7 @@ export default function UserDetail() {
           <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
               <h1 className="text-xl font-semibold tracking-tight">
                 <Button
+                  className="hover:bg-[#F5E193]"
                   variant="ghost"
                   size="icon"
                   onClick={() => router.back()}
@@ -183,6 +184,14 @@ export default function UserDetail() {
                   <ArrowLeft className="h-6 w-6" />
                 </Button>
               </h1>
+              <Button
+                  className="hover:bg-[#F5E193]"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => window.location.reload()}
+                >
+                  <RefreshCw className="h-6 w-6" />
+                </Button>
               <h1 className="text-sm font-semibold tracking-tight">
                 {email}
               </h1>

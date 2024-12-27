@@ -10,6 +10,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from '@/hooks/use-toast';
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
+import { RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -138,14 +140,24 @@ const InboxPageContent: React.FC = () => {
     <div className="flex h-[100dvh] flex-col" style={{ backgroundColor: theme.colors.background }}>
       {/* Fixed Header */}
       <header
-        className="flex justify-between items-center p-2"
+        className="flex justify-between items-center p-2 truncate"
         style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}
       >
         <h1
-          className="text-xl font-semibold tracking-tight"
+          className="text-l font-semibold tracking-tight"
           style={{ color: theme.colors.textPrimary }}
         >
           {email}
+        </h1>
+        <h1>
+          <Button
+            className="hover:bg-[#F5E193]"
+            variant="ghost"
+            size="icon"
+            onClick={() => window.location.reload()}
+          >
+            <RefreshCw className="h-6 w-6" />
+          </Button>
         </h1>
         <h1
           className="text-sm font-semibold tracking-tight"
