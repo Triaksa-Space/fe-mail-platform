@@ -240,7 +240,7 @@ const EmailDetailPage: React.FC = () => {
               }}
               onLoad={handleIframeLoad}
               title="Email content"
-              sandbox="allow-same-origin"
+              sandbox="allow-same-origin allow-popups allow-top-navigation-by-user-activation"
             />
           </div>
         </div>

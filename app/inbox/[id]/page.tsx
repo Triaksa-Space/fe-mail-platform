@@ -279,7 +279,7 @@ const EmailDetailPageContent: React.FC = () => {
                     }
                   }}
                   title="Email content"
-                  sandbox="allow-same-origin"
+                  sandbox="allow-same-origin allow-popups allow-top-navigation-by-user-activation"
                 />
               </div>
             </div>
