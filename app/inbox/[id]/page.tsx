@@ -163,17 +163,17 @@ const EmailDetailPageContent: React.FC = () => {
       <main className="flex-1 overflow-y-auto">
         {!email ? (
           <div className="flex justify-center items-center h-full">
-          <div className="text-center">
-            <h1 className="text-7xl font-bold text-gray-900">404</h1>
-            <h2 className="text-3xl font-semibold text-gray-800">Email Not Found</h2>
-            <p className="text-center text-gray-600">
-              The email you&apos;re looking for doesn&apos;t exist or has been moved.
-            </p>
-            <Button asChild className="mt-6 bg-[#ffeeac] font-bold hover:bg-yellow-300 text-black">
-              <Link href="/">Go to Inbox</Link>
-            </Button>
+            <div className="text-center">
+              <h1 className="text-7xl font-bold text-gray-900">404</h1>
+              <h2 className="text-3xl font-semibold text-gray-800">Email Not Found</h2>
+              <p className="text-center text-gray-600">
+                The email you&apos;re looking for doesn&apos;t exist or has been moved.
+              </p>
+              <Button asChild className="mt-6 bg-[#ffeeac] font-bold hover:bg-yellow-300 text-black">
+                <Link href="/">Go to Inbox</Link>
+              </Button>
+            </div>
           </div>
-        </div>
         ) : (
           <>
             <div className="space-y-2 p-4">
@@ -245,33 +245,40 @@ const EmailDetailPageContent: React.FC = () => {
                       // Apply styles to iframe content
                       const style = iframeDoc.createElement("style");
                       style.textContent = `
-                    body {
-                      margin: 0;
-                      padding: 16px;
-                      font-family: system-ui, -apple-system, roboto;
-                      font-size: 14px;
-                      line-height: 1.5;
-                      color: ${theme.colors.textPrimary};
-                      width: 100%;
-                      box-sizing: border-box;
-                      overflow-y: auto !important;
-                    }
-                    img, table {
-                      max-width: 100%;
-                      height: auto;
-                    }
-                    pre {
-                      white-space: pre-wrap;
-                      word-wrap: break-word;
-                      overflow: hidden !important;
-                    }
-                    table, tr, td, th, div, p, img {
-                      max-width: 100% !important;
-                      width: auto !important;
-                      box-sizing: border-box;
-                    }
-                  `;
+            body {
+              margin: 0;
+              padding: 16px;
+              font-family: system-ui, -apple-system, roboto;
+              font-size: 14px;
+              line-height: 1.5;
+              color: ${theme.colors.textPrimary};
+              width: 100%;
+              box-sizing: border-box;
+              overflow-y: auto !important;
+            }
+            img, table {
+              max-width: 100%;
+              height: auto;
+            }
+            pre {
+              white-space: pre-wrap;
+              word-wrap: break-word;
+              overflow: hidden !important;
+            }
+            table, tr, td, th, div, p, img {
+              max-width: 100% !important;
+              width: auto !important;
+              box-sizing: border-box;
+            }
+          `;
                       iframeDoc.head.appendChild(style);
+
+                      // Ensure links open in a new tab
+                      const links = iframeDoc.querySelectorAll("a");
+                      links.forEach((link) => {
+                        link.setAttribute("target", "_blank");
+                        link.setAttribute("rel", "noopener noreferrer");
+                      });
 
                       // Adjust iframe height
                       const height = iframeDoc.body.scrollHeight + 32;

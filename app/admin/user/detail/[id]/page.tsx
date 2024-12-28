@@ -96,12 +96,12 @@ const EmailDetailPage: React.FC = () => {
       router.replace("/");
       return;
     }
-  
+
     if (!token) {
       setIsLoading(false); // Ensure loading state is updated
       return;
     }
-    
+
     const fetchEmailDetail = async () => {
       if (!token) {
         router.replace("/");
@@ -143,13 +143,13 @@ const EmailDetailPage: React.FC = () => {
     const iframe = e.target as HTMLIFrameElement;
     if (iframe.contentWindow) {
       const iframeDoc = iframe.contentWindow.document;
-  
+
       // Add meta viewport tag
       const meta = iframeDoc.createElement('meta');
       meta.name = 'viewport';
       meta.content = 'width=device-width, initial-scale=1';
       iframeDoc.head.appendChild(meta);
-  
+
       // Apply styles to iframe content
       const style = iframeDoc.createElement('style');
       style.textContent = `
@@ -182,7 +182,14 @@ const EmailDetailPage: React.FC = () => {
         }
       `;
       iframeDoc.head.appendChild(style);
-  
+
+      // Ensure links open in a new tab
+      const links = iframeDoc.querySelectorAll("a");
+      links.forEach((link) => {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener noreferrer");
+      });
+
       // Adjust iframe height
       const height = iframeDoc.body.scrollHeight + 32;
       setIframeHeight(`${height}px`);
