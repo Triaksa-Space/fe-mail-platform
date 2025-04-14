@@ -235,6 +235,9 @@ const EmailDetailPage: React.FC = () => {
           </div>
         </div>
 
+
+        
+
         <div className="space-y-2 pl-4 pr-4">
           <div className="border bg-white shadow-sm" style={{ borderColor: theme.colors.border, borderRadius: theme.borders.radius, boxShadow: theme.shadows.card }}>
             <iframe
