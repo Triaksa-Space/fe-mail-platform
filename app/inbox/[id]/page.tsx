@@ -270,6 +270,8 @@ const EmailDetailPageContent: React.FC = () => {
               width: auto !important;
               box-sizing: border-box;
             }
+
+            
           `;
                       iframeDoc.head.appendChild(style);
 
