@@ -129,9 +129,9 @@ jobs:
           
           # Update PM2 process
           echo "🔄 Updating PM2 process..."
-          # sudo pm2 delete $PM2_APP_NAME 2>/dev/null || true
-          # sudo pm2 start npm --name $PM2_APP_NAME -- start -- --port $APP_PORT
-          # sudo pm2 save
+          sudo pm2 delete $PM2_APP_NAME 2>/dev/null || true
+          sudo pm2 start npm --name $PM2_APP_NAME -- start -- --port $APP_PORT
+          sudo pm2 save
           
           # Cleanup
           echo "🧹 Cleaning up..."
