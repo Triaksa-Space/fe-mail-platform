@@ -7,11 +7,11 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
 import FooterNav from "@/components/FooterNav";
 import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from '@/hooks/use-toast';
+import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
-import { RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -23,11 +23,12 @@ const InboxPageContent: React.FC = () => {
   const roleId = useAuthStore((state) => state.roleId);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const sentStatus = searchParams.get('sent');
+  const sentStatus = searchParams.get("sent");
   const [sentEmails, setSentEmails] = useState(0);
   const [email, setEmailLocal] = useState("");
   const [emails, setEmails] = useState<Email[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const storedToken = useAuthStore.getState().getStoredToken();
   const { setEmail } = useAuthStore();
@@ -81,13 +82,13 @@ const InboxPageContent: React.FC = () => {
     let isSubscribed = true;
     const controller = new AbortController();
 
-    if (sentStatus === 'success') {
+    if (sentStatus === "success") {
       toast({
         description: "Send email successful!",
         variant: "default",
       });
       // Remove the query parameter from the URL
-      router.replace('/inbox');
+      router.replace("/inbox");
     }
 
     const fetchEmails = async (signal?: AbortSignal) => {
@@ -136,12 +137,27 @@ const InboxPageContent: React.FC = () => {
 
   // Conditional rendering based on authLoaded and roleId is handled inside useEffect
 
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      window.location.reload();
+      setIsRefreshing(false);
+    }, 3000);
+  };
+
   return (
-    <div className="flex h-[100dvh] flex-col" style={{ backgroundColor: theme.colors.background }}>
+    <div
+      className="flex h-[100dvh] flex-col"
+      style={{ backgroundColor: theme.colors.background }}
+    >
       {/* Fixed Header */}
       <header
         className="flex justify-between items-center p-2 truncate"
-        style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}
+        style={{
+          backgroundColor: theme.colors.primary,
+          boxShadow: theme.shadows.card,
+        }}
       >
         <h1
           className="text-l font-semibold tracking-tight"
@@ -154,7 +170,10 @@ const InboxPageContent: React.FC = () => {
             className="hover:bg-[#F5E193]"
             variant="ghost"
             size="icon"
-            onClick={() => window.location.reload()}
+            disabled={isRefreshing}
+            onClick={() => {
+              handleRefresh();
+            }}
           >
             <RefreshCw className="h-6 w-6" />
           </Button>
@@ -173,7 +192,10 @@ const InboxPageContent: React.FC = () => {
           {isLoading ? (
             <div className="p-4 text-center">Loading...</div>
           ) : error ? (
-            <div className="p-4 text-center" style={{ color: theme.colors.error }}>
+            <div
+              className="p-4 text-center"
+              style={{ color: theme.colors.error }}
+            >
               {error}
             </div>
           ) : emails.length > 0 ? (
@@ -182,7 +204,7 @@ const InboxPageContent: React.FC = () => {
                 <div
                   key={email.ID}
                   className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
-                      ${!email.IsRead ? 'bg-[#F2F6FC]' : ''}`}
+                      ${!email.IsRead ? "bg-[#F2F6FC]" : ""}`}
                   onClick={() => router.push(`/inbox/${email.email_encode_id}`)}
                 >
                   <div className="space-y-1">

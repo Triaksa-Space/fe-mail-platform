@@ -35,6 +35,13 @@ jobs:
         npm ci --force
         echo "✅ Dependencies installed"
 
+    - name: Clean .next folder if it exists
+      run: |
+        if [ -d ".next" ]; then
+          echo "🧹 Removing .next cache..."
+          rm -rf .next
+        fi
+
     - name: Build Next.js app
       run: |
         npm run build

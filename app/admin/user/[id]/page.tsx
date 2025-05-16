@@ -27,6 +27,7 @@ export default function UserDetail() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState("")
+  const [isRefreshing, setIsRefreshing] = useState(false);
   // const [sentEmails, setSentEmails] = useState(0)
   const params = useParams()
   const router = useRouter()
@@ -167,13 +168,29 @@ export default function UserDetail() {
     };
   }, [params.id, token, router]); // Only include essential dependencies
 
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      window.location.reload();
+      setIsRefreshing(false);
+    }, 3000);
+  };
+
   return (
     <>
-    <div className="space-y-2" style={{ backgroundColor: theme.colors.background }}>
-      <div className="flex-1 overflow-auto pb-20">
-        
+      <div
+        className="space-y-2"
+        style={{ backgroundColor: theme.colors.background }}
+      >
+        <div className="flex-1 overflow-auto pb-20">
           <div className="space-y-0.5">
-          <div className="flex justify-between items-center p-2" style={{ backgroundColor: theme.colors.primary, boxShadow: theme.shadows.card }}>
+            <div
+              className="flex justify-between items-center p-2"
+              style={{
+                backgroundColor: theme.colors.primary,
+                boxShadow: theme.shadows.card,
+              }}
+            >
               <h1 className="text-xl font-semibold tracking-tight">
                 <Button
                   className="hover:bg-[#F5E193]"
@@ -185,16 +202,17 @@ export default function UserDetail() {
                 </Button>
               </h1>
               <Button
-                  className="hover:bg-[#F5E193]"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => window.location.reload()}
-                >
-                  <RefreshCw className="h-6 w-6" />
-                </Button>
-              <h1 className="text-sm font-semibold tracking-tight">
-                {email}
-              </h1>
+                className="hover:bg-[#F5E193]"
+                variant="ghost"
+                size="icon"
+                disabled={isRefreshing}
+                onClick={() => {
+                  handleRefresh();
+                }}
+              >
+                <RefreshCw className="h-6 w-6" />
+              </Button>
+              <h1 className="text-sm font-semibold tracking-tight">{email}</h1>
             </div>
             <div className="flex items-center gap-4"></div>
             {isLoading ? (
@@ -217,7 +235,9 @@ export default function UserDetail() {
                         </span>
                       </div>
                       <h4 className="font-medium truncate">{email.Subject}</h4>
-                      <p className="text-sm text-gray-500 truncate">{email.Preview}</p>
+                      <p className="text-sm text-gray-500 truncate">
+                        {email.Preview}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -236,5 +256,5 @@ export default function UserDetail() {
       </div>
       <Toaster />
     </>
-  )
+  );
 }
