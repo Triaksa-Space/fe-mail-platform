@@ -154,11 +154,7 @@ const InboxPageContent: React.FC = () => {
             className="hover:bg-[#F5E193]"
             variant="ghost"
             size="icon"
-            onClick={() => {
-              setTimeout(() => {
-                window.location.reload();
-              }, 3000);
-            }}
+            onClick={() => window.location.reload()}
           >
             <RefreshCw className="h-6 w-6" />
           </Button>
