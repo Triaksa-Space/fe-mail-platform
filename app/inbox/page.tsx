@@ -32,6 +32,7 @@ const InboxPageContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const storedToken = useAuthStore.getState().getStoredToken();
   const { setEmail } = useAuthStore();
+  let isSubscribed = true;
 
   // Check if the auth store is ready
   const [authLoaded, setAuthLoaded] = useState(false);
@@ -75,12 +76,39 @@ const InboxPageContent: React.FC = () => {
     }
   };
 
+  const controller = new AbortController();
+  const fetchEmails = async (signal?: AbortSignal) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        }
+      );
+
+      if (isSubscribed) {
+        setEmails(response.data);
+        setError(null);
+      }
+    } catch (err) {
+      if (isSubscribed) {
+        console.error("Failed to fetch emails:", err);
+        setError("Failed to load emails");
+      }
+    } finally {
+      if (isSubscribed) {
+        setIsLoading(false);
+      }
+    }
+  };
+
   useEffect(() => {
     if (!authLoaded) return; // Wait until auth is loaded
     if (!storedToken || roleId === 0 || roleId === 2) return; // Don't proceed if not authorized
-
-    let isSubscribed = true;
-    const controller = new AbortController();
+    
 
     if (sentStatus === "success") {
       toast({
@@ -91,33 +119,7 @@ const InboxPageContent: React.FC = () => {
       router.replace("/inbox");
     }
 
-    const fetchEmails = async (signal?: AbortSignal) => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            signal,
-          }
-        );
-
-        if (isSubscribed) {
-          setEmails(response.data);
-          setError(null);
-        }
-      } catch (err) {
-        if (isSubscribed) {
-          console.error("Failed to fetch emails:", err);
-          setError("Failed to load emails");
-        }
-      } finally {
-        if (isSubscribed) {
-          setIsLoading(false);
-        }
-      }
-    };
+    
 
     fetchCountSentEmails();
     fetchEmails(controller.signal);
@@ -140,8 +142,8 @@ const InboxPageContent: React.FC = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+    fetchEmails(controller.signal);
     setTimeout(() => {
-      window.location.reload();
       setIsRefreshing(false);
     }, 3000);
   };
@@ -187,8 +189,11 @@ const InboxPageContent: React.FC = () => {
       </header>
 
       {/* Scrollable Content Area */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto relative">
         <div className="space-y-0.5">
+          {isRefreshing && (
+            <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">Loading...</div>
+          )}
           {isLoading ? (
             <div className="p-4 text-center">Loading...</div>
           ) : error ? (

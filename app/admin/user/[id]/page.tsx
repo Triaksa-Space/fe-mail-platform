@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { useAuthStore } from '@/stores/useAuthStore'
-import axios from 'axios'
-import FooterAdminNav from "@/components/FooterAdminNav"
-import { Toaster } from "@/components/ui/toaster"
-import { ArrowLeft, RefreshCw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { theme } from '@/app/theme'
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/useAuthStore";
+import axios from "axios";
+import FooterAdminNav from "@/components/FooterAdminNav";
+import { Toaster } from "@/components/ui/toaster";
+import { ArrowLeft, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { theme } from "@/app/theme";
 
 interface UserEmail {
   user_encode_id: string;
   email_encode_id: string;
-  ID: number
-  SenderEmail: string
-  SenderName: string
-  Subject: string
-  Preview: string
-  Body: string
-  RelativeTime: string
+  ID: number;
+  SenderEmail: string;
+  SenderName: string;
+  Subject: string;
+  Preview: string;
+  Body: string;
+  RelativeTime: string;
 }
 
 export default function UserDetail() {
-  const [emails, setEmails] = useState<UserEmail[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [email, setEmail] = useState("")
+  const [emails, setEmails] = useState<UserEmail[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   // const [sentEmails, setSentEmails] = useState(0)
-  const params = useParams()
-  const router = useRouter()
+  const params = useParams();
+  const router = useRouter();
   // const token = useAuthStore((state) => state.token)
-  const [token, setToken] = useState("")
+  const [token, setToken] = useState("");
 
   // Move the token check to useEffect
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function UserDetail() {
       return;
     }
 
-    setToken(storedToken)
+    setToken(storedToken);
 
     const storedRoleID = useAuthStore.getState().getStoredRoleID();
     // Redirect based on role
@@ -53,11 +53,11 @@ export default function UserDetail() {
 
   const handleEmailClick = (uemail: UserEmail) => {
     router.push(`/admin/user/detail/${uemail.email_encode_id}`);
-  }
+  };
 
   // const fetchUserEmailsWhenNotFound = async () => {
   //   if (!token) return;
-  
+
   //   try {
   //     const response = await axios.get(
   //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
@@ -67,7 +67,7 @@ export default function UserDetail() {
   //         },
   //       }
   //     );
-  
+
   //     setEmails(response.data);
   //     setError(null);
   //   } catch (err) {
@@ -79,28 +79,56 @@ export default function UserDetail() {
   //   }
   // };
 
+  let isSubscribed = true;
+  const controller = new AbortController();
+  // Function to fetch only emails (will be called repeatedly)
+  const fetchUserEmails = async (signal?: AbortSignal) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal,
+        }
+      );
+
+      if (isSubscribed) {
+        setEmails(response.data);
+        setError(null);
+      }
+    } catch (err) {
+      if (isSubscribed) {
+        console.error("Failed to fetch emails:", err);
+        setError("Failed to load emails");
+      }
+    } finally {
+      if (isSubscribed) {
+        setIsLoading(false);
+      }
+    }
+  };
+
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
     if (!storedToken) {
       router.replace("/");
       return;
     }
-  
+
     if (!token) {
       setIsLoading(false); // Ensure loading state is updated
       return;
     }
-    
-    let isSubscribed = true;
-    const controller = new AbortController();
-  
+
     // Separate function to fetch user details (runs only once)
     const fetchUserDetails = async (signal?: AbortSignal) => {
       if (!token) {
         router.replace("/");
         return;
       }
-  
+
       try {
         const responseDetailUser = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${params.id}`,
@@ -111,55 +139,24 @@ export default function UserDetail() {
             signal,
           }
         );
-  
+
         if (responseDetailUser.data && isSubscribed) {
           setEmail(responseDetailUser.data.Email);
         }
       } catch (err) {
-        console.error('Failed to fetch user details:', err);
+        console.error("Failed to fetch user details:", err);
       }
     };
-  
-    // Function to fetch only emails (will be called repeatedly)
-    const fetchUserEmails = async (signal?: AbortSignal) => {
-      if (!token) return;
-  
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            signal,
-          }
-        );
-  
-        if (isSubscribed) {
-          setEmails(response.data);
-          setError(null);
-        }
-      } catch (err) {
-        if (isSubscribed) {
-          console.error('Failed to fetch user emails:', err);
-          setError('Failed to load user emails');
-        }
-      } finally {
-        if (isSubscribed) {
-          setIsLoading(false);
-        }
-      }
-    };
-  
+
     // Initial fetch for both user details and emails
     fetchUserDetails(controller.signal);
     fetchUserEmails(controller.signal);
-  
+
     // Set up interval for auto-refresh of emails only
     const intervalId = setInterval(() => {
       fetchUserEmails();
     }, 10000);
-  
+
     // Cleanup function
     return () => {
       isSubscribed = false;
@@ -170,8 +167,8 @@ export default function UserDetail() {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+    fetchUserEmails(controller.signal);
     setTimeout(() => {
-      window.location.reload();
       setIsRefreshing(false);
     }, 3000);
   };
@@ -215,6 +212,11 @@ export default function UserDetail() {
               <h1 className="text-sm font-semibold tracking-tight">{email}</h1>
             </div>
             <div className="flex items-center gap-4"></div>
+            {isRefreshing && (
+              <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">
+                Loading...
+              </div>
+            )}
             {isLoading ? (
               <div className="p-4 text-center">Loading...</div>
             ) : error ? (
