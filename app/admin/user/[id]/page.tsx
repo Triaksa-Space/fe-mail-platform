@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useAuthStore } from "@/stores/useAuthStore";
-import axios from "axios";
-import FooterAdminNav from "@/components/FooterAdminNav";
-import { Toaster } from "@/components/ui/toaster";
-import { ArrowLeft, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { theme } from "@/app/theme";
+import { useEffect, useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import { useAuthStore } from '@/stores/useAuthStore'
+import axios from 'axios'
+import FooterAdminNav from "@/components/FooterAdminNav"
+import { Toaster } from "@/components/ui/toaster"
+import { ArrowLeft, RefreshCw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { theme } from '@/app/theme'
 
 interface UserEmail {
   user_encode_id: string;
   email_encode_id: string;
-  ID: number;
-  SenderEmail: string;
-  SenderName: string;
-  Subject: string;
-  Preview: string;
-  Body: string;
-  RelativeTime: string;
+  ID: number
+  SenderEmail: string
+  SenderName: string
+  Subject: string
+  Preview: string
+  Body: string
+  RelativeTime: string
 }
 
 export default function UserDetail() {
@@ -28,6 +28,7 @@ export default function UserDetail() {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshingSecond, setIsRefreshingSecond] = useState(false);
   // const [sentEmails, setSentEmails] = useState(0)
   const params = useParams();
   const router = useRouter();
@@ -79,13 +80,15 @@ export default function UserDetail() {
   //   }
   // };
 
-  let isSubscribed = true;
-  const controller = new AbortController();
+   let isSubscribed = true;
+   const controller = new AbortController();
   // Function to fetch only emails (will be called repeatedly)
   const fetchUserEmails = async (signal?: AbortSignal) => {
+    if (!token) return;
+
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -100,8 +103,8 @@ export default function UserDetail() {
       }
     } catch (err) {
       if (isSubscribed) {
-        console.error("Failed to fetch emails:", err);
-        setError("Failed to load emails");
+        console.error("Failed to fetch user emails:", err);
+        setError("Failed to load user emails");
       }
     } finally {
       if (isSubscribed) {
@@ -170,8 +173,16 @@ export default function UserDetail() {
     fetchUserEmails(controller.signal);
     setTimeout(() => {
       setIsRefreshing(false);
-    }, 3000);
+    }, 1000);
   };
+
+   useEffect(() => {
+      if(isRefreshingSecond) {
+        setTimeout(() => {
+          setIsRefreshingSecond(false);
+        }, 3000);
+      }
+    }, [isRefreshingSecond])
 
   return (
     <>
@@ -202,7 +213,7 @@ export default function UserDetail() {
                 className="hover:bg-[#F5E193]"
                 variant="ghost"
                 size="icon"
-                disabled={isRefreshing}
+                disabled={isRefreshing || isRefreshingSecond}
                 onClick={() => {
                   handleRefresh();
                 }}

@@ -29,6 +29,7 @@ const InboxPageContent: React.FC = () => {
   const [emails, setEmails] = useState<Email[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshingSecond, setIsRefreshingSecond] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const storedToken = useAuthStore.getState().getStoredToken();
   const { setEmail } = useAuthStore();
@@ -144,9 +145,18 @@ const InboxPageContent: React.FC = () => {
     setIsRefreshing(true);
     fetchEmails(controller.signal);
     setTimeout(() => {
+      setIsRefreshingSecond(true);
       setIsRefreshing(false);
-    }, 3000);
+    }, 1000);
   };
+
+  useEffect(() => {
+    if(isRefreshingSecond) {
+      setTimeout(() => {
+        setIsRefreshingSecond(false);
+      }, 3000);
+    }
+  }, [isRefreshingSecond])
 
   return (
     <div
@@ -172,7 +182,7 @@ const InboxPageContent: React.FC = () => {
             className="hover:bg-[#F5E193]"
             variant="ghost"
             size="icon"
-            disabled={isRefreshing}
+            disabled={isRefreshing || isRefreshingSecond}
             onClick={() => {
               handleRefresh();
             }}
@@ -191,7 +201,7 @@ const InboxPageContent: React.FC = () => {
       {/* Scrollable Content Area */}
       <main className="flex-1 overflow-y-auto relative">
         <div className="space-y-0.5">
-          {isRefreshing && (
+          {isRefreshing &&  (
             <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">Loading...</div>
           )}
           {isLoading ? (
