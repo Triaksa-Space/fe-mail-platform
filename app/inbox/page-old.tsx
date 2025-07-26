@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
@@ -33,20 +33,10 @@ const InboxPageContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const storedToken = useAuthStore.getState().getStoredToken();
   const { setEmail } = useAuthStore();
+  let isSubscribed = true;
 
   // Check if the auth store is ready
   const [authLoaded, setAuthLoaded] = useState(false);
-
-  // Refs for managing requests and intervals
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const isRequestInProgressRef = useRef(false);
-  const lastActivityRef = useRef(Date.now());
-  const isPageVisibleRef = useRef(true);
-
-  // Constants for timing
-  const AUTO_REFRESH_INTERVAL = 60000; // 1 minute
-  const IDLE_TIMEOUT = 300000; // 5 minutes of inactivity before considering idle
 
   useEffect(() => {
     // Wait for the auth store to load and set the state
@@ -63,42 +53,6 @@ const InboxPageContent: React.FC = () => {
       router.replace("/not-found");
     }
   }, [authLoaded, storedToken, roleId, router]);
-
-  // User activity tracking
-  const updateLastActivity = useCallback(() => {
-    lastActivityRef.current = Date.now();
-  }, []);
-
-  // Check if user is idle
-  const isUserIdle = useCallback(() => {
-    return Date.now() - lastActivityRef.current > IDLE_TIMEOUT;
-  }, []);
-
-  // Page visibility change handler
-  const handleVisibilityChange = useCallback(() => {
-    isPageVisibleRef.current = !document.hidden;
-    if (!document.hidden) {
-      updateLastActivity();
-    }
-  }, [updateLastActivity]);
-
-  // Set up activity listeners and page visibility
-  useEffect(() => {
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    
-    events.forEach(event => {
-      document.addEventListener(event, updateLastActivity, { passive: true });
-    });
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      events.forEach(event => {
-        document.removeEventListener(event, updateLastActivity);
-      });
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [updateLastActivity, handleVisibilityChange]);
 
   const fetchCountSentEmails = async () => {
     if (!token) return;
@@ -123,21 +77,8 @@ const InboxPageContent: React.FC = () => {
     }
   };
 
-  const fetchEmails = useCallback(async (signal?: AbortSignal) => {
-    // Prevent duplicate requests
-    if (isRequestInProgressRef.current) {
-      console.log("Request already in progress, skipping...");
-      return;
-    }
-
-    // Don't auto-refresh if page is not visible or user is idle
-    if (!isPageVisibleRef.current || isUserIdle()) {
-      console.log("Skipping refresh: page not visible or user idle");
-      return;
-    }
-
-    isRequestInProgressRef.current = true;
-
+  const controller = new AbortController();
+  const fetchEmails = async (signal?: AbortSignal) => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
@@ -149,52 +90,25 @@ const InboxPageContent: React.FC = () => {
         }
       );
 
-      setEmails(response.data);
-      setError(null);
+      if (isSubscribed) {
+        setEmails(response.data);
+        setError(null);
+      }
     } catch (err) {
-      if (!signal?.aborted) {
+      if (isSubscribed) {
         console.error("Failed to fetch emails:", err);
         setError("Failed to load emails");
       }
     } finally {
-      isRequestInProgressRef.current = false;
-      setIsLoading(false);
+      if (isSubscribed) {
+        setIsLoading(false);
+      }
     }
-  }, [token, isUserIdle]);
-
-  // Manual refresh with loading states
-  const handleRefresh = useCallback(() => {
-    // Cancel any existing request
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Create new abort controller
-    abortControllerRef.current = new AbortController();
-    
-    setIsRefreshing(true);
-    updateLastActivity(); // Update activity on manual refresh
-    
-    fetchEmails(abortControllerRef.current.signal).finally(() => {
-      setTimeout(() => {
-        setIsRefreshingSecond(true);
-        setIsRefreshing(false);
-      }, 1000);
-    });
-  }, [fetchEmails, updateLastActivity]);
-
-  useEffect(() => {
-    if(isRefreshingSecond) {
-      setTimeout(() => {
-        setIsRefreshingSecond(false);
-      }, 3000);
-    }
-  }, [isRefreshingSecond]);
+  };
 
   useEffect(() => {
     if (!authLoaded) return; // Wait until auth is loaded
     if (!storedToken || roleId === 0 || roleId === 2) return; // Don't proceed if not authorized
-    
 
     if (sentStatus === "success") {
       toast({
@@ -205,37 +119,40 @@ const InboxPageContent: React.FC = () => {
       router.replace("/inbox");
     }
 
-    // Initial data fetch
     fetchCountSentEmails();
-    
-    // Create abort controller for initial fetch
-    abortControllerRef.current = new AbortController();
-    fetchEmails(abortControllerRef.current.signal);
+    fetchEmails(controller.signal);
 
-    // Set up interval for auto-refresh (1 minute)
-    intervalRef.current = setInterval(() => {
-      // Only auto-refresh if page is visible and user is not idle
-      if (isPageVisibleRef.current && !isUserIdle()) {
-        // Create new abort controller for auto-refresh
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort();
-        }
-        abortControllerRef.current = new AbortController();
-        fetchEmails(abortControllerRef.current.signal);
-      }
-    }, AUTO_REFRESH_INTERVAL);
+    // Set up interval for auto-refresh
+    const intervalId = setInterval(() => {
+      fetchEmails();
+    }, 10000);
 
     // Cleanup function
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      isRequestInProgressRef.current = false;
+      isSubscribed = false;
+      controller.abort();
+      clearInterval(intervalId);
     };
-  }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail, fetchEmails, isUserIdle]);
+  }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail]);
+
+  // Conditional rendering based on authLoaded and roleId is handled inside useEffect
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    fetchEmails(controller.signal);
+    setTimeout(() => {
+      setIsRefreshingSecond(true);
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (isRefreshingSecond) {
+      setTimeout(() => {
+        setIsRefreshingSecond(false);
+      }, 3000);
+    }
+  }, [isRefreshingSecond]);
 
   return (
     <div
@@ -261,8 +178,10 @@ const InboxPageContent: React.FC = () => {
             className="hover:bg-[#F5E193]"
             variant="ghost"
             size="icon"
-            disabled={isRefreshing || isRefreshingSecond || isRequestInProgressRef.current}
-            onClick={handleRefresh}
+            disabled={isRefreshing || isRefreshingSecond}
+            onClick={() => {
+              handleRefresh();
+            }}
           >
             <RefreshCw className="h-6 w-6" />
           </Button>
@@ -278,8 +197,10 @@ const InboxPageContent: React.FC = () => {
       {/* Scrollable Content Area */}
       <main className="flex-1 overflow-y-auto relative">
         <div className="space-y-0.5">
-          {isRefreshing &&  (
-            <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">Loading...</div>
+          {isRefreshing && (
+            <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">
+              Loading...
+            </div>
           )}
           {isLoading ? (
             <div className="p-4 text-center">Loading...</div>
