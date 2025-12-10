@@ -1,0 +1,25 @@
+name: Restart FE mailria
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Restart FE mailria
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          port: 22
+          script: |
+            cd /var/www/frontend
+            sudo pm2 delete nextjs || true
+            sudo pm2 delete nextjs-dev || true
+            pm2 delete nextjs || true
+            pm2 delete nextjs-dev || true
+            pm2 start "npm start" --name nextjs --watch
+            pm2 save
