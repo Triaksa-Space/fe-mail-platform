@@ -1,9 +1,9 @@
-name: PROD-Build to ECR & Deploy to EC2
+name: PROD Mailria-Build to ECR & Deploy to EC2
 
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build-and-deploy:
