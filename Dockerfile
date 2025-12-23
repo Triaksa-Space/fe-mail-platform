@@ -17,7 +17,7 @@ COPY . .
 
 # Set environment variables for build
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_API_BASE_URL=https://beta-api.mailria.com
+ENV NEXT_PUBLIC_API_BASE_URL=https://api.mailria.com
 
 # Build the application
 RUN npm run build
@@ -28,7 +28,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PUBLIC_API_BASE_URL=https://beta-api.mailria.com
+ENV NEXT_PUBLIC_API_BASE_URL=https://api.mailria.com
 
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs
