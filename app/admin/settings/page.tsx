@@ -244,7 +244,6 @@ const AdminSelfChangePassword: React.FC = () => {
 // ============================================
 const SuperAdminSettings: React.FC = () => {
     const [users, setUsers] = useState<AdminUser[]>([]);
-    const router = useRouter();
     const token = useAuthStore((state) => state.token);
 
     const { toast } = useToast();
