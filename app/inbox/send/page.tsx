@@ -1,36 +1,30 @@
 "use client";
-import React, { useEffect, Suspense } from 'react';
-import Send from '@/components/Send';
-import { theme } from "@/app/theme";
-import LoadingProcessingPage from '@/components/ProcessLoading';
-import { useAuthStore } from '@/stores/useAuthStore';
+
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/useAuthStore";
 
-const Page: React.FC = () => {
+/**
+ * Send page - redirects to main inbox with compose modal open
+ * This maintains backward compatibility with existing routes
+ */
+export default function SendPage() {
   const router = useRouter();
+  const storedToken = useAuthStore.getState().getStoredToken();
 
-  // Move the token check to useEffect
   useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
     if (!storedToken) {
       router.replace("/");
       return;
     }
-  }, [router]);
 
-  const roleId = useAuthStore((state) => state.roleId);
-  // Redirect based on role
-  if (roleId === 0 || roleId === 2) {
-    router.push("/not-found");
-  }
+    // Redirect to inbox with compose modal open
+    router.replace("/inbox?compose=true");
+  }, [router, storedToken]);
 
   return (
-    <Suspense fallback={<LoadingProcessingPage />}>
-    <div className="flex h-[100dvh] flex-col " style={{ backgroundColor: theme.colors.background }}>
-      <Send />
+    <div className="flex items-center justify-center h-screen bg-[#F9FAFB]">
+      <div className="text-gray-500">Loading...</div>
     </div>
-    </Suspense>
   );
-};
-
-export default Page;
+}

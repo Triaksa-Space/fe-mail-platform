@@ -1,61 +1,112 @@
 "use client";
 
-import React, { Suspense } from "react";
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { Suspense, useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
-import FooterNav from "@/components/FooterNav";
-import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { theme } from "../theme";
-import { RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  Sidebar,
+  InboxList,
+  Preview,
+  BottomTabs,
+  ComposeModal,
+  SettingsPanel,
+  Mail,
+  ViewType,
+  transformEmailToMail,
+} from "@/components/mail";
 
-// Loading fallback component
+// Loading fallback
 const LoadingFallback: React.FC = () => (
-  <div className="flex justify-center items-center h-full">Loading...</div>
+  <div className="flex items-center justify-center h-screen bg-[#F9FAFB]">
+    <div className="text-gray-500">Loading...</div>
+  </div>
 );
 
 const InboxPageContent: React.FC = () => {
-  const token = useAuthStore((state) => state.token);
-  const roleId = useAuthStore((state) => state.roleId);
   const router = useRouter();
   const searchParams = useSearchParams();
   const sentStatus = searchParams.get("sent");
-  const [sentEmails, setSentEmails] = useState(0);
-  const [email, setEmailLocal] = useState("");
-  const [emails, setEmails] = useState<Email[]>([]);
+  const composeParam = searchParams.get("compose");
+  const viewParam = searchParams.get("view");
+  const emailParam = searchParams.get("email");
+
+  // Auth state
+  const token = useAuthStore((state) => state.token);
+  const roleId = useAuthStore((state) => state.roleId);
+  const logout = useAuthStore((state) => state.logout);
+  const { setEmail } = useAuthStore();
+  const storedToken = useAuthStore.getState().getStoredToken();
+
+  // UI state
+  const [authLoaded, setAuthLoaded] = useState(false);
+  const [currentView, setCurrentView] = useState<ViewType>("inbox");
+  const [selectedEmail, setSelectedEmail] = useState<Mail | null>(null);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [isComposeOpen, setIsComposeOpen] = useState(false);
+
+  // Data state
+  const [userEmail, setUserEmail] = useState("");
+  const [emails, setEmails] = useState<Mail[]>([]);
+  const [sentCount, setSentCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isRefreshingSecond, setIsRefreshingSecond] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const storedToken = useAuthStore.getState().getStoredToken();
-  const { setEmail } = useAuthStore();
 
-  // Check if the auth store is ready
-  const [authLoaded, setAuthLoaded] = useState(false);
-
-  // Refs for managing requests and intervals
+  // Refs for managing requests
   const abortControllerRef = useRef<AbortController | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const isRequestInProgressRef = useRef(false);
   const lastActivityRef = useRef(Date.now());
   const isPageVisibleRef = useRef(true);
 
-  // Constants for timing
-  const AUTO_REFRESH_INTERVAL = 60000; // 1 minute
-  const IDLE_TIMEOUT = 300000; // 5 minutes of inactivity before considering idle
+  // Constants
+  const AUTO_REFRESH_INTERVAL = 60000;
+  const IDLE_TIMEOUT = 300000;
 
+  // Initialize auth
   useEffect(() => {
-    // Wait for the auth store to load and set the state
     setAuthLoaded(true);
   }, []);
 
-  // Redirect logic inside useEffect
+  // Handle URL query parameters for routing
   useEffect(() => {
-    if (!authLoaded) return; // Wait until auth is loaded
+    if (!authLoaded) return;
+
+    // Handle compose parameter
+    if (composeParam === "true") {
+      setIsComposeOpen(true);
+      router.replace("/inbox");
+    }
+
+    // Handle view parameter
+    if (viewParam === "settings") {
+      setCurrentView("settings");
+      router.replace("/inbox");
+    }
+  }, [authLoaded, composeParam, viewParam, router]);
+
+  // Handle email parameter to auto-select email
+  useEffect(() => {
+    if (!authLoaded || !emailParam || emails.length === 0) return;
+
+    const emailToSelect = emails.find(
+      (email) => email.email_encode_id === emailParam || email.id === emailParam
+    );
+
+    if (emailToSelect) {
+      setSelectedEmail(emailToSelect);
+      setShowMobilePreview(true);
+      router.replace("/inbox");
+    }
+  }, [authLoaded, emailParam, emails, router]);
+
+  // Auth redirect
+  useEffect(() => {
+    if (!authLoaded) return;
 
     if (!storedToken) {
       router.replace("/");
@@ -64,17 +115,15 @@ const InboxPageContent: React.FC = () => {
     }
   }, [authLoaded, storedToken, roleId, router]);
 
-  // User activity tracking
+  // Activity tracking
   const updateLastActivity = useCallback(() => {
     lastActivityRef.current = Date.now();
   }, []);
 
-  // Check if user is idle
   const isUserIdle = useCallback(() => {
     return Date.now() - lastActivityRef.current > IDLE_TIMEOUT;
   }, []);
 
-  // Page visibility change handler
   const handleVisibilityChange = useCallback(() => {
     isPageVisibleRef.current = !document.hidden;
     if (!document.hidden) {
@@ -82,141 +131,115 @@ const InboxPageContent: React.FC = () => {
     }
   }, [updateLastActivity]);
 
-  // Set up activity listeners and page visibility
+  // Activity listeners
   useEffect(() => {
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    
-    events.forEach(event => {
+    const events = ["mousedown", "mousemove", "keypress", "scroll", "touchstart", "click"];
+
+    events.forEach((event) => {
       document.addEventListener(event, updateLastActivity, { passive: true });
     });
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, updateLastActivity);
       });
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [updateLastActivity, handleVisibilityChange]);
 
-  const fetchCountSentEmails = async () => {
+  // Fetch sent count
+  const fetchSentCount = async () => {
     if (!token) return;
 
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       if (response.data) {
-        setSentEmails(response.data.SentEmails);
+        setSentCount(response.data.SentEmails);
         setEmail(response.data.Email);
-        setEmailLocal(response.data.Email);
+        setUserEmail(response.data.Email);
       }
     } catch (err) {
-      console.error("Failed to fetch sent emails count:", err);
+      console.error("Failed to fetch sent count:", err);
     }
   };
 
-  const fetchEmails = useCallback(async (signal?: AbortSignal) => {
-    // Prevent duplicate requests
-    if (isRequestInProgressRef.current) {
-      console.log("Request already in progress, skipping...");
-      return;
-    }
+  // Fetch emails
+  const fetchEmails = useCallback(
+    async (signal?: AbortSignal) => {
+      if (isRequestInProgressRef.current) return;
+      if (!isPageVisibleRef.current || isUserIdle()) return;
 
-    // Don't auto-refresh if page is not visible or user is idle
-    if (!isPageVisibleRef.current || isUserIdle()) {
-      console.log("Skipping refresh: page not visible or user idle");
-      return;
-    }
+      isRequestInProgressRef.current = true;
 
-    isRequestInProgressRef.current = true;
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            signal,
+          }
+        );
 
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          signal,
+        const transformedEmails = response.data.map((email: Email) =>
+          transformEmailToMail(email)
+        );
+        setEmails(transformedEmails);
+        setError(null);
+      } catch (err) {
+        if (!signal?.aborted) {
+          console.error("Failed to fetch emails:", err);
+          setError("Failed to load emails");
         }
-      );
-
-      setEmails(response.data);
-      setError(null);
-    } catch (err) {
-      if (!signal?.aborted) {
-        console.error("Failed to fetch emails:", err);
-        setError("Failed to load emails");
+      } finally {
+        isRequestInProgressRef.current = false;
+        setIsLoading(false);
       }
-    } finally {
-      isRequestInProgressRef.current = false;
-      setIsLoading(false);
-    }
-  }, [token, isUserIdle]);
+    },
+    [token, isUserIdle]
+  );
 
-  // Manual refresh with loading states
+  // Manual refresh
   const handleRefresh = useCallback(() => {
-    // Cancel any existing request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
 
-    // Create new abort controller
     abortControllerRef.current = new AbortController();
-    
     setIsRefreshing(true);
-    updateLastActivity(); // Update activity on manual refresh
-    
+    updateLastActivity();
+
     fetchEmails(abortControllerRef.current.signal).finally(() => {
-      setTimeout(() => {
-        setIsRefreshingSecond(true);
-        setIsRefreshing(false);
-      }, 1000);
+      setTimeout(() => setIsRefreshing(false), 1000);
     });
   }, [fetchEmails, updateLastActivity]);
 
+  // Initial fetch and auto-refresh
   useEffect(() => {
-    if(isRefreshingSecond) {
-      setTimeout(() => {
-        setIsRefreshingSecond(false);
-      }, 3000);
-    }
-  }, [isRefreshingSecond]);
-
-  useEffect(() => {
-    if (!authLoaded) return; // Wait until auth is loaded
-    if (!storedToken || roleId === 0 || roleId === 2) return; // Don't proceed if not authorized
-    
+    if (!authLoaded) return;
+    if (!storedToken || roleId === 0 || roleId === 2) return;
 
     if (sentStatus === "success") {
       toast({
-        description: "Send email successful!",
+        description: "Email sent successfully!",
         variant: "default",
       });
-      // Remove the query parameter from the URL
       router.replace("/inbox");
     }
 
-    // Initial data fetch
-    fetchCountSentEmails();
-    
-    // Create abort controller for initial fetch
+    fetchSentCount();
+
     abortControllerRef.current = new AbortController();
     fetchEmails(abortControllerRef.current.signal);
 
-    // Set up interval for auto-refresh (1 minute)
     intervalRef.current = setInterval(() => {
-      // Only auto-refresh if page is visible and user is not idle
       if (isPageVisibleRef.current && !isUserIdle()) {
-        // Create new abort controller for auto-refresh
         if (abortControllerRef.current) {
           abortControllerRef.current.abort();
         }
@@ -225,133 +248,175 @@ const InboxPageContent: React.FC = () => {
       }
     }, AUTO_REFRESH_INTERVAL);
 
-    // Cleanup function
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
       isRequestInProgressRef.current = false;
     };
   }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail, fetchEmails, isUserIdle]);
 
-  return (
-    <div
-      className="flex h-[100dvh] flex-col"
-      style={{ backgroundColor: theme.colors.background }}
-    >
-      {/* Fixed Header */}
-      <header
-        className="flex justify-between items-center p-2 truncate"
-        style={{
-          backgroundColor: theme.colors.primary,
-          boxShadow: theme.shadows.card,
-        }}
-      >
-        <h1
-          className="text-l font-semibold tracking-tight"
-          style={{ color: theme.colors.textPrimary }}
-        >
-          {email}
-        </h1>
-        <h1>
-          <Button
-            className="hover:bg-[#F5E193]"
-            variant="ghost"
-            size="icon"
-            disabled={isRefreshing || isRefreshingSecond || isRequestInProgressRef.current}
-            onClick={handleRefresh}
-          >
-            <RefreshCw className="h-6 w-6" />
-          </Button>
-        </h1>
-        <h1
-          className="text-sm font-semibold tracking-tight"
-          style={{ color: theme.colors.textPrimary }}
-        >
-          Daily Send {sentEmails}/3
-        </h1>
-      </header>
+  // Handlers
+  const handleSelectEmail = (email: Mail) => {
+    setSelectedEmail(email);
+    setShowMobilePreview(true);
+  };
 
-      {/* Scrollable Content Area */}
-      <main className="flex-1 overflow-y-auto relative">
-        <div className="space-y-0.5">
-          {isRefreshing &&  (
-            <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">Loading...</div>
-          )}
-          {isLoading ? (
-            <div className="p-4 text-center">Loading...</div>
-          ) : error ? (
-            <div
-              className="p-4 text-center"
-              style={{ color: theme.colors.error }}
-            >
-              {error}
-            </div>
-          ) : emails.length > 0 ? (
-            <div className="divide-y">
-              {emails.map((email) => (
-                <div
-                  key={email.ID}
-                  className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
-                      ${!email.IsRead ? "bg-[#F2F6FC]" : ""}`}
-                  onClick={() => router.push(`/inbox/${email.email_encode_id}`)}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3
-                        className="font-semibold truncate"
-                        style={{ color: theme.colors.textPrimary }}
-                      >
-                        {email.SenderName}
-                      </h3>
-                      <span
-                        className="text-sm"
-                        style={{ color: theme.colors.textSecondary }}
-                      >
-                        {email.RelativeTime}
-                      </span>
-                    </div>
-                    <h4
-                      className="font-medium truncate"
-                      style={{ color: theme.colors.textPrimary }}
-                    >
-                      {email.Subject}
-                    </h4>
-                    <p
-                      className="text-sm truncate"
-                      style={{ color: theme.colors.textSecondary }}
-                    >
-                      {email.Preview}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div
-              className="p-4 text-center cursor-pointer text-blue-500 underline"
-              onClick={() => window.location.reload()}
-            >
-              No emails found. Please refresh your browser.
-            </div>
-          )}
+  const handleViewChange = (view: ViewType) => {
+    setCurrentView(view);
+    if (view === "compose") {
+      setIsComposeOpen(true);
+    } else {
+      setShowMobilePreview(false);
+      setSelectedEmail(null);
+    }
+  };
+
+  const handleCompose = () => {
+    setIsComposeOpen(true);
+  };
+
+  const handleReply = () => {
+    if (!selectedEmail) return;
+    setIsComposeOpen(true);
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const handleEmailSent = () => {
+    fetchSentCount();
+    handleRefresh();
+  };
+
+  // Render content based on view
+  const renderContent = () => {
+    // Mobile: show preview if selected
+    if (showMobilePreview && selectedEmail) {
+      return (
+        <Preview
+          email={selectedEmail}
+          onBack={() => setShowMobilePreview(false)}
+          onReply={handleReply}
+          showBackButton={true}
+          className="lg:hidden"
+        />
+      );
+    }
+
+    // Settings view
+    if (currentView === "settings") {
+      return (
+        <>
+          {/* Mobile settings */}
+          <SettingsPanel
+            onBack={() => setCurrentView("inbox")}
+            showBackButton={true}
+            className="lg:hidden"
+          />
+          {/* Desktop settings */}
+          <div className="hidden lg:flex flex-1">
+            <SettingsPanel />
+          </div>
+        </>
+      );
+    }
+
+    // Inbox/Sent view
+    return (
+      <>
+        {/* Mobile: Inbox list only */}
+        <InboxList
+          emails={emails}
+          selectedId={selectedEmail?.email_encode_id || null}
+          onSelect={handleSelectEmail}
+          onRefresh={handleRefresh}
+          isLoading={isLoading}
+          isRefreshing={isRefreshing}
+          error={error}
+          className="lg:hidden flex-1"
+        />
+
+        {/* Desktop: Inbox list + Preview */}
+        <div className="hidden lg:flex flex-1">
+          <InboxList
+            emails={emails}
+            selectedId={selectedEmail?.email_encode_id || null}
+            onSelect={handleSelectEmail}
+            onRefresh={handleRefresh}
+            isLoading={isLoading}
+            isRefreshing={isRefreshing}
+            error={error}
+          />
+          <Preview
+            email={selectedEmail}
+            onReply={handleReply}
+            showBackButton={false}
+          />
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <div className="h-screen bg-[#F9FAFB] flex overflow-hidden">
+      {/* Desktop Sidebar */}
+      <Sidebar
+        currentView={currentView}
+        onViewChange={handleViewChange}
+        onCompose={handleCompose}
+        onLogout={handleLogout}
+        userEmail={userEmail}
+        sentCount={sentCount}
+        className="hidden lg:flex"
+      />
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col min-w-0">
+        {/* Mobile Header */}
+        <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
+          <h1 className="text-sm font-medium text-gray-900 truncate">
+            {userEmail}
+          </h1>
+          <span className="text-xs text-gray-500">
+            Daily: {sentCount}/3
+          </span>
+        </header>
+
+        {/* Content Area */}
+        <div className="flex-1 flex overflow-hidden pb-20 lg:pb-0">
+          {renderContent()}
         </div>
       </main>
 
-      {/* Fixed Footer */}
-      <footer className="w-full z-10">
-        <FooterNav />
-      </footer>
+      {/* Mobile Bottom Tabs */}
+      <BottomTabs
+        currentView={currentView}
+        onViewChange={handleViewChange}
+        onCompose={handleCompose}
+        onLogout={handleLogout}
+      />
+
+      {/* Compose Modal */}
+      <ComposeModal
+        isOpen={isComposeOpen}
+        onClose={() => setIsComposeOpen(false)}
+        onSent={handleEmailSent}
+        sentCount={sentCount}
+        maxDailySend={3}
+        replyTo={
+          selectedEmail
+            ? { email: selectedEmail.fromEmail, subject: selectedEmail.subject }
+            : undefined
+        }
+      />
 
       <Toaster />
     </div>
   );
 };
 
-// Wrap InboxPageContent with Suspense
+// Wrap with Suspense
 const InboxPage: React.FC = () => (
   <Suspense fallback={<LoadingFallback />}>
     <InboxPageContent />
