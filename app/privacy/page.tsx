@@ -1,14 +1,69 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Shield } from "lucide-react";
+import { ArrowLeft, Shield, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { privacyData, privacyIntro, privacyEffectiveDate } from "@/lib/privacyData";
 import { Footer } from "@/components/layout";
+import axios from "axios";
+
+interface PrivacyResponse {
+  content: string;
+  effective_date: string;
+}
+
+// DOMPurify config for safe HTML rendering
+const DOMPURIFY_CONFIG = {
+  ALLOWED_TAGS: [
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "p", "br", "hr",
+    "ul", "ol", "li",
+    "strong", "b", "em", "i", "u", "s", "strike",
+    "a", "span", "div",
+    "table", "thead", "tbody", "tr", "th", "td",
+    "blockquote", "pre", "code"
+  ],
+  ALLOWED_ATTR: ["href", "target", "rel", "class", "id", "style"],
+  ALLOW_DATA_ATTR: false,
+};
 
 const PrivacyPage: React.FC = () => {
   const router = useRouter();
+  const [content, setContent] = useState<string>("");
+  const [effectiveDate, setEffectiveDate] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [sanitizedContent, setSanitizedContent] = useState<string>("");
+
+  useEffect(() => {
+    const fetchPrivacy = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get<PrivacyResponse>(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content/privacy`
+        );
+        setContent(response.data.content);
+        setEffectiveDate(response.data.effective_date);
+      } catch (err) {
+        console.error("Failed to fetch privacy policy:", err);
+        setError("Failed to load Privacy Policy. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPrivacy();
+  }, []);
+
+  // Sanitize HTML content on client side only
+  useEffect(() => {
+    if (typeof window !== "undefined" && content) {
+      import("dompurify").then((DOMPurify) => {
+        const clean = DOMPurify.default.sanitize(content, DOMPURIFY_CONFIG);
+        setSanitizedContent(clean);
+      });
+    }
+  }, [content]);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
@@ -54,9 +109,11 @@ const PrivacyPage: React.FC = () => {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Mailria Privacy Policy
             </h2>
-            <p className="text-sm md:text-base text-gray-500 max-w-md mx-auto">
-              Effective Date: {privacyEffectiveDate}
-            </p>
+            {effectiveDate && (
+              <p className="text-sm md:text-base text-gray-500 max-w-md mx-auto">
+                Effective Date: {effectiveDate}
+              </p>
+            )}
           </div>
 
           {/* Privacy Content Card */}
@@ -66,64 +123,43 @@ const PrivacyPage: React.FC = () => {
               "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]"
             )}
           >
-            {/* Introduction */}
-            <div className="space-y-3 text-gray-600 text-sm leading-relaxed mb-8">
-              {privacyIntro.map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-red-500">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 text-blue-600 hover:underline"
+                >
+                  Try again
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Rendered HTML Content */}
+                <div
+                  className="prose prose-sm max-w-none text-gray-600 leading-relaxed
+                    prose-headings:text-gray-900 prose-headings:font-semibold
+                    prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
+                    prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
+                    prose-li:my-1 prose-a:text-blue-600 prose-a:hover:text-blue-700
+                    prose-strong:text-gray-900 prose-blockquote:border-l-blue-500
+                    prose-blockquote:bg-gray-50 prose-blockquote:py-1 prose-blockquote:px-4"
+                  dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                />
 
-            <div className="space-y-8">
-              {privacyData.map((section) => (
-                <section key={section.id} className="space-y-3">
-                  {/* Section Title */}
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {section.id}. {section.title}
-                  </h3>
-
-                  {/* Section Content */}
-                  <div className="space-y-2 text-gray-600 text-sm leading-relaxed">
-                    {section.content.map((paragraph, index) => {
-                      // Check if paragraph is a bullet point
-                      if (paragraph.startsWith("•")) {
-                        return (
-                          <p key={index} className="pl-4">
-                            {paragraph}
-                          </p>
-                        );
-                      }
-
-                      // Check if paragraph contains email link
-                      if (paragraph.includes("support@mailria.com")) {
-                        const parts = paragraph.split("support@mailria.com");
-                        return (
-                          <p key={index} className="pl-4">
-                            {parts[0]}
-                            <a
-                              href="mailto:support@mailria.com"
-                              className="text-blue-600 hover:text-blue-700 hover:underline"
-                            >
-                              support@mailria.com
-                            </a>
-                            {parts[1]}
-                          </p>
-                        );
-                      }
-
-                      return <p key={index}>{paragraph}</p>;
-                    })}
-                  </div>
-                </section>
-              ))}
-            </div>
-
-            {/* Footer Note */}
-            <div className="mt-10 pt-6 border-t border-gray-200">
-              <p className="text-xs text-gray-500 text-center">
-                By using Mailria, you acknowledge that you have read and
-                understood this Privacy Policy.
-              </p>
-            </div>
+                {/* Footer Note */}
+                <div className="mt-10 pt-6 border-t border-gray-200">
+                  <p className="text-xs text-gray-500 text-center">
+                    By using Mailria, you acknowledge that you have read and
+                    understood this Privacy Policy.
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

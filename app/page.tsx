@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ import PasswordInput from "@/components/PasswordInput";
 import FeatureList from "@/components/FeatureList";
 import { PageLayout, AuthCard, Footer } from "@/components/layout";
 import DOMPurify from "dompurify";
+import { LoginResponse } from "@/lib/api-types";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,45 +26,24 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
-  const { setToken, setEmail, setRoleId } = useAuthStore();
+  const { setAuth } = useAuthStore();
   const token = useAuthStore((state) => state.token);
+  const roleId = useAuthStore((state) => state.roleId);
 
   const router = useRouter();
   const { toast } = useToast();
 
-  // Check existing token and redirect if valid
+  // Redirect if already logged in
   useEffect(() => {
-    if (!token) return;
+    if (!token || roleId === null) return;
 
-    const checkToken = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const userData = response.data;
-        setEmail(userData.Email);
-        setRoleId(userData.RoleID);
-
-        // Redirect based on role
-        if (userData.RoleID === 0 || userData.RoleID === 2) {
-          router.push("/admin");
-        } else if (userData.RoleID === 1) {
-          router.push("/inbox");
-        }
-      } catch (error) {
-        setToken(null);
-        console.error("Token validation failed:", error);
-      }
-    };
-
-    checkToken();
-  }, [token, setEmail, setRoleId, router, setToken]);
+    // Redirect based on stored role
+    if (roleId === 0 || roleId === 2) {
+      router.push("/admin");
+    } else if (roleId === 1) {
+      router.push("/inbox");
+    }
+  }, [token, roleId, router]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,9 +53,13 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
+      const response = await axios.post<LoginResponse>(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
-        { email: loginEmail, password: password },
+        {
+          email: loginEmail,
+          password: password,
+          remember_me: rememberMe,
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -82,8 +67,23 @@ export default function LoginPage() {
         }
       );
 
-      const { token } = response.data;
-      setToken(token);
+      const { access_token, refresh_token, user } = response.data;
+
+      // Store all auth data
+      setAuth({
+        token: access_token,
+        refreshToken: refresh_token,
+        email: user.email,
+        roleId: user.role_id,
+        rememberMe: rememberMe,
+      });
+
+      // Redirect based on role
+      if (user.role_id === 0 || user.role_id === 2) {
+        router.push("/admin");
+      } else if (user.role_id === 1) {
+        router.push("/inbox");
+      }
     } catch (error) {
       let errorMessage = "Incorrect email or password. Please try again.";
       if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -96,14 +96,6 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleForgotPassword = () => {
-    // TODO: Implement forgot password flow
-    toast({
-      description: "Please contact support@mailria.com for password reset.",
-      variant: "default",
-    });
   };
 
   return (
@@ -187,13 +179,12 @@ export default function LoginPage() {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
-                <button
-                  type="button"
+                <Link
+                  href="/forgot-password"
                   className="text-xs text-blue-600 hover:text-blue-700 hover:underline transition-colors"
-                  onClick={handleForgotPassword}
                 >
                   Forgot password?
-                </button>
+                </Link>
               </div>
 
               {/* Submit Button */}
