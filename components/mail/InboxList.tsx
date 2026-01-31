@@ -15,6 +15,7 @@ interface InboxListProps {
   isRefreshing?: boolean;
   error?: string | null;
   className?: string;
+  fullWidth?: boolean;
 }
 
 const InboxList: React.FC<InboxListProps> = ({
@@ -26,12 +27,16 @@ const InboxList: React.FC<InboxListProps> = ({
   isRefreshing = false,
   error = null,
   className,
+  fullWidth = false,
 }) => {
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white border-r border-gray-200",
-        "w-full lg:w-[360px] xl:w-[420px]",
+        "flex flex-col h-full bg-white",
+        // On desktop: fixed width with border when not fullWidth, full width when fullWidth
+        fullWidth
+          ? "w-full"
+          : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
         className
       )}
     >
@@ -82,9 +87,9 @@ const InboxList: React.FC<InboxListProps> = ({
             </button>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div>
             {emails.map((email) => (
-              <MailRow
+              <InboxRow
                 key={email.email_encode_id}
                 email={email}
                 isSelected={selectedId === email.email_encode_id}
@@ -98,56 +103,70 @@ const InboxList: React.FC<InboxListProps> = ({
   );
 };
 
-// Individual mail row component
-interface MailRowProps {
+// Gmail-style inbox row component
+interface InboxRowProps {
   email: Mail;
   isSelected: boolean;
   onClick: () => void;
 }
 
-const MailRow: React.FC<MailRowProps> = ({ email, isSelected, onClick }) => {
+const InboxRow: React.FC<InboxRowProps> = ({ email, isSelected, onClick }) => {
+  const isUnread = email.unread;
+
   return (
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-3 transition-colors",
+        "w-full text-left px-4 py-4 transition-colors border-b border-gray-100",
         "hover:bg-gray-50 focus:outline-none focus:bg-gray-50",
-        isSelected && "bg-blue-50 hover:bg-blue-50",
-        email.unread && "bg-blue-50/50"
+        isSelected && "bg-blue-50 hover:bg-blue-100"
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Unread indicator */}
-        <div className="mt-2 flex-shrink-0">
-          {email.unread ? (
+        {/* Unread indicator dot */}
+        <div className="flex-shrink-0 pt-1.5">
+          {isUnread ? (
             <div className="w-2 h-2 rounded-full bg-blue-600" />
           ) : (
-            <div className="w-2 h-2" />
+            <div className="w-2 h-2" /> // Placeholder to maintain alignment
           )}
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
+          {/* Top row: Sender + Time */}
+          <div className="flex items-center justify-between gap-3">
             <span
               className={cn(
-                "text-sm truncate",
-                email.unread ? "font-semibold text-gray-900" : "font-medium text-gray-700"
+                "text-base truncate",
+                isUnread
+                  ? "font-semibold text-slate-900"
+                  : "font-medium text-slate-700"
               )}
             >
-              {email.from}
+              {email.from || "Unknown Sender"}
             </span>
-            <span className="text-xs text-gray-500 flex-shrink-0">{email.date}</span>
+            <span className="text-sm text-gray-500 whitespace-nowrap flex-shrink-0">
+              {email.date}
+            </span>
           </div>
+
+          {/* Subject line */}
           <p
             className={cn(
-              "text-sm truncate mt-0.5",
-              email.unread ? "font-medium text-gray-900" : "text-gray-700"
+              "text-sm truncate mt-1",
+              isUnread
+                ? "font-semibold text-slate-900"
+                : "font-medium text-slate-700"
             )}
           >
-            {email.subject}
+            {email.subject || "(No subject)"}
           </p>
-          <p className="text-sm text-gray-500 truncate mt-0.5">{email.snippet}</p>
+
+          {/* Snippet/Preview */}
+          <p className="text-sm text-gray-500 line-clamp-1 mt-1">
+            {email.snippet || "No preview available"}
+          </p>
         </div>
       </div>
     </button>

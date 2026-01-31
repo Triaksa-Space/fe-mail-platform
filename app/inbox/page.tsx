@@ -291,19 +291,6 @@ const InboxPageContent: React.FC = () => {
 
   // Render content based on view
   const renderContent = () => {
-    // Mobile: show preview if selected
-    if (showMobilePreview && selectedEmail) {
-      return (
-        <Preview
-          email={selectedEmail}
-          onBack={() => setShowMobilePreview(false)}
-          onReply={handleReply}
-          showBackButton={true}
-          className="lg:hidden"
-        />
-      );
-    }
-
     // Settings view
     if (currentView === "settings") {
       return (
@@ -322,22 +309,35 @@ const InboxPageContent: React.FC = () => {
       );
     }
 
-    // Inbox/Sent view
+    // Inbox view - handle both mobile and desktop
     return (
       <>
-        {/* Mobile: Inbox list only */}
-        <InboxList
-          emails={emails}
-          selectedId={selectedEmail?.email_encode_id || null}
-          onSelect={handleSelectEmail}
-          onRefresh={handleRefresh}
-          isLoading={isLoading}
-          isRefreshing={isRefreshing}
-          error={error}
-          className="lg:hidden flex-1"
-        />
+        {/* Mobile view */}
+        {showMobilePreview && selectedEmail ? (
+          // Mobile: show preview when email is selected
+          <Preview
+            email={selectedEmail}
+            onBack={() => setShowMobilePreview(false)}
+            onReply={handleReply}
+            showBackButton={true}
+            className="lg:hidden flex-1"
+          />
+        ) : (
+          // Mobile: show inbox list when no email is selected
+          <InboxList
+            emails={emails}
+            selectedId={selectedEmail?.email_encode_id || null}
+            onSelect={handleSelectEmail}
+            onRefresh={handleRefresh}
+            isLoading={isLoading}
+            isRefreshing={isRefreshing}
+            error={error}
+            fullWidth={true}
+            className="lg:hidden flex-1"
+          />
+        )}
 
-        {/* Desktop: Inbox list + Preview */}
+        {/* Desktop: Always show Inbox list + Preview side by side */}
         <div className="hidden lg:flex flex-1">
           <InboxList
             emails={emails}
@@ -347,12 +347,15 @@ const InboxPageContent: React.FC = () => {
             isLoading={isLoading}
             isRefreshing={isRefreshing}
             error={error}
+            fullWidth={!selectedEmail}
           />
-          <Preview
-            email={selectedEmail}
-            onReply={handleReply}
-            showBackButton={false}
-          />
+          {selectedEmail && (
+            <Preview
+              email={selectedEmail}
+              onReply={handleReply}
+              showBackButton={false}
+            />
+          )}
         </div>
       </>
     );
