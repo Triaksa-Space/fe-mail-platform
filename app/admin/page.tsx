@@ -4,16 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, Key, Trash, ZoomIn, ArrowUpDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowUpDown, Search } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -23,12 +15,13 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog";
-import FooterAdminNav from "@/components/FooterAdminNav";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from '@/components/PasswordInput';
 import LoadingProcessingPage from '@/components/ProcessLoading';
 import DOMPurify from 'dompurify';
+import { cn } from "@/lib/utils";
+import { AdminLayout, AdminContentCard, UserRowActionMenu } from "@/components/admin";
 
 interface EmailUser {
     user_encode_id: string;
@@ -313,180 +306,121 @@ const EmailManagementPageContent: React.FC = () => {
         }
     };
 
-    // Conditional rendering based on authLoaded and roleId
-    if (!authLoaded) {
-        return <div>Loading...</div>;
-    }
-
-    if (roleId === 1) {
-        return null;
-    }
+    // Render sort icon based on field and current sort state
+    const renderSortIcon = (field: SortField) => {
+        if (sortField === field && sortOrder === 'asc') {
+            return <ArrowUp className="ml-1 h-4 w-4" />;
+        } else if (sortField === field && sortOrder === 'desc') {
+            return <ArrowDown className="ml-1 h-4 w-4" />;
+        }
+        return <ArrowUpDown className="ml-1 h-4 w-4 text-gray-400" />;
+    };
 
     return (
-        <div className="p-6 space-y-2">
-            <div className="flex-1 overflow-auto pb-20">
-                <div className="flex justify-between items-center pt-2 pl-4 pr-4">
-                    <Input
-                        id="by_username"
-                        placeholder="by username"
-                        className="max-w-xs placeholder-gray"
-                        value={searchTerm}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            const sanitizedValue = DOMPurify.sanitize(value); // Sanitize
-                            handleSearch(sanitizedValue);
-                        }}
-                    />
-                    <Toaster />
-                </div>
+        <AdminLayout>
+            <AdminContentCard
+                title="User List"
+                headerRight={
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Input
+                            id="by_username"
+                            placeholder="Search by username..."
+                            className="pl-9 w-full sm:w-64 bg-gray-50 border-gray-200 focus:bg-white"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                const sanitizedValue = DOMPurify.sanitize(value);
+                                handleSearch(sanitizedValue);
+                            }}
+                        />
+                    </div>
+                }
+            >
+                <Toaster />
 
-                <div className="overflow-x-auto p-4">
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="bg-gray-400 hover:bg-gray-400">
-                                <TableHead className="text-center text-black font-bold" style={{ width: '150px' }}>Name</TableHead>
-                                <TableHead className="text-center text-black font-bold" style={{ width: '100px' }}>
-                                    <Button
-                                        variant="ghost"
+                {/* Modern Table */}
+                <div className="overflow-x-auto -mx-4 md:-mx-6">
+                    <table className="w-full min-w-[700px]">
+                        <thead>
+                            <tr className="border-b border-gray-100">
+                                <th className="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    User
+                                </th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    <button
                                         onClick={() => toggleSort('last_login')}
-                                        className="font-bold text-black hover:bg-gray-500"
+                                        className="flex items-center hover:text-gray-900 transition-colors"
                                     >
                                         Last Active
-                                        {sortField === 'last_login' && sortOrder === 'asc' ? (
-                                            <ArrowUp className="ml-2 h-4 w-4" />
-                                        ) : sortField === 'last_login' && sortOrder === 'desc' ? (
-                                            <ArrowDown className="ml-2 h-4 w-4" />
-                                        ) : (
-                                            <>
-                                                <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
-                                            </>
-                                        )}
-                                    </Button>
-                                </TableHead>
-                                <TableHead className="text-center text-black font-bold" style={{ width: '100px' }}>
-                                    <Button
-                                        variant="ghost"
+                                        {renderSortIcon('last_login')}
+                                    </button>
+                                </th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    <button
                                         onClick={() => toggleSort('created_at')}
-                                        className="font-bold text-black hover:bg-gray-500"
+                                        className="flex items-center hover:text-gray-900 transition-colors"
                                     >
                                         Created
-                                        {sortField === 'created_at' && sortOrder === 'asc' ? (
-                                            <ArrowUp className="ml-2 h-4 w-4" />
-                                        ) : sortField === 'created_at' && sortOrder === 'desc' ? (
-                                            <ArrowDown className="ml-2 h-4 w-4" />
-                                        ) : (
-                                            <>
-                                                <ArrowUpDown className="ml-2 h-4 w-4 text-gray-500" />
-                                            </>
-                                        )}
-                                    </Button>
-                                </TableHead>
-                                <TableHead className="text-center text-black font-bold" style={{ width: '150px' }}>Created By Admin</TableHead>
-                                <TableHead className="text-center text-black font-bold" style={{ width: '300px' }}>Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {users.map((user) => (
-                                <TableRow key={user.email}>
-                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.email}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.lastActive}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center" style={{ width: '100px' }}>{user.created}</TableCell>
-                                    <TableCell className="px-2 py-1 text-center" style={{ width: '150px' }}>{user.createdByName}</TableCell>
-                                    <TableCell className="px-2 py-1 space-x-2 text-center" style={{ width: '300px' }}>
-                                        <Button variant="secondary" className="shadow appearance-non bg-yellow-100 hover:bg-yellow-200 text-yellow-800" onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}>
-                                            <ZoomIn className="w-4 h-4 mr-2" />
-                                            View
-                                        </Button>
-                                        <Button
-                                            variant="secondary"
-                                            className="shadow appearance-non bg-blue-100 hover:bg-blue-200 text-blue-800"
-                                            onClick={() => handleChangePasswordClick(user)}
-                                        >
-                                            <Key className="w-4 h-4 mr-2" />
-                                            Change Password
-                                        </Button>
-                                        <Button
-                                            variant="destructive"
-                                            className="shadow appearance-non bg-white border border-red-500 text-red-500 hover:bg-red-100"
-                                            onClick={() => handleDeleteClick(user)}
-                                        >
-                                            <Trash className="w-4 h-4 mr-2" />
-                                            Delete
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-
-                    <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Change Password for {selectedAdmin?.email}</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                                <PasswordInput
-                                    id="password"
-                                    placeholder="New Password"
-                                    value={passwordForAdmin}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
-                                        setPasswordForAdmin(sanitizedValue);
-                                    }}
-                                    showPassword={showPassword}
-                                    setShowPassword={setShowPassword}
-                                />
-                                <PasswordInput
-                                    id="confirm_password"
-                                    placeholder="Confirm Password"
-                                    value={confirmPasswordForAdmin}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
-                                        setConfirmPasswordForAdmin(sanitizedValue);
-                                    }}
-                                    showPassword={showCPassword}
-                                    setShowPassword={setShowCPassword}
-                                />
-                            </div>
-                            <DialogFooter>
-                                <Button className="shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100" variant="secondary" onClick={() => {
-                                    setIsChangePasswordDialogOpen(false);
-                                    setPasswordForAdmin("");
-                                    setConfirmPasswordForAdmin("");
-                                    setSelectedAdmin(null);
-                                }}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="default"
-                                    className={`w-1/2  font-bold shadow appearance-non w-1/2 text-black ${!passwordForAdmin || !confirmPasswordForAdmin
-                                        ? "bg-gray-300 cursor-not-allowed"
-                                        : "bg-[#ffeeac] hover:bg-yellow-300"
-                                        }`}
-                                    disabled={!passwordForAdmin || !confirmPasswordForAdmin}
-                                    onClick={handleChangePasswordSubmit}>
-                                    Submit
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                    <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Delete Confirmation</DialogTitle>
-                            </DialogHeader>
-                            <p>Are you sure you want to delete user {selectedUser?.email}?</p>
-                            <DialogFooter>
-                                <Button className='shadow appearance-non w-1/2 bg-white border border-yellow-500 text-yellow-500 hover:bg-yellow-100' variant="secondary" onClick={() => setIsDialogDeleteOpen(false)}>Cancel</Button>
-                                <Button variant="destructive" className='shadow appearance-non w-1/2' onClick={handleDeleteConfirm}>Confirm</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                                        {renderSortIcon('created_at')}
+                                    </button>
+                                </th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Created By
+                                </th>
+                                <th className="px-4 md:px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-50">
+                            {users.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="px-4 md:px-6 py-12 text-center text-gray-500">
+                                        {isLoading ? "Loading users..." : "No users found"}
+                                    </td>
+                                </tr>
+                            ) : (
+                                users.map((user) => (
+                                    <tr
+                                        key={user.email}
+                                        className="hover:bg-gray-50/50 transition-colors"
+                                    >
+                                        <td className="px-4 md:px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-medium text-sm">
+                                                    {user.email.charAt(0).toUpperCase()}
+                                                </div>
+                                                <span className="font-medium text-gray-900">{user.email}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-4 text-sm text-gray-600">
+                                            {user.lastActive}
+                                        </td>
+                                        <td className="px-4 py-4 text-sm text-gray-600">
+                                            {user.created}
+                                        </td>
+                                        <td className="px-4 py-4">
+                                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                                                {user.createdByName || "System"}
+                                            </span>
+                                        </td>
+                                        <td className="px-4 md:px-6 py-4 text-right">
+                                            <UserRowActionMenu
+                                                onView={() => router.push(`/admin/user/${user.user_encode_id}`)}
+                                                onChangePassword={() => handleChangePasswordClick(user)}
+                                                onDelete={() => handleDeleteClick(user)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div className='overflow-x-auto p-4'>
+                {/* Pagination */}
+                <div className="mt-6 border-t border-gray-100 pt-4">
                     <PaginationComponent
                         totalPages={totalPages}
                         currentPage={currentPage}
@@ -496,13 +430,102 @@ const EmailManagementPageContent: React.FC = () => {
                         pageSize={pageSize}
                     />
                 </div>
-            </div>
-            {isLoading && (
-                <LoadingProcessingPage />
-            )}
 
-            <FooterAdminNav />
-        </div>
+                {/* Change Password Dialog - Unchanged */}
+                <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Change Password</DialogTitle>
+                        </DialogHeader>
+                        <p className="text-sm text-gray-500 mb-4">
+                            Update password for <span className="font-medium text-gray-900">{selectedAdmin?.email}</span>
+                        </p>
+                        <div className="space-y-4">
+                            <PasswordInput
+                                id="password"
+                                placeholder="New Password"
+                                value={passwordForAdmin}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                    setPasswordForAdmin(sanitizedValue);
+                                }}
+                                showPassword={showPassword}
+                                setShowPassword={setShowPassword}
+                            />
+                            <PasswordInput
+                                id="confirm_password"
+                                placeholder="Confirm Password"
+                                value={confirmPasswordForAdmin}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                    setConfirmPasswordForAdmin(sanitizedValue);
+                                }}
+                                showPassword={showCPassword}
+                                setShowPassword={setShowCPassword}
+                            />
+                        </div>
+                        <DialogFooter className="mt-6">
+                            <Button
+                                variant="outline"
+                                className="flex-1"
+                                onClick={() => {
+                                    setIsChangePasswordDialogOpen(false);
+                                    setPasswordForAdmin("");
+                                    setConfirmPasswordForAdmin("");
+                                    setSelectedAdmin(null);
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                className={cn(
+                                    "flex-1 font-medium",
+                                    !passwordForAdmin || !confirmPasswordForAdmin
+                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                        : "bg-blue-600 hover:bg-blue-700 text-white"
+                                )}
+                                disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                onClick={handleChangePasswordSubmit}
+                            >
+                                Update Password
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Delete Confirmation Dialog - Unchanged */}
+                <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Delete User</DialogTitle>
+                        </DialogHeader>
+                        <p className="text-gray-600">
+                            Are you sure you want to delete <span className="font-medium text-gray-900">{selectedUser?.email}</span>? This action cannot be undone.
+                        </p>
+                        <DialogFooter className="mt-6">
+                            <Button
+                                variant="outline"
+                                className="flex-1"
+                                onClick={() => setIsDialogDeleteOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                className="flex-1"
+                                onClick={handleDeleteConfirm}
+                            >
+                                Delete User
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </AdminContentCard>
+
+            {isLoading && <LoadingProcessingPage />}
+        </AdminLayout>
     );
 };
 
