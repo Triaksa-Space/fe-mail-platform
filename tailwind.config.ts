@@ -22,7 +22,17 @@ export default {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+  				50: 'var(--primary-50)',
+  				100: 'var(--primary-100)',
+  				200: 'var(--primary-200)',
+  				300: 'var(--primary-300)',
+  				400: 'var(--primary-400)',
+  				500: 'var(--primary-500)',
+  				600: 'var(--primary-600)',
+  				700: 'var(--primary-700)',
+  				800: 'var(--primary-800)',
+  				900: 'var(--primary-900)',
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -39,6 +49,33 @@ export default {
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			neutral: {
+  				50: 'var(--neutral-50)',
+  				100: 'var(--neutral-100)',
+  				200: 'var(--neutral-200)',
+  				300: 'var(--neutral-300)',
+  				400: 'var(--neutral-400)',
+  				500: 'var(--neutral-500)',
+  				600: 'var(--neutral-600)',
+  				700: 'var(--neutral-700)',
+  				800: 'var(--neutral-800)',
+  				900: 'var(--neutral-900)',
+  			},
+  			success: {
+  				50: 'var(--success-50)',
+  				500: 'var(--success-500)',
+  				600: 'var(--success-600)',
+  			},
+  			error: {
+  				50: 'var(--error-50)',
+  				500: 'var(--error-500)',
+  				600: 'var(--error-600)',
+  			},
+  			warning: {
+  				50: 'var(--warning-50)',
+  				500: 'var(--warning-500)',
+  				600: 'var(--warning-600)',
   			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
