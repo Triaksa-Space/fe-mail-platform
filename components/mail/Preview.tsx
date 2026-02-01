@@ -134,7 +134,7 @@ const Preview: React.FC<PreviewProps> = ({
               variant="ghost"
               size="icon"
               onClick={onBack}
-              className="h-9 w-9 rounded-xl hover:bg-gray-100 lg:hidden"
+              className="h-9 w-9 rounded-xl hover:bg-gray-100"
             >
               <ArrowLeft className="h-5 w-5 text-gray-600" />
             </Button>

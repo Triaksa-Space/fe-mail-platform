@@ -45,7 +45,6 @@ const InboxPageContent: React.FC = () => {
   const [authLoaded, setAuthLoaded] = useState(false);
   const [currentView, setCurrentView] = useState<ViewType>("inbox");
   const [selectedEmail, setSelectedEmail] = useState<Mail | null>(null);
-  const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
 
   // Data state
@@ -99,7 +98,6 @@ const InboxPageContent: React.FC = () => {
 
     if (emailToSelect) {
       setSelectedEmail(emailToSelect);
-      setShowMobilePreview(true);
       router.replace("/inbox");
     }
   }, [authLoaded, emailParam, emails, router]);
@@ -247,7 +245,6 @@ const InboxPageContent: React.FC = () => {
   // Handlers
   const handleSelectEmail = (email: Mail) => {
     setSelectedEmail(email);
-    setShowMobilePreview(true);
   };
 
   const handleViewChange = (view: ViewType) => {
@@ -255,7 +252,6 @@ const InboxPageContent: React.FC = () => {
     if (view === "compose") {
       setIsComposeOpen(true);
     } else {
-      setShowMobilePreview(false);
       setSelectedEmail(null);
     }
   };
@@ -298,55 +294,34 @@ const InboxPageContent: React.FC = () => {
       );
     }
 
-    // Inbox view - handle both mobile and desktop
-    return (
-      <>
-        {/* Mobile view */}
-        {showMobilePreview && selectedEmail ? (
-          // Mobile: show preview when email is selected
-          <Preview
-            email={selectedEmail}
-            onBack={() => setShowMobilePreview(false)}
-            onReply={handleReply}
-            showBackButton={true}
-            className="lg:hidden flex-1"
-          />
-        ) : (
-          // Mobile: show inbox list when no email is selected
-          <InboxList
-            emails={emails}
-            selectedId={selectedEmail?.email_encode_id || null}
-            onSelect={handleSelectEmail}
-            onRefresh={handleRefresh}
-            isLoading={isLoading}
-            isRefreshing={isRefreshing}
-            error={error}
-            fullWidth={true}
-            className="lg:hidden flex-1"
-          />
-        )}
+    // Inbox view - show one view at a time (full width)
+    // When email is selected, show preview full width
+    // When no email selected, show inbox list full width
+    if (selectedEmail) {
+      return (
+        <Preview
+          email={selectedEmail}
+          onBack={() => setSelectedEmail(null)}
+          onReply={handleReply}
+          showBackButton={true}
+          className="flex-1"
+        />
+      );
+    }
 
-        {/* Desktop: Always show Inbox list + Preview side by side */}
-        <div className="hidden lg:flex flex-1">
-          <InboxList
-            emails={emails}
-            selectedId={selectedEmail?.email_encode_id || null}
-            onSelect={handleSelectEmail}
-            onRefresh={handleRefresh}
-            isLoading={isLoading}
-            isRefreshing={isRefreshing}
-            error={error}
-            fullWidth={!selectedEmail}
-          />
-          {selectedEmail && (
-            <Preview
-              email={selectedEmail}
-              onReply={handleReply}
-              showBackButton={false}
-            />
-          )}
-        </div>
-      </>
+    // No email selected - show full width inbox list
+    return (
+      <InboxList
+        emails={emails}
+        selectedId={null}
+        onSelect={handleSelectEmail}
+        onRefresh={handleRefresh}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        fullWidth={true}
+        className="flex-1"
+      />
     );
   };
 
