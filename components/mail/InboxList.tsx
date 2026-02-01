@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
+import { InboxListSkeleton } from "./InboxListSkeleton";
+import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 
 interface InboxListProps {
   emails: Mail[];
@@ -29,19 +31,37 @@ const InboxList: React.FC<InboxListProps> = ({
   className,
   fullWidth = false,
 }) => {
+  // Use minimum loading time to prevent skeleton flicker
+  const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
+    minimumDuration: 300,
+  });
+
+  // Show full skeleton during initial load
+  if (shouldShowLoading) {
+    return (
+      <InboxListSkeleton
+        rowCount={8}
+        showHeader={true}
+        fullWidth={fullWidth}
+        className={className}
+      />
+    );
+  }
+
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white",
+        "flex flex-col h-full bg-white relative",
         // On desktop: fixed width with border when not fullWidth, full width when fullWidth
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
         className
       )}
+      aria-busy={isRefreshing}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 relative z-20 bg-white">
         <h2 className="text-lg font-semibold text-gray-900">Inbox</h2>
         <Button
           variant="outline"
@@ -56,35 +76,54 @@ const InboxList: React.FC<InboxListProps> = ({
         </Button>
       </div>
 
-      {/* Refreshing indicator */}
-      {isRefreshing && (
-        <div className="px-4 py-2 bg-blue-50 border-b border-blue-100">
-          <p className="text-xs text-blue-600 text-center">Refreshing...</p>
+      {/* Subtle refreshing indicator - stale-while-revalidate pattern */}
+      {isRefreshing && emails.length > 0 && (
+        <div className="px-4 py-2 bg-blue-50/80 border-b border-blue-100">
+          <div className="flex items-center justify-center gap-2">
+            <RefreshCw className="h-3 w-3 animate-spin text-blue-600" />
+            <span className="text-xs text-blue-600">Refreshing...</span>
+          </div>
         </div>
       )}
 
-      {/* Email List */}
-      <div className="flex-1 overflow-y-auto">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-32">
-            <div className="flex items-center gap-2 text-gray-500">
-              <RefreshCw className="h-4 w-4 animate-spin" />
-              <span className="text-sm">Loading emails...</span>
-            </div>
-          </div>
-        ) : error ? (
-          <div className="flex items-center justify-center h-32 px-4">
-            <p className="text-sm text-red-600 text-center">{error}</p>
+      {/* Email List with fade-in transition */}
+      <div
+        className={cn(
+          "flex-1 overflow-y-auto relative",
+          // Fade-in animation when transitioning from loading
+          isTransitioning && "animate-fade-in"
+        )}
+      >
+        {error ? (
+          <div className="flex flex-col items-center justify-center h-32 px-4">
+            <p className="text-sm text-red-600 text-center mb-2">{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRefresh}
+              className="text-sm"
+            >
+              <RefreshCw className="h-3 w-3 mr-1.5" />
+              Try again
+            </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-32 px-4">
-            <p className="text-sm text-gray-500 text-center">No emails found</p>
-            <button
+          <div className="flex flex-col items-center justify-center h-48 px-4">
+            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+              <RefreshCw className="h-5 w-5 text-gray-400" />
+            </div>
+            <p className="text-sm font-medium text-gray-900 mb-1">No emails found</p>
+            <p className="text-xs text-gray-500 text-center mb-3">
+              Your inbox is empty or no emails match your filter
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={onRefresh}
-              className="mt-2 text-sm text-blue-600 hover:underline"
+              className="text-sm"
             >
               Refresh
-            </button>
+            </Button>
           </div>
         ) : (
           <div>

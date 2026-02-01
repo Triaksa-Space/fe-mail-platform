@@ -92,7 +92,21 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+  		keyframes: {
+  			'fade-in': {
+  				'0%': { opacity: '0' },
+  				'100%': { opacity: '1' },
+  			},
+  			'fade-in-up': {
+  				'0%': { opacity: '0', transform: 'translateY(10px)' },
+  				'100%': { opacity: '1', transform: 'translateY(0)' },
+  			},
+  		},
+  		animation: {
+  			'fade-in': 'fade-in 200ms ease-out',
+  			'fade-in-up': 'fade-in-up 200ms ease-out',
+  		},
   	}
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

@@ -17,12 +17,54 @@ import {
   Mail,
   ViewType,
   transformEmailToMail,
+  InboxListSkeleton,
 } from "@/components/mail";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Loading fallback
+// Loading fallback with proper skeleton layout
 const LoadingFallback: React.FC = () => (
-  <div className="flex items-center justify-center h-screen bg-[#F9FAFB]">
-    <div className="text-gray-500">Loading...</div>
+  <div className="h-screen bg-[#F9FAFB] flex overflow-hidden">
+    {/* Sidebar skeleton - desktop only */}
+    <div className="hidden lg:flex w-64 flex-col bg-white border-r border-gray-200 p-4">
+      {/* Logo area */}
+      <Skeleton className="h-8 w-24 mb-6" />
+      {/* Compose button */}
+      <Skeleton className="h-10 w-full rounded-xl mb-4" />
+      {/* Nav items */}
+      <div className="space-y-2">
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+        <Skeleton className="h-10 w-full rounded-lg" />
+      </div>
+      {/* User info at bottom */}
+      <div className="mt-auto">
+        <Skeleton className="h-10 w-full rounded-lg" />
+      </div>
+    </div>
+
+    {/* Main content area */}
+    <main className="flex-1 flex flex-col min-w-0">
+      {/* Mobile header skeleton */}
+      <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-4 w-16" />
+      </header>
+
+      {/* Inbox list skeleton */}
+      <div className="flex-1 flex overflow-hidden pb-20 lg:pb-0">
+        <InboxListSkeleton rowCount={8} showHeader={true} fullWidth={true} />
+      </div>
+    </main>
+
+    {/* Mobile bottom tabs skeleton */}
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
+      <div className="flex justify-around">
+        <Skeleton className="h-10 w-16 rounded-lg" />
+        <Skeleton className="h-10 w-16 rounded-lg" />
+        <Skeleton className="h-10 w-16 rounded-lg" />
+        <Skeleton className="h-10 w-16 rounded-lg" />
+      </div>
+    </div>
   </div>
 );
 
