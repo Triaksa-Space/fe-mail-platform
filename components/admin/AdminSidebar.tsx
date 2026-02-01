@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuthStore, PermissionKey } from "@/stores/useAuthStore";
 import {
   LayoutDashboard,
   Users,
@@ -24,7 +24,8 @@ interface MenuItem {
   label: string;
   icon: React.ElementType;
   href: string;
-  roles?: number[]; // 0 = SuperAdmin, 2 = Admin
+  permission?: PermissionKey; // Required permission to see this menu item
+  superAdminOnly?: boolean;   // Only SuperAdmin can see (e.g., roles_permissions)
 }
 
 interface MenuGroup {
@@ -32,39 +33,95 @@ interface MenuGroup {
   items: MenuItem[];
 }
 
+// Menu configuration with permission mapping
 const menuGroups: MenuGroup[] = [
   {
     title: "Dashboard",
     items: [
-      { id: "overview", label: "Overview", icon: LayoutDashboard, href: "/admin/overview" },
+      {
+        id: "overview",
+        label: "Overview",
+        icon: LayoutDashboard,
+        href: "/admin/overview",
+        permission: "overview",
+      },
     ],
   },
   {
     title: "User Management",
     items: [
-      { id: "users", label: "User list", icon: Users, href: "/admin" },
-      { id: "create-single", label: "Create single", icon: UserPlus, href: "/admin/create-single-email" },
-      { id: "create-bulk", label: "Create bulk", icon: UsersRound, href: "/admin/create-bulk-email" },
+      {
+        id: "users",
+        label: "User list",
+        icon: Users,
+        href: "/admin",
+        permission: "user_list",
+      },
+      {
+        id: "create-single",
+        label: "Create single",
+        icon: UserPlus,
+        href: "/admin/create-single-email",
+        permission: "create_single",
+      },
+      {
+        id: "create-bulk",
+        label: "Create bulk",
+        icon: UsersRound,
+        href: "/admin/create-bulk-email",
+        permission: "create_bulk",
+      },
     ],
   },
   {
     title: "Email Analytics",
     items: [
-      { id: "all-inbox", label: "All inbox", icon: Inbox, href: "/admin/manage-email", roles: [0] },
-      { id: "all-sent", label: "All sent", icon: Send, href: "/admin/all-sent", roles: [0] },
+      {
+        id: "all-inbox",
+        label: "All inbox",
+        icon: Inbox,
+        href: "/admin/manage-email",
+        permission: "all_inbox",
+      },
+      {
+        id: "all-sent",
+        label: "All sent",
+        icon: Send,
+        href: "/admin/all-sent",
+        permission: "all_sent",
+      },
     ],
   },
   {
     title: "Legal & Policies",
     items: [
-      { id: "terms", label: "Terms of services", icon: FileText, href: "/admin/terms", roles: [0] },
-      { id: "privacy", label: "Privacy policy", icon: Shield, href: "/admin/privacy", roles: [0] },
+      {
+        id: "terms",
+        label: "Terms of services",
+        icon: FileText,
+        href: "/admin/terms",
+        permission: "terms_of_services",
+      },
+      {
+        id: "privacy",
+        label: "Privacy policy",
+        icon: Shield,
+        href: "/admin/privacy",
+        permission: "privacy_policy",
+      },
     ],
   },
   {
     title: "Admin Management",
     items: [
-      { id: "roles", label: "Roles & permissions", icon: Lock, href: "/admin/roles", roles: [0] },
+      {
+        id: "roles",
+        label: "Roles & permissions",
+        icon: Lock,
+        href: "/admin/roles",
+        permission: "roles_permissions",
+        superAdminOnly: true, // Only SuperAdmin can access
+      },
     ],
   },
 ];
@@ -72,7 +129,7 @@ const menuGroups: MenuGroup[] = [
 const AdminSidebar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { roleId, email, logout } = useAuthStore();
+  const { roleId, email, permissions, logout, _hasHydrated } = useAuthStore();
 
   const isActive = (href: string) => {
     if (href === "/admin") {
@@ -81,8 +138,20 @@ const AdminSidebar: React.FC = () => {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  // Check permission - SuperAdmin (roleId=0) has all permissions
+  const checkPermission = (permission: PermissionKey): boolean => {
+    // SuperAdmin bypasses all permission checks
+    if (roleId === 0) return true;
+    // Check if permission exists in array
+    return permissions.includes(permission);
+  };
+
   const handleNavigation = (item: MenuItem) => {
-    if (item.roles && (roleId === null || !item.roles.includes(roleId))) {
+    // Check permission before navigation
+    if (item.superAdminOnly && roleId !== 0) {
+      return;
+    }
+    if (item.permission && !checkPermission(item.permission)) {
       return;
     }
     router.push(item.href);
@@ -93,13 +162,34 @@ const AdminSidebar: React.FC = () => {
     router.push("/");
   };
 
-  // Filter menu groups based on role
+  // Filter menu groups based on permissions
+  // If not hydrated yet or roleId is null, show all menus for SuperAdmin/Admin
   const filteredGroups = menuGroups
     .map((group) => ({
       ...group,
-      items: group.items.filter(
-        (item) => !item.roles || (roleId !== null && item.roles.includes(roleId))
-      ),
+      items: group.items.filter((item) => {
+        // If store hasn't hydrated yet, show all non-superAdmin items
+        if (!_hasHydrated || roleId === null) {
+          return !item.superAdminOnly;
+        }
+
+        // SuperAdmin-only items
+        if (item.superAdminOnly && roleId !== 0) {
+          return false;
+        }
+
+        // SuperAdmin sees everything
+        if (roleId === 0) {
+          return true;
+        }
+
+        // Check permission for regular admins
+        if (item.permission) {
+          return checkPermission(item.permission);
+        }
+
+        return true;
+      }),
     }))
     .filter((group) => group.items.length > 0);
 

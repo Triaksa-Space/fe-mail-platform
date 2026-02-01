@@ -17,6 +17,7 @@ export interface LoginResponse {
     id: string;
     email: string;
     role_id: number;
+    permissions?: string[];
   };
 }
 

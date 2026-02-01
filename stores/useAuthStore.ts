@@ -1,22 +1,39 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+// Permission keys that match backend
+export type PermissionKey =
+  | 'overview'
+  | 'user_list'
+  | 'create_single'
+  | 'create_bulk'
+  | 'all_inbox'
+  | 'all_sent'
+  | 'terms_of_services'
+  | 'privacy_policy'
+  | 'roles_permissions';
+
 interface AuthState {
   token: string | null;
   refreshToken: string | null;
   email: string | null;
   roleId: number | null;
+  permissions: string[];
   rememberMe: boolean;
+  _hasHydrated: boolean;
   setToken: (token: string | null) => void;
   setRefreshToken: (refreshToken: string | null) => void;
   setEmail: (email: string | null) => void;
   setRoleId: (roleId: number | null) => void;
+  setPermissions: (permissions: string[]) => void;
   setRememberMe: (rememberMe: boolean) => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
   setAuth: (data: {
     token: string;
     refreshToken: string;
     email: string;
     roleId: number;
+    permissions?: string[];
     rememberMe: boolean;
   }) => void;
   logout: () => void;
@@ -24,27 +41,34 @@ interface AuthState {
   getStoredRefreshToken: () => string | null;
   getStoredEmail: () => string | null;
   getStoredRoleID: () => number | null;
+  getStoredPermissions: () => string[];
+  hasPermission: (permission: PermissionKey) => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
       refreshToken: null,
       email: null,
       roleId: null,
+      permissions: [],
       rememberMe: true,
+      _hasHydrated: false,
       setToken: (token) => set({ token }),
       setRefreshToken: (refreshToken) => set({ refreshToken }),
       setEmail: (email) => set({ email }),
       setRoleId: (roleId) => set({ roleId }),
+      setPermissions: (permissions) => set({ permissions }),
       setRememberMe: (rememberMe) => set({ rememberMe }),
+      setHasHydrated: (hasHydrated) => set({ _hasHydrated: hasHydrated }),
       setAuth: (data) =>
         set({
           token: data.token,
           refreshToken: data.refreshToken,
           email: data.email,
           roleId: data.roleId,
+          permissions: data.permissions || [],
           rememberMe: data.rememberMe,
         }),
       logout: () => {
@@ -54,6 +78,7 @@ export const useAuthStore = create<AuthState>()(
           refreshToken: null,
           email: null,
           roleId: null,
+          permissions: [],
           rememberMe: true,
         });
 
@@ -117,6 +142,28 @@ export const useAuthStore = create<AuthState>()(
           return null;
         }
       },
+      getStoredPermissions: () => {
+        if (typeof window === "undefined") return [];
+
+        const stored = window.localStorage.getItem("auth-storage");
+        if (!stored) return [];
+
+        try {
+          const parsed = JSON.parse(stored);
+          return parsed.state?.permissions || [];
+        } catch {
+          return [];
+        }
+      },
+      // Check if user has a specific permission
+      // SuperAdmin (roleId=0) always has all permissions
+      hasPermission: (permission: PermissionKey) => {
+        const state = get();
+        // SuperAdmin bypasses all permission checks
+        if (state.roleId === 0) return true;
+        // Check if permission exists in array
+        return state.permissions.includes(permission);
+      },
     }),
     {
       name: "auth-storage",
@@ -135,8 +182,12 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
         email: state.email,
         roleId: state.roleId,
+        permissions: state.permissions,
         rememberMe: state.rememberMe,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

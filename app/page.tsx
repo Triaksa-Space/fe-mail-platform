@@ -69,12 +69,32 @@ export default function LoginPage() {
 
       const { access_token, refresh_token, user } = response.data;
 
-      // Store all auth data
+      // Fetch user details to get permissions (for admin users)
+      let permissions: string[] = user.permissions || [];
+      if (user.role_id === 0 || user.role_id === 2) {
+        try {
+          const userMeResponse = await axios.get<{ permissions: string[] }>(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+              },
+            }
+          );
+          permissions = userMeResponse.data.permissions || [];
+        } catch {
+          // If fetching permissions fails, continue with empty permissions
+          console.error("Failed to fetch user permissions");
+        }
+      }
+
+      // Store all auth data including permissions
       setAuth({
         token: access_token,
         refreshToken: refresh_token,
         email: user.email,
         roleId: user.role_id,
+        permissions: permissions,
         rememberMe: rememberMe,
       });
 
