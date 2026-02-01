@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense, useState, useEffect, useRef, useCallback } from "react";
-import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Email } from "@/types/email";
@@ -153,12 +153,7 @@ const InboxPageContent: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/sent/by_user`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await apiClient.get("/email/sent/by_user");
 
       if (response.data) {
         setSentCount(response.data.SentEmails);
@@ -179,13 +174,7 @@ const InboxPageContent: React.FC = () => {
       isRequestInProgressRef.current = true;
 
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            signal,
-          }
-        );
+        const response = await apiClient.get("/email/by_user", { signal });
 
         const transformedEmails = response.data.map((email: Email) =>
           transformEmailToMail(email)

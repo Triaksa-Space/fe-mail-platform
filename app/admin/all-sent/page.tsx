@@ -10,7 +10,7 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
-  Inbox,
+  Send,
   Download,
   X,
 } from "lucide-react";
@@ -24,7 +24,7 @@ interface AdminEmail extends Email {
   UserEmail?: string;
 }
 
-interface AdminInboxResponse {
+interface AdminSentResponse {
   emails: AdminEmail[];
   total: number;
   page: number;
@@ -41,9 +41,10 @@ interface EmailDetail {
   BodyEml: string;
   RelativeTime: string;
   ListAttachments: { Filename: string; URL: string }[];
+  Recipients?: string[];
 }
 
-export default function AdminAllInboxPage() {
+export default function AdminAllSentPage() {
   const token = useAuthStore((state) => state.token);
 
   // Data state
@@ -97,16 +98,16 @@ export default function AdminAllInboxPage() {
         params.append("search", debouncedSearch);
       }
 
-      const response = await apiClient.get<AdminInboxResponse>(
-        `/admin/inbox?${params.toString()}`
+      const response = await apiClient.get<AdminSentResponse>(
+        `/admin/sent?${params.toString()}`
       );
 
       setEmails(response.data.emails || []);
       setTotal(response.data.total || 0);
       setError(null);
     } catch (err) {
-      console.error("Failed to fetch emails:", err);
-      setError("Failed to load emails");
+      console.error("Failed to fetch sent emails:", err);
+      setError("Failed to load sent emails");
       setEmails([]);
     } finally {
       setIsLoading(false);
@@ -131,7 +132,7 @@ export default function AdminAllInboxPage() {
       setIsLoadingDetail(true);
       try {
         const response = await apiClient.get<EmailDetail>(
-          `/admin/inbox/${selectedEmail.email_encode_id}`
+          `/admin/sent/${selectedEmail.email_encode_id}`
         );
         setEmailDetail(response.data);
       } catch (err) {
@@ -168,9 +169,9 @@ export default function AdminAllInboxPage() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">All inbox</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">All sent</h1>
             <p className="mt-1 text-sm text-gray-500">
-              View all incoming emails across all users
+              View all sent emails across all users
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -224,15 +225,15 @@ export default function AdminAllInboxPage() {
                 </div>
               ) : emails.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-32 px-4">
-                  <Inbox className="h-8 w-8 text-gray-300 mb-2" />
+                  <Send className="h-8 w-8 text-gray-300 mb-2" />
                   <p className="text-sm text-gray-500 text-center">
-                    {debouncedSearch ? "No emails found" : "No emails yet"}
+                    {debouncedSearch ? "No emails found" : "No sent emails yet"}
                   </p>
                 </div>
               ) : (
                 <div>
                   {emails.map((email) => (
-                    <AdminInboxRow
+                    <AdminSentRow
                       key={email.email_encode_id}
                       email={email}
                       isSelected={selectedEmail?.email_encode_id === email.email_encode_id}
@@ -309,8 +310,8 @@ export default function AdminAllInboxPage() {
                         {/* Email Meta */}
                         <div className="space-y-3">
                           <div className="flex items-start gap-3">
-                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                              <span className="text-sm font-semibold text-blue-600">
+                            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                              <span className="text-sm font-semibold text-green-600">
                                 {selectedEmail.SenderName?.charAt(0)?.toUpperCase() || "?"}
                               </span>
                             </div>
@@ -319,7 +320,7 @@ export default function AdminAllInboxPage() {
                                 {selectedEmail.SenderName || "Unknown"}
                               </p>
                               <p className="text-sm text-gray-500 truncate">
-                                {selectedEmail.SenderEmail}
+                                {selectedEmail.SenderEmail || selectedEmail.UserEmail}
                               </p>
                             </div>
                             <p className="text-xs text-gray-400">
@@ -331,7 +332,7 @@ export default function AdminAllInboxPage() {
                           <div className="bg-gray-50 rounded-lg px-3 py-2">
                             <p className="text-xs text-gray-500">
                               <span className="font-medium">To:</span>{" "}
-                              {selectedEmail.Recipient || selectedEmail.UserEmail || "Unknown"}
+                              {selectedEmail.Recipient || "Unknown"}
                             </p>
                           </div>
                         </div>
@@ -430,7 +431,7 @@ export default function AdminAllInboxPage() {
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
                   <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                    <Inbox className="w-8 h-8 text-gray-400" />
+                    <Send className="w-8 h-8 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900">
                     Select an email
@@ -448,20 +449,18 @@ export default function AdminAllInboxPage() {
   );
 }
 
-// Admin inbox row component
-interface AdminInboxRowProps {
+// Admin sent row component
+interface AdminSentRowProps {
   email: AdminEmail;
   isSelected: boolean;
   onClick: () => void;
 }
 
-const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
+const AdminSentRow: React.FC<AdminSentRowProps> = ({
   email,
   isSelected,
   onClick,
 }) => {
-  const isUnread = !email.IsRead;
-
   return (
     <button
       onClick={onClick}
@@ -472,44 +471,30 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Unread indicator */}
+        {/* Sent indicator icon */}
         <div className="flex-shrink-0 pt-1.5">
-          {isUnread ? (
-            <div className="w-2 h-2 rounded-full bg-blue-600" />
-          ) : (
-            <div className="w-2 h-2" />
-          )}
+          <Send className="w-3 h-3 text-green-500" />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {/* Top row: Sender + Time */}
+          {/* Top row: Sender (User) + Time */}
           <div className="flex items-center justify-between gap-3">
-            <span
-              className={cn(
-                "text-sm truncate",
-                isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-700"
-              )}
-            >
-              {email.SenderName || email.SenderEmail || "Unknown"}
+            <span className="text-sm font-medium text-gray-700 truncate">
+              From: {email.SenderEmail || email.UserEmail || "Unknown"}
             </span>
             <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
               {email.RelativeTime}
             </span>
           </div>
 
-          {/* Recipient (admin view) */}
+          {/* Recipient */}
           <p className="text-xs text-gray-400 truncate mt-0.5">
-            To: {email.Recipient || email.UserEmail || "Unknown"}
+            To: {email.Recipient || "Unknown"}
           </p>
 
           {/* Subject */}
-          <p
-            className={cn(
-              "text-sm truncate mt-1",
-              isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-700"
-            )}
-          >
+          <p className="text-sm font-medium text-gray-700 truncate mt-1">
             {email.Subject || "(No subject)"}
           </p>
 

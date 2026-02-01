@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import axios from "axios"
+import { apiClient } from "@/lib/api-client"
 import {
   Select,
   SelectContent,
@@ -30,14 +30,7 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
         if (!token) {
           return;
         }
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/domain/dropdown`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        const response = await apiClient.get("/domain/dropdown")
         setDomains(response.data)
         // Set default domain if no value is provided
         if (!value && response.data.length > 0) {

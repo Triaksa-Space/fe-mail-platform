@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 
@@ -84,14 +85,7 @@ const AdminPrivacyPageContent: React.FC = () => {
 
       try {
         setIsLoading(true);
-        const response = await axios.get<PrivacyResponse>(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content/privacy`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await apiClient.get<PrivacyResponse>("/content/privacy");
         setContent(response.data.content || "");
         setEffectiveDate(response.data.effective_date || "");
       } catch (err) {
@@ -126,19 +120,10 @@ const AdminPrivacyPageContent: React.FC = () => {
 
     try {
       setIsSaving(true);
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/content/privacy`,
-        {
-          content: content,
-          effective_date: effectiveDate,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.put("/admin/content/privacy", {
+        content: content,
+        effective_date: effectiveDate,
+      });
 
       toast({
         description: "Privacy Policy updated successfully.",

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mail, EmailDetail } from "./types";
-import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -78,16 +78,13 @@ const Preview: React.FC<PreviewProps> = ({
 
     setIsDownloading(true);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/download/file`,
+      const response = await apiClient.post(
+        "/email/by_user/download/file",
         {
           email_id: email.email_encode_id,
           file_url: url,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           responseType: "blob",
         }
       );

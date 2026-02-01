@@ -6,6 +6,7 @@ import { X, Paperclip, Send, Loader2, Mail, AtSign } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
 
@@ -129,16 +130,9 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const cleanupAttachments = useCallback(async () => {
     if (attachments.length > 0) {
       try {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
-          { url: attachments.map((att) => att.url) },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await apiClient.post("/email/delete-attachment", {
+          url: attachments.map((att) => att.url),
+        });
       } catch (error) {
         console.error("Failed to clean up attachments:", error);
       }
@@ -196,21 +190,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     setIsSending(true);
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send/resend`,
-        {
-          to,
-          subject,
-          body: message,
-          attachments: attachments.map((att) => att.url),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/send/resend", {
+        to,
+        subject,
+        body: message,
+        attachments: attachments.map((att) => att.url),
+      });
 
       toast({
         description: "Email sent successfully!",
@@ -270,16 +255,11 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       formData.append("attachment", file);
 
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/upload/attachment`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await apiClient.post("/email/upload/attachment", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         setAttachments((prev) => [
           ...prev,
@@ -301,16 +281,9 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     const attachment = attachments[index];
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
-        { url: [attachment.url] },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/delete-attachment", {
+        url: [attachment.url],
+      });
 
       setAttachments((prev) => prev.filter((_, i) => i !== index));
     } catch {

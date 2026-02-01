@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
@@ -53,14 +54,7 @@ const Send: React.FC = () => {
   const fetchEmailDetail = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiClient.get(`/email/by_user/detail/${emailId}`);
 
       if (response.status === 200) {
         const data = response.data;
@@ -129,17 +123,7 @@ const Send: React.FC = () => {
         attachments: attachments.map(att => att.url),
       };
 
-      await axios.post(
-        // `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send/url_attachment`,
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send/resend`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/send/resend", payload);
 
       toast({
         description: "Email sent successfully!",
@@ -198,26 +182,21 @@ const Send: React.FC = () => {
         formData.append('attachment', file);
 
         try {
-          const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/upload/attachment`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
-              },
-              onUploadProgress: (progressEvent) => {
-                const percentCompleted = Math.round(
-                  (progressEvent.loaded * 100) / (progressEvent.total || 1)
-                );
-                setUploading(prevUploading =>
-                  prevUploading.map(upload =>
-                    upload.id === fileId ? { ...upload, progress: percentCompleted } : upload
-                  )
-                );
-              },
-            }
-          );
+          const response = await apiClient.post("/email/upload/attachment", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / (progressEvent.total || 1)
+              );
+              setUploading(prevUploading =>
+                prevUploading.map(upload =>
+                  upload.id === fileId ? { ...upload, progress: percentCompleted } : upload
+                )
+              );
+            },
+          });
 
           const fileUrl = response.data.url;
 
@@ -247,16 +226,9 @@ const Send: React.FC = () => {
     const attachmentToRemove = attachments[index];
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
-        { url: [attachmentToRemove.url] },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/delete-attachment", {
+        url: [attachmentToRemove.url],
+      });
 
       setAttachments(attachments.filter((_, i) => i !== index));
     } catch (error) {
@@ -275,16 +247,7 @@ const Send: React.FC = () => {
   const handleCancel = async () => {
     try {
       const urls = attachments.map(att => att.url);
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
-        { url: urls },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/delete-attachment", { url: urls });
 
       setAttachments([]);
     } catch (error) {

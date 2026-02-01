@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
 import axios from 'axios'
+import { apiClient } from "@/lib/api-client"
 import DomainSelector from "@/components/DomainSelector"
 import LoadingProcessingPage from "@/components/ProcessLoading"
 import { useRouter } from "next/navigation"
@@ -26,7 +27,6 @@ const CreateBulkEmailPageContent: React.FC = () => {
   const [baseName, setBaseName] = useState("")
   const { toast } = useToast()
   const router = useRouter();
-  const token = useAuthStore((state) => state.token)
   const roleId = useAuthStore((state) => state.roleId);
   const storedToken = useAuthStore.getState().getStoredToken();
 
@@ -138,22 +138,13 @@ const CreateBulkEmailPageContent: React.FC = () => {
     }
     setIsLoading(true)
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/bulk`,
-        {
-          base_name: baseName || "random",
-          quantity: count,
-          password: password,
-          send_to: receiveEmail,
-          domain: selectedDomain
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      await apiClient.post("/user/bulk", {
+        base_name: baseName || "random",
+        quantity: count,
+        password: password,
+        send_to: receiveEmail,
+        domain: selectedDomain
+      })
       toast({
         description: `Successfully created ${count} accounts.`,
         variant: "default",

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 
 interface SettingsPanelProps {
@@ -31,7 +32,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const { toast } = useToast();
-  const token = useAuthStore((state) => state.token);
   const email = useAuthStore((state) => state.email);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,19 +51,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     setIsLoading(true);
 
     try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
-        {
-          old_password: currentPassword,
-          new_password: newPassword,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await apiClient.put("/user/change_password", {
+        old_password: currentPassword,
+        new_password: newPassword,
+      });
 
       toast({
         description: "Password updated successfully!",

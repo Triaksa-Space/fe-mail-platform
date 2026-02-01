@@ -4,6 +4,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import DomainSelector from "@/components/DomainSelector";
@@ -26,7 +27,6 @@ interface CreatedEmail {
 
 const CreateSingleEmailPageContent: React.FC = () => {
   const router = useRouter();
-  const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
   const storedToken = useAuthStore.getState().getStoredToken();
   const { toast } = useToast();
@@ -136,19 +136,10 @@ const CreateSingleEmailPageContent: React.FC = () => {
       setIsLoading(true);
 
       // API call to create the user
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
-        {
-          email: `${username}@${selectedDomain}`,
-          password: password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await apiClient.post("/user/", {
+        email: `${username}@${selectedDomain}`,
+        password: password,
+      });
 
       // Store created email info for result card
       setCreatedEmail({

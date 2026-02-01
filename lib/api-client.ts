@@ -1,4 +1,5 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -55,6 +56,8 @@ const getRefreshToken = (): string | null => {
 
 const setTokens = (accessToken: string, refreshToken: string) => {
   if (typeof window === "undefined") return;
+
+  // Update localStorage directly for persistence
   const stored = localStorage.getItem("auth-storage");
   if (stored) {
     try {
@@ -65,6 +68,10 @@ const setTokens = (accessToken: string, refreshToken: string) => {
         refreshToken: refreshToken,
       };
       localStorage.setItem("auth-storage", JSON.stringify(parsed));
+
+      // Also update Zustand store state to keep it in sync
+      useAuthStore.getState().setToken(accessToken);
+      useAuthStore.getState().setRefreshToken(refreshToken);
     } catch {
       // Handle error silently
     }
@@ -73,8 +80,8 @@ const setTokens = (accessToken: string, refreshToken: string) => {
 
 const clearTokens = () => {
   if (typeof window === "undefined") return;
-  localStorage.removeItem("auth-storage");
-  sessionStorage.removeItem("auth-storage");
+  // Use Zustand's logout which handles both state and storage
+  useAuthStore.getState().logout();
 };
 
 // Request interceptor - add auth header

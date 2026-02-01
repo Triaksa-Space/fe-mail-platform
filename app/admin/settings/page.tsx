@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
+import { apiClient } from "@/lib/api-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, ArrowUp, ArrowDown, Plus, Key, Trash, UserCircle, Lock, Eye, EyeOff } from 'lucide-react';
@@ -43,7 +44,6 @@ type SortOrder = 'asc' | 'desc' | '';
 // For roleId === 2 (Admin)
 // ============================================
 const AdminSelfChangePassword: React.FC = () => {
-    const token = useAuthStore((state) => state.token);
     const { toast } = useToast();
 
     const [oldPassword, setOldPassword] = useState("");
@@ -78,19 +78,11 @@ const AdminSelfChangePassword: React.FC = () => {
 
         try {
             setIsLoading(true);
-            await axios.put(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
-                {
-                    new_password: newPassword,
-                    old_password: oldPassword,
-                    user_id: 0 // 0 indicates self
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await apiClient.put("/user/change_password/admin", {
+                new_password: newPassword,
+                old_password: oldPassword,
+                user_id: 0 // 0 indicates self
+            });
 
             toast({
                 description: "Password changed successfully.",
@@ -276,10 +268,7 @@ const SuperAdminSettings: React.FC = () => {
             if (!token) return;
             const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const response = await apiClient.get("/user/admin", {
                 params: {
                     sort_fields: sortFieldsString,
                 }
@@ -351,19 +340,11 @@ const SuperAdminSettings: React.FC = () => {
         }
 
         try {
-            await axios.put(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
-                {
-                    new_password: passwordForAdmin,
-                    old_password: oldPasswordForAdmin,
-                    user_id: selectedSuperAdmin.id
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await apiClient.put("/user/change_password/admin", {
+                new_password: passwordForAdmin,
+                old_password: oldPasswordForAdmin,
+                user_id: selectedSuperAdmin.id
+            });
 
             toast({
                 description: "Your password changed successfully.",
@@ -413,19 +394,11 @@ const SuperAdminSettings: React.FC = () => {
         }
 
         try {
-            await axios.put(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password/admin`,
-                {
-                    new_password: passwordForAdmin,
-                    old_password: oldPasswordForAdmin,
-                    user_id: selectedAdmin.id
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await apiClient.put("/user/change_password/admin", {
+                new_password: passwordForAdmin,
+                old_password: oldPasswordForAdmin,
+                user_id: selectedAdmin.id
+            });
 
             toast({
                 description: "Password changed successfully.",
@@ -461,11 +434,7 @@ const SuperAdminSettings: React.FC = () => {
         if (!selectedUser) return;
 
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin/${selectedUser.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await apiClient.delete(`/user/admin/${selectedUser.id}`);
 
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
             setIsDialogDeleteOpen(false);
@@ -507,19 +476,10 @@ const SuperAdminSettings: React.FC = () => {
         }
 
         try {
-            await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/admin`,
-                {
-                    username: newAdminEmail,
-                    password: newAdminPassword,
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await apiClient.post("/user/admin", {
+                username: newAdminEmail,
+                password: newAdminPassword,
+            });
 
             toast({
                 description: newAdminEmail + " admin has been successfully created!",

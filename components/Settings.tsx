@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import axios from 'axios';
+import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,8 +14,6 @@ import DOMPurify from 'dompurify';
 
 const Settings: React.FC = () => {
   const router = useRouter();
-  const token = useAuthStore((state) => state.token);
-  // const roleId = useAuthStore((state) => state.roleId);
 
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
@@ -62,19 +61,10 @@ const Settings: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
-        {
-          old_password: currentPassword,
-          new_password: newPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      await apiClient.put("/user/change_password", {
+        old_password: currentPassword,
+        new_password: newPassword,
+      });
 
       // Reset form
       setCurrentPassword('');

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
+import { apiClient } from "@/lib/api-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PaginationComponent from "@/components/PaginationComponent";
@@ -145,19 +146,11 @@ const EmailManagementPageContent: React.FC = () => {
 
         try {
             setIsLoading(true);
-            await axios.put(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
-                {
-                    new_password: passwordForAdmin,
-                    old_password: "",
-                    user_id: selectedAdmin.id,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await apiClient.put("/user/change_password", {
+                new_password: passwordForAdmin,
+                old_password: "",
+                user_id: selectedAdmin.id,
+            });
 
             toast({
                 description: "Password changed successfully.",
@@ -193,14 +186,7 @@ const EmailManagementPageContent: React.FC = () => {
         if (!selectedUser) return;
 
         try {
-            await axios.delete(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${selectedUser.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await apiClient.delete(`/user/${selectedUser.id}`);
 
             // Remove the deleted user from the state
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== selectedUser.id));
@@ -241,10 +227,7 @@ const EmailManagementPageContent: React.FC = () => {
             setIsLoading(true);
             const sortFieldsString = sortField ? `${sortField} ${sortOrder}` : '';
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const response = await apiClient.get("/user/", {
                 params: {
                     page: currentPage,
                     page_size: pageSize,
