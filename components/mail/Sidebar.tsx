@@ -1,23 +1,20 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   Inbox,
   Send,
   Settings,
   LogOut,
-  PenSquare,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ViewType } from "./types";
 
 interface SidebarProps {
   currentView: ViewType;
   onViewChange: (view: ViewType) => void;
-  onCompose: () => void;
   onLogout: () => void;
-  userEmail?: string;
   sentCount?: number;
   className?: string;
 }
@@ -25,9 +22,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({
   currentView,
   onViewChange,
-  onCompose,
   onLogout,
-  userEmail,
   sentCount = 0,
   className,
 }) => {
@@ -45,26 +40,20 @@ const Sidebar: React.FC<SidebarProps> = ({
         className
       )}
     >
-      {/* User Email Header */}
-      <div className="p-4 border-b border-gray-200">
-        <p className="text-sm font-medium text-gray-900 truncate">
-          {userEmail || "user@mailria.com"}
-        </p>
-      </div>
-
-      {/* Compose Button */}
-      <div className="p-4">
-        <Button
-          onClick={onCompose}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl h-11 font-medium shadow-sm"
-        >
-          <PenSquare className="w-4 h-4 mr-2" />
-          Compose
-        </Button>
+      {/* Logo */}
+      <div className="flex items-center gap-2 px-4 py-4 border-b border-gray-200">
+        <Image
+          src="/mailria.png"
+          alt="Mailria"
+          width={140}
+          height={36}
+          className="h-9 w-auto"
+          priority
+        />
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 space-y-1">
+      <nav className="flex-1 px-3 pt-3 space-y-1">
         {navItems.map((item) => {
           const isActive = currentView === item.id;
           return (

@@ -8,7 +8,6 @@ import { ViewType } from "./types";
 interface BottomTabsProps {
   currentView: ViewType;
   onViewChange: (view: ViewType) => void;
-  onCompose: () => void;
   onLogout: () => void;
   className?: string;
 }
@@ -16,7 +15,6 @@ interface BottomTabsProps {
 const BottomTabs: React.FC<BottomTabsProps> = ({
   currentView,
   onViewChange,
-  onCompose,
   onLogout,
   className,
 }) => {
@@ -48,16 +46,18 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           <span className="text-xs mt-1 font-medium">Inbox</span>
         </button>
 
-        {/* Send tab - opens compose modal */}
+        {/* Sent tab */}
         <button
-          onClick={onCompose}
+          onClick={() => onViewChange("sent")}
           className={cn(
             "flex flex-col items-center justify-center py-2 px-4 rounded-lg transition-colors",
-            "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            currentView === "sent"
+              ? "bg-blue-50 text-blue-600"
+              : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
           )}
         >
           <Send className="w-5 h-5" />
-          <span className="text-xs mt-1 font-medium">Send</span>
+          <span className="text-xs mt-1 font-medium">Sent</span>
         </button>
 
         {/* Settings tab */}

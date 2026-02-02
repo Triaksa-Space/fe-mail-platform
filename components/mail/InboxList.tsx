@@ -18,6 +18,8 @@ interface InboxListProps {
   error?: string | null;
   className?: string;
   fullWidth?: boolean;
+  userEmail?: string;
+  sentCount?: number;
 }
 
 const InboxList: React.FC<InboxListProps> = ({
@@ -30,6 +32,8 @@ const InboxList: React.FC<InboxListProps> = ({
   error = null,
   className,
   fullWidth = false,
+  userEmail,
+  sentCount = 0,
 }) => {
   // Use minimum loading time to prevent skeleton flicker
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
@@ -62,18 +66,37 @@ const InboxList: React.FC<InboxListProps> = ({
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 relative z-20 bg-white">
-        <h2 className="text-lg font-semibold text-gray-900">Inbox</h2>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onRefresh}
-          disabled={isRefreshing}
-          className="h-9 w-9 rounded-xl border-gray-200 hover:bg-gray-50"
-        >
-          <RefreshCw
-            className={cn("h-4 w-4 text-gray-600", isRefreshing && "animate-spin")}
-          />
-        </Button>
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-gray-900">Inbox</h2>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            className="h-8 w-8 rounded-lg border-gray-200 hover:bg-gray-50"
+          >
+            <RefreshCw
+              className={cn("h-4 w-4 text-gray-600", isRefreshing && "animate-spin")}
+            />
+          </Button>
+        </div>
+        {userEmail && (
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-500">
+              Daily: {sentCount}/3
+            </span>
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100">
+                <span className="text-xs font-semibold text-blue-600">
+                  {userEmail.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-gray-700 truncate max-w-[150px] hidden sm:block">
+                {userEmail}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Subtle refreshing indicator - stale-while-revalidate pattern */}

@@ -469,11 +469,14 @@ const InboxPageContent: React.FC = () => {
           selectedId={null}
           onSelect={handleSelectSentEmail}
           onRefresh={handleSentRefresh}
+          onCompose={handleCompose}
           isLoading={isSentLoading}
           isRefreshing={isSentRefreshing}
           error={sentError}
           fullWidth={true}
           className="flex-1"
+          userEmail={userEmail}
+          sentCount={sentCount}
         />
       );
     }
@@ -505,6 +508,8 @@ const InboxPageContent: React.FC = () => {
         error={error}
         fullWidth={true}
         className="flex-1"
+        userEmail={userEmail}
+        sentCount={sentCount}
       />
     );
   };
@@ -515,25 +520,13 @@ const InboxPageContent: React.FC = () => {
       <Sidebar
         currentView={currentView}
         onViewChange={handleViewChange}
-        onCompose={handleCompose}
         onLogout={handleLogout}
-        userEmail={userEmail}
         sentCount={sentCount}
         className="hidden lg:flex"
       />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header */}
-        <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
-          <h1 className="text-sm font-medium text-gray-900 truncate">
-            {userEmail}
-          </h1>
-          <span className="text-xs text-gray-500">
-            Daily: {sentCount}/3
-          </span>
-        </header>
-
         {/* Content Area */}
         <div className="flex-1 flex overflow-hidden pb-20 lg:pb-0">
           {renderContent()}
@@ -544,7 +537,6 @@ const InboxPageContent: React.FC = () => {
       <BottomTabs
         currentView={currentView}
         onViewChange={handleViewChange}
-        onCompose={handleCompose}
         onLogout={handleLogout}
       />
 

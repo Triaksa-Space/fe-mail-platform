@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { RefreshCw, Send, Paperclip } from "lucide-react";
+import { RefreshCw, Send, Paperclip, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
@@ -13,11 +13,14 @@ interface SentListProps {
   selectedId: string | null;
   onSelect: (email: SentMail) => void;
   onRefresh: () => void;
+  onCompose?: () => void;
   isLoading?: boolean;
   isRefreshing?: boolean;
   error?: string | null;
   className?: string;
   fullWidth?: boolean;
+  userEmail?: string;
+  sentCount?: number;
 }
 
 const SentList: React.FC<SentListProps> = ({
@@ -25,11 +28,14 @@ const SentList: React.FC<SentListProps> = ({
   selectedId,
   onSelect,
   onRefresh,
+  onCompose,
   isLoading = false,
   isRefreshing = false,
   error = null,
   className,
   fullWidth = false,
+  userEmail,
+  sentCount = 0,
 }) => {
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
@@ -59,18 +65,47 @@ const SentList: React.FC<SentListProps> = ({
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 relative z-20 bg-white">
-        <h2 className="text-lg font-semibold text-gray-900">Sent</h2>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onRefresh}
-          disabled={isRefreshing}
-          className="h-9 w-9 rounded-xl border-gray-200 hover:bg-gray-50"
-        >
-          <RefreshCw
-            className={cn("h-4 w-4 text-gray-600", isRefreshing && "animate-spin")}
-          />
-        </Button>
+        <div className="flex items-center gap-2">
+          {onCompose && (
+            <Button
+              onClick={onCompose}
+              size="sm"
+              className="h-9 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Plus className="h-4 w-4 mr-1.5" />
+              Compose
+            </Button>
+          )}
+          <h2 className="text-lg font-semibold text-gray-900">Sent</h2>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            className="h-8 w-8 rounded-lg border-gray-200 hover:bg-gray-50"
+          >
+            <RefreshCw
+              className={cn("h-4 w-4 text-gray-600", isRefreshing && "animate-spin")}
+            />
+          </Button>
+        </div>
+        {userEmail && (
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-500">
+              Daily: {sentCount}/3
+            </span>
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100">
+                <span className="text-xs font-semibold text-blue-600">
+                  {userEmail.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-gray-700 truncate max-w-[150px] hidden sm:block">
+                {userEmail}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Refreshing indicator */}
