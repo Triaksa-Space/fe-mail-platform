@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import AdminSidebar from "./AdminSidebar";
@@ -13,14 +13,10 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);
-  const [authLoaded, setAuthLoaded] = useState(false);
+  const _hasHydrated = useAuthStore((state) => state._hasHydrated);
 
   useEffect(() => {
-    setAuthLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!authLoaded) return;
+    if (!_hasHydrated) return;
 
     const storedToken = useAuthStore.getState().getStoredToken();
     if (!storedToken) {
@@ -32,9 +28,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     if (roleId === 1) {
       router.replace("/not-found");
     }
-  }, [authLoaded, roleId, router]);
+  }, [_hasHydrated, roleId, router]);
 
-  if (!authLoaded) {
+  // Only show loading on initial hydration, not on page navigation
+  if (!_hasHydrated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F9FAFB]">
         <div className="text-gray-500">Loading...</div>

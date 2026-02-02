@@ -69,30 +69,8 @@ const EmailManagementPageContent: React.FC = () => {
     const router = useRouter();
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
-    const [isLoading, setIsLoading] = useState(false)
-
-    // New state to manage auth loading
-    const [authLoaded, setAuthLoaded] = useState(false);
-
-    useEffect(() => {
-        // Wait for the auth store to load and set the state
-        setAuthLoaded(true);
-    }, []);
-
-    // Use effect for redirection logic
-    useEffect(() => {
-        if (!authLoaded) return;
-
-        const storedToken = useAuthStore.getState().getStoredToken();
-        if (!storedToken) {
-            router.replace("/");
-            return;
-        }
-
-        if (roleId === 1) {
-            router.replace("/not-found");
-        }
-    }, [authLoaded, roleId, router]);
+    const _hasHydrated = useAuthStore((state) => state._hasHydrated);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { toast } = useToast();
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
@@ -264,14 +242,14 @@ const EmailManagementPageContent: React.FC = () => {
     };
 
     useEffect(() => {
-        if (!authLoaded || roleId === 1) return;
+        if (!_hasHydrated || roleId === 1) return;
 
         const timeoutId = setTimeout(() => {
             fetchUsers();
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [authLoaded, token, currentPage, pageSize, searchTerm, sortField, sortOrder, roleId]);
+    }, [_hasHydrated, token, currentPage, pageSize, searchTerm, sortField, sortOrder, roleId]);
 
     const toggleSort = (field: SortField) => {
         if (sortField === field) {

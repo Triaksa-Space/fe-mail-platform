@@ -46,10 +46,12 @@ export default function UserDetailPage() {
   const params = useParams();
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);
+  const _hasHydrated = useAuthStore((state) => state._hasHydrated);
   const storedToken = useAuthStore.getState().getStoredToken();
 
   // User details state
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   // Inbox state
   const [inboxEmails, setInboxEmails] = useState<UserEmail[]>([]);
@@ -61,19 +63,12 @@ export default function UserDetailPage() {
   const [isLoadingSent, setIsLoadingSent] = useState(true);
   const [isRefreshingSent, setIsRefreshingSent] = useState(false);
 
-  // Auth state
-  const [authLoaded, setAuthLoaded] = useState(false);
-
   // Refs for cleanup
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Auth check
+  // Auth check - redirect if not authenticated
   useEffect(() => {
-    setAuthLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!authLoaded) return;
+    if (!_hasHydrated) return;
 
     if (!storedToken) {
       router.replace("/");
@@ -83,17 +78,20 @@ export default function UserDetailPage() {
     if (roleId === 1) {
       router.replace("/not-found");
     }
-  }, [authLoaded, storedToken, roleId, router]);
+  }, [_hasHydrated, storedToken, roleId, router]);
 
   // Fetch user details
   const fetchUserDetails = useCallback(async () => {
     if (!storedToken) return;
 
     try {
+      setIsLoadingUser(true);
       const response = await apiClient.get(`/user/${params.id}`);
       setUserDetails(response.data);
     } catch (err) {
       console.error("Failed to fetch user details:", err);
+    } finally {
+      setIsLoadingUser(false);
     }
   }, [params.id, storedToken]);
 
@@ -145,7 +143,7 @@ export default function UserDetailPage() {
 
   // Initial fetch
   useEffect(() => {
-    if (!authLoaded || !storedToken || roleId === 1) return;
+    if (!_hasHydrated || !storedToken || roleId === 1) return;
 
     abortControllerRef.current = new AbortController();
 
@@ -156,7 +154,7 @@ export default function UserDetailPage() {
     return () => {
       abortControllerRef.current?.abort();
     };
-  }, [authLoaded, storedToken, roleId, fetchUserDetails, fetchInboxEmails, fetchSentEmails]);
+  }, [_hasHydrated, storedToken, roleId, fetchUserDetails, fetchInboxEmails, fetchSentEmails]);
 
   // Handle refresh
   const handleRefreshInbox = () => {
@@ -180,12 +178,9 @@ export default function UserDetailPage() {
     return new Date(dateString).toLocaleString();
   };
 
-  if (!authLoaded || roleId === 1) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
-      </div>
-    );
+  // Don't render content if user is not admin
+  if (roleId === 1) {
+    return null;
   }
 
   return (
@@ -208,9 +203,13 @@ export default function UserDetailPage() {
                 <User className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-semibold text-gray-900">
-                  {userDetails?.Email || "Loading..."}
-                </h1>
+                {isLoadingUser ? (
+                  <div className="h-7 w-48 bg-gray-200 rounded animate-pulse" />
+                ) : (
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    {userDetails?.Email || "Unknown User"}
+                  </h1>
+                )}
                 <p className="text-sm text-gray-500">User email details</p>
               </div>
             </div>
@@ -218,8 +217,23 @@ export default function UserDetailPage() {
         </div>
 
         {/* User Info Card */}
-        {userDetails && (
-          <AdminContentCard className="p-4">
+        <AdminContentCard className="p-4">
+          {isLoadingUser ? (
+            <div className="flex flex-wrap gap-6">
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
+                <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
+                <div className="h-4 w-36 bg-gray-200 rounded animate-pulse" />
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
+                <div className="h-4 w-32 bg-gray-200 rounded animate-pulse" />
+              </div>
+            </div>
+          ) : userDetails ? (
             <div className="flex flex-wrap gap-6">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Mail className="h-4 w-4 text-gray-400" />
@@ -244,8 +258,10 @@ export default function UserDetailPage() {
                 </div>
               )}
             </div>
-          </AdminContentCard>
-        )}
+          ) : (
+            <p className="text-sm text-gray-500">Failed to load user details</p>
+          )}
+        </AdminContentCard>
 
         {/* Email Lists - Side by Side */}
         <div className="flex-1 flex gap-5 min-h-0">
