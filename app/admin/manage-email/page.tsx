@@ -8,7 +8,6 @@ import {
   RefreshCw,
   Search,
   ChevronLeft,
-  ChevronRight,
   Inbox,
   Download,
   Paperclip,
@@ -17,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
+import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 
 // API response interfaces (snake_case from backend)
@@ -33,11 +33,16 @@ interface ApiEmail {
   received_at: string;
 }
 
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
 interface AdminInboxResponse {
   data: ApiEmail[];
-  total: number;
-  page: number;
-  page_size: number;
+  pagination: PaginationInfo;
 }
 
 interface EmailDetail {
@@ -76,7 +81,7 @@ export default function AdminAllInboxPage() {
   const [emails, setEmails] = useState<ApiEmail[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(20);
+  const [pageSize] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -114,23 +119,30 @@ export default function AdminAllInboxPage() {
     if (!token) return;
 
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        page_size: pageSize.toString(),
-      });
-
-      if (debouncedSearch) {
-        params.append("search", debouncedSearch);
-      }
-
       const response = await apiClient.get<AdminInboxResponse>(
-        `/admin/inbox?${params.toString()}`
+        `/admin/inbox`,
+        {
+          params: {
+            page,
+            limit: pageSize,
+            ...(debouncedSearch && { search: debouncedSearch }),
+          },
+        }
       );
 
-      // Handle both possible response structures
-      const emailData = response.data.data || [];
-      setEmails(emailData);
-      setTotal(response.data.total || 0);
+      const data = response.data;
+
+      // Handle response with pagination object
+      if (data && Array.isArray(data.data)) {
+        setEmails(data.data);
+        setTotal(data.pagination?.total || data.data.length);
+      } else if (Array.isArray(data)) {
+        setEmails(data);
+        setTotal(data.length);
+      } else {
+        setEmails([]);
+        setTotal(0);
+      }
       setError(null);
     } catch (err) {
       console.error("Failed to fetch emails:", err);
@@ -431,31 +443,16 @@ export default function AdminAllInboxPage() {
               </div>
 
               {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-                  <p className="text-sm text-gray-500">
-                    Page {page} of {totalPages}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                      className="h-8 px-3 rounded-lg"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={page === totalPages}
-                      className="h-8 px-3 rounded-lg"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+              {totalPages > 0 && (
+                <div className="border-t border-gray-100 pt-4 px-4 pb-4">
+                  <PaginationComponent
+                    totalPages={totalPages}
+                    currentPage={page}
+                    onPageChange={setPage}
+                    totalCount={total}
+                    activeCount={total}
+                    pageSize={pageSize}
+                  />
                 </div>
               )}
             </AdminContentCard>

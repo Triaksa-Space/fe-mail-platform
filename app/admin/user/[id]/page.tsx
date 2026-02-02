@@ -14,6 +14,8 @@ import {
   User,
   Calendar,
   Clock,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -51,14 +53,21 @@ interface SentEmail {
   created_at?: string;
 }
 
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  total_pages: number;
+}
+
+interface InboxEmailsResponse {
+  data: InboxEmail[];
+  pagination: PaginationInfo;
+}
+
 interface SentEmailsResponse {
   data: SentEmail[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    total_pages: number;
-  };
+  pagination: PaginationInfo;
 }
 
 interface UserDetails {
@@ -101,11 +110,19 @@ export default function UserDetailPage() {
   const [inboxEmails, setInboxEmails] = useState<InboxEmail[]>([]);
   const [isLoadingInbox, setIsLoadingInbox] = useState(true);
   const [isRefreshingInbox, setIsRefreshingInbox] = useState(false);
+  const [inboxPage, setInboxPage] = useState(1);
+  const [inboxTotalPages, setInboxTotalPages] = useState(1);
+  const [inboxTotal, setInboxTotal] = useState(0);
+  const inboxPageSize = 10;
 
   // Sent state
   const [sentEmails, setSentEmails] = useState<SentEmail[]>([]);
   const [isLoadingSent, setIsLoadingSent] = useState(true);
   const [isRefreshingSent, setIsRefreshingSent] = useState(false);
+  const [sentPage, setSentPage] = useState(1);
+  const [sentTotalPages, setSentTotalPages] = useState(1);
+  const [sentTotal, setSentTotal] = useState(0);
+  const sentPageSize = 10;
 
   // Refs for cleanup
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -141,49 +158,94 @@ export default function UserDetailPage() {
 
   // Fetch inbox emails
   const fetchInboxEmails = useCallback(
-    async (signal?: AbortSignal) => {
+    async (page: number = 1, signal?: AbortSignal) => {
       if (!storedToken) return;
 
       try {
-        const response = await apiClient.get(`/email/by_user/${params.id}`, {
-          signal,
-        });
-        setInboxEmails(response.data || []);
+        const response = await apiClient.get(
+          `/email/by_user/${params.id}`,
+          {
+            params: { page, limit: inboxPageSize },
+            signal,
+          }
+        );
+
+        const data = response.data;
+
+        // Handle different response structures
+        if (Array.isArray(data)) {
+          // Direct array response (no pagination)
+          setInboxEmails(data);
+          setInboxTotal(data.length);
+          setInboxTotalPages(1);
+        } else if (data && Array.isArray(data.data)) {
+          // Paginated response: { data: [], pagination: {} }
+          setInboxEmails(data.data);
+          setInboxTotal(data.pagination?.total || data.data.length);
+          setInboxTotalPages(data.pagination?.total_pages || 1);
+        } else {
+          // Fallback - ensure we always have an array
+          setInboxEmails([]);
+          setInboxTotal(0);
+          setInboxTotalPages(1);
+        }
       } catch (err) {
         if (!signal?.aborted) {
           console.error("Failed to fetch inbox emails:", err);
+          setInboxEmails([]);
         }
       } finally {
         setIsLoadingInbox(false);
         setIsRefreshingInbox(false);
       }
     },
-    [params.id, storedToken]
+    [params.id, storedToken, inboxPageSize]
   );
 
   // Fetch sent emails
   const fetchSentEmails = useCallback(
-    async (signal?: AbortSignal) => {
+    async (page: number = 1, signal?: AbortSignal) => {
       if (!storedToken) return;
 
       try {
-        const response = await apiClient.get<SentEmailsResponse>(
+        const response = await apiClient.get(
           `/email/sent/by_user/${params.id}`,
-          { signal }
+          {
+            params: { page, limit: sentPageSize },
+            signal,
+          }
         );
-        // New API returns { data: [...], pagination: {...} }
-        const emails = response.data?.data || [];
-        setSentEmails(emails);
+
+        const data = response.data;
+
+        // Handle different response structures
+        if (Array.isArray(data)) {
+          // Direct array response (no pagination)
+          setSentEmails(data);
+          setSentTotal(data.length);
+          setSentTotalPages(1);
+        } else if (data && Array.isArray(data.data)) {
+          // Paginated response: { data: [], pagination: {} }
+          setSentEmails(data.data);
+          setSentTotal(data.pagination?.total || data.data.length);
+          setSentTotalPages(data.pagination?.total_pages || 1);
+        } else {
+          // Fallback - ensure we always have an array
+          setSentEmails([]);
+          setSentTotal(0);
+          setSentTotalPages(1);
+        }
       } catch (err) {
         if (!signal?.aborted) {
           console.error("Failed to fetch sent emails:", err);
+          setSentEmails([]);
         }
       } finally {
         setIsLoadingSent(false);
         setIsRefreshingSent(false);
       }
     },
-    [params.id, storedToken]
+    [params.id, storedToken, sentPageSize]
   );
 
   // Initial fetch
@@ -193,23 +255,46 @@ export default function UserDetailPage() {
     abortControllerRef.current = new AbortController();
 
     fetchUserDetails();
-    fetchInboxEmails(abortControllerRef.current.signal);
-    fetchSentEmails(abortControllerRef.current.signal);
+    fetchInboxEmails(inboxPage, abortControllerRef.current.signal);
+    fetchSentEmails(sentPage, abortControllerRef.current.signal);
 
     return () => {
       abortControllerRef.current?.abort();
     };
-  }, [_hasHydrated, storedToken, roleId, fetchUserDetails, fetchInboxEmails, fetchSentEmails]);
+  }, [_hasHydrated, storedToken, roleId, fetchUserDetails]);
+
+  // Fetch inbox when page changes
+  useEffect(() => {
+    if (!_hasHydrated || !storedToken || roleId === 1) return;
+    setIsLoadingInbox(true);
+    fetchInboxEmails(inboxPage);
+  }, [inboxPage, fetchInboxEmails, _hasHydrated, storedToken, roleId]);
+
+  // Fetch sent when page changes
+  useEffect(() => {
+    if (!_hasHydrated || !storedToken || roleId === 1) return;
+    setIsLoadingSent(true);
+    fetchSentEmails(sentPage);
+  }, [sentPage, fetchSentEmails, _hasHydrated, storedToken, roleId]);
 
   // Handle refresh
   const handleRefreshInbox = () => {
     setIsRefreshingInbox(true);
-    fetchInboxEmails();
+    fetchInboxEmails(inboxPage);
   };
 
   const handleRefreshSent = () => {
     setIsRefreshingSent(true);
-    fetchSentEmails();
+    fetchSentEmails(sentPage);
+  };
+
+  // Handle page changes
+  const handleInboxPageChange = (page: number) => {
+    setInboxPage(page);
+  };
+
+  const handleSentPageChange = (page: number) => {
+    setSentPage(page);
   };
 
   // Handle inbox email click
@@ -323,7 +408,7 @@ export default function UserDetailPage() {
                 <Inbox className="h-5 w-5 text-blue-600" />
                 <h3 className="font-semibold text-gray-900">Inbox</h3>
                 <span className="text-sm text-gray-500">
-                  ({inboxEmails.length})
+                  ({inboxTotal})
                 </span>
               </div>
               <Button
@@ -370,6 +455,35 @@ export default function UserDetailPage() {
                 </div>
               )}
             </div>
+
+            {/* Inbox Pagination */}
+            {inboxTotalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50/50">
+                <span className="text-xs text-gray-500">
+                  Page {inboxPage} of {inboxTotalPages}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleInboxPageChange(inboxPage - 1)}
+                    disabled={inboxPage <= 1 || isLoadingInbox}
+                    className="h-7 w-7 p-0 rounded-md"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleInboxPageChange(inboxPage + 1)}
+                    disabled={inboxPage >= inboxTotalPages || isLoadingInbox}
+                    className="h-7 w-7 p-0 rounded-md"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </AdminContentCard>
 
           {/* Sent Panel */}
@@ -380,7 +494,7 @@ export default function UserDetailPage() {
                 <Send className="h-5 w-5 text-green-600" />
                 <h3 className="font-semibold text-gray-900">Sent</h3>
                 <span className="text-sm text-gray-500">
-                  ({sentEmails.length})
+                  ({sentTotal})
                 </span>
               </div>
               <Button
@@ -427,6 +541,35 @@ export default function UserDetailPage() {
                 </div>
               )}
             </div>
+
+            {/* Sent Pagination */}
+            {sentTotalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50/50">
+                <span className="text-xs text-gray-500">
+                  Page {sentPage} of {sentTotalPages}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSentPageChange(sentPage - 1)}
+                    disabled={sentPage <= 1 || isLoadingSent}
+                    className="h-7 w-7 p-0 rounded-md"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSentPageChange(sentPage + 1)}
+                    disabled={sentPage >= sentTotalPages || isLoadingSent}
+                    className="h-7 w-7 p-0 rounded-md"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </AdminContentCard>
         </div>
       </div>
