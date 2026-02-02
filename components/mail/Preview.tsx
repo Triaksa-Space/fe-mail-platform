@@ -25,6 +25,8 @@ interface PreviewProps {
   onForward?: () => void;
   showBackButton?: boolean;
   className?: string;
+  isSentView?: boolean;
+  isSentDetailLoading?: boolean;
 }
 
 const Preview: React.FC<PreviewProps> = ({
@@ -34,6 +36,8 @@ const Preview: React.FC<PreviewProps> = ({
   onForward,
   showBackButton = false,
   className,
+  isSentView = false,
+  isSentDetailLoading = false,
 }) => {
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,14 +46,23 @@ const Preview: React.FC<PreviewProps> = ({
   const token = useAuthStore((state) => state.token);
 
   // Use minimum loading time to prevent skeleton flicker
-  const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
+  // For sent view, use external loading state; for inbox view, use internal loading state
+  const effectiveLoading = isSentView ? isSentDetailLoading : isLoading;
+  const { shouldShowLoading, isTransitioning } = useMinimumLoading(effectiveLoading, {
     minimumDuration: 300,
   });
 
-  // Fetch email details when email changes
+  // Fetch email details when email changes (skip for sent view)
   useEffect(() => {
     if (!email || !token) {
       setEmailDetail(null);
+      return;
+    }
+
+    // Skip fetching for sent emails - we already have the data
+    if (isSentView) {
+      setEmailDetail(null);
+      setIsLoading(false);
       return;
     }
 
@@ -78,7 +91,7 @@ const Preview: React.FC<PreviewProps> = ({
 
     fetchDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email?.email_encode_id, token]);
+  }, [email?.email_encode_id, token, isSentView]);
 
   const handleDownload = async (url: string, filename: string) => {
     if (!token || !email) return;
@@ -151,33 +164,35 @@ const Preview: React.FC<PreviewProps> = ({
           </h2>
         </div>
 
-        <div className="flex items-center gap-1">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onReply}
-            className="h-9 px-3 rounded-xl border-gray-200 hover:bg-gray-50"
-          >
-            <Reply className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">Reply</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onForward}
-            className="h-9 px-3 rounded-xl border-gray-200 hover:bg-gray-50"
-          >
-            <Forward className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">Forward</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-xl hover:bg-gray-100"
-          >
-            <MoreHorizontal className="h-5 w-5 text-gray-600" />
-          </Button>
-        </div>
+        {!isSentView && (
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onReply}
+              className="h-9 px-3 rounded-xl border-gray-200 hover:bg-gray-50"
+            >
+              <Reply className="h-4 w-4 mr-1.5" />
+              <span className="hidden sm:inline">Reply</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onForward}
+              className="h-9 px-3 rounded-xl border-gray-200 hover:bg-gray-50"
+            >
+              <Forward className="h-4 w-4 mr-1.5" />
+              <span className="hidden sm:inline">Forward</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-xl hover:bg-gray-100"
+            >
+              <MoreHorizontal className="h-5 w-5 text-gray-600" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -222,9 +237,17 @@ const Preview: React.FC<PreviewProps> = ({
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-semibold text-blue-600">
-                        {email.from?.charAt(0)?.toUpperCase() || "?"}
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
+                      isSentView ? "bg-green-100" : "bg-blue-100"
+                    )}>
+                      <span className={cn(
+                        "text-sm font-semibold",
+                        isSentView ? "text-green-600" : "text-blue-600"
+                      )}>
+                        {isSentView
+                          ? email.fromEmail?.charAt(0)?.toUpperCase() || "?"
+                          : email.from?.charAt(0)?.toUpperCase() || "?"}
                       </span>
                     </div>
                     <div className="min-w-0">
@@ -232,7 +255,7 @@ const Preview: React.FC<PreviewProps> = ({
                         {email.from}
                       </p>
                       <p className="text-sm text-gray-500 truncate">
-                        {emailDetail?.SenderEmail || email.fromEmail}
+                        {isSentView ? email.fromEmail : (emailDetail?.SenderEmail || email.fromEmail)}
                       </p>
                     </div>
                   </div>
@@ -245,9 +268,9 @@ const Preview: React.FC<PreviewProps> = ({
 
             {/* Email Body Card */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              {emailDetail?.Body ? (
+              {(emailDetail?.Body || (isSentView && email.body)) ? (
                 <iframe
-                  srcDoc={emailDetail.Body}
+                  srcDoc={isSentView ? email.body : emailDetail?.Body}
                   className="w-full"
                   style={{
                     height: iframeHeight,
@@ -326,8 +349,8 @@ const Preview: React.FC<PreviewProps> = ({
               )}
             </div>
 
-            {/* Attachments */}
-            {emailDetail?.ListAttachments &&
+            {/* Attachments - hide for sent view */}
+            {!isSentView && emailDetail?.ListAttachments &&
               emailDetail.ListAttachments.length > 0 && (
                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 md:p-5">
                   <h4 className="text-sm font-medium text-gray-900 mb-3">

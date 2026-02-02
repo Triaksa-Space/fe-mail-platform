@@ -20,6 +20,85 @@ export interface Mail {
   attachments?: MailAttachment[];
 }
 
+// Sent email type
+export interface SentMail {
+  id: string;
+  user_id: string;
+  from: string;
+  to: string;
+  subject: string;
+  snippet: string;
+  body?: string;
+  date: string;
+  status?: string;
+  has_attachments?: boolean;
+}
+
+// API response for sent email list item
+export interface ApiSentEmail {
+  id: string;
+  from_email: string;
+  to_email: string;
+  subject: string;
+  body_preview?: string;
+  status?: string;
+  sent_at: string;
+  created_at?: string;
+  has_attachments?: boolean;
+}
+
+// API response for sent email detail
+export interface ApiSentEmailDetail {
+  id: string;
+  from: string;
+  to: string;
+  subject: string;
+  body?: string;
+  body_preview?: string;
+  status?: string;
+  sent_at: string;
+  has_attachments?: boolean;
+  attachments?: string[];
+}
+
+// Transform API sent email to SentMail type
+export function transformSentEmail(email: ApiSentEmail): SentMail {
+  const sentDate = new Date(email.sent_at);
+  const now = new Date();
+  const diffMs = now.getTime() - sentDate.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  let relativeTime: string;
+  if (diffMins < 1) {
+    relativeTime = "Just now";
+  } else if (diffMins < 60) {
+    relativeTime = `${diffMins}m ago`;
+  } else if (diffHours < 24) {
+    relativeTime = `${diffHours}h ago`;
+  } else if (diffDays < 7) {
+    relativeTime = `${diffDays}d ago`;
+  } else {
+    relativeTime = sentDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  return {
+    id: email.id,
+    user_id: "",
+    from: email.from_email,
+    to: email.to_email,
+    subject: email.subject,
+    snippet: email.body_preview || "",
+    date: relativeTime,
+    status: email.status,
+    has_attachments: email.has_attachments,
+  };
+}
+
 export interface EmailDetail {
   encode_id: string;
   ID: number;
