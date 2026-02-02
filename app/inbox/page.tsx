@@ -10,13 +10,18 @@ import { Toaster } from "@/components/ui/toaster";
 import {
   Sidebar,
   InboxList,
+  SentList,
   Preview,
   BottomTabs,
   ComposeModal,
   SettingsPanel,
   Mail,
+  SentMail,
+  ApiSentEmail,
+  ApiSentEmailDetail,
   ViewType,
   transformEmailToMail,
+  transformSentEmail,
   InboxListSkeleton,
 } from "@/components/mail";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -92,10 +97,17 @@ const InboxPageContent: React.FC = () => {
   // Data state
   const [userEmail, setUserEmail] = useState("");
   const [emails, setEmails] = useState<Mail[]>([]);
+  const [sentEmails, setSentEmails] = useState<SentMail[]>([]);
   const [sentCount, setSentCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSentLoading, setIsSentLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSentRefreshing, setIsSentRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sentError, setSentError] = useState<string | null>(null);
+  const [selectedSentEmail, setSelectedSentEmail] = useState<SentMail | null>(null);
+  const [sentEmailDetail, setSentEmailDetail] = useState<ApiSentEmailDetail | null>(null);
+  const [isSentDetailLoading, setIsSentDetailLoading] = useState(false);
 
   // Refs for managing requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -205,6 +217,61 @@ const InboxPageContent: React.FC = () => {
     }
   };
 
+  // Fetch sent emails list
+  const fetchSentEmails = useCallback(async (isRefresh = false) => {
+    if (!token) return;
+
+    try {
+      if (isRefresh) {
+        setIsSentRefreshing(true);
+      } else {
+        setIsSentLoading(true);
+      }
+      setSentError(null);
+
+      // Try the sent emails list endpoint
+      const response = await apiClient.get("/email/sent/list");
+
+      if (response.data && Array.isArray(response.data.data)) {
+        const transformedEmails = response.data.data.map((email: ApiSentEmail) =>
+          transformSentEmail(email)
+        );
+        setSentEmails(transformedEmails);
+      } else if (response.data && Array.isArray(response.data)) {
+        const transformedEmails = response.data.map((email: ApiSentEmail) =>
+          transformSentEmail(email)
+        );
+        setSentEmails(transformedEmails);
+      } else {
+        setSentEmails([]);
+      }
+    } catch (err) {
+      console.error("Failed to fetch sent emails:", err);
+      setSentError("Failed to load sent emails");
+    } finally {
+      setIsSentLoading(false);
+      setIsSentRefreshing(false);
+    }
+  }, [token]);
+
+  // Fetch sent email detail
+  const fetchSentEmailDetail = useCallback(async (emailId: string) => {
+    if (!token) return;
+
+    try {
+      setIsSentDetailLoading(true);
+      const response = await apiClient.get(`/email/sent/detail/${emailId}`);
+
+      if (response.data) {
+        setSentEmailDetail(response.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch sent email detail:", err);
+    } finally {
+      setIsSentDetailLoading(false);
+    }
+  }, [token]);
+
   // Fetch emails
   const fetchEmails = useCallback(
     async (signal?: AbortSignal) => {
@@ -284,9 +351,22 @@ const InboxPageContent: React.FC = () => {
     };
   }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail, fetchEmails, isUserIdle]);
 
+  // Fetch sent emails when view changes to "sent"
+  useEffect(() => {
+    if (currentView === "sent" && sentEmails.length === 0) {
+      fetchSentEmails();
+    }
+  }, [currentView, sentEmails.length, fetchSentEmails]);
+
   // Handlers
   const handleSelectEmail = (email: Mail) => {
     setSelectedEmail(email);
+  };
+
+  const handleSelectSentEmail = (email: SentMail) => {
+    setSelectedSentEmail(email);
+    setSentEmailDetail(null);
+    fetchSentEmailDetail(email.id);
   };
 
   const handleViewChange = (view: ViewType) => {
@@ -295,8 +375,13 @@ const InboxPageContent: React.FC = () => {
       setIsComposeOpen(true);
     } else {
       setSelectedEmail(null);
+      setSelectedSentEmail(null);
     }
   };
+
+  const handleSentRefresh = useCallback(() => {
+    fetchSentEmails(true);
+  }, [fetchSentEmails]);
 
   const handleCompose = () => {
     setIsComposeOpen(true);
@@ -314,6 +399,13 @@ const InboxPageContent: React.FC = () => {
   const handleEmailSent = () => {
     fetchSentCount();
     handleRefresh();
+    // If on sent view, also refresh sent emails
+    if (currentView === "sent") {
+      fetchSentEmails(true);
+    } else {
+      // Reset sent emails so they get refetched when user switches to sent view
+      setSentEmails([]);
+    }
   };
 
   // Render content based on view
@@ -333,6 +425,56 @@ const InboxPageContent: React.FC = () => {
             <SettingsPanel />
           </div>
         </>
+      );
+    }
+
+    // Sent view
+    if (currentView === "sent") {
+      // When sent email is selected, show preview full width
+      if (selectedSentEmail) {
+        // Use detail data if available, otherwise use list data
+        const detail = sentEmailDetail;
+        const mailForPreview: Mail = {
+          id: selectedSentEmail.id,
+          email_encode_id: selectedSentEmail.id,
+          user_encode_id: selectedSentEmail.user_id,
+          from: `To: ${detail?.to || selectedSentEmail.to}`,
+          fromEmail: detail?.to || selectedSentEmail.to,
+          subject: detail?.subject || selectedSentEmail.subject,
+          snippet: detail?.body_preview || selectedSentEmail.snippet,
+          body: detail?.body || selectedSentEmail.snippet,
+          date: selectedSentEmail.date,
+          unread: false,
+        };
+
+        return (
+          <Preview
+            email={mailForPreview}
+            onBack={() => {
+              setSelectedSentEmail(null);
+              setSentEmailDetail(null);
+            }}
+            showBackButton={true}
+            className="flex-1"
+            isSentView={true}
+            isSentDetailLoading={isSentDetailLoading}
+          />
+        );
+      }
+
+      // No sent email selected - show full width sent list
+      return (
+        <SentList
+          emails={sentEmails}
+          selectedId={null}
+          onSelect={handleSelectSentEmail}
+          onRefresh={handleSentRefresh}
+          isLoading={isSentLoading}
+          isRefreshing={isSentRefreshing}
+          error={sentError}
+          fullWidth={true}
+          className="flex-1"
+        />
       );
     }
 
