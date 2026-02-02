@@ -15,7 +15,6 @@ import { Mail, EmailDetail } from "./types";
 import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { PreviewSkeleton } from "./PreviewSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 
 interface PreviewProps {

@@ -3,12 +3,27 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
-// Create axios instance
+// Default timeout (30 seconds)
+const DEFAULT_TIMEOUT = 30000;
+
+// Create axios instance with optimized defaults
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  timeout: DEFAULT_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
   },
+  // Optimize for JSON responses
+  responseType: "json",
+  // Don't transform request/response (handled by interceptors if needed)
+  transformRequest: [(data, headers) => {
+    // If FormData, let browser set content-type
+    if (data instanceof FormData) {
+      delete headers["Content-Type"];
+      return data;
+    }
+    return JSON.stringify(data);
+  }],
 });
 
 // Track if we're currently refreshing

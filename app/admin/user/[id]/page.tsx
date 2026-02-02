@@ -53,23 +53,6 @@ interface SentEmail {
   created_at?: string;
 }
 
-interface PaginationInfo {
-  page: number;
-  limit: number;
-  total: number;
-  total_pages: number;
-}
-
-interface InboxEmailsResponse {
-  data: InboxEmail[];
-  pagination: PaginationInfo;
-}
-
-interface SentEmailsResponse {
-  data: SentEmail[];
-  pagination: PaginationInfo;
-}
-
 interface UserDetails {
   ID: number;
   Email: string;

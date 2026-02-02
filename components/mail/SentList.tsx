@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { cn } from "@/lib/utils";
 import { RefreshCw, Send, Paperclip, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
+import { LazyList } from "@/components/VirtualList";
 
 interface SentListProps {
   emails: SentMail[];
@@ -157,30 +158,32 @@ const SentList: React.FC<SentListProps> = ({
             </Button>
           </div>
         ) : (
-          <div>
-            {emails.map((email) => (
+          <LazyList
+            items={emails}
+            batchSize={20}
+            getItemKey={(email) => email.id}
+            renderItem={(email) => (
               <SentRow
-                key={email.id}
                 email={email}
                 isSelected={selectedId === email.id}
                 onClick={() => onSelect(email)}
               />
-            ))}
-          </div>
+            )}
+          />
         )}
       </div>
     </div>
   );
 };
 
-// Sent email row component
+// Sent email row component - Memoized to prevent unnecessary re-renders
 interface SentRowProps {
   email: SentMail;
   isSelected: boolean;
   onClick: () => void;
 }
 
-const SentRow: React.FC<SentRowProps> = ({ email, isSelected, onClick }) => {
+const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelected, onClick }) {
   return (
     <button
       onClick={onClick}
@@ -226,6 +229,6 @@ const SentRow: React.FC<SentRowProps> = ({ email, isSelected, onClick }) => {
       </div>
     </button>
   );
-};
+});
 
 export default SentList;

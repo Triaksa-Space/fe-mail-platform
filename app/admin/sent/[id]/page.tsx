@@ -18,7 +18,6 @@ import {
   Clock,
   XCircle,
   FileText,
-  Image as ImageIcon,
 } from "lucide-react";
 
 // API Response type

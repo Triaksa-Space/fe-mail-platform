@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { cn } from "@/lib/utils";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
+import { LazyList } from "@/components/VirtualList";
 
 interface InboxListProps {
   emails: Mail[];
@@ -149,30 +150,32 @@ const InboxList: React.FC<InboxListProps> = ({
             </Button>
           </div>
         ) : (
-          <div>
-            {emails.map((email) => (
+          <LazyList
+            items={emails}
+            batchSize={20}
+            getItemKey={(email) => email.email_encode_id}
+            renderItem={(email) => (
               <InboxRow
-                key={email.email_encode_id}
                 email={email}
                 isSelected={selectedId === email.email_encode_id}
                 onClick={() => onSelect(email)}
               />
-            ))}
-          </div>
+            )}
+          />
         )}
       </div>
     </div>
   );
 };
 
-// Gmail-style inbox row component
+// Gmail-style inbox row component - Memoized to prevent unnecessary re-renders
 interface InboxRowProps {
   email: Mail;
   isSelected: boolean;
   onClick: () => void;
 }
 
-const InboxRow: React.FC<InboxRowProps> = ({ email, isSelected, onClick }) => {
+const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSelected, onClick }) {
   const isUnread = email.unread;
 
   return (
@@ -233,6 +236,6 @@ const InboxRow: React.FC<InboxRowProps> = ({ email, isSelected, onClick }) => {
       </div>
     </button>
   );
-};
+});
 
 export default InboxList;
