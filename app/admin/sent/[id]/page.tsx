@@ -17,6 +17,8 @@ import {
   CheckCircle,
   Clock,
   XCircle,
+  FileText,
+  Image as ImageIcon,
 } from "lucide-react";
 
 // API Response type
@@ -67,6 +69,26 @@ function parseAttachments(attachments?: string): string[] {
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
+  }
+}
+
+// Check if URL is an image
+function isImageUrl(url: string): boolean {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+  const lowerUrl = url.toLowerCase();
+  return imageExtensions.some(ext => lowerUrl.includes(ext));
+}
+
+// Get filename from URL
+function getFilename(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const filename = pathname.split('/').pop() || 'attachment';
+    // Decode URL-encoded characters
+    return decodeURIComponent(filename);
+  } catch {
+    return url.split('/').pop() || 'attachment';
   }
 }
 
@@ -348,21 +370,56 @@ export default function AdminSentDetailPage() {
                       <Paperclip className="h-4 w-4" />
                       Attachments ({attachmentUrls.length})
                     </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {attachmentUrls.map((url, index) => {
-                        const filename = url.split("/").pop() || `Attachment ${index + 1}`;
+                        const filename = getFilename(url);
+                        const isImage = isImageUrl(url);
+
                         return (
                           <a
                             key={index}
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="group flex flex-col bg-gray-50 rounded-lg overflow-hidden hover:bg-gray-100 transition-colors border border-gray-200 hover:border-gray-300"
                           >
-                            <span className="text-sm text-gray-700 truncate flex-1 mr-2">
-                              {filename}
-                            </span>
-                            <Download className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                            {/* Thumbnail or Icon */}
+                            <div className="relative aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+                              {isImage ? (
+                                <>
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={url}
+                                    alt={filename}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                                    onError={(e) => {
+                                      // If image fails to load, show icon instead
+                                      const target = e.target as HTMLImageElement;
+                                      target.style.display = 'none';
+                                      const parent = target.parentElement;
+                                      if (parent) {
+                                        parent.innerHTML = '<div class="flex items-center justify-center w-full h-full"><svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                                      }
+                                    }}
+                                  />
+                                  {/* Hover overlay */}
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                    <Download className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
+                                  </div>
+                                </>
+                              ) : (
+                                <div className="flex flex-col items-center justify-center gap-2 p-4">
+                                  <FileText className="h-12 w-12 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Filename */}
+                            <div className="p-2 border-t border-gray-200">
+                              <p className="text-xs text-gray-600 truncate" title={filename}>
+                                {filename}
+                              </p>
+                            </div>
                           </a>
                         );
                       })}

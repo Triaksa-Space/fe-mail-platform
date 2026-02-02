@@ -20,18 +20,45 @@ import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 
-interface UserEmail {
+// Inbox email interface (from /email/by_user/:id)
+interface InboxEmail {
   user_encode_id: string;
   email_encode_id: string;
   ID: number;
   SenderEmail: string;
   SenderName: string;
-  Recipient?: string;
   Subject: string;
   Preview: string;
   Body: string;
   RelativeTime: string;
   IsRead?: boolean;
+}
+
+// Sent email interface (from /email/sent/by_user/:id)
+interface SentEmail {
+  id: string;
+  user_id: string;
+  from: string;
+  to: string;
+  subject: string;
+  body_preview?: string;
+  body?: string;
+  attachments?: string;
+  has_attachments?: boolean;
+  provider?: string;
+  status?: string;
+  sent_at: string;
+  created_at?: string;
+}
+
+interface SentEmailsResponse {
+  data: SentEmail[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    total_pages: number;
+  };
 }
 
 interface UserDetails {
@@ -40,6 +67,23 @@ interface UserDetails {
   LastLogin: string;
   CreatedAt: string;
   CreatedByName?: string;
+}
+
+// Format relative time for sent emails
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+
+  return date.toLocaleDateString();
 }
 
 export default function UserDetailPage() {
@@ -54,12 +98,12 @@ export default function UserDetailPage() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   // Inbox state
-  const [inboxEmails, setInboxEmails] = useState<UserEmail[]>([]);
+  const [inboxEmails, setInboxEmails] = useState<InboxEmail[]>([]);
   const [isLoadingInbox, setIsLoadingInbox] = useState(true);
   const [isRefreshingInbox, setIsRefreshingInbox] = useState(false);
 
   // Sent state
-  const [sentEmails, setSentEmails] = useState<UserEmail[]>([]);
+  const [sentEmails, setSentEmails] = useState<SentEmail[]>([]);
   const [isLoadingSent, setIsLoadingSent] = useState(true);
   const [isRefreshingSent, setIsRefreshingSent] = useState(false);
 
@@ -123,12 +167,13 @@ export default function UserDetailPage() {
       if (!storedToken) return;
 
       try {
-        const response = await apiClient.get(`/email/sent/by_user/${params.id}`, {
-          signal,
-        });
-        // API might return { emails: [...] } or just array
-        const emails = response.data?.emails || response.data || [];
-        setSentEmails(Array.isArray(emails) ? emails : []);
+        const response = await apiClient.get<SentEmailsResponse>(
+          `/email/sent/by_user/${params.id}`,
+          { signal }
+        );
+        // New API returns { data: [...], pagination: {...} }
+        const emails = response.data?.data || [];
+        setSentEmails(emails);
       } catch (err) {
         if (!signal?.aborted) {
           console.error("Failed to fetch sent emails:", err);
@@ -167,9 +212,14 @@ export default function UserDetailPage() {
     fetchSentEmails();
   };
 
-  // Handle email click
-  const handleEmailClick = (email: UserEmail) => {
-    router.push(`/admin/user/detail/${email.email_encode_id}`);
+  // Handle inbox email click
+  const handleInboxEmailClick = (email: InboxEmail) => {
+    router.push(`/admin/inbox/${email.email_encode_id}`);
+  };
+
+  // Handle sent email click
+  const handleSentEmailClick = (email: SentEmail) => {
+    router.push(`/admin/sent/${email.id}`);
   };
 
   // Format date
@@ -311,11 +361,10 @@ export default function UserDetailPage() {
               ) : (
                 <div>
                   {inboxEmails.map((email) => (
-                    <EmailRow
+                    <InboxEmailRow
                       key={email.ID}
                       email={email}
-                      type="inbox"
-                      onClick={() => handleEmailClick(email)}
+                      onClick={() => handleInboxEmailClick(email)}
                     />
                   ))}
                 </div>
@@ -369,11 +418,10 @@ export default function UserDetailPage() {
               ) : (
                 <div>
                   {sentEmails.map((email) => (
-                    <EmailRow
-                      key={email.ID}
+                    <SentEmailRow
+                      key={email.id}
                       email={email}
-                      type="sent"
-                      onClick={() => handleEmailClick(email)}
+                      onClick={() => handleSentEmailClick(email)}
                     />
                   ))}
                 </div>
@@ -386,15 +434,14 @@ export default function UserDetailPage() {
   );
 }
 
-// Email row component
-interface EmailRowProps {
-  email: UserEmail;
-  type: "inbox" | "sent";
+// Inbox email row component
+interface InboxEmailRowProps {
+  email: InboxEmail;
   onClick: () => void;
 }
 
-const EmailRow: React.FC<EmailRowProps> = ({ email, type, onClick }) => {
-  const isUnread = type === "inbox" && !email.IsRead;
+const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
+  const isUnread = !email.IsRead;
 
   return (
     <button
@@ -405,16 +452,12 @@ const EmailRow: React.FC<EmailRowProps> = ({ email, type, onClick }) => {
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Indicator */}
+        {/* Unread indicator */}
         <div className="flex-shrink-0 pt-1.5">
-          {type === "inbox" ? (
-            isUnread ? (
-              <div className="w-2 h-2 rounded-full bg-blue-600" />
-            ) : (
-              <div className="w-2 h-2" />
-            )
+          {isUnread ? (
+            <div className="w-2 h-2 rounded-full bg-blue-600" />
           ) : (
-            <Send className="w-3 h-3 text-green-500" />
+            <div className="w-2 h-2" />
           )}
         </div>
 
@@ -430,9 +473,7 @@ const EmailRow: React.FC<EmailRowProps> = ({ email, type, onClick }) => {
                   : "font-medium text-gray-700"
               )}
             >
-              {type === "inbox"
-                ? email.SenderName || email.SenderEmail || "Unknown"
-                : `To: ${email.Recipient || "Unknown"}`}
+              {email.SenderName || email.SenderEmail || "Unknown"}
             </span>
             <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
               {email.RelativeTime}
@@ -454,6 +495,54 @@ const EmailRow: React.FC<EmailRowProps> = ({ email, type, onClick }) => {
           {/* Preview */}
           <p className="text-sm text-gray-500 line-clamp-1 mt-0.5">
             {email.Preview || "No preview available"}
+          </p>
+        </div>
+      </div>
+    </button>
+  );
+};
+
+// Sent email row component
+interface SentEmailRowProps {
+  email: SentEmail;
+  onClick: () => void;
+}
+
+const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "w-full text-left px-4 py-3 transition-colors border-b border-gray-100",
+        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
+      )}
+    >
+      <div className="flex items-start gap-3">
+        {/* Sent indicator */}
+        <div className="flex-shrink-0 pt-1.5">
+          <Send className="w-3 h-3 text-green-500" />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {/* Top row */}
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm truncate font-medium text-gray-700">
+              To: {email.to || "Unknown"}
+            </span>
+            <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
+              {formatRelativeTime(email.sent_at)}
+            </span>
+          </div>
+
+          {/* Subject */}
+          <p className="text-sm truncate mt-0.5 font-medium text-gray-700">
+            {email.subject || "(No subject)"}
+          </p>
+
+          {/* Preview */}
+          <p className="text-sm text-gray-500 line-clamp-1 mt-0.5">
+            {email.body_preview || "No preview available"}
           </p>
         </div>
       </div>
