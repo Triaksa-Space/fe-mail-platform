@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { X, Paperclip, Send, Loader2, Mail, AtSign } from "lucide-react";
+import { X, Paperclip, Send, Loader2, Mail, FileText } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
@@ -36,6 +36,12 @@ interface FormState {
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
+
+// Helper to get file extension
+const getFileExtension = (filename: string): string => {
+  const ext = filename.split('.').pop()?.toUpperCase() || 'FILE';
+  return ext.length > 4 ? ext.substring(0, 4) : ext;
+};
 
 const ComposeModal: React.FC<ComposeModalProps> = ({
   isOpen,
@@ -323,7 +329,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           )}
         >
           {/* Header Action Row */}
-          <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 md:rounded-t-2xl">
+          <div className="flex items-center justify-between px-4 py-3 bg-white md:rounded-t-2xl">
             {/* Left: Close Button */}
             <button
               type="button"
@@ -339,23 +345,23 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               <X className="h-5 w-5" />
             </button>
 
-            {/* Center: Daily Send Badge */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 font-medium">Daily send</span>
-              <span
-                className={cn(
-                  "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold",
-                  isLimitReached
-                    ? "bg-red-50 text-red-600 border border-red-200"
-                    : "bg-blue-50 text-blue-600 border border-blue-500"
-                )}
-              >
-                {sentCount} of {maxDailySend}
-              </span>
-            </div>
+            {/* Right: Daily Send Badge, Attachment & Send Buttons */}
+            <div className="flex items-center gap-3">
+              {/* Daily Send Badge */}
+              <div className="flex items-center gap-1">
+                <span className="text-sm text-gray-600 font-normal">Daily send</span>
+                <span
+                  className={cn(
+                    "inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium",
+                    isLimitReached
+                      ? "text-red-600 border border-red-200"
+                      : "text-blue-600 border border-blue-600"
+                  )}
+                >
+                  {sentCount} of {maxDailySend}
+                </span>
+              </div>
 
-            {/* Right: Attachment & Send Buttons */}
-            <div className="flex items-center gap-2">
               {/* Attachment Button */}
               <input
                 type="file"
@@ -370,7 +376,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 htmlFor="compose-attachments"
                 className={cn(
                   "flex items-center justify-center h-10 w-10",
-                  "rounded-xl border border-gray-200 bg-white shadow-sm",
+                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 bg-white",
                   "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                   "transition-colors cursor-pointer",
                   "focus-within:ring-2 focus-within:ring-blue-200",
@@ -391,12 +397,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 onClick={handleSend}
                 disabled={isDisabled}
                 className={cn(
-                  "flex items-center gap-2 h-10 px-4",
-                  "rounded-xl font-medium text-sm",
+                  "flex items-center gap-1.5 h-10 px-4",
+                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] font-medium text-base",
                   "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300",
                   isDisabled
-                    ? "bg-blue-300 text-white cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
+                    ? "bg-blue-300 text-white cursor-not-allowed border border-blue-300"
+                    : "bg-blue-600 hover:bg-blue-700 text-white border border-blue-600"
                 )}
               >
                 {isSending ? (
@@ -406,7 +412,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   </>
                 ) : (
                   <>
-                    <Send className="h-4 w-4" />
+                    <Send className="h-5 w-5" />
                     <span>Send</span>
                   </>
                 )}
@@ -415,12 +421,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           </div>
 
           {/* Form Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
             {/* Card A: From / To */}
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+            <div className="px-4 py-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 space-y-3">
               {/* From Field */}
-              <div className="px-4 py-3 border-b border-gray-100">
-                <label className="block text-xs text-gray-500 font-medium mb-1">
+              <div className="relative pt-2">
+                <label className="absolute -top-1 left-1 px-1 bg-white text-[10px] text-gray-500 font-medium z-10">
                   From
                 </label>
                 <div className="relative">
@@ -430,8 +436,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                     value={email || ""}
                     disabled
                     className={cn(
-                      "w-full pl-10 pr-4 py-2.5 text-sm",
-                      "rounded-xl border border-gray-200",
+                      "w-full pl-10 pr-4 py-2 text-xs",
+                      "rounded-lg border border-gray-200",
                       "bg-gray-50 text-gray-500",
                       "focus:outline-none"
                     )}
@@ -441,15 +447,15 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               </div>
 
               {/* To Field */}
-              <div className="px-4 py-3">
+              <div className="relative pb-2">
                 <label
                   htmlFor="compose-to"
-                  className="block text-xs text-gray-500 font-medium mb-1"
+                  className="absolute -top-2 left-1 px-1 bg-white text-[10px] text-gray-500 font-medium z-10"
                 >
                   To
                 </label>
                 <div className="relative">
-                  <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     id="compose-to"
                     type="email"
@@ -459,8 +465,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
                     }
                     className={cn(
-                      "w-full pl-10 pr-4 py-2.5 text-sm",
-                      "rounded-xl border border-gray-200 bg-white",
+                      "w-full pl-10 pr-4 py-2 text-xs",
+                      "rounded-lg border border-gray-200 bg-white",
                       "placeholder:text-gray-400",
                       "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
                       "transition-colors"
@@ -470,96 +476,94 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               </div>
             </div>
 
-            {/* Card B: Subject */}
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-4">
-              <label
-                htmlFor="compose-subject"
-                className="block text-xs text-gray-500 font-medium mb-1"
-              >
-                Subject
-              </label>
-              <input
-                id="compose-subject"
-                type="text"
-                placeholder="Enter subject"
-                value={subject}
-                onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                className={cn(
-                  "w-full px-4 py-2.5 text-sm",
-                  "rounded-xl border border-gray-200 bg-white",
-                  "placeholder:text-gray-400",
-                  "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
-                  "transition-colors"
-                )}
-              />
-            </div>
+            {/* Card B: Subject & Body */}
+            <div className="px-4 py-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex-1 flex flex-col min-h-[200px] md:min-h-[280px] space-y-3">
+              {/* Subject Field */}
+              <div className="relative pt-2">
+                <label
+                  htmlFor="compose-subject"
+                  className="absolute -top-2 left-3 px-1 bg-white text-[10px] text-gray-500 font-medium z-10"
+                >
+                  
+                </label>
+                <input
+                  id="compose-subject"
+                  type="text"
+                  placeholder="Enter subject"
+                  value={subject}
+                  onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
+                  className={cn(
+                    "w-full px-4 py-2 text-xs",
+                    "rounded-lg border border-gray-200 bg-white",
+                    "placeholder:text-gray-400",
+                    "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
+                    "transition-colors"
+                  )}
+                />
+              </div>
 
-            {/* Card C: Body */}
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 flex-1 flex flex-col min-h-[200px] md:min-h-[280px]">
-              <label
-                htmlFor="compose-body"
-                className="block text-xs text-gray-500 font-medium mb-1"
-              >
-                Message
-              </label>
-              <textarea
-                id="compose-body"
-                placeholder="Compose your email..."
-                value={message}
-                onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                className={cn(
-                  "flex-1 w-full px-4 py-3 text-sm",
-                  "rounded-xl border border-gray-200 bg-white",
-                  "placeholder:text-gray-400",
-                  "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
-                  "transition-colors resize-none",
-                  "min-h-[150px] md:min-h-[220px]"
-                )}
-              />
+              {/* Body Field */}
+              <div className="relative flex-1 flex flex-col pb-2">
+                <label
+                  htmlFor="compose-body"
+                  className="absolute -top-2 left-3 px-1 bg-white text-[10px] text-gray-500 font-medium z-10"
+                >
+                  
+                </label>
+                <textarea
+                  id="compose-body"
+                  placeholder="Compose your email..."
+                  value={message}
+                  onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                  className={cn(
+                    "flex-1 w-full px-4 py-3 text-xs",
+                    "rounded-lg border border-gray-200 bg-white",
+                    "placeholder:text-gray-400",
+                    "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
+                    "transition-colors resize-none",
+                    "min-h-[120px] md:min-h-[180px]"
+                  )}
+                />
+              </div>
             </div>
 
             {/* Attachments List */}
             {attachments.length > 0 && (
-              <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs text-gray-500 font-medium">
-                    Attachments ({attachments.length})
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  {attachments.map((file, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-xl"
-                    >
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
-                        <Paperclip className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                        <span className="text-sm text-gray-700 truncate">
-                          {file.name}
+              <div className="self-stretch inline-flex justify-start items-start gap-2 flex-wrap">
+                {attachments.map((file, index) => (
+                  <div
+                    key={index}
+                    className="w-32 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3"
+                  >
+                    {/* Header: File type + Close button */}
+                    <div className="self-stretch inline-flex justify-between items-center">
+                      <div className="flex justify-start items-center gap-0.5">
+                        <FileText className="w-4 h-4 text-blue-600" />
+                        <span className="text-gray-800 text-xs font-normal leading-5">
+                          {getFileExtension(file.name)}
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleRemoveAttachment(index)}
-                        className={cn(
-                          "flex items-center justify-center h-7 w-7",
-                          "rounded-lg text-gray-400",
-                          "hover:bg-red-100 hover:text-red-600",
-                          "transition-colors focus:outline-none focus:ring-2 focus:ring-red-200"
-                        )}
+                        className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-red-600 transition-colors"
                         aria-label={`Remove ${file.name}`}
                       >
-                        <X className="h-4 w-4" />
+                        <X className="w-4 h-4" />
                       </button>
                     </div>
-                  ))}
-                </div>
+                    {/* Filename */}
+                    <div className="self-stretch text-gray-800 text-sm font-normal leading-5 truncate">
+                      {file.name}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
             {/* Limit Reached Warning */}
             {isLimitReached && (
-              <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+              <div className="px-4 py-3 bg-red-50 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200">
                 <p className="text-sm text-red-600 font-medium">
                   You have reached your daily send limit. Please try again tomorrow.
                 </p>
