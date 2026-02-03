@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { apiClient } from "@/lib/api-client";
@@ -51,7 +51,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onClick={onBack}
             className="h-9 w-9 rounded-xl hover:bg-gray-100 lg:hidden"
           >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
+            <ChevronLeft className="h-5 w-5 text-gray-600" />
           </Button>
         )}
         <h2 className="text-lg font-semibold text-gray-900">Settings</h2>

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, HelpCircle } from "lucide-react";
+import { ChevronLeft, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { searchFaqs, countFaqResults } from "@/lib/faqData";
 import { FaqSearch, FaqSection, FaqEmptyState } from "@/components/faq";
@@ -42,7 +42,7 @@ const FaqPage: React.FC = () => {
               )}
               aria-label="Go back"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5" />
             </button>
 
             {/* Title */}

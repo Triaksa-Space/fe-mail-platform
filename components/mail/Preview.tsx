@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
-  ArrowLeft,
+  ChevronLeft,
   Reply,
   Forward,
   Download,
@@ -155,7 +155,7 @@ const Preview: React.FC<PreviewProps> = ({
               onClick={onBack}
               className="h-9 w-9 rounded-xl hover:bg-gray-100"
             >
-              <ArrowLeft className="h-5 w-5 text-gray-600" />
+              <ChevronLeft className="h-5 w-5 text-gray-600" />
             </Button>
           )}
           <h2 className="text-base font-medium text-gray-900 truncate max-w-[200px] md:max-w-none">

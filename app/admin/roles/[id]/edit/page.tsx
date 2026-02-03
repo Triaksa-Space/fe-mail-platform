@@ -5,7 +5,7 @@ import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -203,7 +203,7 @@ const EditAdminPageContent: React.FC = () => {
                         onClick={() => router.push("/admin/roles")}
                         className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors"
                     >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ChevronLeft className="h-4 w-4" />
                         <span>Roles & permissions</span>
                     </button>
                     <ChevronRight className="h-4 w-4 text-gray-400" />

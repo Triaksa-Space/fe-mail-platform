@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, FileText, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Footer } from "@/components/layout";
 import axios from "axios";
@@ -66,103 +66,78 @@ const TermsPage: React.FC = () => {
   }, [content]);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-5xl px-4 md:px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Back Button */}
-            <button
-              onClick={() => router.back()}
-              className={cn(
-                "flex h-10 w-10 items-center justify-center",
-                "rounded-xl border border-gray-200 bg-white",
-                "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-                "transition-colors"
-              )}
-              aria-label="Go back"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-
-            {/* Title */}
-            <h1 className="text-lg font-semibold text-gray-900">
-              Terms of Services
-            </h1>
-
-            {/* Placeholder for alignment */}
-            <div className="w-10" />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen p-8 relative bg-gray-50 inline-flex flex-col justify-start items-center gap-10 overflow-hidden">
+      {/* Background decorative blur */}
+      <div className="w-[5000px] h-[5000px] left-[-1780px] top-[3542px] absolute bg-sky-100 rounded-full blur-[32px]" />
 
       {/* Main Content */}
-      <main className="flex-1 mx-auto max-w-5xl w-full px-4 md:px-6 py-6">
-        <div className="flex flex-col gap-4 md:gap-5">
-          {/* Hero Section */}
-          <div className="text-center py-6 md:py-8">
-            <div className="flex justify-center mb-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100">
-                <FileText className="h-7 w-7 text-blue-600" />
-              </div>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Mailria Terms of Services
-            </h2>
-            {effectiveDate && (
-              <p className="text-sm md:text-base text-gray-500 max-w-md mx-auto">
-                Effective Date: {effectiveDate}
-              </p>
-            )}
-          </div>
-
-          {/* Terms Content Card */}
-          <div
+      <div className="self-stretch flex flex-col justify-start items-start gap-8 relative z-10">
+        {/* Back Button */}
+        <div className="self-stretch inline-flex justify-start items-center gap-2.5">
+          <button
+            onClick={() => router.back()}
             className={cn(
-              "rounded-xl bg-white p-4 md:p-6 border border-gray-100",
-              "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]"
+              "w-12 h-12 px-4 py-2.5 bg-white rounded-lg",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "outline outline-1 outline-offset-[-1px] outline-gray-200",
+              "flex justify-center items-center gap-2",
+              "text-gray-800 hover:bg-gray-50 transition-colors"
             )}
+            aria-label="Go back"
           >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Content Area */}
+        <div className="self-stretch px-4 md:px-20 lg:px-44 flex flex-col justify-start items-start gap-8">
+          {/* Terms Card */}
+          <div className="self-stretch p-6 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-6">
+            {/* Title */}
+            <h1 className="text-gray-800 text-2xl font-medium leading-8">
+              Mailria Terms of Services
+            </h1>
+
             {isLoading ? (
-              <div className="flex items-center justify-center py-12">
+              <div className="flex items-center justify-center py-12 w-full">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               </div>
             ) : error ? (
-              <div className="text-center py-12">
+              <div className="text-center py-12 w-full">
                 <p className="text-red-500">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="mt-4 text-blue-600 hover:underline"
+                  className="mt-4 text-sky-600 hover:underline"
                 >
                   Try again
                 </button>
               </div>
             ) : (
-              <>
+              <div className="self-stretch flex flex-col justify-start items-start gap-3">
+                {/* Effective Date */}
+                {effectiveDate && (
+                  <p className="self-stretch text-gray-800 text-base font-semibold leading-6">
+                    Effective Date: {effectiveDate}
+                  </p>
+                )}
+
                 {/* Rendered HTML Content */}
                 <div
-                  className="prose prose-sm max-w-none text-gray-600 leading-relaxed
-                    prose-headings:text-gray-900 prose-headings:font-semibold
-                    prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
-                    prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
-                    prose-li:my-1 prose-a:text-blue-600 prose-a:hover:text-blue-700
-                    prose-strong:text-gray-900 prose-blockquote:border-l-blue-500
-                    prose-blockquote:bg-gray-50 prose-blockquote:py-1 prose-blockquote:px-4"
+                  className="self-stretch text-gray-600 text-sm font-normal leading-5
+                    [&_h1]:text-gray-800 [&_h1]:text-base [&_h1]:font-semibold [&_h1]:leading-6 [&_h1]:mt-4
+                    [&_h2]:text-gray-800 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:leading-6 [&_h2]:mt-4
+                    [&_h3]:text-gray-800 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:leading-6 [&_h3]:mt-3
+                    [&_p]:text-gray-600 [&_p]:text-sm [&_p]:font-normal [&_p]:leading-5
+                    [&_a]:text-sky-600 [&_a]:underline
+                    [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
+                    [&_li]:text-gray-600 [&_li]:text-sm [&_li]:font-normal [&_li]:leading-5"
                   dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
-
-                {/* Footer Note */}
-                <div className="mt-10 pt-6 border-t border-gray-200">
-                  <p className="text-xs text-gray-500 text-center">
-                    By using Mailria, you acknowledge that you have read, understood,
-                    and agree to be bound by these Terms of Services.
-                  </p>
-                </div>
-              </>
+              </div>
             )}
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Footer Navigation */}
       <Footer />

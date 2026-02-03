@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  ArrowLeft,
+  ChevronLeft,
   Download,
   Mail,
   User,
@@ -205,7 +205,7 @@ const EmailDetailPage: React.FC = () => {
               onClick={() => router.back()}
               className="h-10 w-10 rounded-xl border-gray-200"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
