@@ -35,7 +35,7 @@ interface ApiEmail {
 
 interface PaginationInfo {
   page: number;
-  limit: number;
+  page_size: number;
   total: number;
   total_pages: number;
 }
@@ -80,8 +80,9 @@ export default function AdminAllInboxPage() {
   // Data state
   const [emails, setEmails] = useState<ApiEmail[]>([]);
   const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(20);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -124,7 +125,7 @@ export default function AdminAllInboxPage() {
         {
           params: {
             page,
-            limit: pageSize,
+            page_size: pageSize,
             ...(debouncedSearch && { search: debouncedSearch }),
           },
         }
@@ -136,12 +137,15 @@ export default function AdminAllInboxPage() {
       if (data && Array.isArray(data.data)) {
         setEmails(data.data);
         setTotal(data.pagination?.total || data.data.length);
+        setTotalPages(data.pagination?.total_pages || Math.ceil((data.pagination?.total || data.data.length) / pageSize));
       } else if (Array.isArray(data)) {
         setEmails(data);
         setTotal(data.length);
+        setTotalPages(Math.ceil(data.length / pageSize));
       } else {
         setEmails([]);
         setTotal(0);
+        setTotalPages(0);
       }
       setError(null);
     } catch (err) {
@@ -198,8 +202,6 @@ export default function AdminAllInboxPage() {
     setSelectedEmail(null);
     setEmailDetail(null);
   };
-
-  const totalPages = Math.ceil(total / pageSize);
 
   return (
     <AdminLayout>
