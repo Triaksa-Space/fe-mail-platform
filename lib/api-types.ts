@@ -35,8 +35,18 @@ export interface RefreshTokenResponse {
 // Forgot Password Types
 // ===================
 
+export interface CheckBindingRequest {
+  email: string;
+}
+
+export interface CheckBindingResponse {
+  has_binding: boolean;
+  binding_email?: string;
+}
+
 export interface ForgotPasswordRequest {
   email: string;
+  binding_email?: string;
 }
 
 export interface ForgotPasswordResponse {
