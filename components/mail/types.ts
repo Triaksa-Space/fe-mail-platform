@@ -38,7 +38,8 @@ export interface SentMail {
 export interface ApiSentEmail {
   id: string;
   from_email: string;
-  to_email: string;
+  to_email?: string;
+  to?: string; // API may return 'to' instead of 'to_email'
   subject: string;
   body_preview?: string;
   status?: string;
@@ -90,7 +91,7 @@ export function transformSentEmail(email: ApiSentEmail): SentMail {
     id: email.id,
     user_id: "",
     from: email.from_email,
-    to: email.to_email,
+    to: email.to_email || email.to || "",
     subject: email.subject,
     snippet: email.body_preview || "",
     date: relativeTime,

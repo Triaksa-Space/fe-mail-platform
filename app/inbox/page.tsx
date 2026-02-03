@@ -515,7 +515,7 @@ const InboxPageContent: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-[#F9FAFB] flex overflow-hidden">
+    <div className="h-screen bg-[#F9FAFB] flex overflow-hidden w-full lg:max-w-[1440px] lg:mx-auto">
       {/* Desktop Sidebar */}
       <Sidebar
         currentView={currentView}
@@ -526,7 +526,7 @@ const InboxPageContent: React.FC = () => {
       />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 px-4 py-4 gap-4 lg:px-5 lg:py-5 lg:gap-5">
         {/* Content Area */}
         <div className="flex-1 flex overflow-hidden pb-20 lg:pb-0">
           {renderContent()}

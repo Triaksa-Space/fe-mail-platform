@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import { cn } from "@/lib/utils";
-import { RefreshCw, Send, Paperclip, Plus } from "lucide-react";
+import { RefreshCw, Send, Paperclip, PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
@@ -56,7 +56,7 @@ const SentList: React.FC<SentListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white relative",
+        "flex flex-col h-full bg-gray relative",
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
@@ -65,48 +65,23 @@ const SentList: React.FC<SentListProps> = ({
       aria-busy={isRefreshing}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 relative z-20 bg-white">
-        <div className="flex items-center gap-2">
+      <div className="px-5 py-3 relative z-20 bg-gray">
+        <div className="h-10 flex items-center justify-between">
           {onCompose && (
             <Button
               onClick={onCompose}
-              size="sm"
-              className="h-9 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+              className="h-10 px-4 py-2.5 bg-blue-600 hover:bg-blue-800 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-sky-600 text-white"
             >
-              <Plus className="h-4 w-4 mr-1.5" />
-              Compose
+              <PenSquare className="h-4 w-4 mr-1.5 text-white" />
+              <span className="text-base font-medium leading-4">Compose</span>
             </Button>
           )}
-          <h2 className="text-lg font-semibold text-gray-900">Sent</h2>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={onRefresh}
-            disabled={isRefreshing}
-            className="h-8 w-8 rounded-lg border-gray-200 hover:bg-gray-50"
-          >
-            <RefreshCw
-              className={cn("h-4 w-4 text-gray-600", isRefreshing && "animate-spin")}
-            />
-          </Button>
-        </div>
-        {userEmail && (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500">
-              Daily: {sentCount}/3
+          {userEmail && (
+            <span className="text-base font-semibold text-gray-800 truncate max-w-[220px]">
+              {userEmail}
             </span>
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100">
-                <span className="text-xs font-semibold text-blue-600">
-                  {userEmail.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-gray-700 truncate max-w-[150px] hidden sm:block">
-                {userEmail}
-              </span>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Refreshing indicator */}
@@ -122,7 +97,7 @@ const SentList: React.FC<SentListProps> = ({
       {/* Email List */}
       <div
         className={cn(
-          "flex-1 overflow-y-auto relative",
+          "flex-1 overflow-y-auto relative px-5",
           isTransitioning && "animate-fade-in"
         )}
       >
@@ -162,6 +137,7 @@ const SentList: React.FC<SentListProps> = ({
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.id}
+            className="flex flex-col gap-2 pb-4"
             renderItem={(email) => (
               <SentRow
                 email={email}
@@ -188,41 +164,33 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-4 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50",
-        isSelected && "bg-blue-50 hover:bg-blue-100"
+        "w-full text-left px-4 py-2 transition-colors",
+        "rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-gray-200",
+        "bg-white hover:bg-sky-100 focus:outline-none focus:bg-sky-100",
+        isSelected && "bg-sky-100"
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Sent icon indicator */}
-        <div className="flex-shrink-0 pt-1.5">
-          <Send className="w-3.5 h-3.5 text-green-500" />
-        </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Top row: To + Time */}
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
-              <span className="text-base font-medium text-slate-700 truncate">
-                To: {email.to || "Unknown"}
-              </span>
-              {email.has_attachments && (
-                <Paperclip className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-              )}
-            </div>
-            <span className="text-sm text-gray-500 whitespace-nowrap flex-shrink-0">
+            <span className="text-base font-normal text-gray-600 truncate">
+              To: {email.to || "Unknown"}
+            </span>
+            <span className="text-xs font-normal text-gray-600 whitespace-nowrap flex-shrink-0">
               {email.date}
             </span>
           </div>
 
           {/* Subject line */}
-          <p className="text-sm font-medium text-slate-700 truncate mt-1">
+          <p className="text-sm font-normal text-gray-600 truncate mt-1">
             {email.subject || "(No subject)"}
           </p>
 
           {/* Snippet/Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-1">
+          <p className="text-sm font-normal text-gray-600 line-clamp-1 mt-1">
             {email.snippet || "No preview available"}
           </p>
         </div>

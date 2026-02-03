@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import { cn } from "@/lib/utils";
-import { RefreshCw } from "lucide-react";
+import { Inbox, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
@@ -56,7 +56,7 @@ const InboxList: React.FC<InboxListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white relative",
+        "flex flex-col h-full bg-gray relative",
         // On desktop: fixed width with border when not fullWidth, full width when fullWidth
         fullWidth
           ? "w-full"
@@ -66,38 +66,25 @@ const InboxList: React.FC<InboxListProps> = ({
       aria-busy={isRefreshing}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 relative z-20 bg-white">
-        <div className="flex items-center gap-2">
-          <h2 className="text-lg font-semibold text-gray-900">Inbox</h2>
+      <div className="px-5 py-3 relative z-20 bg-gray">
+        <div className="h-10 flex items-center justify-between">
           <Button
             variant="outline"
             size="icon"
             onClick={onRefresh}
             disabled={isRefreshing}
-            className="h-8 w-8 rounded-lg border-gray-200 hover:bg-gray-50"
+            className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 hover:bg-gray-50"
           >
             <RefreshCw
-              className={cn("h-4 w-4 text-gray-600", isRefreshing && "animate-spin")}
+              className={cn("h-4 w-4 text-gray-800", isRefreshing && "animate-spin")}
             />
           </Button>
-        </div>
-        {userEmail && (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-500">
-              Daily: {sentCount}/3
+          {userEmail && (
+            <span className="text-base font-semibold text-gray-800 truncate max-w-[220px]">
+              {userEmail}
             </span>
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100">
-                <span className="text-xs font-semibold text-blue-600">
-                  {userEmail.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-sm font-medium text-gray-700 truncate max-w-[150px] hidden sm:block">
-                {userEmail}
-              </span>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Subtle refreshing indicator - stale-while-revalidate pattern */}
@@ -113,7 +100,7 @@ const InboxList: React.FC<InboxListProps> = ({
       {/* Email List with fade-in transition */}
       <div
         className={cn(
-          "flex-1 overflow-y-auto relative",
+          "flex-1 overflow-y-auto relative px-5",
           // Fade-in animation when transitioning from loading
           isTransitioning && "animate-fade-in"
         )}
@@ -132,28 +119,27 @@ const InboxList: React.FC<InboxListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 px-4">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <RefreshCw className="h-5 w-5 text-gray-400" />
+          <div className="flex-1 px-4 md:px-5 py-12 flex items-start justify-center">
+            <div className="w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 px-3 py-12 flex flex-col justify-center items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center">
+                <Inbox className="w-9 h-9 text-gray-300" />
+              </div>
+              <div className="flex flex-col justify-start items-center gap-1">
+                <p className="text-base font-medium text-gray-800">No Email Yet</p>
+                <p className="text-center text-xs font-normal text-gray-600 leading-5">
+                  There are no email in your inbox
+                  <br className="hidden sm:block" />
+                  at the moment.
+                </p>
+              </div>
             </div>
-            <p className="text-sm font-medium text-gray-900 mb-1">No emails found</p>
-            <p className="text-xs text-gray-500 text-center mb-3">
-              Your inbox is empty or no emails match your filter
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onRefresh}
-              className="text-sm"
-            >
-              Refresh
-            </Button>
           </div>
         ) : (
           <LazyList
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.email_encode_id}
+            className="flex flex-col gap-2 pb-4"
             renderItem={(email) => (
               <InboxRow
                 email={email}
@@ -182,54 +168,59 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-4 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50",
-        isSelected && "bg-blue-50 hover:bg-blue-100"
+        "w-full text-left px-4 py-2 transition-colors",
+        "rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-gray-200",
+        isUnread ? "bg-white" : "bg-gray-100",
+        "hover:bg-sky-100 focus:outline-none focus:bg-sky-100",
+        isSelected && "bg-sky-100"
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Unread indicator dot */}
-        <div className="flex-shrink-0 pt-1.5">
-          {isUnread ? (
-            <div className="w-2 h-2 rounded-full bg-blue-600" />
-          ) : (
-            <div className="w-2 h-2" /> // Placeholder to maintain alignment
-          )}
-        </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {/* Top row: Sender + Time */}
+          {/* Top row: Sender + Time + Unread indicator */}
           <div className="flex items-center justify-between gap-3">
             <span
               className={cn(
                 "text-base truncate",
-                isUnread
-                  ? "font-semibold text-slate-900"
-                  : "font-medium text-slate-700"
+                isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
               )}
             >
               {email.from || "Unknown Sender"}
             </span>
-            <span className="text-sm text-gray-500 whitespace-nowrap flex-shrink-0">
-              {email.date}
-            </span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span
+                className={cn(
+                  "text-xs whitespace-nowrap",
+                  isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
+                )}
+              >
+                {email.date}
+              </span>
+              {isUnread && (
+                <div className="w-2 h-2 rounded-full bg-blue-600" />
+              )}
+            </div>
           </div>
 
           {/* Subject line */}
           <p
             className={cn(
               "text-sm truncate mt-1",
-              isUnread
-                ? "font-semibold text-slate-900"
-                : "font-medium text-slate-700"
+              isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
             )}
           >
             {email.subject || "(No subject)"}
           </p>
 
           {/* Snippet/Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-1">
+          <p
+            className={cn(
+              "text-sm line-clamp-1 mt-1",
+              isUnread ? "font-normal text-gray-600" : "font-normal text-gray-600"
+            )}
+          >
             {email.snippet || "No preview available"}
           </p>
         </div>
