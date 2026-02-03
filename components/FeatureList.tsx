@@ -13,48 +13,41 @@ interface FeatureListProps {
   title?: string;
   features?: FeatureItem[];
   className?: string;
-  columns?: 2 | 4;
 }
 
 const defaultFeatures: FeatureItem[] = [
   { icon: Inbox, text: "Unlimited inbox" },
-  { icon: Shield, text: "Protected access" },
   { icon: Ban, text: "No ads. No noise" },
-  { icon: CreditCard, text: "Pay once" },
+  { icon: Shield, text: "Protected access system" },
+  { icon: CreditCard, text: "Pay once. No subscription" },
 ];
 
 /**
- * FeatureList - Displays a grid of features with icons
+ * FeatureList - Displays features with icons in a flex wrap layout
  *
  * Features:
  * - Configurable title
  * - Customizable features list
- * - Responsive grid (2 columns on mobile, configurable)
+ * - Responsive flex wrap layout
  */
 const FeatureList: React.FC<FeatureListProps> = ({
   title = "Why Mailria?",
   features = defaultFeatures,
   className,
-  columns = 2,
 }) => {
-  const gridClasses = {
-    2: "grid-cols-2",
-    4: "grid-cols-2 md:grid-cols-4",
-  };
-
   return (
-    <div className={cn("w-full max-w-sm text-center", className)}>
+    <div className={cn("w-full max-w-sm flex flex-col gap-3", className)}>
       {title && (
-        <p className="text-sm font-semibold text-gray-700 mb-4">{title}</p>
+        <p className="text-sm font-normal text-gray-600 text-center">{title}</p>
       )}
-      <div className={cn("grid gap-3", gridClasses[columns])}>
+      <div className="flex flex-wrap justify-center items-center gap-3">
         {features.map((feature, index) => (
           <div
             key={index}
-            className="flex items-center gap-2 justify-center p-2 rounded-lg bg-white border border-gray-100 text-xs text-gray-600"
+            className="flex items-center gap-1"
           >
-            <feature.icon className="h-4 w-4 text-blue-500" />
-            <span>{feature.text}</span>
+            <feature.icon className="h-3 w-3 text-sky-600" />
+            <span className="text-xs font-normal text-gray-600">{feature.text}</span>
           </div>
         ))}
       </div>

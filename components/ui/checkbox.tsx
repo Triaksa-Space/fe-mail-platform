@@ -28,28 +28,28 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         <label
           htmlFor={inputId}
           className={cn(
-            "flex items-center gap-2 cursor-pointer",
+            "flex items-center gap-1 cursor-pointer",
             props.disabled && "cursor-not-allowed opacity-50"
           )}
         >
-          <div className="relative">
+          <div className="relative w-5 h-5">
             <input
               type="checkbox"
               id={inputId}
               ref={ref}
               className={cn(
-                "peer h-4 w-4 shrink-0 rounded border border-gray-300",
+                "peer h-5 w-5 shrink-0 rounded border-[1.5px] border-gray-300",
                 "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
                 "disabled:cursor-not-allowed disabled:opacity-50",
                 "checked:bg-blue-600 checked:border-blue-600",
-                "appearance-none cursor-pointer",
+                "appearance-none cursor-pointer bg-white",
                 className
               )}
               {...props}
             />
             <Check
               className={cn(
-                "absolute top-0 left-0 h-4 w-4 text-white pointer-events-none",
+                "absolute top-0 left-0 h-5 w-5 text-white pointer-events-none p-0.5",
                 "opacity-0 peer-checked:opacity-100",
                 "transition-opacity duration-150"
               )}
@@ -57,7 +57,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             />
           </div>
           {label && (
-            <span className="text-sm text-gray-600 select-none">{label}</span>
+            <span className="text-sm font-normal text-gray-800 select-none">{label}</span>
           )}
         </label>
         {error && <p className="text-xs text-red-500">{error}</p>}
