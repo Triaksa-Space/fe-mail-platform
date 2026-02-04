@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils";
 import {
   RefreshCw,
   Search,
-  ChevronLeft,
+  ChevronRight,
   Inbox,
   Download,
+  ArrowLeft,
+  Mail,
+  FileText,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
@@ -66,9 +68,9 @@ const formatRelativeTime = (dateString: string): string => {
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffMins < 60) return `${diffMins} months ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffDays < 7) return `${diffDays} days ago`;
 
   return date.toLocaleDateString();
 };
@@ -231,72 +233,84 @@ export default function AdminAllInboxPage() {
         </div>
 
         {/* Main Content - Full width single view */}
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 w-full">
           {selectedEmail ? (
             /* Email Detail View - Full Width */
-            <AdminContentCard className="h-full flex flex-col overflow-hidden">
-              {/* Detail Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                <div className="flex items-center gap-3">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleClosePreview}
-                    className="h-8 w-8 rounded-lg"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <h3 className="font-medium text-gray-900 truncate">
+            <div className="h-full flex flex-col gap-5 overflow-y-auto">
+              {/* Breadcrumb Navigation */}
+              <div className="self-stretch inline-flex justify-start items-center gap-1">
+                {/* Back */}
+                <button
+                  onClick={handleClosePreview}
+                  className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
+                >
+                  <ArrowLeft className="w-6 h-6 text-gray-600" />
+                </button>
+                <ChevronRight className="w-5 h-5 text-gray-300" />
+
+                {/* All inbox */}
+                <button
+                  onClick={handleClosePreview}
+                  className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                >
+                  <Inbox className="w-5 h-5 text-gray-600" />
+                  <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">All inbox</span>
+                </button>
+                <ChevronRight className="w-5 h-5 text-gray-300" />
+
+                {/* Current email subject */}
+                <div className="flex justify-center items-center gap-1">
+                  <Mail className="w-5 h-5 text-sky-600" />
+                  <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
                     {selectedEmail.subject || "(No subject)"}
-                  </h3>
+                  </span>
                 </div>
               </div>
 
-              {/* Detail Content */}
-              <div className="flex-1 overflow-y-auto p-6">
-                {isLoadingDetail ? (
-                  <div className="flex items-center justify-center h-32">
-                    <div className="flex items-center gap-2 text-gray-500">
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">Loading...</span>
-                    </div>
+              {isLoadingDetail ? (
+                <div className="flex items-center justify-center h-32">
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <RefreshCw className="w-6 h-6 animate-spin" />
+                    <span className="text-sm">Loading...</span>
                   </div>
-                ) : (
-                  <div className="max-w-4xl mx-auto space-y-4">
-                    {/* Email Meta */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <span className="text-base font-semibold text-blue-600">
-                            {selectedEmail.from_name?.charAt(0)?.toUpperCase() || "?"}
-                          </span>
+                </div>
+              ) : (
+                <>
+                  {/* Email Meta Card */}
+                  <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-2">
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex justify-between items-start">
+                        <div className="flex justify-start items-center gap-1">
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">From</span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.from}</span>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {selectedEmail.from_name || "Unknown"}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {selectedEmail.from}
-                              </p>
-                            </div>
-                            <p className="text-sm text-gray-400">
-                              {formatRelativeTime(selectedEmail.received_at)}
-                            </p>
-                          </div>
-                          <div className="mt-2 bg-gray-50 rounded-lg px-3 py-2">
-                            <p className="text-sm text-gray-500">
-                              <span className="font-medium">To:</span>{" "}
-                              {selectedEmail.user_email || "Unknown"}
-                            </p>
-                          </div>
+                        <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                          {formatRelativeTime(selectedEmail.received_at)}
+                        </span>
+                      </div>
+                      <div className="flex justify-start items-start gap-1">
+                        <div className="flex justify-start items-center gap-1">
+                          <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.user_email || "Unknown"}</span>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Email Body */}
-                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                  {/* Email Body Card */}
+                  <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-4">
+                    {/* Subject Title */}
+                    <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+                      {selectedEmail.subject || "(No subject)"}
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-full h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-200"></div>
+
+                    {/* Email Body Content */}
+                    <div className="flex flex-col">
                       {emailDetail?.Body ? (
                         <iframe
                           srcDoc={emailDetail.Body}
@@ -315,7 +329,7 @@ export default function AdminAllInboxPage() {
                               style.textContent = `
                                 body {
                                   margin: 0;
-                                  padding: 24px;
+                                  padding: 0;
                                   font-family: system-ui, -apple-system, sans-serif;
                                   font-size: 14px;
                                   line-height: 1.6;
@@ -345,51 +359,48 @@ export default function AdminAllInboxPage() {
                           sandbox="allow-same-origin allow-scripts allow-popups"
                         />
                       ) : (
-                        <div className="p-6">
-                          <p className="text-sm text-gray-600 whitespace-pre-wrap">
-                            {selectedEmail.preview || "No content"}
-                          </p>
-                        </div>
+                        <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                          {selectedEmail.preview || "No content"}
+                        </p>
                       )}
                     </div>
 
                     {/* Attachments */}
                     {emailDetail?.ListAttachments &&
                       emailDetail.ListAttachments.length > 0 && (
-                        <div className="bg-white rounded-xl border border-gray-200 p-4">
-                          <h4 className="text-sm font-medium text-gray-900 mb-3">
-                            Attachments ({emailDetail.ListAttachments.length})
-                          </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {emailDetail.ListAttachments.map((attachment, index) => {
-                              const filename =
-                                attachment.Filename.split("_").pop() ||
-                                attachment.Filename;
-                              return (
-                                <div
-                                  key={index}
-                                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                                >
-                                  <span className="text-sm text-gray-700 truncate flex-1">
-                                    {filename}
-                                  </span>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0 rounded-lg"
-                                  >
-                                    <Download className="h-4 w-4 text-gray-600" />
-                                  </Button>
+                        <div className="inline-flex justify-start items-start gap-2 overflow-x-auto">
+                          {emailDetail.ListAttachments.map((attachment, index) => {
+                            const filename =
+                              attachment.Filename.split("_").pop() ||
+                              attachment.Filename;
+                            const ext = filename.split(".").pop()?.toUpperCase() || "FILE";
+                            return (
+                              <a
+                                key={index}
+                                href={attachment.URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-32 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3 hover:bg-gray-50 transition-colors"
+                              >
+                                <div className="self-stretch inline-flex justify-between items-center">
+                                  <div className="flex justify-start items-center gap-0.5">
+                                    <FileText className="w-5 h-5 text-sky-600" />
+                                    <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
+                                  </div>
+                                  <Download className="w-5 h-5 text-gray-800" />
                                 </div>
-                              );
-                            })}
-                          </div>
+                                <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
+                                  {filename}
+                                </span>
+                              </a>
+                            );
+                          })}
                         </div>
                       )}
                   </div>
-                )}
-              </div>
-            </AdminContentCard>
+                </>
+              )}
+            </div>
           ) : (
             /* Email List View - Full Width */
             <AdminContentCard className="h-full flex flex-col overflow-hidden">
