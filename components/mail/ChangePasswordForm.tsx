@@ -71,10 +71,12 @@ const ChangePasswordForm: React.FC = () => {
   const isFormValid = currentPassword && newPassword && confirmPassword;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {/* Old Password */}
-      <div className="space-y-1.5">
-        <label className="text-xs text-gray-600 font-medium">Old password</label>
+      <div className="relative">
+        <span className="absolute -top-2 left-3 px-1 bg-white text-xs text-gray-500 z-10">
+          Old password
+        </span>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
@@ -86,7 +88,12 @@ const ChangePasswordForm: React.FC = () => {
                 DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
               )
             }
-            className="h-10 text-sm pl-10 pr-10 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-100"
+            className={cn(
+              "h-11 text-sm pl-10 pr-10 rounded-lg",
+              "border-gray-200 bg-white",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "focus:border-blue-500 focus:ring-blue-100"
+            )}
           />
           <button
             type="button"
@@ -103,8 +110,10 @@ const ChangePasswordForm: React.FC = () => {
       </div>
 
       {/* New Password */}
-      <div className="space-y-1.5">
-        <label className="text-xs text-gray-600 font-medium">New password</label>
+      <div className="relative">
+        <span className="absolute -top-2 left-3 px-1 bg-white text-xs text-gray-500 z-10">
+          New password
+        </span>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
@@ -116,7 +125,12 @@ const ChangePasswordForm: React.FC = () => {
                 DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
               )
             }
-            className="h-10 text-sm pl-10 pr-10 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-100"
+            className={cn(
+              "h-11 text-sm pl-10 pr-10 rounded-lg",
+              "border-gray-200 bg-white",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "focus:border-blue-500 focus:ring-blue-100"
+            )}
           />
           <button
             type="button"
@@ -133,10 +147,10 @@ const ChangePasswordForm: React.FC = () => {
       </div>
 
       {/* Confirm Password */}
-      <div className="space-y-1.5">
-        <label className="text-xs text-gray-600 font-medium">
+      <div className="relative">
+        <span className="absolute -top-2 left-3 px-1 bg-white text-xs text-gray-500 z-10">
           Confirm password
-        </label>
+        </span>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
@@ -148,7 +162,12 @@ const ChangePasswordForm: React.FC = () => {
                 DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
               )
             }
-            className="h-10 text-sm pl-10 pr-10 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-100"
+            className={cn(
+              "h-11 text-sm pl-10 pr-10 rounded-lg",
+              "border-gray-200 bg-white",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "focus:border-blue-500 focus:ring-blue-100"
+            )}
           />
           <button
             type="button"
@@ -172,9 +191,9 @@ const ChangePasswordForm: React.FC = () => {
         type="submit"
         disabled={isLoading || !isFormValid}
         className={cn(
-          "w-full h-10 rounded-xl font-medium",
+          "w-full h-10 rounded-lg font-medium",
           "bg-blue-600 hover:bg-blue-700 text-white",
-          "disabled:bg-gray-300 disabled:text-gray-500"
+          "disabled:bg-blue-400 disabled:text-white disabled:opacity-100"
         )}
       >
         {isLoading ? (

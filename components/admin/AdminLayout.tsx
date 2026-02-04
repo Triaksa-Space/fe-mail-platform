@@ -44,19 +44,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-gray-50">
       {/* Desktop Layout */}
-      <div className="mx-auto w-full max-w-[1440px] px-6 py-5">
-        <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
+      <div className="mx-auto w-full max-w-[1440px] py-5 inline-flex flex-col justify-start items-start gap-5 overflow-hidden">
+        <div className="self-stretch px-5 inline-flex justify-start items-start gap-5">
           {/* Sidebar - Hidden on mobile */}
-          <div className="hidden lg:block">
-            <div className="sticky top-5 h-[calc(100vh-40px)]">
-              <AdminSidebar />
-            </div>
+          <div className="hidden lg:inline-flex lg:flex-col lg:justify-start lg:items-start lg:gap-5 h-[calc(100vh-40px)] sticky top-5">
+            <AdminSidebar />
           </div>
 
           {/* Main Content */}
-          <main className="min-w-0 pb-20 lg:pb-0">{children}</main>
+          <main className="flex-1 min-w-0 pb-20 lg:pb-0 inline-flex flex-col justify-start items-start">
+            {children}
+          </main>
         </div>
       </div>
 

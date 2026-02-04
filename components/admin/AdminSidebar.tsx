@@ -196,94 +196,125 @@ const AdminSidebar: React.FC = () => {
   return (
     <aside
       className={cn(
-        "flex h-full flex-col items-start gap-5",
-        "rounded-xl border border-gray-200 bg-white p-4",
-        "shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]"
+        "self-stretch flex-1 p-4 bg-white rounded-xl",
+        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
+        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "flex flex-col justify-start items-start gap-5"
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-2 px-2 py-3">
+      <div className="inline-flex justify-start items-center gap-4">
         <Image
           src="/mailria.png"
           alt="Mailria"
-          width={140}
-          height={36}
-          className="h-9 w-auto"
+          width={112}
+          height={40}
+          className="w-28 h-10"
           priority
         />
       </div>
 
-      {/* Menu Groups */}
-      <nav className="flex-1 w-full space-y-5 overflow-y-auto">
-        {filteredGroups.map((group) => (
-          <div key={group.title} className="space-y-1">
-            {/* Group Title */}
-            <p className="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              {group.title}
-            </p>
-            {/* Group Items */}
-            {group.items.map((item) => {
-              const active = isActive(item.href);
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavigation(item)}
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    active
-                      ? "bg-blue-50 text-blue-700"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  )}
-                >
-                  <Icon className="h-5 w-5" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        ))}
-      </nav>
+      {/* Menu Content */}
+      <div className="self-stretch flex-1 flex flex-col justify-between items-start">
+        {/* Menu Groups */}
+        <div className="self-stretch flex flex-col justify-start items-start gap-2">
+          {filteredGroups.map((group) => (
+            <React.Fragment key={group.title}>
+              {/* Group Title */}
+              <div className="justify-center text-gray-400 text-xs font-normal font-['Roboto'] leading-5">
+                {group.title}
+              </div>
+              {/* Group Items */}
+              {group.items.map((item) => {
+                const active = isActive(item.href);
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item)}
+                    className={cn(
+                      "self-stretch px-3 py-1 inline-flex justify-between items-center",
+                      active && "bg-sky-100 rounded-xl"
+                    )}
+                  >
+                    <div className="flex-1 flex justify-start items-center gap-5">
+                      <Icon
+                        className={cn(
+                          "w-5 h-5",
+                          active ? "text-sky-600" : "text-gray-600"
+                        )}
+                      />
+                      <div
+                        className={cn(
+                          "justify-center text-sm font-['Roboto'] leading-5",
+                          active
+                            ? "text-sky-600 font-semibold"
+                            : "text-gray-600 font-normal"
+                        )}
+                      >
+                        {item.label}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </React.Fragment>
+          ))}
+        </div>
 
-      {/* Bottom Section */}
-      <div className="w-full border-t border-gray-100 pt-4 space-y-1">
-        {/* Settings */}
-        <button
-          onClick={() => router.push("/admin/settings")}
-          className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-            pathname.startsWith("/admin/settings")
-              ? "bg-blue-50 text-blue-700"
-              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-          )}
-        >
-          <Settings className="h-5 w-5" />
-          <span>Settings</span>
-        </button>
+        {/* Bottom Section */}
+        <div className="self-stretch flex flex-col justify-start items-start gap-2">
+          {/* Settings */}
+          <button
+            onClick={() => router.push("/admin/settings")}
+            className={cn(
+              "self-stretch px-3 py-1 inline-flex justify-between items-center",
+              pathname.startsWith("/admin/settings") && "bg-sky-100 rounded-xl"
+            )}
+          >
+            <div className="flex-1 flex justify-start items-center gap-5">
+              <Settings
+                className={cn(
+                  "w-5 h-5",
+                  pathname.startsWith("/admin/settings")
+                    ? "text-sky-600"
+                    : "text-gray-600"
+                )}
+              />
+              <div
+                className={cn(
+                  "justify-center text-sm font-['Roboto'] leading-5",
+                  pathname.startsWith("/admin/settings")
+                    ? "text-sky-600 font-semibold"
+                    : "text-gray-600 font-normal"
+                )}
+              >
+                Settings
+              </div>
+            </div>
+          </button>
 
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-        >
-          <LogOut className="h-5 w-5" />
-          <span>Log out</span>
-        </button>
+          {/* Logout */}
+          <button
+            onClick={handleLogout}
+            className="self-stretch px-3 py-1 inline-flex justify-between items-center"
+          >
+            <div className="flex-1 flex justify-start items-center gap-5">
+              <LogOut className="w-5 h-5 text-gray-600" />
+              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-5">
+                Log out
+              </div>
+            </div>
+          </button>
 
-        {/* User Display */}
-        <div className="mt-3 flex items-center gap-3 rounded-lg bg-gray-50 px-3 py-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100">
-            <span className="text-sm font-semibold text-blue-600">
-              {email?.charAt(0)?.toUpperCase() || "A"}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+          {/* Divider */}
+          <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-gray-300" />
+
+          {/* User Info */}
+          <div className="self-stretch px-3 py-1 bg-gray-100 rounded-xl inline-flex justify-center items-center gap-2.5">
+            <div className="justify-center text-gray-800 text-base font-semibold font-['Roboto'] leading-6 truncate">
               {email || "Admin"}
-            </p>
-            <p className="text-xs text-gray-500">
-              {roleId === 0 ? "Super Admin" : "Admin"}
-            </p>
+            </div>
           </div>
         </div>
       </div>

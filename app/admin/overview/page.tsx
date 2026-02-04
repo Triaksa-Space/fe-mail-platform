@@ -76,7 +76,7 @@ interface OverviewData {
   latestSent: EmailItem[];
 }
 
-// Format relative time (matching inbox page style)
+// Format relative time (matching Figma design)
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
@@ -86,9 +86,12 @@ function formatRelativeTime(dateString: string): string {
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffMins === 1) return "1 minute ago";
+  if (diffMins < 60) return `${diffMins} minutes ago`;
+  if (diffHours === 1) return "1 hour ago";
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffDays === 1) return "1 day ago";
+  if (diffDays < 7) return `${diffDays} days ago`;
 
   return date.toLocaleDateString();
 }
@@ -136,16 +139,15 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
     return (
       <div
         className={cn(
-          "rounded-xl bg-white p-5 border border-gray-100",
-          "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]"
+          "flex-1 p-4 bg-white rounded-lg",
+          "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+          "inline-flex flex-col justify-start items-start gap-2 overflow-hidden"
         )}
       >
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-12 w-12 rounded-lg" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-7 w-20" />
-          </div>
+        <Skeleton className="h-4 w-32" />
+        <div className="flex justify-start items-center gap-1">
+          <Skeleton className="h-7 w-7 rounded-lg" />
+          <Skeleton className="h-7 w-20" />
         </div>
       </div>
     );
@@ -154,26 +156,29 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
   return (
     <div
       className={cn(
-        "rounded-xl bg-white p-5 border border-gray-100",
-        "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]"
+        "flex-1 p-4 bg-white rounded-lg",
+        "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+        "inline-flex flex-col justify-start items-start gap-2 overflow-hidden"
       )}
     >
-      <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50">
-          <Icon className="h-6 w-6 text-blue-600" />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <p className="text-2xl font-bold text-gray-900">
+      <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-4">
+        {label}
+      </div>
+      <div className="self-stretch inline-flex justify-start items-center gap-1">
+        <div className="flex justify-start items-center gap-1">
+          <div className="p-1 bg-sky-100 rounded-lg flex justify-start items-center gap-2.5">
+            <Icon className="w-5 h-5 text-sky-600" />
+          </div>
+          <div className="justify-center text-gray-800 text-xl font-semibold font-['Roboto'] leading-7">
             {formatNumber(value)}
-          </p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-// Email Row Component (matching InboxList style)
+// Email Row Component (matching Figma design)
 interface EmailRowProps {
   email: EmailItem;
   type: "inbox" | "sent";
@@ -187,76 +192,93 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-4 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
+        "self-stretch px-4 py-2 bg-white rounded-xl",
+        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
+        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "inline-flex justify-start items-center gap-2 w-full text-left",
+        "hover:bg-gray-50 transition-colors"
       )}
     >
-      <div className="flex items-start gap-3">
-        {/* Unread indicator dot */}
-        <div className="flex-shrink-0 pt-1.5">
-          {isUnread ? (
-            <div className="w-2 h-2 rounded-full bg-blue-600" />
-          ) : (
-            <div className="w-2 h-2" />
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Top row: Sender/Recipient + Time */}
-          <div className="flex items-center justify-between gap-3">
-            <span
-              className={cn(
-                "text-base truncate",
-                isUnread
-                  ? "font-semibold text-slate-900"
-                  : "font-medium text-slate-700"
-              )}
-            >
-              {email.name}
-            </span>
-            <span className="text-sm text-gray-500 whitespace-nowrap flex-shrink-0">
-              {email.date}
-            </span>
-          </div>
-
-          {/* Subject line */}
-          <p
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        {/* Top row: Sender/Recipient + Time + Unread badge */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div
             className={cn(
-              "text-sm truncate mt-1",
+              "justify-center text-base font-['Roboto'] leading-6",
               isUnread
-                ? "font-semibold text-slate-900"
-                : "font-medium text-slate-700"
+                ? "text-gray-800 font-semibold"
+                : "text-gray-600 font-normal"
             )}
           >
-            {email.subject}
-          </p>
+            {type === "sent" ? `To: ${email.name}` : email.name}
+          </div>
+          <div className="flex justify-end items-center gap-0.5">
+            <div
+              className={cn(
+                "justify-center text-xs font-['Roboto'] leading-5 line-clamp-1",
+                isUnread
+                  ? "text-gray-800 font-semibold"
+                  : "text-gray-600 font-normal"
+              )}
+            >
+              {email.date}
+            </div>
+            {isUnread && (
+              <div className="w-2 h-2 bg-sky-600 rounded-full" />
+            )}
+          </div>
+        </div>
 
-          {/* Snippet/Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-1">
-            {email.snippet}
-          </p>
+        {/* Content row: Subject + Preview + User email */}
+        <div className="self-stretch inline-flex justify-start items-start gap-2">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+            {/* Subject */}
+            <div
+              className={cn(
+                "self-stretch justify-center text-sm font-['Roboto'] leading-5 line-clamp-1",
+                isUnread
+                  ? "text-gray-800 font-semibold"
+                  : "text-gray-600 font-normal"
+              )}
+            >
+              {email.subject}
+            </div>
+            {/* Preview/Snippet */}
+            <div className="self-stretch justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+              {email.snippet}
+            </div>
+          </div>
+          {/* User email badge */}
+          <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+            {email.email}
+          </div>
         </div>
       </div>
     </button>
   );
 }
 
-// Email Row Skeleton (matching InboxList style)
+// Email Row Skeleton
 function EmailRowSkeleton() {
   return (
-    <div className="px-4 py-4 border-b border-gray-100">
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 pt-1.5">
-          <Skeleton className="w-2 h-2 rounded-full" />
+    <div
+      className={cn(
+        "self-stretch px-4 py-2 bg-white rounded-xl",
+        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
+        "outline outline-1 outline-offset-[-1px] outline-gray-200"
+      )}
+    >
+      <div className="flex-1 flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-4 w-16" />
         </div>
-        <div className="flex-1 space-y-2">
-          <div className="flex items-center justify-between">
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-4 w-12" />
+        <div className="flex items-start gap-2">
+          <div className="flex-1 flex flex-col gap-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-full" />
           </div>
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-28" />
         </div>
       </div>
     </div>
@@ -282,26 +304,26 @@ function LatestListCard({
   return (
     <div
       className={cn(
-        "rounded-xl bg-white border border-gray-100",
-        "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]",
-        "flex flex-col overflow-hidden"
+        "flex-1 p-4 bg-white rounded-lg",
+        "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+        "inline-flex flex-col justify-start items-start gap-4 overflow-hidden"
       )}
     >
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+      <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+        {title}
       </div>
 
       {/* Email List */}
-      <div className="flex-1">
+      <div className="self-stretch flex flex-col justify-start items-start gap-2">
         {isLoading ? (
-          <div>
+          <>
             {Array.from({ length: 5 }).map((_, i) => (
               <EmailRowSkeleton key={i} />
             ))}
-          </div>
+          </>
         ) : emails.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="self-stretch flex flex-col items-center justify-center py-12 px-4">
             <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
               {type === "inbox" ? (
                 <Inbox className="h-5 w-5 text-gray-400" />
@@ -319,7 +341,7 @@ function LatestListCard({
             </p>
           </div>
         ) : (
-          <div>
+          <>
             {emails.map((email) => (
               <EmailRow
                 key={email.id}
@@ -328,7 +350,7 @@ function LatestListCard({
                 onClick={() => onItemClick?.(email.id)}
               />
             ))}
-          </div>
+          </>
         )}
       </div>
     </div>
@@ -415,31 +437,36 @@ export default function OverviewPage() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Overview</h1>
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Overview
+          </div>
           <button
             onClick={handleRefresh}
             disabled={isRefreshing || isLoading}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200",
-              "bg-white transition-colors hover:bg-gray-50",
+              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "outline outline-1 outline-offset-[-1px] outline-gray-200",
+              "flex justify-center items-center gap-2 overflow-hidden",
+              "hover:bg-gray-50 transition-colors",
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
             aria-label="Refresh data"
           >
             <RefreshCw
               className={cn(
-                "h-5 w-5 text-gray-600",
+                "w-5 h-5 text-gray-800",
                 isRefreshing && "animate-spin"
               )}
             />
           </button>
         </div>
 
-        {/* KPI Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* KPI Cards Row 1 */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
           <KPICard
             icon={Users}
             label="Total @mailria.com user"
@@ -452,6 +479,10 @@ export default function OverviewPage() {
             value={data?.stats?.totalUsersMailsaja ?? 0}
             isLoading={isLoading}
           />
+        </div>
+
+        {/* KPI Cards Row 2 */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
           <KPICard
             icon={Inbox}
             label="Total inbox"
@@ -466,8 +497,8 @@ export default function OverviewPage() {
           />
         </div>
 
-        {/* Latest Lists Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Latest Lists Row */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
           <LatestListCard
             title="Latest inbox"
             emails={data?.latestInbox ?? []}

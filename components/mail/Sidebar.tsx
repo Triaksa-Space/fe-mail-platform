@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-2 px-4 py-4 border-b border-gray-200">
+      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
         <Image
           src="/mailria.png"
           alt="Mailria"
