@@ -466,14 +466,7 @@ const EmailManagementPageContent: React.FC = () => {
                         </div>
 
                         {/* Pagination */}
-                        <div className="self-stretch inline-flex justify-between items-center">
-                            <div className="px-3 py-2.5 rounded outline outline-1 outline-offset-[-0.50px] outline-gray-100 inline-flex flex-col justify-center items-start gap-2">
-                                <div className="inline-flex justify-start items-center gap-2">
-                                    <div className="text-justify justify-center text-gray-700 text-sm font-normal font-['Roboto'] leading-4">
-                                        Showing {users.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} results
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="self-stretch">
                             <PaginationComponent
                                 totalPages={totalPages}
                                 currentPage={currentPage}
