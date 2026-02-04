@@ -8,7 +8,7 @@ import {
   RefreshCw,
   Search,
   ChevronLeft,
-  Send,
+  Send as SendIcon,
   Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -425,13 +425,13 @@ export default function AdminAllSentPage() {
                   </div>
                 ) : emails.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-32 px-4">
-                    <Send className="h-8 w-8 text-gray-300 mb-2" />
+                    <SendIcon className="h-8 w-8 text-gray-300 mb-2" />
                     <p className="text-sm text-gray-500 text-center">
                       {debouncedSearch ? "No emails found" : "No sent emails yet"}
                     </p>
                   </div>
                 ) : (
-                  <div>
+                  <div className="flex flex-col gap-2 p-4">
                     {emails.map((email) => (
                       <AdminSentRow
                         key={email.id}
@@ -481,43 +481,38 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-4 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50",
-        isSelected && "bg-blue-50 hover:bg-blue-100"
+        "self-stretch w-full text-left px-4 py-2 rounded-xl",
+        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
+        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "inline-flex justify-start items-center gap-2",
+        "transition-colors",
+        isSelected ? "bg-gray-100" : "bg-white hover:bg-gray-100"
       )}
     >
-      <div className="flex items-start gap-3">
-        {/* Sent indicator icon */}
-        <div className="flex-shrink-0 pt-1.5">
-          <Send className="w-3 h-3 text-green-500" />
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        {/* Row 1: Recipient + Time */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">
+            To: {email.to || "Unknown"}
+          </div>
+          <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+            {formatRelativeTime(email.sent_at)}
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Top row: Sender (User) + Time */}
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-sm font-medium text-gray-700 truncate">
-              From: {email.from || email.user_email || "Unknown"}
-            </span>
-            <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
-              {formatRelativeTime(email.sent_at)}
-            </span>
+        {/* Row 2: Subject + Sender email */}
+        <div className="self-stretch inline-flex justify-start items-start gap-2">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+              {email.subject || "(No subject)"}
+            </div>
+            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+              {email.preview || "No preview available"}
+            </div>
           </div>
-
-          {/* Recipient */}
-          <p className="text-xs text-gray-400 truncate mt-0.5">
-            To: {email.to || "Unknown"}
-          </p>
-
-          {/* Subject */}
-          <p className="text-sm font-medium text-gray-700 truncate mt-1">
-            {email.subject || "(No subject)"}
-          </p>
-
-          {/* Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-1">
-            {email.preview || "No preview available"}
-          </p>
+          <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+            {email.from || email.user_email || "Unknown"}
+          </div>
         </div>
       </div>
     </button>

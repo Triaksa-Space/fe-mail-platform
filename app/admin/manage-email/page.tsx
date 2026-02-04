@@ -10,7 +10,6 @@ import {
   ChevronLeft,
   Inbox,
   Download,
-  Paperclip,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -431,7 +430,7 @@ export default function AdminAllInboxPage() {
                     </p>
                   </div>
                 ) : (
-                  <div>
+                  <div className="flex flex-col gap-2 p-4">
                     {emails.map((email) => (
                       <AdminInboxRow
                         key={email.id}
@@ -483,62 +482,52 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-4 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50",
-        isSelected && "bg-blue-50 hover:bg-blue-100"
+        "self-stretch w-full text-left px-4 py-2 rounded-xl",
+        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
+        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "inline-flex justify-start items-center gap-2",
+        "transition-colors",
+        isSelected ? "bg-gray-100" : "bg-white hover:bg-gray-100"
       )}
     >
-      <div className="flex items-start gap-3">
-        {/* Unread indicator */}
-        <div className="flex-shrink-0 pt-1.5">
-          {isUnread ? (
-            <div className="w-2 h-2 rounded-full bg-blue-600" />
-          ) : (
-            <div className="w-2 h-2" />
-          )}
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        {/* Row 1: Sender + Time */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className={cn(
+            "text-base font-['Roboto'] leading-6",
+            isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+          )}>
+            {email.from_name || email.from || "Unknown"}
+          </div>
+          <div className="flex justify-end items-center gap-0.5">
+            <div className={cn(
+              "text-xs font-['Roboto'] leading-5 line-clamp-1",
+              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+            )}>
+              {formatRelativeTime(email.received_at)}
+            </div>
+            {isUnread && (
+              <div className="w-2 h-2 bg-sky-600 rounded-full"></div>
+            )}
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Top row: Sender + Time */}
-          <div className="flex items-center justify-between gap-3">
-            <span
-              className={cn(
-                "text-sm truncate",
-                isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-700"
-              )}
-            >
-              {email.from_name || email.from || "Unknown"}
-            </span>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {email.has_attachments && (
-                <Paperclip className="h-3 w-3 text-gray-400" />
-              )}
-              <span className="text-xs text-gray-500 whitespace-nowrap">
-                {formatRelativeTime(email.received_at)}
-              </span>
+        {/* Row 2: Subject + Recipient */}
+        <div className="self-stretch inline-flex justify-start items-start gap-2">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+            <div className={cn(
+              "self-stretch text-sm font-['Roboto'] leading-5 line-clamp-1",
+              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+            )}>
+              {email.subject || "(No subject)"}
+            </div>
+            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+              {email.preview || "No preview available"}
             </div>
           </div>
-
-          {/* Recipient (admin view) */}
-          <p className="text-xs text-gray-400 truncate mt-0.5">
-            To: {email.user_email || "Unknown"}
-          </p>
-
-          {/* Subject */}
-          <p
-            className={cn(
-              "text-sm truncate mt-1",
-              isUnread ? "font-semibold text-gray-900" : "font-medium text-gray-700"
-            )}
-          >
-            {email.subject || "(No subject)"}
-          </p>
-
-          {/* Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-1">
-            {email.preview || "No preview available"}
-          </p>
+          <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+            {email.user_email || "Unknown"}
+          </div>
         </div>
       </div>
     </button>

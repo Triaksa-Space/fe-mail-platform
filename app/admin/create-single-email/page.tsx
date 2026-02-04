@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState, Suspense } from "react";
-import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
@@ -13,7 +12,7 @@ import { useRouter } from "next/navigation";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, AdminContentCard } from "@/components/admin";
-import { Shuffle, Copy, Check, X } from "lucide-react";
+import { Shuffle, Copy, Check, X, Plus } from "lucide-react";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -183,21 +182,23 @@ const CreateSingleEmailPageContent: React.FC = () => {
       <Toaster />
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
-        <div className="self-stretch inline-flex justify-between items-center">
-          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
-            Create single email
+        <div className="self-stretch inline-flex justify-start items-center gap-5">
+          <div className="text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Create Single
           </div>
         </div>
 
         {/* Form Card */}
-        <AdminContentCard>
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr_auto] md:items-end">
-              {/* Email Input */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Email</label>
-                <div className="flex items-center gap-2">
-                  <Input
+        <AdminContentCard className="w-full">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Input Row */}
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Email Input with Floating Label */}
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                  <input
+                    type="text"
                     value={username}
                     onChange={(e) => {
                       let value = e.target.value.toLowerCase();
@@ -206,31 +207,33 @@ const CreateSingleEmailPageContent: React.FC = () => {
                       setUsername(value);
                     }}
                     placeholder="Insert email"
-                    className={cn(
-                      "h-11 rounded-xl border-gray-200 bg-white",
-                      "focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
-                    )}
+                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400"
                     required
                   />
-                  <span className="text-gray-400 font-medium">@</span>
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
                 </div>
               </div>
 
-              {/* Domain Selector */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 md:invisible">Domain</label>
+              {/* Domain Selector with Floating Label */}
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
                 <DomainSelector
                   value={selectedDomain}
                   onChange={(value) => setSelectedDomain(value)}
-                  className="h-11 w-full md:w-[180px] rounded-xl border-gray-200"
+                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 text-gray-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
                 />
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
+                </div>
               </div>
 
-              {/* Password Input */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Password</label>
-                <div className="flex items-center gap-2">
-                  <Input
+              {/* Password Input with Floating Label */}
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                  <input
                     type="text"
                     value={password}
                     onChange={(e) => {
@@ -240,9 +243,8 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     }}
                     placeholder="Insert password"
                     className={cn(
-                      "h-11 rounded-xl border-gray-200",
-                      isRandomPasswordActive ? "bg-gray-100" : "bg-white",
-                      "focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                      isRandomPasswordActive ? "text-gray-500" : "text-gray-800"
                     )}
                     disabled={isRandomPasswordActive}
                     required
@@ -251,101 +253,96 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     type="button"
                     onClick={toggleRandomPassword}
                     className={cn(
-                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors",
+                      "w-5 h-5 flex items-center justify-center transition-colors",
                       isRandomPasswordActive
-                        ? "bg-blue-100 border-blue-300 text-blue-600"
-                        : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
+                        ? "text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
                     )}
                     title="Generate random password"
                   >
-                    <Shuffle className="h-4 w-4" />
+                    <Shuffle className="w-4 h-4" />
                   </button>
                 </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                </div>
               </div>
+            </div>
 
-              {/* Submit Button */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 md:invisible">Action</label>
-                <button
-                  type="submit"
-                  disabled={!isFormValid || isLoading}
-                  className={cn(
-                    "h-11 w-full md:w-auto px-6 rounded-xl font-medium transition-colors",
-                    isFormValid && !isLoading
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  )}
-                >
-                  Create email
-                </button>
-              </div>
+            {/* Divider */}
+            <div className="w-full h-px bg-gray-300"></div>
+
+            {/* Submit Button - Right Aligned */}
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={!isFormValid || isLoading}
+                className={cn(
+                  "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+                  isFormValid && !isLoading
+                    ? "bg-blue-600 outline outline-1 outline-blue-500 text-white hover:bg-blue-700"
+                    : "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
+                )}
+              >
+                <Plus className="w-5 h-5" />
+                <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
+              </button>
             </div>
           </form>
         </AdminContentCard>
 
         {/* Result Card */}
         {createdEmail && (
-          <AdminContentCard className="relative">
-            <button
-              onClick={() => setCreatedEmail(null)}
-              className="absolute top-4 right-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-                <Check className="h-4 w-4 text-green-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900">Email Created Successfully</h3>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {/* Email */}
-              <div className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
-                <div>
-                  <p className="text-xs text-gray-500">Email</p>
-                  <p className="font-medium text-gray-900">{createdEmail.email}</p>
+          <AdminContentCard className="w-full">
+            <div className="flex items-start gap-4">
+              {/* Gray Card - Full Width */}
+              <div className="flex-1 p-4 bg-gray-50 rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-wrap justify-start items-start gap-10">
+                {/* Email */}
+                <div className="flex justify-start items-start gap-1">
+                  <div className="flex justify-start items-center gap-1">
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">Email</span>
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
+                  </div>
+                  <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{createdEmail.email}</span>
+                  <button
+                    onClick={() => handleCopy(createdEmail.email, 'email')}
+                    className="w-5 h-5 flex items-center justify-center transition-colors"
+                  >
+                    {copiedField === 'email' ? (
+                      <Check className="w-3.5 h-3.5 text-green-600" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-sky-600" />
+                    )}
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleCopy(createdEmail.email, 'email')}
-                  className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
-                    copiedField === 'email'
-                      ? "bg-green-100 text-green-600"
-                      : "bg-white border border-gray-200 text-gray-500 hover:text-gray-700"
-                  )}
-                >
-                  {copiedField === 'email' ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
+
+                {/* Password */}
+                <div className="flex justify-start items-start gap-1">
+                  <div className="flex justify-start items-center gap-1">
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">Password</span>
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
+                  </div>
+                  <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5 font-mono">{createdEmail.password}</span>
+                  <button
+                    onClick={() => handleCopy(createdEmail.password, 'password')}
+                    className="w-5 h-5 flex items-center justify-center transition-colors"
+                  >
+                    {copiedField === 'password' ? (
+                      <Check className="w-3.5 h-3.5 text-green-600" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-sky-600" />
+                    )}
+                  </button>
+                </div>
               </div>
 
-              {/* Password */}
-              <div className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
-                <div>
-                  <p className="text-xs text-gray-500">Password</p>
-                  <p className="font-medium text-gray-900 font-mono">{createdEmail.password}</p>
-                </div>
-                <button
-                  onClick={() => handleCopy(createdEmail.password, 'password')}
-                  className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
-                    copiedField === 'password'
-                      ? "bg-green-100 text-green-600"
-                      : "bg-white border border-gray-200 text-gray-500 hover:text-gray-700"
-                  )}
-                >
-                  {copiedField === 'password' ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+              {/* Close Button - Outside Gray Card */}
+              <button
+                onClick={() => setCreatedEmail(null)}
+                className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </AdminContentCard>
         )}

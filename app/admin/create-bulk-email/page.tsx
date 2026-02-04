@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState, Suspense } from "react"
-import { Minus, Plus, Shuffle } from 'lucide-react'
-import { Input } from "@/components/ui/input"
+import { Minus, Plus } from 'lucide-react'
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
@@ -20,11 +19,38 @@ const LoadingFallback: React.FC = () => (
   <div className="flex justify-center items-center h-full"></div>
 );
 
+// Toggle Switch Component
+const ToggleSwitch: React.FC<{
+  active: boolean;
+  onChange: () => void;
+  label: string;
+  className?: string;
+}> = ({ active, onChange, label, className }) => (
+  <div className={cn("h-10 flex justify-start items-center gap-1 shrink-0", className)}>
+    <button
+      type="button"
+      onClick={onChange}
+      className="w-10 h-6 relative"
+    >
+      <div className={cn(
+        "w-10 h-6 rounded-3xl transition-colors",
+        active ? "bg-sky-600" : "bg-gray-200"
+      )}></div>
+      <div className={cn(
+        "w-5 h-5 absolute top-[1.5px] bg-white rounded-full transition-all",
+        active ? "left-[18.5px]" : "left-[1.5px]"
+      )}></div>
+    </button>
+    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-4">{label}</span>
+  </div>
+);
+
 const CreateBulkEmailPageContent: React.FC = () => {
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
   const [count, setCount] = useState(2)
   const [password, setPassword] = useState("")
   const [baseName, setBaseName] = useState("")
+  const [passwordLength, setPasswordLength] = useState(6)
   const { toast } = useToast()
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);
@@ -63,12 +89,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
   }
 
   const toggleRandomPassword = () => {
+    setIsRandomPasswordActive(!isRandomPasswordActive);
     if (!isRandomPasswordActive) {
-      generateRandomPassword();
-      setIsRandomPasswordActive(true);
-    } else {
       setPassword("");
-      setIsRandomPasswordActive(false);
     }
   };
 
@@ -88,34 +111,16 @@ const CreateBulkEmailPageContent: React.FC = () => {
     }
   }
 
-  const generateRandomPassword = () => {
-    const lower = "abcdefghijklmnopqrstuvwxyz";
-    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const numbers = "0123456789";
-    const symbols = "!@#$%^&*";
-    const allChars = lower + upper + numbers + symbols;
-
-    // Ensure at least one character from each category
-    let password = "";
-    password += lower.charAt(Math.floor(Math.random() * lower.length));
-    password += upper.charAt(Math.floor(Math.random() * upper.length));
-    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
-    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
-
-    // Fill the remaining characters
-    for (let i = 4; i < 8; i++) {
-      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  const updatePasswordLength = (newLength: number) => {
+    if (newLength >= 6 && newLength <= 32) {
+      setPasswordLength(newLength)
     }
-
-    // Shuffle the password to randomize character positions
-    password = password.split('').sort(() => 0.5 - Math.random()).join('');
-
-    setPassword(password);
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!password) {
+
+    if (!isRandomPasswordActive && !password) {
       toast({
         description: "Please provide a password.",
         variant: "destructive",
@@ -129,7 +134,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
       })
       return
     }
-    if (password.length < 6) {
+    if (!isRandomPasswordActive && password.length < 6) {
       toast({
         description: "Password must be at least 6 characters long. Please try again.",
         variant: "destructive",
@@ -141,7 +146,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
       await apiClient.post("/user/bulk", {
         base_name: baseName || "random",
         quantity: count,
-        password: password,
+        password: isRandomPasswordActive ? `random:${passwordLength}` : password,
         send_to: receiveEmail,
         domain: selectedDomain
       })
@@ -169,192 +174,276 @@ const CreateBulkEmailPageContent: React.FC = () => {
     }
   }
 
-  const isFormValid = receiveEmail && baseName && password;
+  const isFormValid = receiveEmail && (baseName || isRandomNameActive) && (password || isRandomPasswordActive);
 
   return (
     <AdminLayout>
       <Toaster />
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
-        <div className="self-stretch inline-flex justify-between items-center">
-          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
-            Create bulk email
+        <div className="self-stretch inline-flex justify-start items-center gap-5">
+          <div className="text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Create Bulk
           </div>
         </div>
 
         {/* Form Card */}
-        <AdminContentCard>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Row 1: Email Name + Domain */}
-            <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
-              {/* Email Base Name */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Email prefix</label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={isRandomNameActive ? "random" : baseName}
-                    placeholder="Enter base name"
-                    className={cn(
-                      "h-11 rounded-xl border-gray-200",
-                      isRandomNameActive ? "bg-gray-100" : "bg-white",
-                      "focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
-                    )}
-                    onChange={(e) => {
-                      const value = e.target.value.toLowerCase();
-                      const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
-                      const domPurifyValue = DOMPurify.sanitize(sanitizedValue);
-                      setBaseName(domPurifyValue);
-                    }}
-                    disabled={isRandomNameActive}
-                  />
-                  <button
-                    type="button"
-                    onClick={toggleRandomName}
-                    className={cn(
-                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors",
-                      isRandomNameActive
-                        ? "bg-blue-100 border-blue-300 text-blue-600"
-                        : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
-                    )}
-                    title="Use random names"
-                  >
-                    <Shuffle className="h-4 w-4" />
-                  </button>
-                  <span className="text-gray-400 font-medium">@</span>
+        <AdminContentCard className="w-full">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Row 1: Email + Random toggle | Domain | Quantity + buttons */}
+            <div className="flex flex-col lg:flex-row gap-4 items-end">
+              {/* Email Input + Random Toggle */}
+              <div className="flex-1 flex justify-start items-end gap-4">
+                <div className="flex-1 relative flex flex-col">
+                  <div className="h-3.5"></div>
+                  <div className={cn(
+                    "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3",
+                    isRandomNameActive ? "bg-gray-100" : "bg-white"
+                  )}>
+                    <input
+                      type="text"
+                      value={isRandomNameActive ? "" : baseName}
+                      onChange={(e) => {
+                        const value = e.target.value.toLowerCase();
+                        const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+                        const domPurifyValue = DOMPurify.sanitize(sanitizedValue);
+                        setBaseName(domPurifyValue);
+                      }}
+                      placeholder="Insert email"
+                      disabled={isRandomNameActive}
+                      className={cn(
+                        "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                        isRandomNameActive ? "text-gray-400" : "text-gray-800"
+                      )}
+                    />
+                  </div>
+                  <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                    <span className={cn(
+                      "text-[10px] font-normal font-['Roboto'] leading-4",
+                      isRandomNameActive ? "text-gray-400" : "text-gray-800"
+                    )}>Email</span>
+                  </div>
                 </div>
+                <ToggleSwitch
+                  active={isRandomNameActive}
+                  onChange={toggleRandomName}
+                  label="Random email"
+                  className="w-[130px]"
+                />
               </div>
 
               {/* Domain Selector */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Domain</label>
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
                 <DomainSelector
                   value={selectedDomain}
                   onChange={(value) => setSelectedDomain(value)}
-                  className="h-11 w-full md:w-[180px] rounded-xl border-gray-200"
+                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 text-gray-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
                 />
-              </div>
-
-              {/* Quantity Stepper */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Quantity</label>
-                <div className="flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => updateCount(count - 1)}
-                    disabled={count <= 2}
-                    className={cn(
-                      "flex h-11 w-11 items-center justify-center rounded-l-xl border border-r-0 transition-colors",
-                      count <= 2
-                        ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                        : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <Input
-                    type="text"
-                    value={count}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (/^\d*$/.test(value)) {
-                        const numericValue = parseInt(value, 10);
-                        if (!isNaN(numericValue) && numericValue <= 100) {
-                          setCount(numericValue);
-                        } else if (value === "") {
-                          setCount(2);
-                        }
-                      }
-                    }}
-                    className="h-11 w-16 rounded-none border-gray-200 text-center focus:z-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => updateCount(count + 1)}
-                    disabled={count >= 100}
-                    className={cn(
-                      "flex h-11 w-11 items-center justify-center rounded-r-xl border border-l-0 transition-colors",
-                      count >= 100
-                        ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                        : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
                 </div>
-                <p className="text-xs text-gray-500">Min 2, max 100</p>
               </div>
-            </div>
 
-            {/* Row 2: Password */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Password</label>
-              <div className="flex items-center gap-2 max-w-md">
-                <Input
-                  type="text"
-                  value={password}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                    setPassword(sanitizedValue);
-                  }}
-                  placeholder="Enter password"
-                  className={cn(
-                    "h-11 rounded-xl border-gray-200",
-                    isRandomPasswordActive ? "bg-gray-100" : "bg-white",
-                    "focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
-                  )}
-                  disabled={isRandomPasswordActive}
-                />
+              {/* Quantity Input + Buttons */}
+              <div className="flex-1 flex justify-start items-end gap-2">
+                <div className="flex-1 relative flex flex-col">
+                  <div className="h-3.5"></div>
+                  <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center justify-center gap-3">
+                    <input
+                      type="text"
+                      value={count}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          const numericValue = parseInt(value, 10);
+                          if (!isNaN(numericValue) && numericValue <= 100) {
+                            setCount(numericValue);
+                          } else if (value === "") {
+                            setCount(2);
+                          }
+                        }
+                      }}
+                      className="w-full bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none text-center"
+                    />
+                  </div>
+                  <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4 whitespace-nowrap">Quantity (minimum 2, maximum 100)</span>
+                  </div>
+                </div>
                 <button
                   type="button"
-                  onClick={toggleRandomPassword}
+                  onClick={() => updateCount(count - 1)}
+                  disabled={count <= 2}
                   className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors",
-                    isRandomPasswordActive
-                      ? "bg-blue-100 border-blue-300 text-blue-600"
-                      : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
+                    count <= 2
+                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   )}
-                  title="Generate random password"
                 >
-                  <Shuffle className="h-4 w-4" />
+                  <Minus className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updateCount(count + 1)}
+                  disabled={count >= 100}
+                  className={cn(
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 flex justify-center items-center shrink-0",
+                    count >= 100
+                      ? "bg-gray-100 outline-gray-200 text-gray-300 cursor-not-allowed"
+                      : "bg-sky-100 outline-blue-100 text-sky-600 hover:bg-sky-200"
+                  )}
+                >
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-xs text-gray-500">All accounts will use the same password</p>
             </div>
 
-            {/* Row 3: Receive Email */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Send results to</label>
-              <Input
-                type="email"
-                value={receiveEmail}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                  setReceiveEmail(sanitizedValue);
-                }}
-                placeholder="Email for receiving account list"
-                className={cn(
-                  "h-11 max-w-md rounded-xl border-gray-200 bg-white",
-                  "focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
-                )}
-              />
-              <p className="text-xs text-gray-500">You will receive a list of created accounts at this email</p>
+            {/* Row 2: Same password + Random toggle | Password length + buttons | Email for receiving */}
+            <div className="flex flex-col lg:flex-row gap-4 items-end">
+              {/* Same Password + Random Toggle */}
+              <div className="flex-[1.2] flex justify-start items-end gap-4">
+                <div className="flex-1 relative flex flex-col">
+                  <div className="h-3.5"></div>
+                  <div className={cn(
+                    "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3",
+                    isRandomPasswordActive ? "bg-gray-100" : "bg-white"
+                  )}>
+                    <input
+                      type="text"
+                      value={password}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                        setPassword(sanitizedValue);
+                      }}
+                      placeholder="Insert password"
+                      disabled={isRandomPasswordActive}
+                      className={cn(
+                        "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                        isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
+                      )}
+                    />
+                  </div>
+                  <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                    <span className={cn(
+                      "text-[10px] font-normal font-['Roboto'] leading-4",
+                      isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
+                    )}>Same password</span>
+                  </div>
+                </div>
+                <ToggleSwitch
+                  active={isRandomPasswordActive}
+                  onChange={toggleRandomPassword}
+                  label="Random pass"
+                  className="w-[130px]"
+                />
+              </div>
+
+              {/* Password Length + Buttons */}
+              <div className="flex-[0.8] flex justify-start items-end gap-2">
+                <div className="flex-1 relative flex flex-col">
+                  <div className="h-3.5"></div>
+                  <div className={cn(
+                    "h-10 px-3 py-2 rounded-lg outline outline-1 outline-gray-200 flex items-center justify-center gap-3 overflow-hidden",
+                    !isRandomPasswordActive ? "bg-gray-100" : "bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]"
+                  )}>
+                    <input
+                      type="text"
+                      value={passwordLength}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          const numericValue = parseInt(value, 10);
+                          if (!isNaN(numericValue) && numericValue <= 32) {
+                            setPasswordLength(numericValue);
+                          } else if (value === "") {
+                            setPasswordLength(6);
+                          }
+                        }
+                      }}
+                      disabled={!isRandomPasswordActive}
+                      className={cn(
+                        "w-full bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none text-center",
+                        !isRandomPasswordActive ? "text-gray-300" : "text-gray-800"
+                      )}
+                    />
+                  </div>
+                  <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                    <span className={cn(
+                      "text-[10px] font-normal font-['Roboto'] leading-4",
+                      !isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
+                    )}>Password length</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => updatePasswordLength(passwordLength - 1)}
+                  disabled={!isRandomPasswordActive || passwordLength <= 6}
+                  className={cn(
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
+                    !isRandomPasswordActive || passwordLength <= 6
+                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  )}
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updatePasswordLength(passwordLength + 1)}
+                  disabled={!isRandomPasswordActive || passwordLength >= 32}
+                  className={cn(
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
+                    !isRandomPasswordActive || passwordLength >= 32
+                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+                      : "bg-sky-100 outline-blue-100 text-sky-600 hover:bg-sky-200"
+                  )}
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Email for Receiving List */}
+              <div className="flex-[1] relative flex flex-col">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                  <input
+                    type="email"
+                    value={receiveEmail}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                      setReceiveEmail(sanitizedValue);
+                    }}
+                    placeholder="Insert email"
+                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400"
+                  />
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email for receiving list</span>
+                </div>
+              </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-2">
+            {/* Divider */}
+            <div className="w-full h-px bg-gray-300"></div>
+
+            {/* Submit Button - Right Aligned */}
+            <div className="flex justify-end">
               <button
                 type="submit"
                 disabled={!isFormValid || isLoading}
                 className={cn(
-                  "h-11 px-8 rounded-xl font-medium transition-colors",
+                  "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
                   isFormValid && !isLoading
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    ? "bg-blue-600 outline outline-1 outline-blue-500 text-white hover:bg-blue-700"
+                    : "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
                 )}
               >
-                Create {count} emails
+                <Plus className="w-5 h-5" />
+                <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
               </button>
             </div>
           </form>
