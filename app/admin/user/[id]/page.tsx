@@ -9,17 +9,14 @@ import {
   RefreshCw,
   Inbox,
   Send,
-  Mail,
-  ChevronLeft,
-  User,
-  Calendar,
-  Clock,
   ChevronRight,
+  Users,
+  User,
+  ArrowLeft,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
-import AdminContentCard from "@/components/admin/AdminContentCard";
+import PaginationComponent from "@/components/PaginationComponent";
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -70,11 +67,12 @@ function formatRelativeTime(dateString: string): string {
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffMins < 60) return `${diffMins} minutes ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffDays === 1) return "24 hours ago";
+  if (diffDays < 7) return `${diffDays} days ago`;
 
-  return date.toLocaleDateString();
+  return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 export default function UserDetailPage() {
@@ -154,19 +152,15 @@ export default function UserDetailPage() {
 
         const data = response.data;
 
-        // Handle different response structures
         if (Array.isArray(data)) {
-          // Direct array response (no pagination)
           setInboxEmails(data);
           setInboxTotal(data.length);
           setInboxTotalPages(1);
         } else if (data && Array.isArray(data.data)) {
-          // Paginated response: { data: [], pagination: {} }
           setInboxEmails(data.data);
           setInboxTotal(data.pagination?.total || data.data.length);
           setInboxTotalPages(data.pagination?.total_pages || 1);
         } else {
-          // Fallback - ensure we always have an array
           setInboxEmails([]);
           setInboxTotal(0);
           setInboxTotalPages(1);
@@ -200,19 +194,15 @@ export default function UserDetailPage() {
 
         const data = response.data;
 
-        // Handle different response structures
         if (Array.isArray(data)) {
-          // Direct array response (no pagination)
           setSentEmails(data);
           setSentTotal(data.length);
           setSentTotalPages(1);
         } else if (data && Array.isArray(data.data)) {
-          // Paginated response: { data: [], pagination: {} }
           setSentEmails(data.data);
           setSentTotal(data.pagination?.total || data.data.length);
           setSentTotalPages(data.pagination?.total_pages || 1);
         } else {
-          // Fallback - ensure we always have an array
           setSentEmails([]);
           setSentTotal(0);
           setSentTotalPages(1);
@@ -260,23 +250,11 @@ export default function UserDetailPage() {
   }, [sentPage, fetchSentEmails, _hasHydrated, storedToken, roleId]);
 
   // Handle refresh
-  const handleRefreshInbox = () => {
+  const handleRefresh = () => {
     setIsRefreshingInbox(true);
-    fetchInboxEmails(inboxPage);
-  };
-
-  const handleRefreshSent = () => {
     setIsRefreshingSent(true);
+    fetchInboxEmails(inboxPage);
     fetchSentEmails(sentPage);
-  };
-
-  // Handle page changes
-  const handleInboxPageChange = (page: number) => {
-    setInboxPage(page);
-  };
-
-  const handleSentPageChange = (page: number) => {
-    setSentPage(page);
   };
 
   // Handle inbox email click
@@ -289,12 +267,6 @@ export default function UserDetailPage() {
     router.push(`/admin/sent/${email.id}`);
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleString();
-  };
-
   // Don't render content if user is not admin
   if (roleId === 1) {
     return null;
@@ -303,256 +275,140 @@ export default function UserDetailPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="flex flex-col gap-5 h-[calc(100vh-80px)]">
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+        {/* Breadcrumb Header */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="flex justify-start items-center gap-1">
+            {/* Back */}
+            <button
               onClick={() => router.back()}
-              className="h-10 w-10 rounded-xl border-gray-200"
+              className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
             >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-                <User className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                {isLoadingUser ? (
-                  <div className="h-7 w-48 bg-gray-200 rounded animate-pulse" />
-                ) : (
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    {userDetails?.Email || "Unknown User"}
-                  </h1>
-                )}
-                <p className="text-sm text-gray-500">User email details</p>
+              <ArrowLeft className="w-6 h-6 text-gray-600" />
+            </button>
+            <ChevronRight className="w-5 h-5 text-gray-300" />
+
+            {/* User list */}
+            <button
+              onClick={() => router.push("/admin")}
+              className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+            >
+              <Users className="w-5 h-5 text-gray-600" />
+              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
+            </button>
+            <ChevronRight className="w-5 h-5 text-gray-300" />
+
+            {/* Current user email */}
+            <div className="flex justify-center items-center gap-1">
+              <User className="w-5 h-5 text-sky-600" />
+              <div className="justify-center text-sky-600 text-sm font-normal font-['Roboto'] leading-4">
+                {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
               </div>
             </div>
           </div>
+
+          {/* Refresh Button */}
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshingInbox || isRefreshingSent}
+            className={cn(
+              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "outline outline-1 outline-offset-[-1px] outline-gray-200",
+              "flex justify-center items-center gap-2 overflow-hidden",
+              "hover:bg-gray-50 transition-colors",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+          >
+            <RefreshCw className={cn("w-5 h-5 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
+          </button>
         </div>
 
-        {/* User Info Card */}
-        <AdminContentCard className="p-4">
-          {isLoadingUser ? (
-            <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
-                <div className="h-4 w-48 bg-gray-200 rounded animate-pulse" />
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
-                <div className="h-4 w-36 bg-gray-200 rounded animate-pulse" />
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
-                <div className="h-4 w-32 bg-gray-200 rounded animate-pulse" />
-              </div>
-            </div>
-          ) : userDetails ? (
-            <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Mail className="h-4 w-4 text-gray-400" />
-                <span className="font-medium">Email:</span>
-                <span>{userDetails.Email}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Clock className="h-4 w-4 text-gray-400" />
-                <span className="font-medium">Last Login:</span>
-                <span>{formatDate(userDetails.LastLogin)}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="font-medium">Created:</span>
-                <span>{formatDate(userDetails.CreatedAt)}</span>
-              </div>
-              {userDetails.CreatedByName && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <User className="h-4 w-4 text-gray-400" />
-                  <span className="font-medium">Created By:</span>
-                  <span>{userDetails.CreatedByName}</span>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500">Failed to load user details</p>
-          )}
-        </AdminContentCard>
-
         {/* Email Lists - Side by Side */}
-        <div className="flex-1 flex gap-5 min-h-0">
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
           {/* Inbox Panel */}
-          <AdminContentCard className="flex-1 flex flex-col min-w-0 overflow-hidden">
-            {/* Inbox Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <Inbox className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold text-gray-900">Inbox</h3>
-                <span className="text-sm text-gray-500">
-                  ({inboxTotal})
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRefreshInbox}
-                disabled={isRefreshingInbox}
-                className="h-8 w-8 p-0 rounded-lg"
-              >
-                <RefreshCw
-                  className={cn(
-                    "h-4 w-4",
-                    isRefreshingInbox && "animate-spin"
-                  )}
-                />
-              </Button>
-            </div>
+          <div className="flex-1 self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+            <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Inbox</div>
 
             {/* Inbox List */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="self-stretch flex flex-col justify-start items-start gap-2">
               {isLoadingInbox ? (
-                <div className="flex items-center justify-center h-32">
+                <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
                     <RefreshCw className="h-4 w-4 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
               ) : inboxEmails.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-32 px-4">
+                <div className="self-stretch flex flex-col items-center justify-center py-8">
                   <Inbox className="h-8 w-8 text-gray-300 mb-2" />
-                  <p className="text-sm text-gray-500 text-center">
-                    No inbox emails
-                  </p>
+                  <p className="text-sm text-gray-500 text-center">No inbox emails</p>
                 </div>
               ) : (
-                <div>
-                  {inboxEmails.map((email) => (
-                    <InboxEmailRow
-                      key={email.ID}
-                      email={email}
-                      onClick={() => handleInboxEmailClick(email)}
-                    />
-                  ))}
-                </div>
+                inboxEmails.map((email) => (
+                  <InboxEmailRow
+                    key={email.ID}
+                    email={email}
+                    onClick={() => handleInboxEmailClick(email)}
+                  />
+                ))
               )}
             </div>
 
             {/* Inbox Pagination */}
-            {inboxTotalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50/50">
-                <span className="text-xs text-gray-500">
-                  Page {inboxPage} of {inboxTotalPages}
-                </span>
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleInboxPageChange(inboxPage - 1)}
-                    disabled={inboxPage <= 1 || isLoadingInbox}
-                    className="h-7 w-7 p-0 rounded-md"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleInboxPageChange(inboxPage + 1)}
-                    disabled={inboxPage >= inboxTotalPages || isLoadingInbox}
-                    className="h-7 w-7 p-0 rounded-md"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+            {inboxTotalPages > 0 && (
+              <PaginationComponent
+                totalPages={inboxTotalPages}
+                currentPage={inboxPage}
+                onPageChange={setInboxPage}
+                totalCount={inboxTotal}
+                activeCount={inboxTotal}
+                pageSize={inboxPageSize}
+              />
             )}
-          </AdminContentCard>
+          </div>
 
           {/* Sent Panel */}
-          <AdminContentCard className="flex-1 flex flex-col min-w-0 overflow-hidden">
-            {/* Sent Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <Send className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-gray-900">Sent</h3>
-                <span className="text-sm text-gray-500">
-                  ({sentTotal})
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRefreshSent}
-                disabled={isRefreshingSent}
-                className="h-8 w-8 p-0 rounded-lg"
-              >
-                <RefreshCw
-                  className={cn(
-                    "h-4 w-4",
-                    isRefreshingSent && "animate-spin"
-                  )}
-                />
-              </Button>
-            </div>
+          <div className="flex-1 self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+            <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Sent</div>
 
             {/* Sent List */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="self-stretch flex flex-col justify-start items-start gap-2">
               {isLoadingSent ? (
-                <div className="flex items-center justify-center h-32">
+                <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
                     <RefreshCw className="h-4 w-4 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
               ) : sentEmails.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-32 px-4">
+                <div className="self-stretch flex flex-col items-center justify-center py-8">
                   <Send className="h-8 w-8 text-gray-300 mb-2" />
-                  <p className="text-sm text-gray-500 text-center">
-                    No sent emails
-                  </p>
+                  <p className="text-sm text-gray-500 text-center">No sent emails</p>
                 </div>
               ) : (
-                <div>
-                  {sentEmails.map((email) => (
-                    <SentEmailRow
-                      key={email.id}
-                      email={email}
-                      onClick={() => handleSentEmailClick(email)}
-                    />
-                  ))}
-                </div>
+                sentEmails.map((email) => (
+                  <SentEmailRow
+                    key={email.id}
+                    email={email}
+                    onClick={() => handleSentEmailClick(email)}
+                  />
+                ))
               )}
             </div>
 
             {/* Sent Pagination */}
-            {sentTotalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50/50">
-                <span className="text-xs text-gray-500">
-                  Page {sentPage} of {sentTotalPages}
-                </span>
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSentPageChange(sentPage - 1)}
-                    disabled={sentPage <= 1 || isLoadingSent}
-                    className="h-7 w-7 p-0 rounded-md"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSentPageChange(sentPage + 1)}
-                    disabled={sentPage >= sentTotalPages || isLoadingSent}
-                    className="h-7 w-7 p-0 rounded-md"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+            {sentTotalPages > 0 && (
+              <PaginationComponent
+                totalPages={sentTotalPages}
+                currentPage={sentPage}
+                onPageChange={setSentPage}
+                totalCount={sentTotal}
+                activeCount={sentTotal}
+                pageSize={sentPageSize}
+              />
             )}
-          </AdminContentCard>
+          </div>
         </div>
       </div>
     </AdminLayout>
@@ -571,56 +427,38 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={cn(
-        "w-full text-left px-4 py-3 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
-      )}
+      className="self-stretch px-4 py-2 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors w-full text-left"
     >
-      <div className="flex items-start gap-3">
-        {/* Unread indicator */}
-        <div className="flex-shrink-0 pt-1.5">
-          {isUnread ? (
-            <div className="w-2 h-2 rounded-full bg-blue-600" />
-          ) : (
-            <div className="w-2 h-2" />
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Top row */}
-          <div className="flex items-center justify-between gap-3">
-            <span
-              className={cn(
-                "text-sm truncate",
-                isUnread
-                  ? "font-semibold text-gray-900"
-                  : "font-medium text-gray-700"
-              )}
-            >
-              {email.SenderName || email.SenderEmail || "Unknown"}
-            </span>
-            <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
-              {email.RelativeTime}
-            </span>
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch inline-flex justify-start items-start gap-4">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+            <div className="self-stretch inline-flex justify-between items-center">
+              <div className={cn(
+                "text-base font-['Roboto'] leading-6",
+                isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+              )}>
+                {email.SenderName || email.SenderEmail || "Unknown"}
+              </div>
+              <div className="flex justify-end items-center gap-0.5">
+                <div className={cn(
+                  "text-xs font-['Roboto'] leading-5 line-clamp-1",
+                  isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+                )}>
+                  {email.RelativeTime}
+                </div>
+                {isUnread && <div className="w-2 h-2 bg-sky-600 rounded-full"></div>}
+              </div>
+            </div>
+            <div className={cn(
+              "self-stretch text-sm font-['Roboto'] leading-5",
+              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+            )}>
+              {email.Subject || "(No subject)"}
+            </div>
           </div>
-
-          {/* Subject */}
-          <p
-            className={cn(
-              "text-sm truncate mt-0.5",
-              isUnread
-                ? "font-semibold text-gray-900"
-                : "font-medium text-gray-700"
-            )}
-          >
-            {email.Subject || "(No subject)"}
-          </p>
-
-          {/* Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-0.5">
-            {email.Preview || "No preview available"}
-          </p>
+        </div>
+        <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+          {email.Preview || "No preview available"}
         </div>
       </div>
     </button>
@@ -637,38 +475,26 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={cn(
-        "w-full text-left px-4 py-3 transition-colors border-b border-gray-100",
-        "hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
-      )}
+      className="self-stretch px-4 py-2 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors w-full text-left"
     >
-      <div className="flex items-start gap-3">
-        {/* Sent indicator */}
-        <div className="flex-shrink-0 pt-1.5">
-          <Send className="w-3 h-3 text-green-500" />
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Top row */}
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-sm truncate font-medium text-gray-700">
-              To: {email.to || "Unknown"}
-            </span>
-            <span className="text-xs text-gray-500 whitespace-nowrap flex-shrink-0">
-              {formatRelativeTime(email.sent_at)}
-            </span>
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch inline-flex justify-start items-start gap-4">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+            <div className="self-stretch inline-flex justify-between items-center">
+              <div className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">
+                To: {email.to || "Unknown"}
+              </div>
+              <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+                {formatRelativeTime(email.sent_at)}
+              </div>
+            </div>
+            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5">
+              {email.subject || "(No subject)"}
+            </div>
           </div>
-
-          {/* Subject */}
-          <p className="text-sm truncate mt-0.5 font-medium text-gray-700">
-            {email.subject || "(No subject)"}
-          </p>
-
-          {/* Preview */}
-          <p className="text-sm text-gray-500 line-clamp-1 mt-0.5">
-            {email.body_preview || "No preview available"}
-          </p>
+        </div>
+        <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+          {email.body_preview || "No preview available"}
         </div>
       </div>
     </button>
