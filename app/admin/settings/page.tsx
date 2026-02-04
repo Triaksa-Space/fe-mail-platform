@@ -3,15 +3,14 @@
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Input } from "@/components/ui/input";
-import { Key, Lock, Eye, EyeOff } from 'lucide-react';
+import { Lock, Eye, EyeOff, Check } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
-import { AdminLayout, AdminContentCard } from "@/components/admin";
+import { AdminLayout } from "@/components/admin";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -33,7 +32,7 @@ const ChangePasswordSection: React.FC = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const isFormValid = oldPassword && newPassword && confirmPassword && newPassword === confirmPassword;
+    const isFormValid = oldPassword && newPassword && confirmPassword && newPassword === confirmPassword && newPassword.length >= 6;
 
     // API: PUT /user/change_password/admin (existing endpoint)
     const handleChangePassword = async () => {
@@ -87,123 +86,162 @@ const ChangePasswordSection: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col gap-5">
+        <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
             {/* Page Header */}
-            <div>
-                <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
-                <p className="mt-1 text-sm text-gray-500">Manage your account settings</p>
+            <div className="self-stretch inline-flex justify-start items-center gap-5">
+                <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                    Settings
+                </div>
             </div>
 
             {/* Change Password Card */}
-            <AdminContentCard>
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
-                    <p className="mt-1 text-sm text-gray-500">Update your account password</p>
+            <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-hidden">
+                <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+                    Change password
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-3">
+                {/* Password Inputs Row */}
+                <div className="self-stretch inline-flex justify-start items-start gap-4">
                     {/* Old Password */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Current Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input
-                                type={showOldPassword ? "text" : "password"}
-                                value={oldPassword}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                    setOldPassword(sanitizedValue);
-                                }}
-                                placeholder="Enter current password"
-                                className="pl-10 pr-10 h-11 rounded-xl border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowOldPassword(!showOldPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            >
-                                {showOldPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
+                    <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                        <div className="self-stretch relative flex flex-col justify-start items-start">
+                            <div className="self-stretch h-3.5"></div>
+                            <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                <div className="flex-1 flex justify-start items-center gap-2">
+                                    <Lock className="w-5 h-5 text-gray-400" />
+                                    <input
+                                        type={showOldPassword ? "text" : "password"}
+                                        value={oldPassword}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                            setOldPassword(sanitizedValue);
+                                        }}
+                                        placeholder="***********"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowOldPassword(!showOldPassword)}
+                                    className="flex justify-center items-center"
+                                >
+                                    {showOldPassword ? (
+                                        <EyeOff className="w-5 h-5 text-gray-800" />
+                                    ) : (
+                                        <Eye className="w-5 h-5 text-gray-800" />
+                                    )}
+                                </button>
+                            </div>
+                            <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <span className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
+                            </div>
                         </div>
                     </div>
 
                     {/* New Password */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">New Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input
-                                type={showNewPassword ? "text" : "password"}
-                                value={newPassword}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                    setNewPassword(sanitizedValue);
-                                }}
-                                placeholder="Enter new password"
-                                className="pl-10 pr-10 h-11 rounded-xl border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowNewPassword(!showNewPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            >
-                                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
+                    <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                        <div className="self-stretch relative flex flex-col justify-start items-start">
+                            <div className="self-stretch h-3.5"></div>
+                            <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                <div className="flex-1 flex justify-start items-center gap-2">
+                                    <Lock className="w-5 h-5 text-gray-400" />
+                                    <input
+                                        type={showNewPassword ? "text" : "password"}
+                                        value={newPassword}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                            setNewPassword(sanitizedValue);
+                                        }}
+                                        placeholder="***********"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNewPassword(!showNewPassword)}
+                                    className="flex justify-center items-center"
+                                >
+                                    {showNewPassword ? (
+                                        <EyeOff className="w-5 h-5 text-gray-800" />
+                                    ) : (
+                                        <Eye className="w-5 h-5 text-gray-800" />
+                                    )}
+                                </button>
+                            </div>
+                            <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <span className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
+                            </div>
                         </div>
                     </div>
 
                     {/* Confirm Password */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">Confirm Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input
-                                type={showConfirmPassword ? "text" : "password"}
-                                value={confirmPassword}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                    setConfirmPassword(sanitizedValue);
-                                }}
-                                placeholder="Confirm new password"
-                                className={cn(
-                                    "pl-10 pr-10 h-11 rounded-xl border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
-                                    confirmPassword && newPassword !== confirmPassword && "border-red-300 focus:border-red-400 focus:ring-red-200"
-                                )}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            >
-                                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
+                    <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                        <div className="self-stretch relative flex flex-col justify-start items-start">
+                            <div className="self-stretch h-3.5"></div>
+                            <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                <div className="flex-1 flex justify-start items-center gap-2">
+                                    <Lock className="w-5 h-5 text-gray-400" />
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        value={confirmPassword}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                            setConfirmPassword(sanitizedValue);
+                                        }}
+                                        placeholder="***********"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="flex justify-center items-center"
+                                >
+                                    {showConfirmPassword ? (
+                                        <EyeOff className="w-5 h-5 text-gray-800" />
+                                    ) : (
+                                        <Eye className="w-5 h-5 text-gray-800" />
+                                    )}
+                                </button>
+                            </div>
+                            <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <span className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
+                            </div>
                         </div>
-                        {confirmPassword && newPassword !== confirmPassword && (
-                            <p className="text-xs text-red-500">Passwords do not match</p>
-                        )}
                     </div>
                 </div>
 
+                {/* Divider */}
+                <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-300"></div>
+
                 {/* Submit Button */}
-                <div className="mt-6 flex justify-end">
+                <div className="self-stretch inline-flex justify-end items-start gap-2.5">
                     <button
                         onClick={handleChangePassword}
                         disabled={!isFormValid || isLoading}
                         className={cn(
-                            "inline-flex items-center gap-2 rounded-xl px-5 py-3 font-medium transition-colors",
+                            "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex justify-center items-center gap-1.5 transition-colors",
                             isFormValid && !isLoading
-                                ? "bg-blue-600 text-white hover:bg-blue-700"
-                                : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                                ? "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-500 hover:bg-blue-700"
+                                : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
                         )}
                     >
-                        <Key className="h-4 w-4" />
-                        {isLoading ? "Changing..." : "Change Password"}
+                        <Check className={cn(
+                            "w-5 h-5",
+                            isFormValid && !isLoading ? "text-white" : "text-blue-300"
+                        )} />
+                        <span className={cn(
+                            "text-center text-base font-medium font-['Roboto'] leading-4",
+                            isFormValid && !isLoading ? "text-white" : "text-blue-300"
+                        )}>
+                            {isLoading ? "Changing..." : "Change password"}
+                        </span>
                     </button>
                 </div>
-            </AdminContentCard>
+            </div>
         </div>
     );
 };
