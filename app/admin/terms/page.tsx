@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { FileText, Save, Loader2, Eye, Edit3 } from "lucide-react";
+import { Save, Loader2, Eye, Edit3 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -150,21 +150,11 @@ const AdminTermsPageContent: React.FC = () => {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="flex flex-col gap-5">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
-              <FileText className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Edit Terms of Services
-              </h1>
-              <p className="text-sm text-gray-500">
-                Manage the Terms of Services content displayed to users
-              </p>
-            </div>
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Terms of services
           </div>
           <div className="flex items-center gap-3">
             <Button

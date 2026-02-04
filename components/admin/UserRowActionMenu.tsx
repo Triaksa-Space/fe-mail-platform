@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { MoreHorizontal, Eye, Key, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 interface UserRowActionMenuProps {
   onView: () => void;
@@ -55,51 +55,29 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
       {isOpen && (
         <div
           className={cn(
-            "absolute right-0 mt-2 w-44 z-50",
-            "rounded-xl border border-gray-200 bg-white shadow-lg",
-            "overflow-hidden"
+            "absolute right-0 mt-1 z-50 min-w-[180px]",
+            "p-2 bg-white rounded-lg",
+            "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+            "inline-flex flex-col justify-start items-start gap-1"
           )}
         >
-          <div className="py-1">
-            {/* View */}
-            <button
-              onClick={() => handleAction(onView)}
-              className={cn(
-                "flex w-full items-center gap-3 px-4 py-2.5 text-sm",
-                "text-gray-700 hover:bg-gray-50 transition-colors"
-              )}
-            >
-              <Eye className="h-4 w-4 text-gray-500" />
-              <span>View</span>
-            </button>
+          {/* Change Password */}
+          <button
+            onClick={() => handleAction(onChangePassword)}
+            className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors"
+          >
+            <Pencil className="w-5 h-5 text-gray-800" />
+            <div className="text-gray-800 text-base font-normal font-['Roboto'] leading-4 whitespace-nowrap">Change password</div>
+          </button>
 
-            {/* Change Password */}
-            <button
-              onClick={() => handleAction(onChangePassword)}
-              className={cn(
-                "flex w-full items-center gap-3 px-4 py-2.5 text-sm",
-                "text-gray-700 hover:bg-gray-50 transition-colors"
-              )}
-            >
-              <Key className="h-4 w-4 text-gray-500" />
-              <span>Change password</span>
-            </button>
-
-            {/* Divider */}
-            <div className="my-1 border-t border-gray-100" />
-
-            {/* Delete */}
-            <button
-              onClick={() => handleAction(onDelete)}
-              className={cn(
-                "flex w-full items-center gap-3 px-4 py-2.5 text-sm",
-                "text-red-600 hover:bg-red-50 transition-colors"
-              )}
-            >
-              <Trash2 className="h-4 w-4" />
-              <span>Delete</span>
-            </button>
-          </div>
+          {/* Delete */}
+          <button
+            onClick={() => handleAction(onDelete)}
+            className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-red-50 transition-colors"
+          >
+            <Trash2 className="w-5 h-5 text-red-600" />
+            <div className="text-red-600 text-base font-normal font-['Roboto'] leading-4">Delete</div>
+          </button>
         </div>
       )}
     </div>

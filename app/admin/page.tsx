@@ -3,10 +3,9 @@
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, ArrowUpDown, Search } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowUpDown, Search, AlertTriangle, X, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -19,10 +18,9 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import PasswordInput from '@/components/PasswordInput';
-import LoadingProcessingPage from '@/components/ProcessLoading';
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
-import { AdminLayout, AdminContentCard, UserRowActionMenu } from "@/components/admin";
+import { AdminLayout, UserRowActionMenu } from "@/components/admin";
 
 interface EmailUser {
     user_encode_id: string;
@@ -30,6 +28,7 @@ interface EmailUser {
     id: number;
     email: string;
     lastActive: string;
+    lastActiveRaw: string;
     created: string;
     createdByName: string;
 }
@@ -39,7 +38,7 @@ interface User {
     email_encode_id: string;
     ID: number;
     Email: string;
-    LastLogin: string;
+    LastLogin: string | null;
     CreatedAt: string;
     CreatedByName: string;
 }
@@ -55,6 +54,57 @@ interface AdminUser {
 
 type SortField = 'last_login' | 'created_at';
 type SortOrder = 'asc' | 'desc' | '';
+
+// Last Active Badge Component
+const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw }) => {
+    const now = new Date();
+    const lastActiveDate = new Date(lastActiveRaw);
+
+    // Check for invalid date
+    if (isNaN(lastActiveDate.getTime())) {
+        return (
+            <div className="h-5 px-1.5 py-0.5 bg-gray-100 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-gray-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
+            </div>
+        );
+    }
+
+    const diffMs = now.getTime() - lastActiveDate.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    // Determine badge style and text
+    let badgeClass = "h-5 px-1.5 py-0.5 rounded-3xl flex justify-center items-center gap-1";
+    let textClass = "text-center justify-center text-xs font-medium font-['Roboto'] leading-5";
+    let displayText = "";
+
+    if (diffMins < 5) {
+        // Online
+        badgeClass += " bg-green-50";
+        textClass += " text-green-500";
+        displayText = "Online";
+    } else if (diffMins < 60) {
+        // Recent (sky/blue)
+        badgeClass += " bg-sky-100";
+        textClass += " text-gray-700";
+        displayText = `${diffMins} minutes ago`;
+    } else if (diffHours < 24) {
+        badgeClass += " bg-gray-100";
+        textClass += " text-gray-700";
+        displayText = `${diffHours} hours ago`;
+    } else {
+        badgeClass += " bg-gray-100";
+        textClass += " text-gray-700";
+        displayText = `${diffDays} days ago`;
+    }
+
+    return (
+        <div className={badgeClass}>
+            <div className={textClass}>{displayText}</div>
+        </div>
+    );
+};
 
 const EmailManagementPageContent: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -222,14 +272,22 @@ const EmailManagementPageContent: React.FC = () => {
                 return;
             }
 
-            const data = response.data.users.map((user: User) => ({
-                id: user.ID,
-                email: user.Email,
-                lastActive: new Date(user.LastLogin).toLocaleString(),
-                created: new Date(user.CreatedAt).toLocaleString(),
-                createdByName: user.CreatedByName,
-                user_encode_id: user.user_encode_id,
-            }));
+            const data = response.data.users.map((user: User) => {
+                // Use LastLogin if available and not zero time, otherwise fallback to CreatedAt
+                const lastLoginDate = user.LastLogin && user.LastLogin !== "0001-01-01T00:00:00Z"
+                    ? user.LastLogin
+                    : user.CreatedAt;
+
+                return {
+                    id: user.ID,
+                    email: user.Email,
+                    lastActive: new Date(lastLoginDate).toLocaleString(),
+                    lastActiveRaw: lastLoginDate,
+                    created: new Date(user.CreatedAt).toLocaleString(),
+                    createdByName: user.CreatedByName,
+                    user_encode_id: user.user_encode_id,
+                };
+            });
             setUsers(data);
             setTotalPages(response.data.total_pages || 1);
             setTotalCount(response.data.total_count || 0);
@@ -279,213 +337,318 @@ const EmailManagementPageContent: React.FC = () => {
 
     return (
         <AdminLayout>
-            <AdminContentCard
-                title="User List"
-                headerRight={
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <Input
-                            id="by_username"
-                            placeholder="Search by username..."
-                            className="pl-9 w-full sm:w-64 bg-gray-50 border-gray-200 focus:bg-white"
-                            value={searchTerm}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                const sanitizedValue = DOMPurify.sanitize(value);
-                                handleSearch(sanitizedValue);
-                            }}
-                        />
+            <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+                {/* Header */}
+                <div className="self-stretch inline-flex justify-between items-center">
+                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                        User list
                     </div>
-                }
-            >
-                <Toaster />
+                    <div className="w-64 h-10 inline-flex flex-col justify-between items-start">
+                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-between items-center">
+                            <div className="flex justify-start items-center gap-2 flex-1">
+                                <Search className="w-4 h-4 text-gray-400" />
+                                <input
+                                    id="by_username"
+                                    placeholder="Search by username..."
+                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400"
+                                    value={searchTerm}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        const sanitizedValue = DOMPurify.sanitize(value);
+                                        handleSearch(sanitizedValue);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                {/* Modern Table */}
-                <div className="overflow-x-auto -mx-4 md:-mx-6">
-                    <table className="w-full min-w-[700px]">
-                        <thead>
-                            <tr className="border-b border-gray-100">
-                                <th className="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    User
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                {/* Table Card */}
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden relative">
+                    <Toaster />
+
+                    {/* Loading Overlay - only covers table card */}
+                    {isLoading && (
+                        <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-lg">
+                            <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Table Container */}
+                    <div className="self-stretch flex flex-col justify-start items-start gap-4">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 overflow-hidden">
+                            {/* Table Header */}
+                            <div className="flex w-full bg-white border-b border-gray-200">
+                                <div className="w-80 px-4 py-3 flex items-center gap-1">
+                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
+                                    <ArrowUpDown className="w-5 h-5 text-gray-500" />
+                                </div>
+                                <div className="flex-1 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('last_login')}
-                                        className="flex items-center hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
                                     >
-                                        Last Active
+                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
                                         {renderSortIcon('last_login')}
                                     </button>
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                </div>
+                                <div className="flex-1 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('created_at')}
-                                        className="flex items-center hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
                                     >
-                                        Created
+                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created</div>
                                         {renderSortIcon('created_at')}
                                     </button>
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Created By
-                                </th>
-                                <th className="px-4 md:px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-50">
+                                </div>
+                                <div className="flex-1 px-4 py-3 flex items-center gap-1">
+                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
+                                    <ArrowUpDown className="w-5 h-5 text-gray-500" />
+                                </div>
+                                <div className="w-20 px-4 py-3 flex justify-center items-center">
+                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
+                                </div>
+                            </div>
+
+                            {/* Table Body */}
                             {users.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="px-4 md:px-6 py-12 text-center text-gray-500">
-                                        {isLoading ? "Loading users..." : "No users found"}
-                                    </td>
-                                </tr>
+                                <div className="flex w-full bg-white border-b border-gray-200 px-4 py-3">
+                                    <div className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">
+                                        {isLoading ? "Loading..." : "No users found"}
+                                    </div>
+                                </div>
                             ) : (
                                 users.map((user) => (
-                                    <tr
+                                    <div
                                         key={user.email}
-                                        className="hover:bg-gray-50/50 transition-colors"
+                                        className="flex w-full bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+                                        onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}
                                     >
-                                        <td className="px-4 md:px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-medium text-sm">
-                                                    {user.email.charAt(0).toUpperCase()}
-                                                </div>
-                                                <span className="font-medium text-gray-900">{user.email}</span>
+                                        {/* Name */}
+                                        <div className="w-80 px-4 py-3 flex items-center">
+                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                                {user.email}
                                             </div>
-                                        </td>
-                                        <td className="px-4 py-4 text-sm text-gray-600">
-                                            {user.lastActive}
-                                        </td>
-                                        <td className="px-4 py-4 text-sm text-gray-600">
-                                            {user.created}
-                                        </td>
-                                        <td className="px-4 py-4">
-                                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                                        </div>
+                                        {/* Last Active */}
+                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                            <LastActiveBadge lastActiveRaw={user.lastActiveRaw} />
+                                        </div>
+                                        {/* Created */}
+                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                                {user.created}
+                                            </div>
+                                        </div>
+                                        {/* Created By */}
+                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.createdByName || "System"}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 md:px-6 py-4 text-right">
+                                            </div>
+                                        </div>
+                                        {/* Action */}
+                                        <div
+                                            className="w-20 px-4 py-3 flex justify-center items-center"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
                                             <UserRowActionMenu
                                                 onView={() => router.push(`/admin/user/${user.user_encode_id}`)}
                                                 onChangePassword={() => handleChangePasswordClick(user)}
                                                 onDelete={() => handleDeleteClick(user)}
                                             />
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </div>
                                 ))
                             )}
-                        </tbody>
-                    </table>
-                </div>
+                        </div>
 
-                {/* Pagination */}
-                <div className="mt-6 border-t border-gray-100 pt-4">
-                    <PaginationComponent
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                        totalCount={totalCount}
-                        activeCount={activeCount}
-                        pageSize={pageSize}
-                    />
-                </div>
-
-                {/* Change Password Dialog - Unchanged */}
-                <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle>Change Password</DialogTitle>
-                        </DialogHeader>
-                        <p className="text-sm text-gray-500 mb-4">
-                            Update password for <span className="font-medium text-gray-900">{selectedAdmin?.email}</span>
-                        </p>
-                        <div className="space-y-4">
-                            <PasswordInput
-                                id="password"
-                                placeholder="New Password"
-                                value={passwordForAdmin}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                    setPasswordForAdmin(sanitizedValue);
-                                }}
-                                showPassword={showPassword}
-                                setShowPassword={setShowPassword}
-                            />
-                            <PasswordInput
-                                id="confirm_password"
-                                placeholder="Confirm Password"
-                                value={confirmPasswordForAdmin}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                    setConfirmPasswordForAdmin(sanitizedValue);
-                                }}
-                                showPassword={showCPassword}
-                                setShowPassword={setShowCPassword}
+                        {/* Pagination */}
+                        <div className="self-stretch inline-flex justify-between items-center">
+                            <div className="px-3 py-2.5 rounded outline outline-1 outline-offset-[-0.50px] outline-gray-100 inline-flex flex-col justify-center items-start gap-2">
+                                <div className="inline-flex justify-start items-center gap-2">
+                                    <div className="text-justify justify-center text-gray-700 text-sm font-normal font-['Roboto'] leading-4">
+                                        Showing {users.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} results
+                                    </div>
+                                </div>
+                            </div>
+                            <PaginationComponent
+                                totalPages={totalPages}
+                                currentPage={currentPage}
+                                onPageChange={setCurrentPage}
+                                totalCount={totalCount}
+                                activeCount={activeCount}
+                                pageSize={pageSize}
                             />
                         </div>
-                        <DialogFooter className="mt-6">
-                            <Button
-                                variant="outline"
-                                className="flex-1"
+                    </div>
+                </div>
+
+                {/* Change Password Dialog */}
+                <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
+                    <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
+                        {/* Header */}
+                        <div className="self-stretch inline-flex justify-between items-center">
+                            <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">Change Password</div>
+                            <button
                                 onClick={() => {
                                     setIsChangePasswordDialogOpen(false);
                                     setPasswordForAdmin("");
                                     setConfirmPasswordForAdmin("");
                                     setSelectedAdmin(null);
                                 }}
+                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
                             >
-                                Cancel
-                            </Button>
-                            <Button
-                                className={cn(
-                                    "flex-1 font-medium",
-                                    !passwordForAdmin || !confirmPasswordForAdmin
-                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                        : "bg-blue-600 hover:bg-blue-700 text-white"
-                                )}
-                                disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                <X className="w-5 h-5 text-gray-800" />
+                            </button>
+                        </div>
+
+                        {/* Form */}
+                        <div className="w-full flex flex-col justify-start items-start gap-4">
+                            <div className="self-stretch flex flex-col justify-start items-center gap-3">
+                                {/* New Password Input */}
+                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                                        <div className="self-stretch h-3.5"></div>
+                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                            <div className="flex-1 flex justify-start items-center gap-2">
+                                                <Lock className="w-5 h-5 text-gray-400" />
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    value={passwordForAdmin}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                                        setPasswordForAdmin(sanitizedValue);
+                                                    }}
+                                                    placeholder="***********"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="flex justify-center items-center"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="w-5 h-5 text-gray-800" />
+                                                ) : (
+                                                    <Eye className="w-5 h-5 text-gray-800" />
+                                                )}
+                                            </button>
+                                        </div>
+                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Confirm Password Input */}
+                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                                        <div className="self-stretch h-3.5"></div>
+                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                            <div className="flex-1 flex justify-start items-center gap-2">
+                                                <Lock className="w-5 h-5 text-gray-400" />
+                                                <input
+                                                    type={showCPassword ? "text" : "password"}
+                                                    value={confirmPasswordForAdmin}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                                        setConfirmPasswordForAdmin(sanitizedValue);
+                                                    }}
+                                                    placeholder="***********"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowCPassword(!showCPassword)}
+                                                className="flex justify-center items-center"
+                                            >
+                                                {showCPassword ? (
+                                                    <EyeOff className="w-5 h-5 text-gray-800" />
+                                                ) : (
+                                                    <Eye className="w-5 h-5 text-gray-800" />
+                                                )}
+                                            </button>
+                                        </div>
+                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
                                 onClick={handleChangePasswordSubmit}
+                                disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                className={cn(
+                                    "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+                                    !passwordForAdmin || !confirmPasswordForAdmin
+                                        ? "bg-blue-400 cursor-not-allowed"
+                                        : "bg-blue-600 hover:bg-blue-700"
+                                )}
                             >
-                                Update Password
-                            </Button>
-                        </DialogFooter>
+                                <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Change password</div>
+                            </button>
+                        </div>
                     </DialogContent>
                 </Dialog>
 
-                {/* Delete Confirmation Dialog - Unchanged */}
+                {/* Delete Confirmation Dialog */}
                 <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle>Delete User</DialogTitle>
-                        </DialogHeader>
-                        <p className="text-gray-600">
-                            Are you sure you want to delete <span className="font-medium text-gray-900">{selectedUser?.email}</span>? This action cannot be undone.
-                        </p>
-                        <DialogFooter className="mt-6">
-                            <Button
-                                variant="outline"
-                                className="flex-1"
+                    <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
+                        <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
+                            {/* Close Button */}
+                            <button
                                 onClick={() => setIsDialogDeleteOpen(false)}
+                                className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                             >
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                className="flex-1"
-                                onClick={handleDeleteConfirm}
-                            >
-                                Delete User
-                            </Button>
-                        </DialogFooter>
+                                <X className="w-4 h-4 text-gray-800" />
+                            </button>
+
+                            <div className="self-stretch flex flex-col justify-start items-center gap-5">
+                                {/* Icon */}
+                                <div className="w-12 h-12 p-2 bg-red-50 rounded-3xl inline-flex justify-center items-center gap-2.5">
+                                    <AlertTriangle className="w-6 h-6 text-red-500" />
+                                </div>
+
+                                {/* Title & Description */}
+                                <div className="self-stretch flex flex-col justify-start items-center gap-2">
+                                    <div className="self-stretch text-center justify-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7">
+                                        Delete user?
+                                    </div>
+                                    <div className="self-stretch flex flex-col justify-start items-center text-center">
+                                        <span className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
+                                        <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{selectedUser?.email}?</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Buttons */}
+                            <div className="self-stretch inline-flex justify-start items-center gap-3">
+                                <button
+                                    onClick={() => setIsDialogDeleteOpen(false)}
+                                    className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                >
+                                    <div className="text-center justify-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
+                                </button>
+                                <button
+                                    onClick={handleDeleteConfirm}
+                                    className="flex-1 h-10 px-4 py-2.5 bg-red-500 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-600 flex justify-center items-center gap-1.5 overflow-hidden hover:bg-red-600 transition-colors"
+                                >
+                                    <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Delete</div>
+                                </button>
+                            </div>
+                        </div>
                     </DialogContent>
                 </Dialog>
-            </AdminContentCard>
-
-            {isLoading && <LoadingProcessingPage />}
+            </div>
         </AdminLayout>
     );
 };

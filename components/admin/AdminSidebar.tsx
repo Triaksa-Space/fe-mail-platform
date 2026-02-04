@@ -196,7 +196,7 @@ const AdminSidebar: React.FC = () => {
   return (
     <aside
       className={cn(
-        "self-stretch flex-1 p-4 bg-white rounded-xl",
+        "w-full h-full p-4 bg-white rounded-xl",
         "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
         "outline outline-1 outline-offset-[-1px] outline-gray-200",
         "flex flex-col justify-start items-start gap-5"

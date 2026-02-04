@@ -181,11 +181,12 @@ const CreateSingleEmailPageContent: React.FC = () => {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="flex flex-col gap-5">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Create Single Email</h1>
-          <p className="mt-1 text-sm text-gray-500">Create a new email account for a user</p>
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Create single email
+          </div>
         </div>
 
         {/* Form Card */}

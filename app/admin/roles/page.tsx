@@ -359,14 +359,12 @@ const RolesPermissionsPageContent: React.FC = () => {
 
     return (
         <AdminLayout>
-            {/* Page Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">Roles & permissions</h1>
-            </div>
-
-            <AdminContentCard
-                title="Admin list"
-                headerRight={
+            <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+                {/* Page Header */}
+                <div className="self-stretch inline-flex justify-between items-center">
+                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                        Roles & permissions
+                    </div>
                     <div className="flex items-center gap-3">
                         {/* Search Input */}
                         <div className="relative">
@@ -391,8 +389,9 @@ const RolesPermissionsPageContent: React.FC = () => {
                             Create admin
                         </Button>
                     </div>
-                }
-            >
+                </div>
+
+                <AdminContentCard>
                 <Toaster />
 
                 {/* Table */}
@@ -640,7 +639,8 @@ const RolesPermissionsPageContent: React.FC = () => {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-            </AdminContentCard>
+                </AdminContentCard>
+            </div>
 
             {isLoading && <LoadingProcessingPage />}
         </AdminLayout>

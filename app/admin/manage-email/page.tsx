@@ -206,29 +206,29 @@ export default function AdminAllInboxPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="flex flex-col gap-5 h-[calc(100vh-80px)]">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full h-[calc(100vh-80px)]">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">All inbox</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              View all incoming emails across all users
-            </p>
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            All inbox
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="h-9 px-3 rounded-xl border-gray-200"
-            >
-              <RefreshCw
-                className={cn("h-4 w-4 mr-2", isRefreshing && "animate-spin")}
-              />
-              Refresh
-            </Button>
-          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className={cn(
+              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
+              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+              "outline outline-1 outline-offset-[-1px] outline-gray-200",
+              "flex justify-center items-center gap-2 overflow-hidden",
+              "hover:bg-gray-50 transition-colors",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+            aria-label="Refresh"
+          >
+            <RefreshCw
+              className={cn("w-5 h-5 text-gray-800", isRefreshing && "animate-spin")}
+            />
+          </button>
         </div>
 
         {/* Main Content - Full width single view */}
