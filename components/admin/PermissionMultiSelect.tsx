@@ -10,6 +10,8 @@ interface PermissionMultiSelectProps {
   onChange: (value: string[]) => void;
   error?: string;
   disabled?: boolean;
+  displayMode?: "badges" | "text";
+  dropdownPosition?: "bottom" | "top";
 }
 
 const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
@@ -17,6 +19,8 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
   onChange,
   error,
   disabled = false,
+  displayMode = "badges",
+  dropdownPosition = "bottom",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,7 +74,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
           disabled
             ? "bg-gray-100 border-gray-200 cursor-not-allowed"
             : isOpen
-            ? "border-blue-500 ring-2 ring-blue-100"
+            ? "border-sky-500 ring-2 ring-sky-100"
             : error
             ? "border-red-500"
             : "border-gray-200 hover:border-gray-300"
@@ -78,6 +82,10 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
       >
         {value.length === 0 ? (
           <span className="text-sm text-gray-400">Select permissions...</span>
+        ) : displayMode === "text" ? (
+          <span className="text-sm text-gray-800 truncate flex-1">
+            {value.map((id) => getPermissionLabel(id)).join(", ")}
+          </span>
         ) : (
           value.map((permissionId) => (
             <span
@@ -85,7 +93,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
               className={cn(
                 "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5",
                 "text-xs font-medium",
-                "bg-blue-50 text-blue-700 border border-blue-100"
+                "bg-sky-100 text-sky-600"
               )}
             >
               {getPermissionLabel(permissionId)}
@@ -93,7 +101,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 <button
                   type="button"
                   onClick={(e) => removePermission(permissionId, e)}
-                  className="hover:bg-blue-100 rounded-full p-0.5 transition-colors"
+                  className="hover:bg-sky-200 rounded-full p-0.5 transition-colors"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -113,9 +121,10 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
       {isOpen && !disabled && (
         <div
           className={cn(
-            "absolute z-50 mt-1 w-full max-h-60 overflow-auto",
+            "absolute z-50 w-full max-h-60 overflow-auto",
             "rounded-lg border border-gray-200 bg-white shadow-lg",
-            "py-1"
+            "py-1",
+            dropdownPosition === "top" ? "bottom-full mb-1" : "mt-1"
           )}
         >
           {AVAILABLE_PERMISSIONS.map((permission) => {
@@ -128,14 +137,14 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 className={cn(
                   "flex w-full items-center gap-3 px-3 py-2 text-sm",
                   "hover:bg-gray-50 transition-colors text-left",
-                  isSelected && "bg-blue-50"
+                  isSelected && "bg-sky-50"
                 )}
               >
                 <div
                   className={cn(
                     "flex h-4 w-4 items-center justify-center rounded border shrink-0",
                     isSelected
-                      ? "bg-blue-600 border-blue-600"
+                      ? "bg-sky-600 border-sky-600"
                       : "border-gray-300"
                   )}
                 >
@@ -144,7 +153,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 <span
                   className={cn(
                     "flex-1",
-                    isSelected ? "text-blue-700 font-medium" : "text-gray-700"
+                    isSelected ? "text-sky-700 font-medium" : "text-gray-700"
                   )}
                 >
                   {permission.label}

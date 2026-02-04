@@ -6,6 +6,7 @@
 export interface AdminApiResponse {
   id: string;
   username: string;
+  password?: string;
   last_active_at: string | null;
   is_online: boolean;
   permissions: PermissionKey[];
@@ -26,6 +27,7 @@ export interface AdminListApiResponse {
 export interface AdminUser {
   id: string;
   username: string;
+  password?: string;
   last_active_at: string | null;
   is_online: boolean;
   permissions: PermissionKey[];

@@ -3,14 +3,11 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Shield, User, Edit3, X, Check } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import PasswordInput from '@/components/PasswordInput';
 import LoadingProcessingPage from '@/components/ProcessLoading';
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
@@ -35,7 +32,6 @@ const EditAdminPageContent: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [permissions, setPermissions] = useState<PermissionKey[]>([]);
-    const [showPassword, setShowPassword] = useState(false);
 
     const { toast } = useToast();
 
@@ -71,6 +67,7 @@ const EditAdminPageContent: React.FC = () => {
                 const adminData: AdminUser = {
                     id: response.data.id,
                     username: response.data.username,
+                    password: response.data.password,
                     last_active_at: response.data.last_active_at,
                     is_online: response.data.is_online,
                     permissions: response.data.permissions,
@@ -78,6 +75,7 @@ const EditAdminPageContent: React.FC = () => {
                 };
                 setAdmin(adminData);
                 setUsername(adminData.username);
+                setPassword(adminData.password || '');
                 setPermissions(adminData.permissions);
             }
         } catch (error) {
@@ -159,7 +157,7 @@ const EditAdminPageContent: React.FC = () => {
                 variant: "default",
             });
 
-            router.push("/admin/roles");
+            router.push(`/admin/roles/${adminId}`);
         } catch (error) {
             console.error('Failed to update admin:', error);
             let errorMessage = "Failed to update admin. Please try again.";
@@ -176,7 +174,7 @@ const EditAdminPageContent: React.FC = () => {
     };
 
     const handleCancel = () => {
-        router.push("/admin/roles");
+        router.push(`/admin/roles/${adminId}`);
     };
 
     // Check if form is valid
@@ -186,7 +184,10 @@ const EditAdminPageContent: React.FC = () => {
         return (
             <AdminLayout>
                 <div className="flex items-center justify-center py-20">
-                    <div className="text-gray-500">Loading...</div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                    </div>
                 </div>
             </AdminLayout>
         );
@@ -195,109 +196,144 @@ const EditAdminPageContent: React.FC = () => {
     return (
         <AdminLayout>
             <Toaster />
+            <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+                {/* Breadcrumb Navigation */}
+                <div className="h-5 inline-flex justify-start items-center gap-1">
+                    {/* Back Button */}
+                    <button
+                        onClick={() => router.push(`/admin/roles/${adminId}`)}
+                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-gray-100 transition-colors"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                    </button>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
 
-            {/* Breadcrumb Header */}
-            <div className="mb-6">
-                <div className="flex items-center gap-2 text-sm">
+                    {/* Roles & permissions link */}
                     <button
                         onClick={() => router.push("/admin/roles")}
-                        className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
                     >
-                        <ChevronLeft className="h-4 w-4" />
-                        <span>Roles & permissions</span>
+                        <Shield className="w-5 h-5 text-gray-600" />
+                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </button>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-500">{admin?.username}</span>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                    <span className="text-gray-900 font-medium">Edit</span>
-                </div>
-            </div>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
 
-            {/* Form Card */}
-            <div
-                className={cn(
-                    "rounded-xl bg-white p-4 md:p-6 border border-gray-100",
-                    "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]"
-                )}
-            >
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                    Edit admin
-                </h2>
+                    {/* Admin username link */}
+                    <button
+                        onClick={() => router.push(`/admin/roles/${adminId}`)}
+                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                    >
+                        <User className="w-5 h-5 text-gray-600" />
+                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
+                    </button>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
 
-                {/* Form Fields - 3 columns on desktop */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    {/* Username */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                            Username
-                        </label>
-                        <Input
-                            placeholder="Enter username"
-                            value={username}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
-                                setUsername(sanitizedValue);
-                            }}
-                            className="bg-gray-50 border-gray-200 focus:bg-white"
-                        />
-                    </div>
-
-                    {/* Password */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                            Password
-                        </label>
-                        <PasswordInput
-                            id="edit_password"
-                            placeholder="Leave empty to keep current"
-                            value={password}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                setPassword(sanitizedValue);
-                            }}
-                            showPassword={showPassword}
-                            setShowPassword={setShowPassword}
-                        />
-                        <p className="text-xs text-gray-500">
-                            Leave empty to keep current password
-                        </p>
-                    </div>
-
-                    {/* Role / Permissions */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                            Role
-                        </label>
-                        <PermissionMultiSelect
-                            value={permissions}
-                            onChange={(values) => setPermissions(values as PermissionKey[])}
-                        />
+                    {/* Current page - Edit */}
+                    <div className="flex justify-center items-center gap-1">
+                        <Edit3 className="w-5 h-5 text-sky-600" />
+                        <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
                     </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
-                    <Button
-                        variant="outline"
-                        onClick={handleCancel}
-                        className="px-6"
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleSave}
-                        disabled={!isFormValid}
-                        className={cn(
-                            "px-6",
-                            !isFormValid
-                                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                : "bg-blue-600 hover:bg-blue-700 text-white"
-                        )}
-                    >
-                        Save changes
-                    </Button>
+                {/* Page Header */}
+                <div className="self-stretch inline-flex justify-start items-center gap-5">
+                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                        Edit
+                    </div>
+                </div>
+
+                {/* Form Card */}
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-hidden">
+                    {/* Form Fields Row */}
+                    <div className="self-stretch inline-flex justify-start items-start gap-4">
+                        {/* Username Input */}
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                            <div className="self-stretch relative flex flex-col justify-start items-start">
+                                <div className="self-stretch h-3.5"></div>
+                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                    <input
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
+                                            setUsername(sanitizedValue);
+                                        }}
+                                        placeholder="Enter username"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Password Input */}
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                            <div className="self-stretch relative flex flex-col justify-start items-start">
+                                <div className="self-stretch h-3.5"></div>
+                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                    <input
+                                        type="text"
+                                        value={password}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                            setPassword(sanitizedValue);
+                                        }}
+                                        placeholder="Enter new password"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Role Select */}
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                            <div className="self-stretch relative flex flex-col justify-start items-start">
+                                <div className="self-stretch h-3.5"></div>
+                                <PermissionMultiSelect
+                                    value={permissions}
+                                    onChange={(values) => setPermissions(values as PermissionKey[])}
+                                    displayMode="text"
+                                />
+                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
+                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-300"></div>
+
+                    {/* Action Buttons */}
+                    <div className="self-stretch inline-flex justify-end items-start gap-2.5">
+                        <button
+                            onClick={handleCancel}
+                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                        >
+                            <X className="w-5 h-5 text-gray-800" />
+                            <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={!isFormValid}
+                            className={cn(
+                                "h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex justify-center items-center gap-1.5 transition-colors",
+                                isFormValid
+                                    ? "bg-sky-600 outline outline-1 outline-offset-[-1px] outline-sky-600 hover:bg-sky-700"
+                                    : "bg-sky-400 outline outline-1 outline-offset-[-1px] outline-sky-400 cursor-not-allowed"
+                            )}
+                        >
+                            <Check className="w-5 h-5 text-white" />
+                            <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Save changes</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 

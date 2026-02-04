@@ -28,9 +28,9 @@ const PermissionChips: React.FC<PermissionChipsProps> = ({
         <span
           key={permission}
           className={cn(
-            "inline-flex items-center rounded-full px-2.5 py-0.5",
+            "inline-flex items-center rounded-full px-2 py-0.5",
             "text-xs font-medium",
-            "bg-blue-50 text-blue-700 border border-blue-100"
+            "bg-sky-100 text-sky-600"
           )}
         >
           {getPermissionLabel(permission)}

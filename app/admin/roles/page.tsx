@@ -3,29 +3,21 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, ArrowUpDown, UserPlus, Search } from 'lucide-react';
+import { ArrowUp, ArrowDown, ArrowUpDown, UserPlus, AlertTriangle, X, Lock, Eye, EyeOff, Edit3, Trash2 } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
     Dialog,
     DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import PasswordInput from '@/components/PasswordInput';
 import LoadingProcessingPage from '@/components/ProcessLoading';
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import {
     AdminLayout,
-    AdminContentCard,
-    AdminRowActionMenu,
     PermissionChips,
     PermissionMultiSelect
 } from "@/components/admin";
@@ -33,69 +25,80 @@ import {
     AdminUser,
     AdminListApiResponse,
     PermissionKey,
-    formatLastActive,
     formatDate,
 } from "@/lib/admin-types";
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
 
-// Last active status badge component
+// Last Active Badge Component - matching user list style
 const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean }> = ({
     lastActiveAt,
     isOnline,
 }) => {
-    const { text, variant } = formatLastActive(lastActiveAt, isOnline);
+    // If online, show online badge
+    if (isOnline) {
+        return (
+            <div className="h-5 px-1.5 py-0.5 bg-green-50 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-green-500 text-xs font-medium font-['Roboto'] leading-5">Online</div>
+            </div>
+        );
+    }
 
-    const variantStyles = {
-        online: 'bg-green-50 text-green-700 border-green-100',
-        recent: 'bg-blue-50 text-blue-700 border-blue-100',
-        away: 'bg-gray-100 text-gray-600 border-gray-200',
-    };
+    // Calculate time difference
+    if (!lastActiveAt) {
+        return (
+            <div className="h-5 px-1.5 py-0.5 bg-gray-100 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-gray-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
+            </div>
+        );
+    }
+
+    const now = new Date();
+    const lastActiveDate = new Date(lastActiveAt);
+
+    // Check for invalid date
+    if (isNaN(lastActiveDate.getTime())) {
+        return (
+            <div className="h-5 px-1.5 py-0.5 bg-gray-100 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-gray-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
+            </div>
+        );
+    }
+
+    const diffMs = now.getTime() - lastActiveDate.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    let badgeClass = "h-5 px-1.5 py-0.5 rounded-3xl flex justify-center items-center gap-1";
+    let textClass = "text-center justify-center text-xs font-medium font-['Roboto'] leading-5";
+    let displayText = "";
+
+    if (diffMins < 5) {
+        badgeClass += " bg-green-50";
+        textClass += " text-green-500";
+        displayText = "Online";
+    } else if (diffMins < 60) {
+        badgeClass += " bg-sky-100";
+        textClass += " text-gray-700";
+        displayText = `${diffMins} minutes ago`;
+    } else if (diffHours < 24) {
+        badgeClass += " bg-gray-100";
+        textClass += " text-gray-700";
+        displayText = `${diffHours} hours ago`;
+    } else {
+        badgeClass += " bg-gray-100";
+        textClass += " text-gray-700";
+        displayText = `${diffDays} days ago`;
+    }
 
     return (
-        <span
-            className={cn(
-                "inline-flex items-center rounded-full px-2.5 py-0.5",
-                "text-xs font-medium border",
-                variantStyles[variant]
-            )}
-        >
-            {variant === 'online' && (
-                <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-green-500" />
-            )}
-            {text}
-        </span>
+        <div className={badgeClass}>
+            <div className={textClass}>{displayText}</div>
+        </div>
     );
 };
-
-// Skeleton row for loading state
-const SkeletonRow: React.FC = () => (
-    <tr className="animate-pulse">
-        <td className="px-4 md:px-6 py-4">
-            <div className="flex items-center gap-3">
-                <div className="h-9 w-9 rounded-full bg-gray-200" />
-                <div className="h-4 w-24 rounded bg-gray-200" />
-            </div>
-        </td>
-        <td className="px-4 py-4">
-            <div className="h-6 w-20 rounded-full bg-gray-200" />
-        </td>
-        <td className="px-4 py-4">
-            <div className="flex flex-wrap gap-1.5">
-                <div className="h-5 w-16 rounded-full bg-gray-200" />
-                <div className="h-5 w-20 rounded-full bg-gray-200" />
-                <div className="h-5 w-14 rounded-full bg-gray-200" />
-            </div>
-        </td>
-        <td className="px-4 py-4">
-            <div className="h-4 w-24 rounded bg-gray-200" />
-        </td>
-        <td className="px-4 md:px-6 py-4 text-right">
-            <div className="h-9 w-9 rounded-lg bg-gray-200 ml-auto" />
-        </td>
-    </tr>
-);
 
 const RolesPermissionsPageContent: React.FC = () => {
     const [admins, setAdmins] = useState<AdminUser[]>([]);
@@ -353,166 +356,155 @@ const RolesPermissionsPageContent: React.FC = () => {
     // Check if user can create (button state)
     const canCreate = newUsername.trim() && newPassword.length >= 6 && newPermissions.length > 0;
 
-    // Calculate pagination text
-    const startIndex = totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1;
-    const endIndex = Math.min(currentPage * pageSize, totalCount);
-
     return (
         <AdminLayout>
             <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
                 {/* Page Header */}
-                <div className="self-stretch inline-flex justify-between items-center">
+                <div className="self-stretch inline-flex justify-start items-center gap-5">
                     <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
                         Roles & permissions
                     </div>
-                    <div className="flex items-center gap-3">
-                        {/* Search Input */}
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input
-                                placeholder="Search by username..."
-                                value={searchQuery}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const sanitizedValue = DOMPurify.sanitize(value);
-                                    setSearchQuery(sanitizedValue);
-                                }}
-                                className="pl-9 w-48 sm:w-64 bg-gray-50 border-gray-200 focus:bg-white"
-                            />
-                        </div>
-                        {/* Create Button */}
-                        <Button
-                            onClick={() => setIsCreateModalOpen(true)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                            <UserPlus className="h-4 w-4 mr-2" />
-                            Create admin
-                        </Button>
-                    </div>
                 </div>
 
-                <AdminContentCard>
                 <Toaster />
 
-                {/* Table */}
-                <div className="overflow-x-auto -mx-4 md:-mx-6">
-                    <table className="w-full min-w-[800px]">
-                        <thead>
-                            <tr className="border-b border-gray-100">
-                                <th className="px-4 md:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                {/* Table Card */}
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden relative">
+
+                    {/* Loading Overlay */}
+                    {isLoading && (
+                        <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-lg">
+                            <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Header Row */}
+                    <div className="self-stretch inline-flex justify-between items-center">
+                        <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+                            Admin list
+                        </div>
+                        <div className="flex justify-end items-center gap-3">
+                            <button
+                                onClick={() => setIsCreateModalOpen(true)}
+                                className="h-10 px-4 py-2.5 bg-sky-600 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-sky-600 flex justify-center items-center gap-1.5 hover:bg-sky-700 transition-colors"
+                            >
+                                <UserPlus className="h-5 w-5 text-white" />
+                                <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
+                                    Create admin
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Table Container */}
+                    <div className="self-stretch flex flex-col justify-start items-start gap-4">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 overflow-hidden">
+                            {/* Table Header */}
+                            <div className="flex w-full bg-white border-b border-gray-200">
+                                <div className="w-56 px-4 py-3 flex items-center gap-1">
                                     <button
                                         onClick={() => toggleSort('username')}
-                                        className="flex items-center hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
                                     >
-                                        Username
+                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Username</div>
                                         {renderSortIcon('username')}
                                     </button>
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                </div>
+                                <div className="w-40 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('last_active_at')}
-                                        className="flex items-center hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
                                     >
-                                        Last Active
+                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
                                         {renderSortIcon('last_active_at')}
                                     </button>
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Role
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                </div>
+                                <div className="flex-1 px-4 py-3 flex items-center gap-1">
+                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
+                                    <ArrowUpDown className="w-5 h-5 text-gray-500" />
+                                </div>
+                                <div className="w-40 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('created_at')}
-                                        className="flex items-center hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
                                     >
-                                        Created
+                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created date</div>
                                         {renderSortIcon('created_at')}
                                     </button>
-                                </th>
-                                <th className="px-4 md:px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-50">
-                            {isLoading && admins.length === 0 ? (
-                                // Skeleton loading state
-                                <>
-                                    <SkeletonRow />
-                                    <SkeletonRow />
-                                    <SkeletonRow />
-                                </>
-                            ) : admins.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="px-4 md:px-6 py-12 text-center">
-                                        <div className="space-y-3">
-                                            <p className="text-gray-500">
-                                                {searchQuery ? 'No admins found matching your search' : 'No admins found'}
-                                            </p>
-                                            {!searchQuery && (
-                                                <Button
-                                                    onClick={() => setIsCreateModalOpen(true)}
-                                                    variant="outline"
-                                                    className="text-blue-600 border-blue-200 hover:bg-blue-50"
-                                                >
-                                                    <UserPlus className="h-4 w-4 mr-2" />
-                                                    Create admin
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
+                                </div>
+                                <div className="w-24 px-4 py-3 flex justify-center items-center">
+                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
+                                </div>
+                            </div>
+
+                            {/* Table Body */}
+                            {admins.length === 0 ? (
+                                <div className="flex w-full bg-white border-b border-gray-200 px-4 py-3">
+                                    <div className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">
+                                        {isLoading ? "Loading..." : searchQuery ? "No admins found matching your search" : "No admins found"}
+                                    </div>
+                                </div>
                             ) : (
                                 admins.map((admin) => (
-                                    <tr
+                                    <div
                                         key={admin.id}
-                                        className="hover:bg-gray-50/50 transition-colors"
+                                        className="flex w-full bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+                                        onClick={() => router.push(`/admin/roles/${admin.id}`)}
                                     >
-                                        <td className="px-4 md:px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-blue-600 font-medium text-sm">
-                                                    {admin.username.charAt(0).toUpperCase()}
-                                                </div>
-                                                <span className="font-medium text-gray-900">
-                                                    {admin.username}
-                                                </span>
+                                        {/* Username */}
+                                        <div className="w-56 px-4 py-3 flex items-center">
+                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                                {admin.username}
                                             </div>
-                                        </td>
-                                        <td className="px-4 py-4">
+                                        </div>
+                                        {/* Last Active */}
+                                        <div className="w-40 px-4 py-3 flex items-center">
                                             <LastActiveBadge
                                                 lastActiveAt={admin.last_active_at}
                                                 isOnline={admin.is_online}
                                             />
-                                        </td>
-                                        <td className="px-4 py-4">
+                                        </div>
+                                        {/* Role/Permissions */}
+                                        <div className="flex-1 px-4 py-3 flex items-center">
                                             <PermissionChips
                                                 permissions={admin.permissions}
-                                                className="max-w-[280px]"
+                                                className="max-w-[300px]"
                                             />
-                                        </td>
-                                        <td className="px-4 py-4 text-sm text-gray-600">
-                                            {formatDate(admin.created_at)}
-                                        </td>
-                                        <td className="px-4 md:px-6 py-4 text-right">
-                                            <AdminRowActionMenu
-                                                onEdit={() => handleEditClick(admin)}
-                                                onDelete={() => handleDeleteClick(admin)}
-                                            />
-                                        </td>
-                                    </tr>
+                                        </div>
+                                        {/* Created Date */}
+                                        <div className="w-40 px-4 py-3 flex items-center">
+                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                                {formatDate(admin.created_at)}
+                                            </div>
+                                        </div>
+                                        {/* Action */}
+                                        <div
+                                            className="w-24 px-4 py-3 flex justify-center items-center gap-2"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <button
+                                                onClick={() => handleEditClick(admin)}
+                                                className="w-8 h-8 bg-white rounded-md shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors"
+                                            >
+                                                <Edit3 className="w-4 h-4 text-gray-600" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteClick(admin)}
+                                                className="w-8 h-8 bg-white rounded-md shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center hover:bg-red-50 transition-colors"
+                                            >
+                                                <Trash2 className="w-4 h-4 text-red-500" />
+                                            </button>
+                                        </div>
+                                    </div>
                                 ))
                             )}
-                        </tbody>
-                    </table>
-                </div>
+                        </div>
 
-                {/* Pagination Footer */}
-                {totalCount > 0 && (
-                    <div className="mt-6 border-t border-gray-100 pt-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                            <p className="text-sm text-gray-500">
-                                Showing {startIndex} to {endIndex} of {totalCount} results
-                            </p>
+                        {/* Pagination */}
+                        <div className="self-stretch">
                             <PaginationComponent
                                 totalPages={totalPages}
                                 currentPage={currentPage}
@@ -523,7 +515,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                             />
                         </div>
                     </div>
-                )}
+                </div>
 
                 {/* Create Admin Modal */}
                 <Dialog
@@ -533,113 +525,169 @@ const RolesPermissionsPageContent: React.FC = () => {
                         if (!open) resetCreateForm();
                     }}
                 >
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle>Create admin</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">
-                                    Username
-                                </label>
-                                <Input
-                                    placeholder="Enter username"
-                                    value={newUsername}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
-                                        setNewUsername(sanitizedValue);
-                                    }}
-                                    className="bg-gray-50 border-gray-200 focus:bg-white"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">
-                                    Password
-                                </label>
-                                <PasswordInput
-                                    id="new_password"
-                                    placeholder="Enter password"
-                                    value={newPassword}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                        setNewPassword(sanitizedValue);
-                                    }}
-                                    showPassword={showNewPassword}
-                                    setShowPassword={setShowNewPassword}
-                                />
-                                <p className="text-xs text-gray-500">Minimum 6 characters</p>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">
-                                    Permissions
-                                </label>
-                                <PermissionMultiSelect
-                                    value={newPermissions}
-                                    onChange={(values) => setNewPermissions(values as PermissionKey[])}
-                                />
-                                <p className="text-xs text-gray-500">Select at least one permission</p>
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button
-                                variant="outline"
-                                className="flex-1"
+                    <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
+                        {/* Header */}
+                        <div className="self-stretch inline-flex justify-between items-center">
+                            <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">Create admin</div>
+                            <button
                                 onClick={() => {
                                     setIsCreateModalOpen(false);
                                     resetCreateForm();
                                 }}
+                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
                             >
-                                Cancel
-                            </Button>
-                            <Button
-                                className={cn(
-                                    "flex-1 font-medium",
-                                    !canCreate
-                                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                                        : "bg-blue-600 hover:bg-blue-700 text-white"
-                                )}
-                                disabled={!canCreate}
+                                <X className="w-5 h-5 text-gray-800" />
+                            </button>
+                        </div>
+
+                        {/* Form */}
+                        <div className="w-full flex flex-col justify-start items-start gap-4">
+                            <div className="self-stretch flex flex-col justify-start items-center gap-3">
+                                {/* Username Input */}
+                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                                        <div className="self-stretch h-3.5"></div>
+                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                            <input
+                                                type="text"
+                                                placeholder="Enter username"
+                                                value={newUsername}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
+                                                    setNewUsername(sanitizedValue);
+                                                }}
+                                                className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                            />
+                                        </div>
+                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Password Input */}
+                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                                        <div className="self-stretch h-3.5"></div>
+                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                            <div className="flex-1 flex justify-start items-center gap-2">
+                                                <Lock className="w-5 h-5 text-gray-400" />
+                                                <input
+                                                    type={showNewPassword ? "text" : "password"}
+                                                    value={newPassword}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                                        setNewPassword(sanitizedValue);
+                                                    }}
+                                                    placeholder="***********"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                                className="flex justify-center items-center"
+                                            >
+                                                {showNewPassword ? (
+                                                    <EyeOff className="w-5 h-5 text-gray-800" />
+                                                ) : (
+                                                    <Eye className="w-5 h-5 text-gray-800" />
+                                                )}
+                                            </button>
+                                        </div>
+                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</div>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500">Minimum 6 characters</p>
+                                </div>
+
+                                {/* Permissions */}
+                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                                        <div className="self-stretch h-3.5"></div>
+                                        <PermissionMultiSelect
+                                            value={newPermissions}
+                                            onChange={(values) => setNewPermissions(values as PermissionKey[])}
+                                        />
+                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
+                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Permissions</div>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500">Select at least one permission</p>
+                                </div>
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
                                 onClick={handleCreateAdmin}
+                                disabled={!canCreate}
+                                className={cn(
+                                    "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+                                    !canCreate
+                                        ? "bg-blue-400 cursor-not-allowed"
+                                        : "bg-blue-600 hover:bg-blue-700"
+                                )}
                             >
-                                Create admin
-                            </Button>
-                        </DialogFooter>
+                                <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Create admin</div>
+                            </button>
+                        </div>
                     </DialogContent>
                 </Dialog>
 
                 {/* Delete Confirmation Modal */}
                 <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-                    <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                            <DialogTitle>Delete admin?</DialogTitle>
-                        </DialogHeader>
-                        <p className="text-gray-600 py-4">
-                            This action cannot be undone.
-                        </p>
-                        <DialogFooter>
-                            <Button
-                                variant="outline"
-                                className="flex-1"
-                                onClick={() => {
-                                    setIsDeleteModalOpen(false);
-                                    setSelectedAdmin(null);
-                                }}
+                    <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
+                        <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setIsDeleteModalOpen(false)}
+                                className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                             >
-                                Cancel
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                className="flex-1"
-                                onClick={handleDeleteConfirm}
-                            >
-                                Delete
-                            </Button>
-                        </DialogFooter>
+                                <X className="w-4 h-4 text-gray-800" />
+                            </button>
+
+                            <div className="self-stretch flex flex-col justify-start items-center gap-5">
+                                {/* Icon */}
+                                <div className="w-12 h-12 p-2 bg-red-50 rounded-3xl inline-flex justify-center items-center gap-2.5">
+                                    <AlertTriangle className="w-6 h-6 text-red-500" />
+                                </div>
+
+                                {/* Title & Description */}
+                                <div className="self-stretch flex flex-col justify-start items-center gap-2">
+                                    <div className="self-stretch text-center justify-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7">
+                                        Delete admin?
+                                    </div>
+                                    <div className="self-stretch flex flex-col justify-start items-center text-center">
+                                        <span className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
+                                        <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{selectedAdmin?.username}?</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Buttons */}
+                            <div className="self-stretch inline-flex justify-start items-center gap-3">
+                                <button
+                                    onClick={() => {
+                                        setIsDeleteModalOpen(false);
+                                        setSelectedAdmin(null);
+                                    }}
+                                    className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                >
+                                    <div className="text-center justify-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
+                                </button>
+                                <button
+                                    onClick={handleDeleteConfirm}
+                                    className="flex-1 h-10 px-4 py-2.5 bg-red-500 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-600 flex justify-center items-center gap-1.5 overflow-hidden hover:bg-red-600 transition-colors"
+                                >
+                                    <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Delete</div>
+                                </button>
+                            </div>
+                        </div>
                     </DialogContent>
                 </Dialog>
-                </AdminContentCard>
             </div>
 
             {isLoading && <LoadingProcessingPage />}
