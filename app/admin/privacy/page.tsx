@@ -1,16 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { Save, Loader2, Eye, Edit3 } from "lucide-react";
+import { Loader2, Edit3, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
-import AdminContentCard from "@/components/admin/AdminContentCard";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
@@ -52,10 +50,11 @@ const AdminPrivacyPageContent: React.FC = () => {
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
   const [content, setContent] = useState<string>("");
+  const [originalContent, setOriginalContent] = useState<string>("");
   const [effectiveDate, setEffectiveDate] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [isPreview, setIsPreview] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [authLoaded, setAuthLoaded] = useState(false);
   const [editorReady, setEditorReady] = useState(false);
   const [sanitizedContent, setSanitizedContent] = useState<string>("");
@@ -87,6 +86,7 @@ const AdminPrivacyPageContent: React.FC = () => {
         setIsLoading(true);
         const response = await apiClient.get<PrivacyResponse>("/content/privacy");
         setContent(response.data.content || "");
+        setOriginalContent(response.data.content || "");
         setEffectiveDate(response.data.effective_date || "");
       } catch (err) {
         console.error("Failed to fetch privacy policy:", err);
@@ -114,6 +114,16 @@ const AdminPrivacyPageContent: React.FC = () => {
     }
   }, [content]);
 
+  const handleEdit = () => {
+    setOriginalContent(content);
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setContent(originalContent);
+    setIsEditing(false);
+  };
+
   // Save privacy content
   const handleSave = async () => {
     if (!token) return;
@@ -124,6 +134,9 @@ const AdminPrivacyPageContent: React.FC = () => {
         content: content,
         effective_date: effectiveDate,
       });
+
+      setOriginalContent(content);
+      setIsEditing(false);
 
       toast({
         description: "Privacy Policy updated successfully.",
@@ -156,113 +169,116 @@ const AdminPrivacyPageContent: React.FC = () => {
           <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
             Privacy policy
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setIsPreview(!isPreview)}
-              className="flex items-center gap-2"
+          {isEditing ? (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleCancel}
+                disabled={isSaving}
+                className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                <X className="w-5 h-5 text-gray-800" />
+                <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">
+                  Cancel
+                </span>
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={isSaving || isLoading}
+                className={cn(
+                  "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex justify-center items-center gap-2 overflow-hidden transition-colors",
+                  isSaving || isLoading
+                    ? "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
+                    : "bg-blue-600 outline outline-1 outline-blue-500 text-white hover:bg-blue-700"
+                )}
+              >
+                {isSaving ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : null}
+                <span className="text-center text-base font-medium font-['Roboto'] leading-4">
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </span>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleEdit}
+              className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
             >
-              {isPreview ? (
-                <>
-                  <Edit3 className="h-4 w-4" />
-                  Edit
-                </>
-              ) : (
-                <>
-                  <Eye className="h-4 w-4" />
-                  Preview
-                </>
-              )}
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={isSaving || isLoading}
-              className={cn(
-                "flex items-center gap-2",
-                isSaving || isLoading
-                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              )}
-            >
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4" />
-              )}
-              {isSaving ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
+              <Edit3 className="w-5 h-5 text-gray-800" />
+              <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">
+                Edit
+              </span>
+            </button>
+          )}
         </div>
 
-        {/* Effective Date */}
-        <AdminContentCard>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Effective Date
-            </label>
-            <Input
-              type="text"
-              value={effectiveDate}
-              onChange={(e) => setEffectiveDate(e.target.value)}
-              placeholder="e.g., January 1, 2024"
-              className="max-w-xs h-11 rounded-xl border-gray-200"
-            />
-          </div>
-        </AdminContentCard>
-
-        {/* Content Editor / Preview */}
-        <AdminContentCard title={isPreview ? "Preview" : "Content Editor"}>
+        {/* Content Card */}
+        <div className="self-stretch flex-1 p-6 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-hidden">
           {isLoading ? (
             <LoadingFallback />
-          ) : isPreview ? (
-            <div
-              className="prose prose-sm max-w-none text-gray-600 leading-relaxed
-                prose-headings:text-gray-900 prose-headings:font-semibold
-                prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
-                prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
-                prose-li:my-1 prose-a:text-blue-600 prose-a:hover:text-blue-700
-                prose-strong:text-gray-900 prose-blockquote:border-l-blue-500
-                prose-blockquote:bg-gray-50 prose-blockquote:py-1 prose-blockquote:px-4
-                min-h-[400px] p-4 border border-gray-200 rounded-xl"
-              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-            />
+          ) : isEditing ? (
+            /* Editor Mode */
+            <div className="self-stretch flex-1 bg-gray-100 rounded-md outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start overflow-hidden">
+              <div className="self-stretch flex-1 relative">
+                <Editor
+                  apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+                  onInit={(_evt: unknown, editor: TinyMCEEditor) => {
+                    editorRef.current = editor;
+                    setEditorReady(true);
+                  }}
+                  value={content}
+                  onEditorChange={(newContent: string) => setContent(newContent)}
+                  init={{
+                    height: 600,
+                    menubar: false,
+                    plugins: [
+                      "advlist", "autolink", "lists", "link", "charmap",
+                      "anchor", "searchreplace", "visualblocks", "code",
+                      "insertdatetime", "table", "code", "help", "wordcount"
+                    ],
+                    toolbar:
+                      "undo redo | blocks | " +
+                      "bold italic underline strikethrough | alignleft aligncenter " +
+                      "alignright alignjustify | bullist numlist outdent indent | " +
+                      "link | removeformat",
+                    content_style:
+                      "body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; color: #374151; padding: 20px; }",
+                    branding: false,
+                    promotion: false,
+                    statusbar: false,
+                  }}
+                />
+                {!editorReady && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                  </div>
+                )}
+              </div>
+            </div>
           ) : (
-            <div className="min-h-[400px]">
-              <Editor
-                apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
-                onInit={(_evt: unknown, editor: TinyMCEEditor) => {
-                  editorRef.current = editor;
-                  setEditorReady(true);
-                }}
-                value={content}
-                onEditorChange={(newContent: string) => setContent(newContent)}
-                init={{
-                  height: 500,
-                  menubar: true,
-                  plugins: [
-                    "advlist", "autolink", "lists", "link", "charmap", "preview",
-                    "anchor", "searchreplace", "visualblocks", "code", "fullscreen",
-                    "insertdatetime", "table", "code", "help", "wordcount"
-                  ],
-                  toolbar:
-                    "undo redo | blocks | " +
-                    "bold italic underline strikethrough | alignleft aligncenter " +
-                    "alignright alignjustify | bullist numlist outdent indent | " +
-                    "link | removeformat | help",
-                  content_style:
-                    "body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.6; color: #4B5563; }",
-                  branding: false,
-                  promotion: false,
-                }}
-              />
-              {!editorReady && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            /* View Mode */
+            <div className="self-stretch flex-1 bg-gray-100 rounded-md outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start overflow-hidden">
+              <div className="self-stretch p-2 bg-gray-300 inline-flex justify-start items-center gap-5">
+                <div className="flex justify-start items-start gap-2">
+                  <div className="h-7 px-2 rounded flex justify-center items-center">
+                    <span className="text-gray-500 text-sm font-normal">Paragraph</span>
+                  </div>
                 </div>
-              )}
+              </div>
+              <div className="self-stretch p-5 flex flex-col justify-start items-start gap-5 overflow-y-auto max-h-[600px]">
+                <div
+                  className="prose prose-sm max-w-none text-gray-400 leading-relaxed
+                    prose-headings:text-gray-400 prose-headings:font-semibold
+                    prose-h1:text-2xl prose-h2:text-base prose-h3:text-base
+                    prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
+                    prose-li:my-1 prose-a:text-sky-600 prose-a:underline
+                    prose-strong:text-gray-400"
+                  dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                />
+              </div>
             </div>
           )}
-        </AdminContentCard>
+        </div>
       </div>
     </AdminLayout>
   );
