@@ -11,13 +11,14 @@ export interface Mail {
   email_encode_id: string;
   user_encode_id: string;
   from: string;
-  fromEmail: string;
+  fromEmail?: string;
+  to?: string;
   subject: string;
   snippet: string;
   body: string;
   date: string;
   unread: boolean;
-  attachments?: MailAttachment[];
+  attachments?: MailAttachment[] | string; // MailAttachment[] for inbox, JSON string for sent
 }
 
 // Sent email type
@@ -32,6 +33,7 @@ export interface SentMail {
   date: string;
   status?: string;
   has_attachments?: boolean;
+  attachments?: string; // JSON string array of URLs
 }
 
 // API response for sent email list item
@@ -59,7 +61,7 @@ export interface ApiSentEmailDetail {
   status?: string;
   sent_at: string;
   has_attachments?: boolean;
-  attachments?: string[];
+  attachments?: string | string[]; // Can be JSON string or array
 }
 
 // Transform API sent email to SentMail type

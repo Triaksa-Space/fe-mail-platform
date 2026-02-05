@@ -438,13 +438,15 @@ const InboxPageContent: React.FC = () => {
           id: selectedSentEmail.id,
           email_encode_id: selectedSentEmail.id,
           user_encode_id: selectedSentEmail.user_id,
-          from: `To: ${detail?.to || selectedSentEmail.to}`,
-          fromEmail: detail?.to || selectedSentEmail.to,
+          from: detail?.from || selectedSentEmail.from,
+          fromEmail: detail?.from || selectedSentEmail.from,
+          to: detail?.to || selectedSentEmail.to,
           subject: detail?.subject || selectedSentEmail.subject,
           snippet: detail?.body_preview || selectedSentEmail.snippet,
           body: detail?.body || selectedSentEmail.snippet,
           date: selectedSentEmail.date,
           unread: false,
+          attachments: detail?.attachments,
         };
 
         return (

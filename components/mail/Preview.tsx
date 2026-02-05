@@ -148,6 +148,36 @@ const Preview: React.FC<PreviewProps> = ({
     return ext;
   };
 
+  // Helper function to get filename from URL
+  const getFilenameFromUrl = (url: string): string => {
+    const parts = url.split("/");
+    const fullFilename = parts[parts.length - 1] || "file";
+    // Remove UUID prefix if present (format: uuid_filename.ext)
+    const underscoreIndex = fullFilename.indexOf("_");
+    if (underscoreIndex !== -1) {
+      return fullFilename.substring(underscoreIndex + 1);
+    }
+    return fullFilename;
+  };
+
+  // Parse sent email attachments (comes as JSON string)
+  const getSentAttachments = (): string[] => {
+    if (!isSentView || !email?.attachments) return [];
+    try {
+      if (typeof email.attachments === "string") {
+        return JSON.parse(email.attachments);
+      }
+      if (Array.isArray(email.attachments)) {
+        return email.attachments;
+      }
+    } catch {
+      return [];
+    }
+    return [];
+  };
+
+  const sentAttachments = getSentAttachments();
+
   return (
     <div className={cn("flex-1 flex flex-col bg-gray-50 relative overflow-hidden", className)}>
       {/* Content */}
@@ -196,9 +226,9 @@ const Preview: React.FC<PreviewProps> = ({
               {showBackButton && (
                 <button
                   onClick={onBack}
-                  className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors"
+                  className="w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors"
                 >
-                  <ChevronLeft className="w-5 h-5 text-gray-800" />
+                  <ChevronLeft className="w-6 h-6 text-gray-800" />
                 </button>
               )}
               {!showBackButton && <div />}
@@ -233,7 +263,7 @@ const Preview: React.FC<PreviewProps> = ({
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">From</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-                        {isSentView ? email.fromEmail : (emailDetail?.SenderEmail || email.fromEmail || email.from)}
+                        {isSentView ? email.from : (emailDetail?.SenderEmail || email.fromEmail || email.from)}
                       </span>
                     </div>
                     <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
@@ -246,7 +276,7 @@ const Preview: React.FC<PreviewProps> = ({
                       <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-                        {isSentView ? (email.to || "Unknown") : (emailDetail?.RecipientEmail || email.to || "Unknown")}
+                        {isSentView ? email.to : (emailDetail?.RecipientEmail || email.to || "Unknown")}
                       </span>
                     </div>
                   </div>
@@ -344,7 +374,7 @@ const Preview: React.FC<PreviewProps> = ({
               </div>
             </div>
 
-            {/* Attachments */}
+            {/* Attachments for Inbox */}
             {!isSentView && emailDetail?.ListAttachments &&
               emailDetail.ListAttachments.length > 0 && (
                 <div className="px-4">
@@ -380,6 +410,43 @@ const Preview: React.FC<PreviewProps> = ({
                   </div>
                 </div>
               )}
+
+            {/* Attachments for Sent */}
+            {isSentView && sentAttachments.length > 0 && (
+              <div className="px-4">
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {sentAttachments.map((url, index) => {
+                    const filename = getFilenameFromUrl(url);
+                    const fileExt = getFileExtension(filename);
+                    return (
+                      <div
+                        key={index}
+                        className="w-32 flex-shrink-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-3"
+                      >
+                        <div className="flex justify-between items-center">
+                          <div className="flex justify-start items-center gap-0.5">
+                            <FileText className="w-5 h-5 text-sky-600" />
+                            <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
+                          </div>
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download={filename}
+                            className="w-5 h-5 flex items-center justify-center hover:bg-gray-100 rounded transition-colors"
+                          >
+                            <Download className="w-4 h-4 text-gray-800" />
+                          </a>
+                        </div>
+                        <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
+                          {filename}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
