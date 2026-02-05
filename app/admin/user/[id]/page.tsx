@@ -14,7 +14,7 @@ import {
   User,
   ArrowLeft,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
 
@@ -55,24 +55,6 @@ interface UserDetails {
   LastLogin: string;
   CreatedAt: string;
   CreatedByName?: string;
-}
-
-// Format relative time for sent emails
-function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins} minutes ago`;
-  if (diffHours < 24) return `${diffHours} hours ago`;
-  if (diffDays === 1) return "24 hours ago";
-  if (diffDays < 7) return `${diffDays} days ago`;
-
-  return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 export default function UserDetailPage() {

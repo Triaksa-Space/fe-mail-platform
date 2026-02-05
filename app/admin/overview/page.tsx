@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -74,26 +74,6 @@ interface OverviewData {
   };
   latestInbox: EmailItem[];
   latestSent: EmailItem[];
-}
-
-// Format relative time (matching Figma design)
-function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return "Just now";
-  if (diffMins === 1) return "1 minute ago";
-  if (diffMins < 60) return `${diffMins} minutes ago`;
-  if (diffHours === 1) return "1 hour ago";
-  if (diffHours < 24) return `${diffHours} hours ago`;
-  if (diffDays === 1) return "1 day ago";
-  if (diffDays < 7) return `${diffDays} days ago`;
-
-  return date.toLocaleDateString();
 }
 
 // Transform API inbox email to display format
