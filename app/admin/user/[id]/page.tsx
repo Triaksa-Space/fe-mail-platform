@@ -15,6 +15,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
+import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
 
@@ -294,11 +295,7 @@ export default function UserDetailPage() {
             onClick={handleRefresh}
             disabled={isRefreshingInbox || isRefreshingSent}
             className={cn(
-              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200",
-              "flex justify-center items-center gap-2 overflow-hidden",
-              "hover:bg-gray-50 transition-colors",
+              BUTTON_STYLES.icon,
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
@@ -409,7 +406,7 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="self-stretch px-4 py-2 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors w-full text-left"
+      className={cn(CARD_STYLES.interactive, "self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
         <div className="self-stretch inline-flex justify-start items-start gap-4">
@@ -457,7 +454,7 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="self-stretch px-4 py-2 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors w-full text-left"
+      className={cn(CARD_STYLES.interactive, "self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
         <div className="self-stretch inline-flex justify-start items-start gap-4">

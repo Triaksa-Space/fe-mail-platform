@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
+import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import {
   RefreshCw,
   Search,
@@ -200,11 +201,7 @@ export default function AdminAllInboxPage() {
             onClick={handleRefresh}
             disabled={isRefreshing}
             className={cn(
-              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200",
-              "flex justify-center items-center gap-2 overflow-hidden",
-              "hover:bg-gray-50 transition-colors",
+              BUTTON_STYLES.icon,
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
             aria-label="Refresh"
@@ -260,7 +257,7 @@ export default function AdminAllInboxPage() {
               ) : (
                 <>
                   {/* Email Meta Card */}
-                  <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-2">
+                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}>
                     <div className="flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
                         <div className="flex justify-start items-center gap-1">
@@ -283,7 +280,7 @@ export default function AdminAllInboxPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-4">
+                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-4")}>
                     {/* Subject Title */}
                     <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
                       {selectedEmail.subject || "(No subject)"}
@@ -363,7 +360,7 @@ export default function AdminAllInboxPage() {
                                 href={attachment.URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-32 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3 hover:bg-gray-50 transition-colors"
+                                className={cn(CARD_STYLES.interactive, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3")}
                               >
                                 <div className="self-stretch inline-flex justify-between items-center">
                                   <div className="flex justify-start items-center gap-0.5">
@@ -476,12 +473,8 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
     <button
       onClick={onClick}
       className={cn(
-        "self-stretch w-full text-left px-4 py-2 rounded-xl",
-        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "outline outline-1 outline-offset-[-1px] outline-gray-200",
-        "inline-flex justify-start items-center gap-2",
-        "transition-colors",
-        isSelected ? "bg-gray-100" : "bg-white hover:bg-gray-100"
+        isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
+        "self-stretch w-full text-left px-4 py-2 inline-flex justify-start items-center gap-2"
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">

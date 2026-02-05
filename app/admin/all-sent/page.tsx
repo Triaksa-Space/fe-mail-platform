@@ -4,12 +4,15 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
+import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
+import { parseAttachments, getFileExtension } from "@/lib/attachmentUtils";
+import { ApiSentEmail } from "@/lib/transformers";
 import {
   RefreshCw,
   Search,
   ChevronRight,
   Send as SendIcon,
-  X,
+  Download,
   ArrowLeft,
   Mail,
   FileText,
@@ -20,34 +23,14 @@ import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 
-// API response interfaces (snake_case from backend)
-interface ApiSentEmail {
-  id: string;
-  user_id: string;
-  user_email: string;
-  to: string;
-  from: string;
-  from_name?: string;
-  subject: string;
-  body_preview: string;
-  body?: string;
-  status?: string;
-  provider?: string;
-  sent_at: string;
-  has_attachments?: boolean;
-  attachments?: string;
-}
-
-interface PaginationInfo {
-  page: number;
-  page_size: number;
-  total: number;
-  total_pages: number;
-}
-
 interface AdminSentResponse {
   data: ApiSentEmail[];
-  pagination: PaginationInfo;
+  pagination: {
+    page: number;
+    page_size: number;
+    total: number;
+    total_pages: number;
+  };
 }
 
 interface EmailDetail {
@@ -61,52 +44,15 @@ interface EmailDetail {
   RelativeTime?: string;
   ListAttachments?: { Filename: string; URL: string }[];
   Recipients?: string[];
-  // Sent email specific fields
   id?: string;
   from?: string;
   to?: string;
   subject?: string;
   body?: string;
   body_preview?: string;
-  attachments?: string; // JSON string of URL array
+  attachments?: string;
   sent_at?: string;
 }
-
-// Helper to get attachments from email detail (handles both inbox and sent formats)
-const getAttachments = (emailDetail: EmailDetail | null): { Filename: string; URL: string }[] => {
-  if (!emailDetail) return [];
-
-  // Check for inbox-style ListAttachments
-  if (emailDetail.ListAttachments && emailDetail.ListAttachments.length > 0) {
-    return emailDetail.ListAttachments;
-  }
-
-  // Check for sent-style attachments (JSON string of URLs)
-  if (emailDetail.attachments && typeof emailDetail.attachments === 'string') {
-    try {
-      const urls = JSON.parse(emailDetail.attachments) as string[];
-      if (Array.isArray(urls) && urls.length > 0) {
-        return urls.map(url => {
-          // Extract filename from URL
-          const urlParts = url.split('/');
-          const fullFilename = urlParts[urlParts.length - 1] || 'attachment';
-          // Remove UUID prefix if present (e.g., "fa4942da-a89f-484c-ac11-3ab788a3852e_filename.png")
-          const filename = fullFilename.includes('_')
-            ? fullFilename.split('_').slice(1).join('_')
-            : fullFilename;
-          return {
-            Filename: filename,
-            URL: url
-          };
-        });
-      }
-    } catch (e) {
-      console.error('Failed to parse attachments:', e);
-    }
-  }
-
-  return [];
-};
 
 export default function AdminAllSentPage() {
   const token = useAuthStore((state) => state.token);
@@ -250,11 +196,7 @@ export default function AdminAllSentPage() {
             onClick={handleRefresh}
             disabled={isRefreshing}
             className={cn(
-              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200",
-              "flex justify-center items-center gap-2 overflow-hidden",
-              "hover:bg-gray-50 transition-colors",
+              BUTTON_STYLES.icon,
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
             aria-label="Refresh"
@@ -310,7 +252,7 @@ export default function AdminAllSentPage() {
               ) : (
                 <>
                   {/* Email Meta Card */}
-                  <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-2">
+                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}>
                     <div className="flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
                         <div className="flex justify-start items-center gap-1">
@@ -333,7 +275,7 @@ export default function AdminAllSentPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col gap-2">
+                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}>
                     {/* Subject Title */}
                     <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
                       {selectedEmail.subject || "(No subject)"}
@@ -399,33 +341,30 @@ export default function AdminAllSentPage() {
 
                   {/* Attachments - Outside body card */}
                   {(() => {
-                    const attachments = getAttachments(emailDetail);
+                    const attachments = parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments);
                     if (attachments.length === 0) return null;
                     return (
                       <div className="flex flex-col gap-2.5">
                         <div className="inline-flex justify-start items-start gap-2">
                           {attachments.map((attachment, index) => {
-                            const filename =
-                              attachment.Filename.split("_").pop() ||
-                              attachment.Filename;
-                            const ext = filename.split(".").pop()?.toUpperCase() || "FILE";
+                            const ext = getFileExtension(attachment.Filename);
                             return (
                               <a
                                 key={index}
                                 href={attachment.URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-32 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3 hover:bg-gray-50 transition-colors"
+                                className={cn(CARD_STYLES.base, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3 hover:bg-gray-50 transition-colors")}
                               >
                                 <div className="self-stretch inline-flex justify-between items-center">
                                   <div className="flex justify-start items-center gap-0.5">
                                     <FileText className="w-5 h-5 text-sky-600" />
                                     <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
                                   </div>
-                                  <X className="w-4 h-4 text-gray-800" />
+                                  <Download className="w-4 h-4 text-gray-800" />
                                 </div>
                                 <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                                  {filename}
+                                  {attachment.Filename}
                                 </span>
                               </a>
                             );
@@ -527,12 +466,10 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
     <button
       onClick={onClick}
       className={cn(
-        "self-stretch w-full text-left px-4 py-2 rounded-xl",
-        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
+        "self-stretch w-full text-left px-4 py-2",
         "inline-flex justify-start items-center gap-2",
-        "transition-colors",
-        isSelected ? "bg-gray-100" : "bg-white hover:bg-gray-100"
+        !isSelected && "hover:bg-gray-100"
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">

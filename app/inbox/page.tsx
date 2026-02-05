@@ -446,7 +446,10 @@ const InboxPageContent: React.FC = () => {
           body: detail?.body || selectedSentEmail.snippet,
           date: selectedSentEmail.date,
           unread: false,
-          attachments: detail?.attachments,
+          // Convert string[] to JSON string if needed for consistent handling
+          attachments: Array.isArray(detail?.attachments)
+            ? JSON.stringify(detail.attachments)
+            : detail?.attachments,
         };
 
         return (
@@ -551,7 +554,7 @@ const InboxPageContent: React.FC = () => {
         maxDailySend={3}
         replyTo={
           selectedEmail
-            ? { email: selectedEmail.fromEmail, subject: selectedEmail.subject }
+            ? { email: selectedEmail.fromEmail || selectedEmail.from, subject: selectedEmail.subject }
             : undefined
         }
       />

@@ -35,6 +35,7 @@ const InboxList: React.FC<InboxListProps> = ({
   className,
   fullWidth = false,
   userEmail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   sentCount = 0,
 }) => {
   // Use minimum loading time to prevent skeleton flicker

@@ -2,22 +2,24 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
+import { CARD_STYLES } from "@/lib/styles";
+import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
   ArrowLeft,
   ChevronRight,
   RefreshCw,
   Inbox,
   Mail,
-  X,
   User,
   Users,
+  FileText,
 } from "lucide-react";
-import { formatRelativeTime } from "@/lib/utils";
 
 // API Response type
 interface InboxEmailDetail {
@@ -34,57 +36,6 @@ interface InboxEmailDetail {
   has_attachments?: boolean;
   received_at: string;
   created_at?: string;
-}
-
-// Parse attachments from JSON string
-function parseAttachments(attachments?: string): string[] {
-  if (!attachments) return [];
-  try {
-    const parsed = JSON.parse(attachments);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-// Check if URL is an image
-function isImageUrl(url: string): boolean {
-  const imageExtensions = [
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".webp",
-    ".bmp",
-    ".svg",
-  ];
-  const lowerUrl = url.toLowerCase();
-  return imageExtensions.some((ext) => lowerUrl.includes(ext));
-}
-
-// Get filename from URL
-function getFilename(url: string): string {
-  try {
-    const urlObj = new URL(url);
-    const pathname = urlObj.pathname;
-    const filename = pathname.split("/").pop() || "attachment";
-    return decodeURIComponent(filename);
-  } catch {
-    return url.split("/").pop() || "attachment";
-  }
-}
-
-function getFileTypeLabel(filename: string): string {
-  const ext = filename.split(".").pop()?.toLowerCase() || "";
-  if (!ext) return "FILE";
-  if (ext === "pdf") return "PDF";
-  if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"].includes(ext)) {
-    return ext.toUpperCase();
-  }
-  if (["doc", "docx"].includes(ext)) return "DOC";
-  if (["xls", "xlsx"].includes(ext)) return "XLS";
-  if (["ppt", "pptx"].includes(ext)) return "PPT";
-  return ext.toUpperCase();
 }
 
 // Loading skeleton
@@ -148,11 +99,7 @@ export default function AdminInboxDetailPage() {
     fetchEmailDetail();
   }, [fetchEmailDetail]);
 
-  const handleBack = () => {
-    router.back();
-  };
-
-  const attachmentUrls = parseAttachments(email?.attachments);
+  const attachments = parseAttachments(email?.attachments);
   const subject = email?.subject || "(No subject)";
   const userEmail = email?.user_email || "Unknown";
 
@@ -207,7 +154,7 @@ export default function AdminInboxDetailPage() {
         {isLoading ? (
           <DetailSkeleton />
         ) : error ? (
-          <div className="flex flex-col items-center justify-center h-64 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200">
+          <div className={cn(CARD_STYLES.base, "flex flex-col items-center justify-center h-64")}>
             <p className="text-sm text-red-600 mb-4">{error}</p>
             <Button
               variant="outline"
@@ -220,7 +167,7 @@ export default function AdminInboxDetailPage() {
           </div>
         ) : email ? (
           <div className="self-stretch inline-flex flex-col justify-start items-start gap-5">
-            <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-2">
+            <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-2")}>
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">
                   <div className="flex justify-start items-center gap-1">
@@ -254,7 +201,7 @@ export default function AdminInboxDetailPage() {
               </div>
             </div>
 
-            <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-2">
+            <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-2")}>
               <div className="text-gray-800 text-lg font-medium leading-7">
                 {subject}
               </div>
@@ -315,37 +262,27 @@ export default function AdminInboxDetailPage() {
               </div>
             </div>
 
-            {attachmentUrls.length > 0 && (
+            {attachments.length > 0 && (
               <div className="flex flex-col justify-start items-start gap-2.5">
                 <div className="inline-flex justify-start items-start gap-2 flex-wrap">
-                  {attachmentUrls.map((url, index) => {
-                    const filename = getFilename(url);
-                    const fileType = getFileTypeLabel(filename);
+                  {attachments.map((attachment, index) => {
+                    const filename = extractFilenameFromUrl(attachment.URL);
+                    const fileType = getFileExtension(filename);
 
                     return (
                       <a
                         key={index}
-                        href={url}
+                        href={attachment.URL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-32 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3"
+                        className={cn(CARD_STYLES.interactive, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3")}
                       >
                         <div className="self-stretch inline-flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
-                            <div className="w-5 h-5 relative overflow-hidden">
-                              {/* <div className="w-3 h-4 left-[4px] top-[2px] absolute bg-sky-600"></div> */}
-                              <div className="">
-                                  <FileText className="w-3 h-4 left-[4px] top-[2px] absolute text-sky-600" />
-                                </div>
-                            </div>
+                            <FileText className="w-5 h-5 text-sky-600" />
                             <div className="text-gray-800 text-xs font-normal leading-5">
                               {fileType}
                             </div>
-                          </div>
-                          <div className="w-5 h-5 relative overflow-hidden">
-                            <X className="w-3 h-3 left-[5px] top-[4px] absolute">
-
-                            </X>
                           </div>
                         </div>
                         <div

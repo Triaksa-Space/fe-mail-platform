@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { Mail, CheckCircle, AlertTriangle, Lock, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -415,12 +416,12 @@ export default function ForgotPasswordClient() {
                       {isLoading ? "Sending..." : "Reset password"}
                     </Button>
 
-                    <a
+                    <Link
                       href="/"
                       className="h-9 flex items-center justify-center text-sky-600 text-base font-medium hover:text-sky-700"
                     >
                       Back to login
-                    </a>
+                    </Link>
                   </div>
                 </form>
 

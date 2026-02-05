@@ -161,7 +161,7 @@ const Preview: React.FC<PreviewProps> = ({
     return fullFilename;
   };
 
-  // Parse sent email attachments (comes as JSON string)
+  // Parse sent email attachments (comes as JSON string or MailAttachment[])
   const getSentAttachments = (): string[] => {
     if (!isSentView || !email?.attachments) return [];
     try {
@@ -169,7 +169,8 @@ const Preview: React.FC<PreviewProps> = ({
         return JSON.parse(email.attachments);
       }
       if (Array.isArray(email.attachments)) {
-        return email.attachments;
+        // Handle MailAttachment[] - extract URLs
+        return email.attachments.map((att) => att.URL);
       }
     } catch {
       return [];
@@ -277,7 +278,7 @@ const Preview: React.FC<PreviewProps> = ({
                       <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-                        {isSentView ? email.to : (userEmail || emailDetail?.RecipientEmail || "Unknown")}
+                        {isSentView ? email.to : (userEmail || "Unknown")}
                       </span>
                     </div>
                   </div>

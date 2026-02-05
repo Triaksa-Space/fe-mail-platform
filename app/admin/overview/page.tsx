@@ -2,11 +2,19 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
+import {
+  ApiInboxEmail,
+  ApiSentEmail,
+  EmailItem,
+  transformInboxEmail,
+  transformSentEmail,
+} from "@/lib/transformers";
 import {
   Users,
   Inbox,
@@ -14,34 +22,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-// API Response Types (snake_case from backend)
-interface ApiInboxEmail {
-  id: string;
-  user_id?: string;
-  user_email?: string;
-  from: string;
-  from_name?: string;
-  subject: string;
-  preview?: string;
-  body?: string;
-  is_read?: boolean;
-  has_attachments?: boolean;
-  received_at: string;
-}
-
-interface ApiSentEmail {
-  id: string;
-  user_id?: string;
-  user_email?: string;
-  from?: string;
-  to?: string;
-  subject: string;
-  preview?: string;
-  body?: string;
-  status?: string;
-  sent_at: string;
-}
-
+// API Response Types
 interface ApiOverviewResponse {
   stats?: {
     total_users_mailria?: number;
@@ -55,16 +36,6 @@ interface ApiOverviewResponse {
 }
 
 // Internal types for display
-interface EmailItem {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  snippet: string;
-  date: string; // Formatted relative time
-  isUnread?: boolean;
-}
-
 interface OverviewData {
   stats: {
     totalUsersMailria: number;
@@ -74,31 +45,6 @@ interface OverviewData {
   };
   latestInbox: EmailItem[];
   latestSent: EmailItem[];
-}
-
-// Transform API inbox email to display format
-function transformInboxEmail(email: ApiInboxEmail): EmailItem {
-  return {
-    id: email.id,
-    name: email.from_name || email.from?.split("@")[0] || "Unknown Sender",
-    email: email.from,
-    subject: email.subject || "(No subject)",
-    snippet: email.preview || "No preview available",
-    date: formatRelativeTime(email.received_at),
-    isUnread: email.is_read === false,
-  };
-}
-
-// Transform API sent email to display format
-function transformSentEmail(email: ApiSentEmail): EmailItem {
-  return {
-    id: email.id,
-    name: email.to?.split("@")[0] || "Unknown",
-    email: email.to || "",
-    subject: email.subject || "(No subject)",
-    snippet: email.preview || "No preview available",
-    date: formatRelativeTime(email.sent_at),
-  };
 }
 
 // Format number with commas
@@ -172,11 +118,8 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
     <button
       onClick={onClick}
       className={cn(
-        "self-stretch px-4 py-2 bg-white rounded-xl",
-        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "outline outline-1 outline-offset-[-1px] outline-gray-200",
-        "inline-flex justify-start items-center gap-2 w-full text-left",
-        "hover:bg-gray-50 transition-colors"
+        CARD_STYLES.interactive,
+        "px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left"
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
@@ -241,13 +184,7 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
 // Email Row Skeleton
 function EmailRowSkeleton() {
   return (
-    <div
-      className={cn(
-        "self-stretch px-4 py-2 bg-white rounded-xl",
-        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "outline outline-1 outline-offset-[-1px] outline-gray-200"
-      )}
-    >
+    <div className={cn(CARD_STYLES.base, "px-4 py-2")}>
       <div className="flex-1 flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-24" />
@@ -427,11 +364,7 @@ export default function OverviewPage() {
             onClick={handleRefresh}
             disabled={isRefreshing || isLoading}
             className={cn(
-              "w-10 h-10 px-4 py-2.5 bg-white rounded-lg",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200",
-              "flex justify-center items-center gap-2 overflow-hidden",
-              "hover:bg-gray-50 transition-colors",
+              BUTTON_STYLES.icon,
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
             aria-label="Refresh data"

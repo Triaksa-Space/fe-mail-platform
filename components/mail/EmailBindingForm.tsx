@@ -39,7 +39,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
   const isValidEmail = EMAIL_REGEX.test(email);
   const hasChanged = email !== originalEmail;
   const isFormValid = isValidEmail && hasChanged;
-  const isLinked = originalEmail && EMAIL_REGEX.test(originalEmail);
+  const isLinked = !!originalEmail && EMAIL_REGEX.test(originalEmail);
 
   // Determine if the input should be disabled (linked and not editing)
   const isInputDisabled = isLinked && !isEditing;

@@ -11,6 +11,7 @@ interface UserRowActionMenuProps {
 }
 
 const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onView,
   onChangePassword,
   onDelete,

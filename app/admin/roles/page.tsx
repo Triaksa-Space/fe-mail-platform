@@ -102,6 +102,7 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
 
 const RolesPermissionsPageContent: React.FC = () => {
     const [admins, setAdmins] = useState<AdminUser[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [searchQuery, setSearchQuery] = useState('');
     const [sortField, setSortField] = useState<SortField>('created_at');
     const [sortOrder, setSortOrder] = useState<SortOrder>('desc');

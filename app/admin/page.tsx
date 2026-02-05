@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Button } from "@/components/ui/button";
 import PaginationComponent from "@/components/PaginationComponent";
 import { ArrowUp, ArrowDown, ArrowUpDown, Search, AlertTriangle, X, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
@@ -11,13 +10,9 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import {
     Dialog,
     DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import PasswordInput from '@/components/PasswordInput';
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, UserRowActionMenu } from "@/components/admin";

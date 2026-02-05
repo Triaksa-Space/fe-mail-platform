@@ -37,6 +37,7 @@ const SentList: React.FC<SentListProps> = ({
   className,
   fullWidth = false,
   userEmail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   sentCount = 0,
 }) => {
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {

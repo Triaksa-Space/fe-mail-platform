@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import axios from "axios";
