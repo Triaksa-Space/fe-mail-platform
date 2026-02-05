@@ -42,6 +42,7 @@ const Preview: React.FC<PreviewProps> = ({
   const [isDownloading, setIsDownloading] = useState(false);
   const [iframeHeight, setIframeHeight] = useState("400px");
   const token = useAuthStore((state) => state.token);
+  const userEmail = useAuthStore((state) => state.email);
 
   // Use minimum loading time to prevent skeleton flicker
   // For sent view, use external loading state; for inbox view, use internal loading state
@@ -276,7 +277,7 @@ const Preview: React.FC<PreviewProps> = ({
                       <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
                       <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-                        {isSentView ? email.to : (emailDetail?.RecipientEmail || email.to || "Unknown")}
+                        {isSentView ? email.to : (userEmail || emailDetail?.RecipientEmail || "Unknown")}
                       </span>
                     </div>
                   </div>
