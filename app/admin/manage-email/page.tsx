@@ -5,6 +5,7 @@ import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
+import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
   RefreshCw,
   Search,
@@ -56,7 +57,9 @@ interface EmailDetail {
   Body: string;
   BodyEml: string;
   RelativeTime: string;
-  ListAttachments: { Filename: string; URL: string }[];
+  ListAttachments?: { Filename: string; URL: string }[];
+  attachments?: string; // JSON string of URLs from API
+  has_attachments?: boolean;
 }
 
 export default function AdminAllInboxPage() {
@@ -344,40 +347,41 @@ export default function AdminAllInboxPage() {
                         </p>
                       )}
                     </div>
-
-                    {/* Attachments */}
-                    {emailDetail?.ListAttachments &&
-                      emailDetail.ListAttachments.length > 0 && (
-                        <div className="inline-flex justify-start items-start gap-2 overflow-x-auto">
-                          {emailDetail.ListAttachments.map((attachment, index) => {
-                            const filename =
-                              attachment.Filename.split("_").pop() ||
-                              attachment.Filename;
-                            const ext = filename.split(".").pop()?.toUpperCase() || "FILE";
-                            return (
-                              <a
-                                key={index}
-                                href={attachment.URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={cn(CARD_STYLES.interactive, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3")}
-                              >
-                                <div className="self-stretch inline-flex justify-between items-center">
-                                  <div className="flex justify-start items-center gap-0.5">
-                                    <FileText className="w-5 h-5 text-sky-600" />
-                                    <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
-                                  </div>
-                                  <Download className="w-5 h-5 text-gray-800" />
-                                </div>
-                                <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                                  {filename}
-                                </span>
-                              </a>
-                            );
-                          })}
-                        </div>
-                      )}
                   </div>
+
+                  {/* Attachments - Outside email body card */}
+                  {(() => {
+                    const attachments = parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments);
+                    if (attachments.length === 0) return null;
+                    return (
+                      <div className="inline-flex justify-start items-start gap-2 overflow-x-auto">
+                        {attachments.map((attachment, index) => {
+                          const filename = extractFilenameFromUrl(attachment.URL);
+                          const ext = getFileExtension(filename);
+                          return (
+                            <a
+                              key={index}
+                              href={attachment.URL}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={cn(CARD_STYLES.interactive, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3")}
+                            >
+                              <div className="self-stretch inline-flex justify-between items-center">
+                                <div className="flex justify-start items-center gap-0.5">
+                                  <FileText className="w-5 h-5 text-sky-600" />
+                                  <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
+                                </div>
+                                <Download className="w-5 h-5 text-gray-800" />
+                              </div>
+                              <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
+                                {filename}
+                              </span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
                 </>
               )}
             </div>
