@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
-import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import LoadingPage from "../Loading";
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
@@ -19,14 +19,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
 
         try {
           console.log("Checking token...");
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await apiClient.get("/user/get_user_me");
 
           const userData = response.data;
           setEmail(userData.Email);

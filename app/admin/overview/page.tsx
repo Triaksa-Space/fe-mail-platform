@@ -1,0 +1,433 @@
+"use client";
+
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { apiClient } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/useAuthStore";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
+import {
+  ApiInboxEmail,
+  ApiSentEmail,
+  EmailItem,
+  transformInboxEmail,
+  transformSentEmail,
+} from "@/lib/transformers";
+import {
+  Users,
+  Inbox,
+  Send,
+  RefreshCw,
+} from "lucide-react";
+
+// API Response Types
+interface ApiOverviewResponse {
+  stats?: {
+    total_users_mailria?: number;
+    total_users_mailsaja?: number;
+    total_inbox?: number;
+    total_sent?: number;
+  };
+  inbox: ApiInboxEmail[];
+  sent: ApiSentEmail[];
+  generated_at?: string;
+}
+
+// Internal types for display
+interface OverviewData {
+  stats: {
+    totalUsersMailria: number;
+    totalUsersMailsaja: number;
+    totalInbox: number;
+    totalSent: number;
+  };
+  latestInbox: EmailItem[];
+  latestSent: EmailItem[];
+}
+
+// Format number with commas
+function formatNumber(num: number): string {
+  return num.toLocaleString();
+}
+
+// KPI Card Component
+interface KPICardProps {
+  icon: React.ElementType;
+  label: string;
+  value: number;
+  isLoading?: boolean;
+}
+
+function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
+  if (isLoading) {
+    return (
+      <div
+        className={cn(
+          "flex-1 p-4 bg-white rounded-lg",
+          "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+          "inline-flex flex-col justify-start items-start gap-2 overflow-hidden"
+        )}
+      >
+        <Skeleton className="h-4 w-32" />
+        <div className="flex justify-start items-center gap-1">
+          <Skeleton className="h-7 w-7 rounded-lg" />
+          <Skeleton className="h-7 w-20" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "flex-1 p-4 bg-white rounded-lg",
+        "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+        "inline-flex flex-col justify-start items-start gap-2 overflow-hidden"
+      )}
+    >
+      <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-4">
+        {label}
+      </div>
+      <div className="self-stretch inline-flex justify-start items-center gap-1">
+        <div className="flex justify-start items-center gap-1">
+          <div className="p-1 bg-sky-100 rounded-lg flex justify-start items-center gap-2.5">
+            <Icon className="w-5 h-5 text-sky-600" />
+          </div>
+          <div className="justify-center text-gray-800 text-xl font-semibold font-['Roboto'] leading-7">
+            {formatNumber(value)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Email Row Component (matching Figma design)
+interface EmailRowProps {
+  email: EmailItem;
+  type: "inbox" | "sent";
+  onClick?: () => void;
+}
+
+function EmailRow({ email, type, onClick }: EmailRowProps) {
+  const isUnread = type === "inbox" && email.isUnread;
+
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        CARD_STYLES.interactive,
+        "px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left"
+      )}
+    >
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        {/* Top row: Sender/Recipient + Time + Unread badge */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div
+            className={cn(
+              "justify-center text-base font-['Roboto'] leading-6",
+              isUnread
+                ? "text-gray-800 font-semibold"
+                : "text-gray-600 font-normal"
+            )}
+          >
+            {type === "sent" ? `To: ${email.name}` : email.name}
+          </div>
+          <div className="flex justify-end items-center gap-0.5">
+            <div
+              className={cn(
+                "justify-center text-xs font-['Roboto'] leading-5 line-clamp-1",
+                isUnread
+                  ? "text-gray-800 font-semibold"
+                  : "text-gray-600 font-normal"
+              )}
+            >
+              {email.date}
+            </div>
+            {isUnread && (
+              <div className="w-2 h-2 bg-sky-600 rounded-full" />
+            )}
+          </div>
+        </div>
+
+        {/* Content row: Subject + Preview + User email */}
+        <div className="self-stretch inline-flex justify-start items-start gap-2">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+            {/* Subject */}
+            <div
+              className={cn(
+                "self-stretch justify-center text-sm font-['Roboto'] leading-5 line-clamp-1",
+                isUnread
+                  ? "text-gray-800 font-semibold"
+                  : "text-gray-600 font-normal"
+              )}
+            >
+              {email.subject}
+            </div>
+            {/* Preview/Snippet */}
+            <div className="self-stretch justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+              {email.snippet}
+            </div>
+          </div>
+          {/* User email badge */}
+          <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+            {email.email}
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// Email Row Skeleton
+function EmailRowSkeleton() {
+  return (
+    <div className={cn(CARD_STYLES.base, "px-4 py-2")}>
+      <div className="flex-1 flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+        <div className="flex items-start gap-2">
+          <div className="flex-1 flex flex-col gap-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+          <Skeleton className="h-4 w-28" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Latest List Card Component
+interface LatestListCardProps {
+  title: string;
+  emails: EmailItem[];
+  type: "inbox" | "sent";
+  isLoading?: boolean;
+  onItemClick?: (id: string) => void;
+}
+
+function LatestListCard({
+  title,
+  emails,
+  type,
+  isLoading,
+  onItemClick,
+}: LatestListCardProps) {
+  return (
+    <div
+      className={cn(
+        "flex-1 p-4 bg-white rounded-lg",
+        "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
+        "inline-flex flex-col justify-start items-start gap-4 overflow-hidden"
+      )}
+    >
+      {/* Header */}
+      <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+        {title}
+      </div>
+
+      {/* Email List */}
+      <div className="self-stretch flex flex-col justify-start items-start gap-2">
+        {isLoading ? (
+          <>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <EmailRowSkeleton key={i} />
+            ))}
+          </>
+        ) : emails.length === 0 ? (
+          <div className="self-stretch flex flex-col items-center justify-center py-12 px-4">
+            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+              {type === "inbox" ? (
+                <Inbox className="h-5 w-5 text-gray-400" />
+              ) : (
+                <Send className="h-5 w-5 text-gray-400" />
+              )}
+            </div>
+            <p className="text-sm font-medium text-gray-900 mb-1">
+              No {type === "inbox" ? "emails" : "sent emails"} found
+            </p>
+            <p className="text-xs text-gray-500 text-center">
+              {type === "inbox"
+                ? "Your inbox is empty"
+                : "No emails have been sent yet"}
+            </p>
+          </div>
+        ) : (
+          <>
+            {emails.map((email) => (
+              <EmailRow
+                key={email.id}
+                email={email}
+                type={type}
+                onClick={() => onItemClick?.(email.id)}
+              />
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Main Page Component
+export default function OverviewPage() {
+  const router = useRouter();
+  const roleId = useAuthStore((state) => state.roleId);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [data, setData] = useState<OverviewData | null>(null);
+
+  // Check if user is admin (roleId 0 = SuperAdmin, roleId 2 = Admin)
+  const isAdmin = roleId === 0 || roleId === 2;
+
+  const fetchOverviewData = useCallback(async (showRefreshState = false) => {
+    try {
+      if (showRefreshState) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+
+      const response = await apiClient.get<ApiOverviewResponse>("/admin/overview");
+      const apiData = response.data;
+
+      // Transform API response to internal format
+      const transformedData: OverviewData = {
+        stats: {
+          totalUsersMailria: apiData.stats?.total_users_mailria ?? 0,
+          totalUsersMailsaja: apiData.stats?.total_users_mailsaja ?? 0,
+          totalInbox: apiData.stats?.total_inbox ?? 0,
+          totalSent: apiData.stats?.total_sent ?? 0,
+        },
+        latestInbox: (apiData.inbox || []).slice(0, 5).map(transformInboxEmail),
+        latestSent: (apiData.sent || []).slice(0, 5).map(transformSentEmail),
+      };
+
+      setData(transformedData);
+    } catch (error) {
+      console.error("Failed to fetch overview data:", error);
+      // Set empty data on error
+      setData({
+        stats: {
+          totalUsersMailria: 0,
+          totalUsersMailsaja: 0,
+          totalInbox: 0,
+          totalSent: 0,
+        },
+        latestInbox: [],
+        latestSent: [],
+      });
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchOverviewData();
+  }, [fetchOverviewData]);
+
+  const handleRefresh = () => {
+    fetchOverviewData(true);
+  };
+
+  const handleInboxItemClick = (id: string) => {
+    if (isAdmin) {
+      router.push(`/admin/inbox/${id}`);
+    } else {
+      router.push(`/inbox?email=${id}`);
+    }
+  };
+
+  const handleSentItemClick = (id: string) => {
+    if (isAdmin) {
+      router.push(`/admin/sent/${id}`);
+    } else {
+      router.push(`/inbox`);
+    }
+  };
+
+  return (
+    <AdminLayout>
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+        {/* Header */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Overview
+          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing || isLoading}
+            className={cn(
+              BUTTON_STYLES.icon,
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+            aria-label="Refresh data"
+          >
+            <RefreshCw
+              className={cn(
+                "w-5 h-5 text-gray-800",
+                isRefreshing && "animate-spin"
+              )}
+            />
+          </button>
+        </div>
+
+        {/* KPI Cards Row 1 */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
+          <KPICard
+            icon={Users}
+            label="Total @mailria.com user"
+            value={data?.stats?.totalUsersMailria ?? 0}
+            isLoading={isLoading}
+          />
+          <KPICard
+            icon={Users}
+            label="Total @mailsaja.com user"
+            value={data?.stats?.totalUsersMailsaja ?? 0}
+            isLoading={isLoading}
+          />
+        </div>
+
+        {/* KPI Cards Row 2 */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
+          <KPICard
+            icon={Inbox}
+            label="Total inbox"
+            value={data?.stats?.totalInbox ?? 0}
+            isLoading={isLoading}
+          />
+          <KPICard
+            icon={Send}
+            label="Total email send"
+            value={data?.stats?.totalSent ?? 0}
+            isLoading={isLoading}
+          />
+        </div>
+
+        {/* Latest Lists Row */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
+          <LatestListCard
+            title="Latest inbox"
+            emails={data?.latestInbox ?? []}
+            type="inbox"
+            isLoading={isLoading}
+            onItemClick={handleInboxItemClick}
+          />
+          <LatestListCard
+            title="Latest sent"
+            emails={data?.latestSent ?? []}
+            type="sent"
+            isLoading={isLoading}
+            onItemClick={handleSentItemClick}
+          />
+        </div>
+      </div>
+    </AdminLayout>
+  );
+}

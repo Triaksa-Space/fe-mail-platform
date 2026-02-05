@@ -1,26 +1,31 @@
 'use client';
 
 import React, { useEffect, useState, Suspense } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import FooterAdminNav from "@/components/FooterAdminNav";
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import DomainSelector from "@/components/DomainSelector";
 import LoadingProcessingPage from "@/components/ProcessLoading";
 import { useRouter } from "next/navigation";
 import DOMPurify from 'dompurify';
+import { cn } from "@/lib/utils";
+import { AdminLayout, AdminContentCard } from "@/components/admin";
+import { Shuffle, Copy, Check, X, Plus } from "lucide-react";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
   <div className="flex justify-center items-center h-full"></div>
 );
 
+interface CreatedEmail {
+  email: string;
+  password: string;
+}
+
 const CreateSingleEmailPageContent: React.FC = () => {
   const router = useRouter();
-  const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
   const storedToken = useAuthStore.getState().getStoredToken();
   const { toast } = useToast();
@@ -31,6 +36,8 @@ const CreateSingleEmailPageContent: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
+  const [createdEmail, setCreatedEmail] = useState<CreatedEmail | null>(null);
+  const [copiedField, setCopiedField] = useState<'email' | 'password' | null>(null);
 
   // Authentication loaded state
   const [authLoaded, setAuthLoaded] = useState(false);
@@ -96,6 +103,17 @@ const CreateSingleEmailPageContent: React.FC = () => {
     setPassword(pwd);
   };
 
+  // Copy to clipboard
+  const handleCopy = async (text: string, field: 'email' | 'password') => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,19 +135,16 @@ const CreateSingleEmailPageContent: React.FC = () => {
       setIsLoading(true);
 
       // API call to create the user
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/`,
-        {
-          email: `${username}@${selectedDomain}`,
-          password: password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await apiClient.post("/user/", {
+        email: `${username}@${selectedDomain}`,
+        password: password,
+      });
+
+      // Store created email info for result card
+      setCreatedEmail({
+        email: `${username}@${selectedDomain}`,
+        password: password,
+      });
 
       // Show success toast
       toast({
@@ -160,95 +175,182 @@ const CreateSingleEmailPageContent: React.FC = () => {
     }
   };
 
+  const isFormValid = username && password;
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="flex-1 overflow-auto pb-20">
-        <div className="p-4 border-b flex items-center justify-between shadow appearance-non">
-          <Toaster />
+    <AdminLayout>
+      <Toaster />
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+        {/* Page Header */}
+        <div className="self-stretch inline-flex justify-start items-center gap-5">
+          <div className="text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Create Single
+          </div>
         </div>
 
-        <div className="max-w-md mx-auto p-6">
-          {/* You can uncomment the heading if needed */}
-          {/* <h2 className="text-xl font-bold text-center mb-8">Create Single Email</h2> */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Input */}
-            <div className="flex items-center gap-2">
-              <Input
-                value={username}
-                onChange={(e) => {
-                  let value = e.target.value.toLowerCase();
-                  value = value.replace(/\s/g, ''); // Remove spaces
-                  value = value.replace(/[^a-zA-Z0-9]/g, ''); // Remove special chars
-                  setUsername(value);
-                }}
-                placeholder="Email"
-                className="shadow appearance-non flex-1 h-12"
-                required
-              />
-              <span className="text-lg">@</span>
-              <DomainSelector
-                value={selectedDomain}
-                onChange={(value) => setSelectedDomain(value)}
-                className="shadow appearance-non w-[180px] h-12"
-              />
+        {/* Form Card */}
+        <AdminContentCard className="w-full">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Input Row */}
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Email Input with Floating Label */}
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => {
+                      let value = e.target.value.toLowerCase();
+                      value = value.replace(/\s/g, '');
+                      value = value.replace(/[^a-zA-Z0-9]/g, '');
+                      setUsername(value);
+                    }}
+                    placeholder="Insert email"
+                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400"
+                    required
+                  />
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
+                </div>
+              </div>
+
+              {/* Domain Selector with Floating Label */}
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
+                <DomainSelector
+                  value={selectedDomain}
+                  onChange={(value) => setSelectedDomain(value)}
+                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 text-gray-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
+                />
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
+                </div>
+              </div>
+
+              {/* Password Input with Floating Label */}
+              <div className="flex-1 relative flex flex-col">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={password}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                      setPassword(sanitizedValue);
+                    }}
+                    placeholder="Insert password"
+                    className={cn(
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                      isRandomPasswordActive ? "text-gray-500" : "text-gray-800"
+                    )}
+                    disabled={isRandomPasswordActive}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleRandomPassword}
+                    className={cn(
+                      "w-5 h-5 flex items-center justify-center transition-colors",
+                      isRandomPasswordActive
+                        ? "text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
+                    )}
+                    title="Generate random password"
+                  >
+                    <Shuffle className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                </div>
+              </div>
             </div>
 
-            {/* Password Input */}
-            <div className="flex items-center gap-2">
-              <Input
-                type="text"
-                value={password}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
-                  setPassword(sanitizedValue);
-                }}
-                placeholder="Password"
-                className={
-                  isRandomPasswordActive
-                    ? "shadow appearance-non flex-1 h-12 bg-gray-300"
-                    : "shadow appearance-non flex-1 h-12"
-                }
-                disabled={isRandomPasswordActive}
-                required
-              />
-              <Button
-                type="button"
-                onClick={toggleRandomPassword}
-                className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${
-                  isRandomPasswordActive
-                    ? "bg-yellow-300 hover:bg-yellow-400"
-                    : "bg-[#ffeeac] hover:bg-yellow-300"
-                }`}
-              >
-                {isRandomPasswordActive ? "Random Password" : "Random Password"}
-              </Button>
-            </div>
+            {/* Divider */}
+            <div className="w-full h-px bg-gray-300"></div>
 
-            {/* Submit Button */}
-            <div className="flex justify-center">
-              <Button
+            {/* Submit Button - Right Aligned */}
+            <div className="flex justify-end">
+              <button
                 type="submit"
-                className={`shadow appearance-none h-11 w-3/4 max-w-xs font-bold text-black ${
-                  !username || !password
-                    ? "bg-gray-300 cursor-not-allowed"
-                    : "bg-[#ffeeac] hover:bg-yellow-300"
-                }`}
-                disabled={!username || !password}
+                disabled={!isFormValid || isLoading}
+                className={cn(
+                  "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+                  isFormValid && !isLoading
+                    ? "bg-blue-600 outline outline-1 outline-blue-500 text-white hover:bg-blue-700"
+                    : "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
+                )}
               >
-                Create
-              </Button>
+                <Plus className="w-5 h-5" />
+                <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
+              </button>
             </div>
           </form>
-        </div>
+        </AdminContentCard>
+
+        {/* Result Card */}
+        {createdEmail && (
+          <AdminContentCard className="w-full">
+            <div className="flex items-start gap-4">
+              {/* Gray Card - Full Width */}
+              <div className="flex-1 p-4 bg-gray-50 rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-wrap justify-start items-start gap-10">
+                {/* Email */}
+                <div className="flex justify-start items-start gap-1">
+                  <div className="flex justify-start items-center gap-1">
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">Email</span>
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
+                  </div>
+                  <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{createdEmail.email}</span>
+                  <button
+                    onClick={() => handleCopy(createdEmail.email, 'email')}
+                    className="w-5 h-5 flex items-center justify-center transition-colors"
+                  >
+                    {copiedField === 'email' ? (
+                      <Check className="w-3.5 h-3.5 text-green-600" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-sky-600" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Password */}
+                <div className="flex justify-start items-start gap-1">
+                  <div className="flex justify-start items-center gap-1">
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">Password</span>
+                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
+                  </div>
+                  <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5 font-mono">{createdEmail.password}</span>
+                  <button
+                    onClick={() => handleCopy(createdEmail.password, 'password')}
+                    className="w-5 h-5 flex items-center justify-center transition-colors"
+                  >
+                    {copiedField === 'password' ? (
+                      <Check className="w-3.5 h-3.5 text-green-600" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-sky-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Close Button - Outside Gray Card */}
+              <button
+                onClick={() => setCreatedEmail(null)}
+                className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </AdminContentCard>
+        )}
       </div>
 
       {/* Loading Indicator */}
       {isLoading && <LoadingProcessingPage />}
-
-      {/* Footer */}
-      <FooterAdminNav />
-    </div>
+    </AdminLayout>
   );
 };
 

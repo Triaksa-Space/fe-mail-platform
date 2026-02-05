@@ -1,273 +1,481 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { useAuthStore } from '@/stores/useAuthStore'
-import axios from 'axios'
-import FooterAdminNav from "@/components/FooterAdminNav"
-import { Toaster } from "@/components/ui/toaster"
-import { ArrowLeft, RefreshCw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { theme } from '@/app/theme'
+import { useEffect, useState, useCallback, useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { apiClient } from "@/lib/api-client";
+import { Toaster } from "@/components/ui/toaster";
+import {
+  RefreshCw,
+  Inbox,
+  Send,
+  ChevronRight,
+  Users,
+  User,
+  ArrowLeft,
+} from "lucide-react";
+import { cn, formatRelativeTime } from "@/lib/utils";
+import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
+import AdminLayout from "@/components/admin/AdminLayout";
+import PaginationComponent from "@/components/PaginationComponent";
 
-interface UserEmail {
+// Inbox email interface (from /email/by_user/:id)
+interface InboxEmail {
   user_encode_id: string;
   email_encode_id: string;
-  ID: number
-  SenderEmail: string
-  SenderName: string
-  Subject: string
-  Preview: string
-  Body: string
-  RelativeTime: string
+  ID: number;
+  SenderEmail: string;
+  SenderName: string;
+  Subject: string;
+  Preview: string;
+  Body: string;
+  RelativeTime: string;
+  IsRead?: boolean;
 }
 
-export default function UserDetail() {
-  const [emails, setEmails] = useState<UserEmail[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isRefreshingSecond, setIsRefreshingSecond] = useState(false);
-  // const [sentEmails, setSentEmails] = useState(0)
+// Sent email interface (from /email/sent/by_user/:id)
+interface SentEmail {
+  id: string;
+  user_id: string;
+  from: string;
+  to: string;
+  subject: string;
+  body_preview?: string;
+  body?: string;
+  attachments?: string;
+  has_attachments?: boolean;
+  provider?: string;
+  status?: string;
+  sent_at: string;
+  created_at?: string;
+}
+
+interface UserDetails {
+  ID: number;
+  Email: string;
+  LastLogin: string;
+  CreatedAt: string;
+  CreatedByName?: string;
+}
+
+export default function UserDetailPage() {
   const params = useParams();
   const router = useRouter();
-  // const token = useAuthStore((state) => state.token)
-  const [token, setToken] = useState("");
+  const roleId = useAuthStore((state) => state.roleId);
+  const _hasHydrated = useAuthStore((state) => state._hasHydrated);
+  const storedToken = useAuthStore.getState().getStoredToken();
 
-  // Move the token check to useEffect
+  // User details state
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+
+  // Inbox state
+  const [inboxEmails, setInboxEmails] = useState<InboxEmail[]>([]);
+  const [isLoadingInbox, setIsLoadingInbox] = useState(true);
+  const [isRefreshingInbox, setIsRefreshingInbox] = useState(false);
+  const [inboxPage, setInboxPage] = useState(1);
+  const [inboxTotalPages, setInboxTotalPages] = useState(1);
+  const [inboxTotal, setInboxTotal] = useState(0);
+  const inboxPageSize = 10;
+
+  // Sent state
+  const [sentEmails, setSentEmails] = useState<SentEmail[]>([]);
+  const [isLoadingSent, setIsLoadingSent] = useState(true);
+  const [isRefreshingSent, setIsRefreshingSent] = useState(false);
+  const [sentPage, setSentPage] = useState(1);
+  const [sentTotalPages, setSentTotalPages] = useState(1);
+  const [sentTotal, setSentTotal] = useState(0);
+  const sentPageSize = 10;
+
+  // Refs for cleanup
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Auth check - redirect if not authenticated
   useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
+    if (!_hasHydrated) return;
+
     if (!storedToken) {
       router.replace("/");
       return;
     }
 
-    setToken(storedToken);
-
-    const storedRoleID = useAuthStore.getState().getStoredRoleID();
-    // Redirect based on role
-    if (storedRoleID === 1) {
-      router.push("/not-found");
+    if (roleId === 1) {
+      router.replace("/not-found");
     }
-  }, [router]);
+  }, [_hasHydrated, storedToken, roleId, router]);
 
-  const handleEmailClick = (uemail: UserEmail) => {
-    router.push(`/admin/user/detail/${uemail.email_encode_id}`);
-  };
-
-  // const fetchUserEmailsWhenNotFound = async () => {
-  //   if (!token) return;
-
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     setEmails(response.data);
-  //     setError(null);
-  //   } catch (err) {
-  //     console.error('Failed to fetch user emails:', err);
-  //     setError('Failed to load user emails');
-  //   } finally {
-  //     setIsLoading(false);
-  //     window.location.reload();
-  //   }
-  // };
-
-   let isSubscribed = true;
-   const controller = new AbortController();
-  // Function to fetch only emails (will be called repeatedly)
-  const fetchUserEmails = async (signal?: AbortSignal) => {
-    if (!token) return;
+  // Fetch user details
+  const fetchUserDetails = useCallback(async () => {
+    if (!storedToken) return;
 
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/${params.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          signal,
-        }
-      );
-
-      if (isSubscribed) {
-        setEmails(response.data);
-        setError(null);
-      }
+      setIsLoadingUser(true);
+      const response = await apiClient.get(`/user/${params.id}`);
+      setUserDetails(response.data);
     } catch (err) {
-      if (isSubscribed) {
-        console.error("Failed to fetch user emails:", err);
-        setError("Failed to load user emails");
-      }
+      console.error("Failed to fetch user details:", err);
     } finally {
-      if (isSubscribed) {
-        setIsLoading(false);
-      }
+      setIsLoadingUser(false);
     }
-  };
+  }, [params.id, storedToken]);
 
-  useEffect(() => {
-    const storedToken = useAuthStore.getState().getStoredToken();
-    if (!storedToken) {
-      router.replace("/");
-      return;
-    }
-
-    if (!token) {
-      setIsLoading(false); // Ensure loading state is updated
-      return;
-    }
-
-    // Separate function to fetch user details (runs only once)
-    const fetchUserDetails = async (signal?: AbortSignal) => {
-      if (!token) {
-        router.replace("/");
-        return;
-      }
+  // Fetch inbox emails
+  const fetchInboxEmails = useCallback(
+    async (page: number = 1, signal?: AbortSignal) => {
+      if (!storedToken) return;
 
       try {
-        const responseDetailUser = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${params.id}`,
+        const response = await apiClient.get(
+          `/email/by_user/${params.id}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            params: { page, limit: inboxPageSize },
             signal,
           }
         );
 
-        if (responseDetailUser.data && isSubscribed) {
-          setEmail(responseDetailUser.data.Email);
+        const data = response.data;
+
+        if (Array.isArray(data)) {
+          setInboxEmails(data);
+          setInboxTotal(data.length);
+          setInboxTotalPages(1);
+        } else if (data && Array.isArray(data.data)) {
+          setInboxEmails(data.data);
+          setInboxTotal(data.pagination?.total || data.data.length);
+          setInboxTotalPages(data.pagination?.total_pages || 1);
+        } else {
+          setInboxEmails([]);
+          setInboxTotal(0);
+          setInboxTotalPages(1);
         }
       } catch (err) {
-        console.error("Failed to fetch user details:", err);
+        if (!signal?.aborted) {
+          console.error("Failed to fetch inbox emails:", err);
+          setInboxEmails([]);
+        }
+      } finally {
+        setIsLoadingInbox(false);
+        setIsRefreshingInbox(false);
       }
-    };
+    },
+    [params.id, storedToken, inboxPageSize]
+  );
 
-    // Initial fetch for both user details and emails
-    fetchUserDetails(controller.signal);
-    fetchUserEmails(controller.signal);
+  // Fetch sent emails
+  const fetchSentEmails = useCallback(
+    async (page: number = 1, signal?: AbortSignal) => {
+      if (!storedToken) return;
 
-    // Set up interval for auto-refresh of emails only
-    const intervalId = setInterval(() => {
-      fetchUserEmails();
-    }, 10000);
+      try {
+        const response = await apiClient.get(
+          `/email/sent/by_user/${params.id}`,
+          {
+            params: { page, limit: sentPageSize },
+            signal,
+          }
+        );
 
-    // Cleanup function
+        const data = response.data;
+
+        if (Array.isArray(data)) {
+          setSentEmails(data);
+          setSentTotal(data.length);
+          setSentTotalPages(1);
+        } else if (data && Array.isArray(data.data)) {
+          setSentEmails(data.data);
+          setSentTotal(data.pagination?.total || data.data.length);
+          setSentTotalPages(data.pagination?.total_pages || 1);
+        } else {
+          setSentEmails([]);
+          setSentTotal(0);
+          setSentTotalPages(1);
+        }
+      } catch (err) {
+        if (!signal?.aborted) {
+          console.error("Failed to fetch sent emails:", err);
+          setSentEmails([]);
+        }
+      } finally {
+        setIsLoadingSent(false);
+        setIsRefreshingSent(false);
+      }
+    },
+    [params.id, storedToken, sentPageSize]
+  );
+
+  // Initial fetch
+  useEffect(() => {
+    if (!_hasHydrated || !storedToken || roleId === 1) return;
+
+    abortControllerRef.current = new AbortController();
+
+    fetchUserDetails();
+    fetchInboxEmails(inboxPage, abortControllerRef.current.signal);
+    fetchSentEmails(sentPage, abortControllerRef.current.signal);
+
     return () => {
-      isSubscribed = false;
-      controller.abort();
-      clearInterval(intervalId);
+      abortControllerRef.current?.abort();
     };
-  }, [params.id, token, router]); // Only include essential dependencies
+  }, [_hasHydrated, storedToken, roleId, fetchUserDetails]);
 
+  // Fetch inbox when page changes
+  useEffect(() => {
+    if (!_hasHydrated || !storedToken || roleId === 1) return;
+    setIsLoadingInbox(true);
+    fetchInboxEmails(inboxPage);
+  }, [inboxPage, fetchInboxEmails, _hasHydrated, storedToken, roleId]);
+
+  // Fetch sent when page changes
+  useEffect(() => {
+    if (!_hasHydrated || !storedToken || roleId === 1) return;
+    setIsLoadingSent(true);
+    fetchSentEmails(sentPage);
+  }, [sentPage, fetchSentEmails, _hasHydrated, storedToken, roleId]);
+
+  // Handle refresh
   const handleRefresh = () => {
-    setIsRefreshing(true);
-    fetchUserEmails(controller.signal);
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
+    setIsRefreshingInbox(true);
+    setIsRefreshingSent(true);
+    fetchInboxEmails(inboxPage);
+    fetchSentEmails(sentPage);
   };
 
-   useEffect(() => {
-      if(isRefreshingSecond) {
-        setTimeout(() => {
-          setIsRefreshingSecond(false);
-        }, 3000);
-      }
-    }, [isRefreshingSecond])
+  // Handle inbox email click
+  const handleInboxEmailClick = (email: InboxEmail) => {
+    router.push(`/admin/inbox/${email.email_encode_id}`);
+  };
+
+  // Handle sent email click
+  const handleSentEmailClick = (email: SentEmail) => {
+    router.push(`/admin/sent/${email.id}`);
+  };
+
+  // Don't render content if user is not admin
+  if (roleId === 1) {
+    return null;
+  }
 
   return (
-    <>
-      <div
-        className="space-y-2"
-        style={{ backgroundColor: theme.colors.background }}
-      >
-        <div className="flex-1 overflow-auto pb-20">
-          <div className="space-y-0.5">
-            <div
-              className="flex justify-between items-center p-2"
-              style={{
-                backgroundColor: theme.colors.primary,
-                boxShadow: theme.shadows.card,
-              }}
+    <AdminLayout>
+      <Toaster />
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+        {/* Breadcrumb Header */}
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="flex justify-start items-center gap-1">
+            {/* Back */}
+            <button
+              onClick={() => router.back()}
+              className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
             >
-              <h1 className="text-xl font-semibold tracking-tight">
-                <Button
-                  className="hover:bg-[#F5E193]"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => router.back()}
-                >
-                  <ArrowLeft className="h-6 w-6" />
-                </Button>
-              </h1>
-              <Button
-                className="hover:bg-[#F5E193]"
-                variant="ghost"
-                size="icon"
-                disabled={isRefreshing || isRefreshingSecond}
-                onClick={() => {
-                  handleRefresh();
-                }}
-              >
-                <RefreshCw className="h-6 w-6" />
-              </Button>
-              <h1 className="text-sm font-semibold tracking-tight">{email}</h1>
+              <ArrowLeft className="w-6 h-6 text-gray-600" />
+            </button>
+            <ChevronRight className="w-5 h-5 text-gray-300" />
+
+            {/* User list */}
+            <button
+              onClick={() => router.push("/admin")}
+              className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+            >
+              <Users className="w-5 h-5 text-gray-600" />
+              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
+            </button>
+            <ChevronRight className="w-5 h-5 text-gray-300" />
+
+            {/* Current user email */}
+            <div className="flex justify-center items-center gap-1">
+              <User className="w-5 h-5 text-sky-600" />
+              <div className="justify-center text-sky-600 text-sm font-normal font-['Roboto'] leading-4">
+                {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
+              </div>
             </div>
-            <div className="flex items-center gap-4"></div>
-            {isRefreshing && (
-              <div className="p-2 text-center absolute top-0 left-0 right-0 mx-auto bg-yellow-100 w-fit rounded border border-yellow-500 z-10 mt-3">
-                Loading...
-              </div>
+          </div>
+
+          {/* Refresh Button */}
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshingInbox || isRefreshingSent}
+            className={cn(
+              BUTTON_STYLES.icon,
+              "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
-            {isLoading ? (
-              <div className="p-4 text-center">Loading...</div>
-            ) : error ? (
-              <div className="p-4 text-center">{error}</div>
-            ) : emails.length > 0 ? (
-              <div className="divide-y">
-                {emails.map((email) => (
-                  <div
-                    key={email.ID}
-                    className="p-4 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleEmailClick(email)}
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold">{email.SenderName}</h3>
-                        <span className="text-sm text-gray-500">
-                          {email.RelativeTime}
-                        </span>
-                      </div>
-                      <h4 className="font-medium truncate">{email.Subject}</h4>
-                      <p className="text-sm text-gray-500 truncate">
-                        {email.Preview}
-                      </p>
-                    </div>
+          >
+            <RefreshCw className={cn("w-5 h-5 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
+          </button>
+        </div>
+
+        {/* Email Lists - Side by Side */}
+        <div className="self-stretch inline-flex justify-start items-start gap-5">
+          {/* Inbox Panel */}
+          <div className="flex-1 self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+            <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Inbox</div>
+
+            {/* Inbox List */}
+            <div className="self-stretch flex flex-col justify-start items-start gap-2">
+              {isLoadingInbox ? (
+                <div className="self-stretch flex items-center justify-center py-8">
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <span className="text-sm">Loading...</span>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div
-                className="p-4 text-center cursor-pointer text-blue-500 underline"
-                onClick={() => window.location.reload()}
-              >
-                No emails found, Please Refresh your browser.
-              </div>
+                </div>
+              ) : inboxEmails.length === 0 ? (
+                <div className="self-stretch flex flex-col items-center justify-center py-8">
+                  <Inbox className="h-8 w-8 text-gray-300 mb-2" />
+                  <p className="text-sm text-gray-500 text-center">No inbox emails</p>
+                </div>
+              ) : (
+                inboxEmails.map((email) => (
+                  <InboxEmailRow
+                    key={email.ID}
+                    email={email}
+                    onClick={() => handleInboxEmailClick(email)}
+                  />
+                ))
+              )}
+            </div>
+
+            {/* Inbox Pagination */}
+            {inboxTotalPages > 0 && (
+              <PaginationComponent
+                totalPages={inboxTotalPages}
+                currentPage={inboxPage}
+                onPageChange={setInboxPage}
+                totalCount={inboxTotal}
+                activeCount={inboxTotal}
+                pageSize={inboxPageSize}
+              />
+            )}
+          </div>
+
+          {/* Sent Panel */}
+          <div className="flex-1 self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+            <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Sent</div>
+
+            {/* Sent List */}
+            <div className="self-stretch flex flex-col justify-start items-start gap-2">
+              {isLoadingSent ? (
+                <div className="self-stretch flex items-center justify-center py-8">
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <span className="text-sm">Loading...</span>
+                  </div>
+                </div>
+              ) : sentEmails.length === 0 ? (
+                <div className="self-stretch flex flex-col items-center justify-center py-8">
+                  <Send className="h-8 w-8 text-gray-300 mb-2" />
+                  <p className="text-sm text-gray-500 text-center">No sent emails</p>
+                </div>
+              ) : (
+                sentEmails.map((email) => (
+                  <SentEmailRow
+                    key={email.id}
+                    email={email}
+                    onClick={() => handleSentEmailClick(email)}
+                  />
+                ))
+              )}
+            </div>
+
+            {/* Sent Pagination */}
+            {sentTotalPages > 0 && (
+              <PaginationComponent
+                totalPages={sentTotalPages}
+                currentPage={sentPage}
+                onPageChange={setSentPage}
+                totalCount={sentTotal}
+                activeCount={sentTotal}
+                pageSize={sentPageSize}
+              />
             )}
           </div>
         </div>
-        <FooterAdminNav />
       </div>
-      <Toaster />
-    </>
+    </AdminLayout>
   );
 }
+
+// Inbox email row component
+interface InboxEmailRowProps {
+  email: InboxEmail;
+  onClick: () => void;
+}
+
+const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
+  const isUnread = !email.IsRead;
+
+  return (
+    <button
+      onClick={onClick}
+      className={cn(CARD_STYLES.interactive, "self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
+    >
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch inline-flex justify-start items-start gap-4">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+            <div className="self-stretch inline-flex justify-between items-center">
+              <div className={cn(
+                "text-base font-['Roboto'] leading-6",
+                isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+              )}>
+                {email.SenderName || email.SenderEmail || "Unknown"}
+              </div>
+              <div className="flex justify-end items-center gap-0.5">
+                <div className={cn(
+                  "text-xs font-['Roboto'] leading-5 line-clamp-1",
+                  isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+                )}>
+                  {email.RelativeTime}
+                </div>
+                {isUnread && <div className="w-2 h-2 bg-sky-600 rounded-full"></div>}
+              </div>
+            </div>
+            <div className={cn(
+              "self-stretch text-sm font-['Roboto'] leading-5",
+              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+            )}>
+              {email.Subject || "(No subject)"}
+            </div>
+          </div>
+        </div>
+        <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+          {email.Preview || "No preview available"}
+        </div>
+      </div>
+    </button>
+  );
+};
+
+// Sent email row component
+interface SentEmailRowProps {
+  email: SentEmail;
+  onClick: () => void;
+}
+
+const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(CARD_STYLES.interactive, "self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
+    >
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch inline-flex justify-start items-start gap-4">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+            <div className="self-stretch inline-flex justify-between items-center">
+              <div className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">
+                To: {email.to || "Unknown"}
+              </div>
+              <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+                {formatRelativeTime(email.sent_at)}
+              </div>
+            </div>
+            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5">
+              {email.subject || "(No subject)"}
+            </div>
+          </div>
+        </div>
+        <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+          {email.body_preview || "No preview available"}
+        </div>
+      </div>
+    </button>
+  );
+};

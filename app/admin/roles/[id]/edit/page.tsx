@@ -1,0 +1,353 @@
+'use client';
+
+import { useState, useEffect, Suspense, useCallback } from 'react';
+import axios from 'axios';
+import { apiClient } from "@/lib/api-client";
+import { ArrowLeft, ChevronRight, Shield, User, Edit3, X, Check } from 'lucide-react';
+import { useRouter, useParams } from "next/navigation";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import LoadingProcessingPage from '@/components/ProcessLoading';
+import DOMPurify from 'dompurify';
+import { cn } from "@/lib/utils";
+import {
+    AdminLayout,
+    PermissionMultiSelect
+} from "@/components/admin";
+import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
+
+const EditAdminPageContent: React.FC = () => {
+    const router = useRouter();
+    const params = useParams();
+    const adminId = params?.id as string;
+
+    const roleId = useAuthStore((state) => state.roleId);
+    const [authLoaded, setAuthLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isFetching, setIsFetching] = useState(true);
+
+    // Form state
+    const [admin, setAdmin] = useState<AdminUser | null>(null);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [permissions, setPermissions] = useState<PermissionKey[]>([]);
+
+    const { toast } = useToast();
+
+    useEffect(() => {
+        setAuthLoaded(true);
+    }, []);
+
+    // Redirect logic
+    useEffect(() => {
+        if (!authLoaded) return;
+
+        const storedToken = useAuthStore.getState().getStoredToken();
+        if (!storedToken) {
+            router.replace("/");
+            return;
+        }
+
+        // Only SuperAdmin (roleId = 0) can access this page
+        if (roleId !== 0) {
+            router.replace("/admin");
+        }
+    }, [authLoaded, roleId, router]);
+
+    // Fetch admin data: GET /admin/admins/:id
+    const fetchAdmin = useCallback(async () => {
+        if (!adminId) return;
+
+        try {
+            setIsFetching(true);
+            const response = await apiClient.get<AdminApiResponse>(`/admin/admins/${adminId}`);
+
+            if (response.data) {
+                const adminData: AdminUser = {
+                    id: response.data.id,
+                    username: response.data.username,
+                    password: response.data.password,
+                    last_active_at: response.data.last_active_at,
+                    is_online: response.data.is_online,
+                    permissions: response.data.permissions,
+                    created_at: response.data.created_at,
+                };
+                setAdmin(adminData);
+                setUsername(adminData.username);
+                setPassword(adminData.password || '');
+                setPermissions(adminData.permissions);
+            }
+        } catch (error) {
+            console.error('Failed to fetch admin:', error);
+
+            // Handle 403 Forbidden
+            if (axios.isAxiosError(error) && error.response?.status === 403) {
+                toast({
+                    description: "You don't have permission to access this page.",
+                    variant: "destructive",
+                });
+                router.replace("/admin");
+                return;
+            }
+
+            toast({
+                description: "Failed to load admin data.",
+                variant: "destructive",
+            });
+            router.replace("/admin/roles");
+        } finally {
+            setIsFetching(false);
+        }
+    }, [adminId, router, toast]);
+
+    useEffect(() => {
+        if (!authLoaded || roleId !== 0) return;
+        fetchAdmin();
+    }, [authLoaded, roleId, adminId, fetchAdmin]);
+
+    // PUT /admin/admins/:id
+    const handleSave = async () => {
+        // Validation
+        if (!username.trim()) {
+            toast({
+                description: "Username is required.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (password && password.length < 6) {
+            toast({
+                description: "Password must be at least 6 characters long.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (permissions.length === 0) {
+            toast({
+                description: "At least one permission is required.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+
+            const payload: {
+                username: string;
+                permissions: PermissionKey[];
+                password?: string;
+            } = {
+                username: username.trim(),
+                permissions: permissions,
+            };
+
+            // Only include password if it was changed
+            if (password) {
+                payload.password = password;
+            }
+
+            await apiClient.put(`/admin/admins/${admin?.id}`, payload);
+
+            toast({
+                description: "Admin updated successfully.",
+                variant: "default",
+            });
+
+            router.push(`/admin/roles/${adminId}`);
+        } catch (error) {
+            console.error('Failed to update admin:', error);
+            let errorMessage = "Failed to update admin. Please try again.";
+            if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
+                errorMessage = error.response.data.error.message;
+            }
+            toast({
+                description: errorMessage,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        router.push(`/admin/roles/${adminId}`);
+    };
+
+    // Check if form is valid
+    const isFormValid = username.trim() && permissions.length > 0 && (!password || password.length >= 6);
+
+    if (isFetching) {
+        return (
+            <AdminLayout>
+                <div className="flex items-center justify-center py-20">
+                    <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                    </div>
+                </div>
+            </AdminLayout>
+        );
+    }
+
+    return (
+        <AdminLayout>
+            <Toaster />
+            <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+                {/* Breadcrumb Navigation */}
+                <div className="h-5 inline-flex justify-start items-center gap-1">
+                    {/* Back Button */}
+                    <button
+                        onClick={() => router.push(`/admin/roles/${adminId}`)}
+                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-gray-100 transition-colors"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                    </button>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
+
+                    {/* Roles & permissions link */}
+                    <button
+                        onClick={() => router.push("/admin/roles")}
+                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                    >
+                        <Shield className="w-5 h-5 text-gray-600" />
+                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
+                    </button>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
+
+                    {/* Admin username link */}
+                    <button
+                        onClick={() => router.push(`/admin/roles/${adminId}`)}
+                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                    >
+                        <User className="w-5 h-5 text-gray-600" />
+                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
+                    </button>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
+
+                    {/* Current page - Edit */}
+                    <div className="flex justify-center items-center gap-1">
+                        <Edit3 className="w-5 h-5 text-sky-600" />
+                        <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
+                    </div>
+                </div>
+
+                {/* Page Header */}
+                <div className="self-stretch inline-flex justify-start items-center gap-5">
+                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                        Edit
+                    </div>
+                </div>
+
+                {/* Form Card */}
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-hidden">
+                    {/* Form Fields Row */}
+                    <div className="self-stretch inline-flex justify-start items-start gap-4">
+                        {/* Username Input */}
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                            <div className="self-stretch relative flex flex-col justify-start items-start">
+                                <div className="self-stretch h-3.5"></div>
+                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                    <input
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
+                                            setUsername(sanitizedValue);
+                                        }}
+                                        placeholder="Enter username"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Password Input */}
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                            <div className="self-stretch relative flex flex-col justify-start items-start">
+                                <div className="self-stretch h-3.5"></div>
+                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                    <input
+                                        type="text"
+                                        value={password}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                                            setPassword(sanitizedValue);
+                                        }}
+                                        placeholder="Enter new password"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                    />
+                                </div>
+                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Role Select */}
+                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                            <div className="self-stretch relative flex flex-col justify-start items-start">
+                                <div className="self-stretch h-3.5"></div>
+                                <PermissionMultiSelect
+                                    value={permissions}
+                                    onChange={(values) => setPermissions(values as PermissionKey[])}
+                                    displayMode="text"
+                                />
+                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
+                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-300"></div>
+
+                    {/* Action Buttons */}
+                    <div className="self-stretch inline-flex justify-end items-start gap-2.5">
+                        <button
+                            onClick={handleCancel}
+                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                        >
+                            <X className="w-5 h-5 text-gray-800" />
+                            <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={!isFormValid}
+                            className={cn(
+                                "h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex justify-center items-center gap-1.5 transition-colors",
+                                isFormValid
+                                    ? "bg-sky-600 outline outline-1 outline-offset-[-1px] outline-sky-600 hover:bg-sky-700"
+                                    : "bg-sky-400 outline outline-1 outline-offset-[-1px] outline-sky-400 cursor-not-allowed"
+                            )}
+                        >
+                            <Check className="w-5 h-5 text-white" />
+                            <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Save changes</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {isLoading && <LoadingProcessingPage />}
+        </AdminLayout>
+    );
+};
+
+const EditAdminPage: React.FC = () => {
+    return (
+        <Suspense fallback={<div></div>}>
+            <EditAdminPageContent />
+        </Suspense>
+    );
+};
+
+export default EditAdminPage;
