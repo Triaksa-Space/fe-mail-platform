@@ -21,13 +21,16 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2",
+        "fixed bottom-0 left-0 right-0 z-50 flex justify-center items-center py-2",
         "lg:hidden", // Hide on desktop
         className
       )}
     >
+      {/* Background decorative blur - positioned behind the menu */}
+      <div className="absolute w-[5000px] h-[100px] left-[-2305px] bottom-0 bg-sky-100 rounded-full blur-[32px] pointer-events-none -z-10" />
+
       <nav
-        className="flex items-center justify-around bg-white rounded-xl border border-gray-200 px-2 py-2"
+        className="flex items-center justify-start bg-white rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 px-4 py-2 gap-4"
         style={{
           boxShadow: "0 2px 6px rgba(16, 24, 40, 0.06)",
         }}
@@ -36,51 +39,60 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
         <button
           onClick={() => onViewChange("inbox")}
           className={cn(
-            "flex flex-col items-center justify-center py-2 px-4 rounded-lg transition-colors",
+            "w-14 flex flex-col items-center justify-center gap-0.5 relative",
             currentView === "inbox"
-              ? "bg-blue-50 text-blue-600"
-              : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+              ? "text-sky-600"
+              : "text-gray-600 hover:text-gray-700"
           )}
         >
           <Inbox className="w-5 h-5" />
-          <span className="text-xs mt-1 font-medium">Inbox</span>
+          <span className={cn(
+            "w-14 text-center text-sm font-['Roboto'] leading-5",
+            currentView === "inbox" ? "font-semibold" : "font-normal"
+          )}>Inbox</span>
         </button>
 
         {/* Sent tab */}
         <button
           onClick={() => onViewChange("sent")}
           className={cn(
-            "flex flex-col items-center justify-center py-2 px-4 rounded-lg transition-colors",
+            "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "sent"
-              ? "bg-blue-50 text-blue-600"
-              : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+              ? "text-sky-600"
+              : "text-gray-600 hover:text-gray-700"
           )}
         >
           <Send className="w-5 h-5" />
-          <span className="text-xs mt-1 font-medium">Sent</span>
+          <span className={cn(
+            "w-14 text-center text-sm font-['Roboto'] leading-5",
+            currentView === "sent" ? "font-semibold" : "font-normal"
+          )}>Sent</span>
         </button>
 
         {/* Settings tab */}
         <button
           onClick={() => onViewChange("settings")}
           className={cn(
-            "flex flex-col items-center justify-center py-2 px-4 rounded-lg transition-colors",
+            "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "settings"
-              ? "bg-blue-50 text-blue-600"
-              : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+              ? "text-sky-600"
+              : "text-gray-600 hover:text-gray-700"
           )}
         >
           <Settings className="w-5 h-5" />
-          <span className="text-xs mt-1 font-medium">Settings</span>
+          <span className={cn(
+            "w-14 text-center text-sm font-['Roboto'] leading-5",
+            currentView === "settings" ? "font-semibold" : "font-normal"
+          )}>Settings</span>
         </button>
 
         {/* Logout tab */}
         <button
           onClick={onLogout}
-          className="flex flex-col items-center justify-center py-2 px-4 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+          className="w-14 flex flex-col items-center justify-center gap-0.5 text-gray-600 hover:text-gray-700"
         >
           <LogOut className="w-5 h-5" />
-          <span className="text-xs mt-1 font-medium">Logout</span>
+          <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>
         </button>
       </nav>
     </div>

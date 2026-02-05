@@ -1,6 +1,7 @@
 "use client";
 
 import React, { memo } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Inbox, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -56,7 +57,7 @@ const InboxList: React.FC<InboxListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-gray relative",
+        "flex flex-col h-full bg-gray-50 relative overflow-hidden",
         // On desktop: fixed width with border when not fullWidth, full width when fullWidth
         fullWidth
           ? "w-full"
@@ -65,9 +66,29 @@ const InboxList: React.FC<InboxListProps> = ({
       )}
       aria-busy={isRefreshing}
     >
-      {/* Header */}
-      <div className="px-5 py-3 relative z-20 bg-gray">
-        <div className="h-10 flex items-center justify-between">
+      {/* Mobile Header with Logo */}
+      <div className="lg:hidden px-4 py-3 flex items-center justify-between relative z-20">
+        <div className="flex items-center gap-4">
+          <Image
+            src="/mailria.png"
+            alt="Mailria"
+            width={112}
+            height={40}
+            className="h-10 w-28"
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          {userEmail && (
+            <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">
+              {userEmail}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden lg:flex px-5 py-3 relative z-20 bg-gray-50">
+        <div className="h-10 flex items-center justify-between w-full">
           <Button
             variant="outline"
             size="icon"
@@ -89,7 +110,7 @@ const InboxList: React.FC<InboxListProps> = ({
 
       {/* Subtle refreshing indicator - stale-while-revalidate pattern */}
       {isRefreshing && emails.length > 0 && (
-        <div className="px-4 py-2 bg-blue-50/80 border-b border-blue-100">
+        <div className="px-4 py-2 bg-blue-50/80 border-b border-blue-100 relative z-10">
           <div className="flex items-center justify-center gap-2">
             <RefreshCw className="h-3 w-3 animate-spin text-blue-600" />
             <span className="text-xs text-blue-600">Refreshing...</span>
@@ -100,7 +121,7 @@ const InboxList: React.FC<InboxListProps> = ({
       {/* Email List with fade-in transition */}
       <div
         className={cn(
-          "flex-1 overflow-y-auto relative px-5",
+          "flex-1 overflow-y-auto relative px-4 pb-24 lg:pb-4",
           // Fade-in animation when transitioning from loading
           isTransitioning && "animate-fade-in"
         )}
@@ -119,8 +140,8 @@ const InboxList: React.FC<InboxListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className="flex-1 px-4 md:px-5 py-12 flex items-start justify-center">
-            <div className="w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 px-3 py-12 flex flex-col justify-center items-center gap-3">
+          <div className="flex-1 py-12 flex items-start justify-center">
+            <div className="w-full bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 px-3 py-12 flex flex-col justify-center items-center gap-3">
               <div className="w-10 h-10 flex items-center justify-center">
                 <Inbox className="w-9 h-9 text-gray-300" />
               </div>
@@ -139,7 +160,7 @@ const InboxList: React.FC<InboxListProps> = ({
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.email_encode_id}
-            className="flex flex-col gap-2 pb-4"
+            className="flex flex-col gap-2"
             renderItem={(email) => (
               <InboxRow
                 email={email}
@@ -154,7 +175,7 @@ const InboxList: React.FC<InboxListProps> = ({
   );
 };
 
-// Gmail-style inbox row component - Memoized to prevent unnecessary re-renders
+// Inbox row component - Memoized to prevent unnecessary re-renders
 interface InboxRowProps {
   email: Mail;
   isSelected: boolean;
@@ -169,33 +190,26 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
       onClick={onClick}
       className={cn(
         "w-full text-left px-4 py-2 transition-colors",
-        "rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-gray-200",
-        isUnread ? "bg-white" : "bg-gray-100",
+        "rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200",
+        isUnread ? "bg-white" : "bg-white",
         "hover:bg-sky-100 focus:outline-none focus:bg-sky-100",
         isSelected && "bg-sky-100"
       )}
     >
-      <div className="flex items-start gap-3">
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          {/* Top row: Sender + Time + Unread indicator */}
-          <div className="flex items-center justify-between gap-3">
-            <span
-              className={cn(
-                "text-base truncate",
+      <div className="flex-1 flex flex-col gap-1">
+        <div className="flex flex-col gap-0.5">
+          {/* Top row: Sender + Time */}
+          <div className="flex items-center justify-between">
+            <div className="flex-1 flex items-center gap-0.5">
+              <span className={cn(
+                "text-base font-['Roboto'] leading-6 truncate",
                 isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
-              )}
-            >
-              {email.from || "Unknown Sender"}
-            </span>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <span
-                className={cn(
-                  "text-xs whitespace-nowrap",
-                  isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
-                )}
-              >
+              )}>
+                {email.from || "Unknown Sender"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
                 {email.date}
               </span>
               {isUnread && (
@@ -205,25 +219,18 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
           </div>
 
           {/* Subject line */}
-          <p
-            className={cn(
-              "text-sm truncate mt-1",
-              isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
-            )}
-          >
+          <p className={cn(
+            "text-sm font-['Roboto'] leading-5 truncate",
+            isUnread ? "font-semibold text-gray-800" : "font-normal text-gray-600"
+          )}>
             {email.subject || "(No subject)"}
           </p>
-
-          {/* Snippet/Preview */}
-          <p
-            className={cn(
-              "text-sm line-clamp-1 mt-1",
-              isUnread ? "font-normal text-gray-600" : "font-normal text-gray-600"
-            )}
-          >
-            {email.snippet || "No preview available"}
-          </p>
         </div>
+
+        {/* Snippet/Preview */}
+        <p className="text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+          {email.snippet || "No preview available"}
+        </p>
       </div>
     </button>
   );

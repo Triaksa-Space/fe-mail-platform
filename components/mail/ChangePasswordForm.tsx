@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff, Lock, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, Lock, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
@@ -68,118 +66,114 @@ const ChangePasswordForm: React.FC = () => {
     }
   };
 
-  const isFormValid = currentPassword && newPassword && confirmPassword;
+  const isFormValid = currentPassword && newPassword && confirmPassword && newPassword.length >= 6 && newPassword === confirmPassword;
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* Old Password */}
-      <div className="relative">
-        <span className="absolute -top-2 left-3 px-1 bg-white text-xs text-gray-500 z-10">
-          Old password
-        </span>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            type={showCurrentPassword ? "text" : "password"}
-            placeholder="Enter old password"
-            value={currentPassword}
-            onChange={(e) =>
-              setCurrentPassword(
-                DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-              )
-            }
-            className={cn(
-              "h-11 text-sm pl-10 pr-10 rounded-lg",
-              "border-gray-200 bg-white",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "focus:border-blue-500 focus:ring-blue-100"
-            )}
-          />
-          <button
-            type="button"
-            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
-            {showCurrentPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
-          </button>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3">
+        {/* Old Password */}
+        <div className="relative flex flex-col">
+          <div className="h-3.5"></div>
+          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+            <div className="flex-1 flex justify-start items-center gap-2">
+              <Lock className="w-5 h-5 text-gray-400" />
+              <input
+                type={showCurrentPassword ? "text" : "password"}
+                placeholder="***********"
+                value={currentPassword}
+                onChange={(e) =>
+                  setCurrentPassword(
+                    DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
+                  )
+                }
+                className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              className="flex justify-center items-center"
+            >
+              {showCurrentPassword ? (
+                <EyeOff className="w-5 h-5 text-gray-800" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-800" />
+              )}
+            </button>
+          </div>
+          <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
+          </div>
         </div>
-      </div>
 
-      {/* New Password */}
-      <div className="relative">
-        <span className="absolute -top-2 left-3 px-1 bg-white text-xs text-gray-500 z-10">
-          New password
-        </span>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            type={showNewPassword ? "text" : "password"}
-            placeholder="Enter new password"
-            value={newPassword}
-            onChange={(e) =>
-              setNewPassword(
-                DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-              )
-            }
-            className={cn(
-              "h-11 text-sm pl-10 pr-10 rounded-lg",
-              "border-gray-200 bg-white",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "focus:border-blue-500 focus:ring-blue-100"
-            )}
-          />
-          <button
-            type="button"
-            onClick={() => setShowNewPassword(!showNewPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
-            {showNewPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
-          </button>
+        {/* New Password */}
+        <div className="relative flex flex-col">
+          <div className="h-3.5"></div>
+          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+            <div className="flex-1 flex justify-start items-center gap-2">
+              <Lock className="w-5 h-5 text-gray-400" />
+              <input
+                type={showNewPassword ? "text" : "password"}
+                placeholder="***********"
+                value={newPassword}
+                onChange={(e) =>
+                  setNewPassword(
+                    DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
+                  )
+                }
+                className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              className="flex justify-center items-center"
+            >
+              {showNewPassword ? (
+                <EyeOff className="w-5 h-5 text-gray-800" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-800" />
+              )}
+            </button>
+          </div>
+          <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
+          </div>
         </div>
-      </div>
 
-      {/* Confirm Password */}
-      <div className="relative">
-        <span className="absolute -top-2 left-3 px-1 bg-white text-xs text-gray-500 z-10">
-          Confirm password
-        </span>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            type={showConfirmPassword ? "text" : "password"}
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) =>
-              setConfirmPassword(
-                DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-              )
-            }
-            className={cn(
-              "h-11 text-sm pl-10 pr-10 rounded-lg",
-              "border-gray-200 bg-white",
-              "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-              "focus:border-blue-500 focus:ring-blue-100"
-            )}
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-          >
-            {showConfirmPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
-          </button>
+        {/* Confirm Password */}
+        <div className="relative flex flex-col">
+          <div className="h-3.5"></div>
+          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+            <div className="flex-1 flex justify-start items-center gap-2">
+              <Lock className="w-5 h-5 text-gray-400" />
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="***********"
+                value={confirmPassword}
+                onChange={(e) =>
+                  setConfirmPassword(
+                    DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
+                  )
+                }
+                className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="flex justify-center items-center"
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="w-5 h-5 text-gray-800" />
+              ) : (
+                <Eye className="w-5 h-5 text-gray-800" />
+              )}
+            </button>
+          </div>
+          <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
+          </div>
         </div>
       </div>
 
@@ -187,24 +181,27 @@ const ChangePasswordForm: React.FC = () => {
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       {/* Submit Button */}
-      <Button
+      <button
         type="submit"
         disabled={isLoading || !isFormValid}
         className={cn(
-          "w-full h-10 rounded-lg font-medium",
-          "bg-blue-600 hover:bg-blue-700 text-white",
-          "disabled:bg-blue-400 disabled:text-white disabled:opacity-100"
+          "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+          isFormValid && !isLoading
+            ? "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-500 hover:bg-blue-700"
+            : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
         )}
       >
-        {isLoading ? (
-          <>
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            Changing...
-          </>
-        ) : (
-          "Change password"
-        )}
-      </Button>
+        <Check className={cn(
+          "w-5 h-5",
+          isFormValid && !isLoading ? "text-white" : "text-blue-300"
+        )} />
+        <span className={cn(
+          "text-center text-base font-medium font-['Roboto'] leading-4",
+          isFormValid && !isLoading ? "text-white" : "text-blue-300"
+        )}>
+          {isLoading ? "Changing..." : "Change password"}
+        </span>
+      </button>
     </form>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,34 +42,40 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
   return (
     <div className={cn("flex-1 flex flex-col bg-gray-50 relative overflow-hidden", className)}>
-      {/* Background decorative blur - visible on mobile */}
-      <div className="lg:hidden w-[5000px] h-[5000px] left-[-1780px] top-[400px] absolute bg-sky-100 rounded-full blur-[32px]" />
+      {/* Mobile Header */}
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 relative z-10">
+        <div className="flex items-center gap-4">
+          <Image
+            src="/mailria.png"
+            alt="Mailria"
+            width={112}
+            height={40}
+            className="h-10 w-28"
+          />
+        </div>
+        <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{email}</span>
+      </div>
 
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 md:px-6 py-3 bg-white border-b border-gray-200 relative z-10">
+      {/* Desktop Header */}
+      <div className="hidden lg:flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 relative z-10">
         <div className="flex items-center gap-3">
           {showBackButton && (
             <Button
               variant="ghost"
               size="icon"
               onClick={onBack}
-              className="h-9 w-9 rounded-xl hover:bg-gray-100 lg:hidden"
+              className="h-9 w-9 rounded-xl hover:bg-gray-100"
             >
               <ChevronLeft className="h-5 w-5 text-gray-600" />
             </Button>
           )}
           <h2 className="text-lg font-semibold text-gray-900">Settings</h2>
         </div>
-        {/* Email display on header for web */}
-        <span className="hidden lg:block text-sm text-gray-600">{email}</span>
+        <span className="text-sm text-gray-600">{email}</span>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 relative z-10">
-        {/* Mobile: Email display */}
-        <div className="lg:hidden mb-4">
-          <p className="text-sm text-gray-600 text-center">{email}</p>
-        </div>
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 lg:pb-6 relative z-10">
 
         {/* Web View: Horizontal card with both sections */}
         <div className="hidden lg:block">

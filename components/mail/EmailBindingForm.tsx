@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Mail, Loader2, CheckCircle2, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Check, RefreshCw, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
@@ -89,12 +87,30 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* Email Input */}
-      <div className="flex flex-col gap-2">
-        <div className="relative">
-          <div className="absolute -top-2 left-3 px-1 bg-white z-10 flex items-center gap-2">
-            <span className="text-xs text-gray-500">Email</span>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3">
+        {/* Email Input */}
+        <div className="relative flex flex-col">
+          <div className="h-3.5"></div>
+          <div className={cn(
+            "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3",
+            isInputDisabled && "bg-gray-50"
+          )}>
+            <div className="flex-1 flex justify-start items-center gap-2">
+              <input
+                type="email"
+                placeholder="Insert email"
+                value={email}
+                onChange={(e) =>
+                  setEmail(DOMPurify.sanitize(e.target.value).trim())
+                }
+                disabled={isInputDisabled}
+                className={cn(
+                  "flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400",
+                  isInputDisabled && "text-gray-500 cursor-not-allowed"
+                )}
+              />
+            </div>
             {isLinked && !isEditing && (
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-700">
                 <CheckCircle2 className="h-2.5 w-2.5" />
@@ -102,28 +118,12 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
               </span>
             )}
           </div>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              type="email"
-              placeholder="Insert email"
-              value={email}
-              onChange={(e) =>
-                setEmail(DOMPurify.sanitize(e.target.value).trim())
-              }
-              disabled={isInputDisabled}
-              className={cn(
-                "h-11 text-sm pl-10 pr-3 rounded-lg",
-                "border-gray-200 bg-white",
-                "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-                "focus:border-blue-500 focus:ring-blue-100",
-                error && "border-red-500 focus:border-red-500 focus:ring-red-100",
-                isInputDisabled && "bg-gray-50 text-gray-500 cursor-not-allowed"
-              )}
-            />
+          <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500">
+
+        <p className="text-gray-500 text-xs font-normal font-['Roboto'] leading-4">
           Link an email to your account. This email will be used to reset your
           password and recover your account if needed.
         </p>
@@ -134,37 +134,39 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
 
       {/* Change Email Button (when linked and not editing) */}
       {isLinked && !isEditing ? (
-        <Button
+        <button
           type="button"
           onClick={handleChangeEmail}
-          className={cn(
-            "w-full h-10 rounded-lg font-medium",
-            "bg-blue-600 hover:bg-blue-700 text-white"
-          )}
+          className="h-10 px-4 py-2.5 bg-blue-600 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-blue-500 inline-flex justify-center items-center gap-1.5 hover:bg-blue-700 transition-colors"
         >
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Change Email
-        </Button>
+          <RefreshCw className="w-5 h-5 text-white" />
+          <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
+            Change Email
+          </span>
+        </button>
       ) : (
         /* Save Email Button (when not linked or editing) */
-        <Button
+        <button
           type="submit"
           disabled={isLoading || !isFormValid}
           className={cn(
-            "w-full h-10 rounded-lg font-medium",
-            "bg-blue-600 hover:bg-blue-700 text-white",
-            "disabled:bg-blue-400 disabled:text-white disabled:opacity-100"
+            "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+            isFormValid && !isLoading
+              ? "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-500 hover:bg-blue-700"
+              : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
           )}
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Save email"
-          )}
-        </Button>
+          <Check className={cn(
+            "w-5 h-5",
+            isFormValid && !isLoading ? "text-white" : "text-blue-300"
+          )} />
+          <span className={cn(
+            "text-center text-base font-medium font-['Roboto'] leading-4",
+            isFormValid && !isLoading ? "text-white" : "text-blue-300"
+          )}>
+            {isLoading ? "Saving..." : "Save email"}
+          </span>
+        </button>
       )}
     </form>
   );
