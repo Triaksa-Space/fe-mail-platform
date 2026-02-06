@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { X, Paperclip, Send, Loader2, Mail, FileText } from "lucide-react";
+import { Paperclip, Loader2, Mail, FileText } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
+import { XMarkIcon,PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 interface ComposeModalProps {
   isOpen: boolean;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CircleXIcon, X, Paperclip } from 'lucide-react';
+import { CircleXIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";

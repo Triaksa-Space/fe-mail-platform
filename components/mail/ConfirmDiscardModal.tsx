@@ -2,7 +2,8 @@
 
 import React, { useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { X, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { XMarkIcon } from "@heroicons/react/24/outline"
 
 interface ConfirmDiscardModalProps {
   isOpen: boolean;

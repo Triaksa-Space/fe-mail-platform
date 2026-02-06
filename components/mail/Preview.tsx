@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
-  ChevronLeft,
   Reply,
   Forward,
   Download,
@@ -15,6 +14,7 @@ import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 
 interface PreviewProps {
   email: Mail | null;
