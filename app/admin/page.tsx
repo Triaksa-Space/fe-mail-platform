@@ -501,9 +501,19 @@ const EmailManagementPageContent: React.FC = () => {
                                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
                                     <div className="self-stretch relative flex flex-col justify-start items-start">
                                         <div className="self-stretch h-3.5"></div>
-                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                        <div className={cn(
+                                            "self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3",
+                                            confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
+                                                ? "outline-red-500"
+                                                : "outline-gray-200"
+                                        )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <Lock className="w-5 h-5 text-gray-400" />
+                                                <Lock className={cn(
+                                                    "w-5 h-5",
+                                                    confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
+                                                        ? "text-red-400"
+                                                        : "text-gray-400"
+                                                )} />
                                                 <input
                                                     type={showPassword ? "text" : "password"}
                                                     value={passwordForAdmin}
@@ -529,16 +539,26 @@ const EmailManagementPageContent: React.FC = () => {
                                             </button>
                                         </div>
                                         <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</div>
+                                            <div className={cn(
+                                                "justify-center text-[10px] font-normal font-['Roboto'] leading-4",
+                                                confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
+                                                    ? "text-red-500"
+                                                    : "text-gray-800"
+                                            )}>New password</div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Confirm Password Input */}
-                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                                <div className="self-stretch flex flex-col justify-start items-start gap-1">
                                     <div className="self-stretch relative flex flex-col justify-start items-start">
                                         <div className="self-stretch h-3.5"></div>
-                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                        <div className={cn(
+                                            "self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3",
+                                            confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
+                                                ? "outline-red-500"
+                                                : "outline-gray-200"
+                                        )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
                                                 <Lock className="w-5 h-5 text-gray-400" />
                                                 <input
@@ -565,20 +585,33 @@ const EmailManagementPageContent: React.FC = () => {
                                                 )}
                                             </button>
                                         </div>
-                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</div>
+                                        <div className={cn(
+                                            "px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5",
+                                        )}>
+                                            <div className={cn(
+                                                "justify-center text-[10px] font-normal font-['Roboto'] leading-4",
+                                                confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
+                                                    ? "text-red-500"
+                                                    : "text-gray-800"
+                                            )}>Confirm password</div>
                                         </div>
                                     </div>
+                                    {/* Error Message */}
+                                    {confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin && (
+                                        <div className="text-red-500 text-xs font-normal font-['Roboto'] leading-4 pl-1">
+                                            Your confirmation password doesn&apos;t match.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
                             {/* Submit Button */}
                             <button
                                 onClick={handleChangePasswordSubmit}
-                                disabled={!passwordForAdmin || !confirmPasswordForAdmin}
+                                disabled={!passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin}
                                 className={cn(
                                     "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-center items-center gap-1.5 transition-colors",
-                                    !passwordForAdmin || !confirmPasswordForAdmin
+                                    !passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin
                                         ? "bg-sky-400 outline-sky-400 cursor-not-allowed"
                                         : "bg-sky-600 outline-sky-600 hover:bg-sky-700"
                                 )}
