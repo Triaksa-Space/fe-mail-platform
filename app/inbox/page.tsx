@@ -482,6 +482,7 @@ const InboxPageContent: React.FC = () => {
           className="flex-1"
           userEmail={userEmail}
           sentCount={sentCount}
+          isComposeOpen={isComposeOpen}
         />
       );
     }

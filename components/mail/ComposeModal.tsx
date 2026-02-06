@@ -322,23 +322,23 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-modal="true"
           aria-labelledby="compose-title"
           className={cn(
-            "relative w-full bg-[#F9FAFB] flex flex-col",
-            // Mobile: full screen
-            "h-full",
+            "relative w-full bg-gray-50 flex flex-col",
+            // Mobile: full screen with py-4 and gap-4
+            "h-full py-4 gap-4",
             // Desktop: centered modal with max dimensions
-            "md:h-auto md:max-h-[90vh] md:max-w-2xl lg:max-w-3xl md:rounded-2xl md:shadow-xl"
+            "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-2xl lg:max-w-3xl md:rounded-2xl md:shadow-xl md:bg-[#F9FAFB]"
           )}
         >
           {/* Header Action Row */}
-          <div className="flex items-center justify-between px-4 py-3 bg-white md:rounded-t-2xl">
+          <div className="flex items-center justify-between px-4 md:py-3 md:bg-white md:rounded-t-2xl">
             {/* Left: Close Button */}
             <button
               type="button"
               onClick={requestClose}
               className={cn(
                 "flex items-center justify-center h-10 w-10",
-                "rounded-xl border border-gray-200 bg-white shadow-sm",
-                "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 bg-white",
+                "text-gray-800 hover:bg-gray-50",
                 "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
               )}
               aria-label="Close compose"
@@ -350,13 +350,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
             <div className="flex items-center gap-3">
               {/* Daily Send Badge */}
               <div className="flex items-center gap-1">
-                <span className="text-sm text-gray-600 font-normal">Daily send</span>
+                <span className="text-sm text-gray-600 font-normal font-['Roboto'] leading-5">Daily send</span>
                 <span
                   className={cn(
-                    "inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium",
+                    "inline-flex items-center justify-center w-11 h-5 px-1.5 py-0.5 rounded-3xl text-xs font-medium font-['Roboto'] leading-5",
                     isLimitReached
-                      ? "text-red-600 border border-red-200"
-                      : "text-blue-600 border border-blue-600"
+                      ? "text-red-600 outline outline-1 outline-offset-[-1px] outline-red-200"
+                      : "text-gray-400 outline outline-1 outline-offset-[-1px] outline-gray-200"
                   )}
                 >
                   {sentCount} of {maxDailySend}
@@ -378,7 +378,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 className={cn(
                   "flex items-center justify-center h-10 w-10",
                   "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 bg-white",
-                  "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                  "text-gray-800 hover:bg-gray-50",
                   "transition-colors cursor-pointer",
                   "focus-within:ring-2 focus-within:ring-blue-200",
                   isUploading && "opacity-50 cursor-not-allowed"
@@ -399,11 +399,11 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 disabled={isDisabled}
                 className={cn(
                   "flex items-center gap-1.5 h-10 px-4",
-                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] font-medium text-base",
-                  "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300",
+                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] font-medium text-base font-['Roboto'] leading-4",
+                  "transition-colors focus:outline-none focus:ring-2 focus:ring-sky-300",
                   isDisabled
-                    ? "bg-blue-300 text-white cursor-not-allowed border border-blue-300"
-                    : "bg-blue-600 hover:bg-blue-700 text-white border border-blue-600"
+                    ? "bg-sky-400 text-white cursor-not-allowed outline outline-1 outline-offset-[-1px] outline-sky-400"
+                    : "bg-sky-600 hover:bg-sky-700 text-white outline outline-1 outline-offset-[-1px] outline-sky-600"
                 )}
               >
                 {isSending ? (
@@ -422,150 +422,129 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           </div>
 
           {/* Form Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+          <div className="flex-1 overflow-y-auto px-4 flex flex-col justify-start items-start gap-4 md:p-4 md:bg-white">
             {/* Card A: From / To */}
-            <div className="px-4 py-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 space-y-3">
+            <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-3">
               {/* From Field */}
-              <div className="relative pt-2">
-                <label className="absolute -top-1 left-1 px-1 bg-white text-[10px] text-gray-500 font-medium z-10">
-                  From
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <input
-                    type="text"
-                    value={email || ""}
-                    disabled
-                    className={cn(
-                      "w-full pl-10 pr-4 py-2 text-xs",
-                      "rounded-lg border border-gray-200",
-                      "bg-gray-50 text-gray-500",
-                      "focus:outline-none"
-                    )}
-                    aria-label="From email address"
-                  />
+              <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                <div className="self-stretch relative flex flex-col justify-start items-start">
+                  <div className="self-stretch h-3.5"></div>
+                  <div className="self-stretch h-10 px-3 py-2 bg-gray-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                    <div className="flex-1 flex justify-start items-center gap-2">
+                      <Mail className="w-5 h-5 text-gray-400" />
+                      <div className="flex justify-start items-center gap-0.5">
+                        <span className="text-gray-400 text-sm font-normal font-['Roboto'] leading-4">{email || ""}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                    <span className="text-gray-400 text-[10px] font-normal font-['Roboto'] leading-4">From</span>
+                  </div>
                 </div>
               </div>
 
               {/* To Field */}
-              <div className="relative pb-2">
-                <label
-                  htmlFor="compose-to"
-                  className="absolute -top-2 left-1 px-1 bg-white text-[10px] text-gray-500 font-medium z-10"
-                >
-                  To
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <input
-                    id="compose-to"
-                    type="email"
-                    placeholder="recipient@example.com"
-                    value={to}
-                    onChange={(e) =>
-                      setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
-                    }
-                    className={cn(
-                      "w-full pl-10 pr-4 py-2 text-xs",
-                      "rounded-lg border border-gray-200 bg-white",
-                      "placeholder:text-gray-400",
-                      "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
-                      "transition-colors"
-                    )}
-                  />
+              <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                <div className="self-stretch relative flex flex-col justify-start items-start">
+                  <div className="self-stretch h-3.5"></div>
+                  <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                    <div className="flex-1 flex justify-start items-center gap-2">
+                      <Mail className="w-5 h-5 text-gray-400" />
+                      <input
+                        id="compose-to"
+                        type="email"
+                        placeholder="recipient@example.com"
+                        value={to}
+                        onChange={(e) =>
+                          setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
+                        }
+                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                      />
+                    </div>
+                  </div>
+                  <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">To</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Card B: Subject & Body */}
-            <div className="px-4 py-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex-1 flex flex-col min-h-[200px] md:min-h-[280px] space-y-3">
+            <div className="self-stretch flex-1 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-3">
               {/* Subject Field */}
-              <div className="relative pt-2">
-                <label
-                  htmlFor="compose-subject"
-                  className="absolute -top-2 left-3 px-1 bg-white text-[10px] text-gray-500 font-medium z-10"
-                >
-                  
-                </label>
-                <input
-                  id="compose-subject"
-                  type="text"
-                  placeholder="Enter subject"
-                  value={subject}
-                  onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                  className={cn(
-                    "w-full px-4 py-2 text-xs",
-                    "rounded-lg border border-gray-200 bg-white",
-                    "placeholder:text-gray-400",
-                    "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
-                    "transition-colors"
-                  )}
-                />
+              <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                  <div className="flex-1 flex justify-start items-center gap-2">
+                    <input
+                      id="compose-subject"
+                      type="text"
+                      placeholder="Enter subject"
+                      value={subject}
+                      onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
+                      className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Body Field */}
-              <div className="relative flex-1 flex flex-col pb-2">
-                <label
-                  htmlFor="compose-body"
-                  className="absolute -top-2 left-3 px-1 bg-white text-[10px] text-gray-500 font-medium z-10"
-                >
-                  
-                </label>
-                <textarea
-                  id="compose-body"
-                  placeholder="Compose your email..."
-                  value={message}
-                  onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                  className={cn(
-                    "flex-1 w-full px-4 py-3 text-xs",
-                    "rounded-lg border border-gray-200 bg-white",
-                    "placeholder:text-gray-400",
-                    "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
-                    "transition-colors resize-none",
-                    "min-h-[120px] md:min-h-[180px]"
-                  )}
-                />
+              <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2">
+                <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
+                  <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-start gap-3">
+                    <div className="flex-1 flex justify-start items-start gap-2">
+                      <textarea
+                        id="compose-body"
+                        placeholder="Compose your email..."
+                        value={message}
+                        onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                        className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400 resize-none min-h-[200px] md:min-h-[280px]"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Attachments List */}
             {attachments.length > 0 && (
-              <div className="self-stretch inline-flex justify-start items-start gap-2 flex-wrap">
-                {attachments.map((file, index) => (
-                  <div
-                    key={index}
-                    className="w-32 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3"
-                  >
-                    {/* Header: File type + Close button */}
-                    <div className="self-stretch inline-flex justify-between items-center">
-                      <div className="flex justify-start items-center gap-0.5">
-                        <FileText className="w-4 h-4 text-blue-600" />
-                        <span className="text-gray-800 text-xs font-normal leading-5">
-                          {getFileExtension(file.name)}
-                        </span>
+              <div className="self-stretch overflow-x-auto">
+                <div className="inline-flex justify-start items-start gap-2">
+                  {attachments.map((file, index) => (
+                    <div
+                      key={index}
+                      className="w-32 h-[88px] p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3 flex-shrink-0"
+                    >
+                      {/* Header: File type + Close button */}
+                      <div className="self-stretch inline-flex justify-between items-center">
+                        <div className="flex justify-start items-center gap-0.5">
+                          <FileText className="w-5 h-5 text-sky-600" />
+                          <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
+                            {getFileExtension(file.name)}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(index)}
+                          className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-red-600 transition-colors"
+                          aria-label={`Remove ${file.name}`}
+                        >
+                          <XMarkIcon className="w-4 h-4" />
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveAttachment(index)}
-                        className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-red-600 transition-colors"
-                        aria-label={`Remove ${file.name}`}
-                      >
-                        <XMarkIcon className="w-4 h-4" />
-                      </button>
+                      {/* Filename - truncated to 2 lines */}
+                      <div className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
+                        {file.name}
+                      </div>
                     </div>
-                    {/* Filename */}
-                    <div className="self-stretch text-gray-800 text-sm font-normal leading-5 truncate">
-                      {file.name}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
 
             {/* Limit Reached Warning */}
             {isLimitReached && (
-              <div className="px-4 py-3 bg-red-50 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200">
-                <p className="text-sm text-red-600 font-medium">
+              <div className="self-stretch px-4 py-3 bg-red-50 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200">
+                <p className="text-sm text-red-600 font-medium font-['Roboto']">
                   You have reached your daily send limit. Please try again tomorrow.
                 </p>
               </div>

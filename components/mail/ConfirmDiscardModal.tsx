@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { cn } from "@/lib/utils";
 import { AlertTriangle } from "lucide-react";
-import { XMarkIcon } from "@heroicons/react/24/outline"
 
 interface ConfirmDiscardModalProps {
   isOpen: boolean;
@@ -34,7 +32,7 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/50"
         onClick={onCancel}
         aria-hidden="true"
       />
@@ -45,76 +43,50 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
         aria-modal="true"
         aria-labelledby="discard-title"
         aria-describedby="discard-description"
-        className={cn(
-          "relative w-full max-w-sm",
-          "bg-white rounded-2xl border border-gray-200 shadow-lg",
-          "overflow-hidden"
-        )}
+        className="relative w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-red-50">
-              <AlertTriangle className="h-5 w-5 text-red-500" />
+        <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
+          {/* Icon and Text */}
+          <div className="self-stretch flex flex-col justify-start items-center gap-5">
+            {/* Warning Icon */}
+            <div className="w-12 h-12 p-2 bg-amber-50 rounded-3xl inline-flex justify-center items-center gap-2.5">
+              <AlertTriangle className="w-6 h-6 text-amber-500" />
             </div>
-            <h2
-              id="discard-title"
-              className="text-lg font-semibold text-gray-900"
-            >
-              Discard email?
-            </h2>
+
+            {/* Title and Description */}
+            <div className="self-stretch flex flex-col justify-start items-center gap-2">
+              <h2
+                id="discard-title"
+                className="self-stretch text-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7"
+              >
+                Discard email?
+              </h2>
+              <p
+                id="discard-description"
+                className="self-stretch text-center text-gray-500 text-sm font-normal font-['Roboto'] leading-5"
+              >
+                Are you sure you want to discard this email? Any unsaved changes will be lost.
+              </p>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={onCancel}
-            className={cn(
-              "flex items-center justify-center h-8 w-8",
-              "rounded-lg text-gray-400",
-              "hover:bg-gray-100 hover:text-gray-600",
-              "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
-            )}
-            aria-label="Close"
-          >
-            <XMarkIcon className="h-4 w-4" />
-          </button>
-        </div>
 
-        {/* Body */}
-        <div className="px-5 py-4">
-          <p id="discard-description" className="text-sm text-gray-600">
-            Are you sure you want to discard this email? Any unsaved changes
-            will be lost.
-          </p>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-gray-100 bg-gray-50">
-          <button
-            type="button"
-            onClick={onCancel}
-            className={cn(
-              "h-10 px-4",
-              "rounded-xl font-medium text-sm",
-              "border border-gray-200 bg-white text-gray-700",
-              "hover:bg-gray-50",
-              "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
-            )}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={onDiscard}
-            className={cn(
-              "h-10 px-4",
-              "rounded-xl font-medium text-sm",
-              "bg-red-600 text-white",
-              "hover:bg-red-700",
-              "transition-colors focus:outline-none focus:ring-2 focus:ring-red-300"
-            )}
-          >
-            Discard
-          </button>
+          {/* Action Buttons */}
+          <div className="self-stretch inline-flex justify-start items-center gap-3">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
+            </button>
+            <button
+              type="button"
+              onClick={onDiscard}
+              className="flex-1 h-10 px-4 py-2.5 bg-blue-500 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-500 flex justify-center items-center gap-2 overflow-hidden hover:bg-blue-600 transition-colors"
+            >
+              <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Discard</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

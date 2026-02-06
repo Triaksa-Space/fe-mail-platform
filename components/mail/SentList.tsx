@@ -24,6 +24,7 @@ interface SentListProps {
   fullWidth?: boolean;
   userEmail?: string;
   sentCount?: number;
+  isComposeOpen?: boolean;
 }
 
 const SentList: React.FC<SentListProps> = ({
@@ -40,6 +41,7 @@ const SentList: React.FC<SentListProps> = ({
   userEmail,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   sentCount = 0,
+  isComposeOpen = false,
 }) => {
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
@@ -168,8 +170,8 @@ const SentList: React.FC<SentListProps> = ({
         )}
       </div>
 
-      {/* Mobile Floating Compose Button */}
-      {onCompose && (
+      {/* Mobile Floating Compose Button - hidden when compose modal is open */}
+      {onCompose && !isComposeOpen && (
         <button
           onClick={onCompose}
           className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 bg-sky-600 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-sky-600 inline-flex justify-center items-center gap-1.5 hover:bg-sky-700 transition-colors"
