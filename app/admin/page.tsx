@@ -477,9 +477,9 @@ const EmailManagementPageContent: React.FC = () => {
 
                 {/* Change Password Dialog */}
                 <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
-                    <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
+                    <DialogContent className="p-4 w-auto max-w-none border-0 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
                         {/* Header */}
-                        <div className="self-stretch inline-flex justify-between items-center">
+                        <div className="w-[518px] inline-flex justify-between items-center">
                             <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">Change Password</div>
                             <button
                                 onClick={() => {
@@ -495,7 +495,7 @@ const EmailManagementPageContent: React.FC = () => {
                         </div>
 
                         {/* Form */}
-                        <div className="w-full flex flex-col justify-start items-start gap-4">
+                        <div className="w-[518px] flex flex-col justify-start items-start gap-4">
                             <div className="self-stretch flex flex-col justify-start items-center gap-3">
                                 {/* New Password Input */}
                                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
@@ -513,7 +513,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                         setPasswordForAdmin(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
                                                 />
                                             </div>
                                             <button
@@ -550,7 +550,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                         setConfirmPasswordForAdmin(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
                                                 />
                                             </div>
                                             <button
@@ -577,10 +577,10 @@ const EmailManagementPageContent: React.FC = () => {
                                 onClick={handleChangePasswordSubmit}
                                 disabled={!passwordForAdmin || !confirmPasswordForAdmin}
                                 className={cn(
-                                    "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
+                                    "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-center items-center gap-1.5 transition-colors",
                                     !passwordForAdmin || !confirmPasswordForAdmin
-                                        ? "bg-blue-400 cursor-not-allowed"
-                                        : "bg-blue-600 hover:bg-blue-700"
+                                        ? "bg-sky-400 outline-sky-400 cursor-not-allowed"
+                                        : "bg-sky-600 outline-sky-600 hover:bg-sky-700"
                                 )}
                             >
                                 <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Change password</div>

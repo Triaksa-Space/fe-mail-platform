@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, Suspense } from "react"
-import { Minus, Plus } from 'lucide-react'
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
@@ -13,6 +12,7 @@ import { useRouter } from "next/navigation"
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils"
 import { AdminLayout, AdminContentCard } from "@/components/admin"
+import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -282,7 +282,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   )}
                 >
-                  <Minus className="w-4 h-4" />
+                  <MinusIcon className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
@@ -295,7 +295,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       : "bg-sky-100 outline-blue-100 text-sky-600 hover:bg-sky-200"
                   )}
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -388,7 +388,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   )}
                 >
-                  <Minus className="w-4 h-4" />
+                  <MinusIcon className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
@@ -401,7 +401,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       : "bg-sky-100 outline-blue-100 text-sky-600 hover:bg-sky-200"
                   )}
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                 </button>
               </div>
 
@@ -442,7 +442,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     : "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
                 )}
               >
-                <Plus className="w-5 h-5" />
+                <CheckCircleIcon className="w-5 h-5" />
                 <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
               </button>
             </div>

@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, AdminContentCard } from "@/components/admin";
-import { Shuffle, Copy, Check, X, Plus } from "lucide-react";
+import { CheckCircleIcon, DocumentDuplicateIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -260,7 +260,6 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     )}
                     title="Generate random password"
                   >
-                    <Shuffle className="w-4 h-4" />
                   </button>
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
@@ -284,7 +283,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     : "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
                 )}
               >
-                <Plus className="w-5 h-5" />
+                <CheckCircleIcon className="w-5 h-5" />
                 <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
               </button>
             </div>
@@ -309,9 +308,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     className="w-5 h-5 flex items-center justify-center transition-colors"
                   >
                     {copiedField === 'email' ? (
-                      <Check className="w-3.5 h-3.5 text-green-600" />
+                      <CheckIcon className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5 text-sky-600" />
+                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-sky-600" />
                     )}
                   </button>
                 </div>
@@ -328,9 +327,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     className="w-5 h-5 flex items-center justify-center transition-colors"
                   >
                     {copiedField === 'password' ? (
-                      <Check className="w-3.5 h-3.5 text-green-600" />
+                      <CheckIcon className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5 text-sky-600" />
+                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-sky-600" />
                     )}
                   </button>
                 </div>
