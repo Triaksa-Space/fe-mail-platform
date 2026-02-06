@@ -2,11 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { searchFaqs, countFaqResults } from "@/lib/faqData";
 import { FaqSearch, FaqSection, FaqEmptyState } from "@/components/faq";
 import { Footer } from "@/components/layout";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 
 const FaqPage: React.FC = () => {
   const router = useRouter();

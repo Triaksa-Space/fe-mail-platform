@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { ArrowLeft, ChevronRight, Shield, User, Edit3, X, Check, Pencil } from 'lucide-react';
+import { Shield, Check } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";

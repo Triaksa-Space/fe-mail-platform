@@ -7,12 +7,8 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
-  RefreshCw,
-  Search,
-  ChevronRight,
   Inbox,
   Download,
-  ArrowLeft,
   Mail,
   FileText,
 } from "lucide-react";

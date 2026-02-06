@@ -16,10 +16,7 @@ import {
   transformSentEmail,
 } from "@/lib/transformers";
 import {
-  Users,
   Inbox,
-  Send,
-  RefreshCw,
 } from "lucide-react";
 import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 

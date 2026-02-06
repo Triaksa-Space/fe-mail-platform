@@ -5,12 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { apiClient } from "@/lib/api-client";
 import { Toaster } from "@/components/ui/toaster";
-import {
-  ChevronRight,
-  Users,
-  User,
-  ArrowLeft,
-} from "lucide-react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";

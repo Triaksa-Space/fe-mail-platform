@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, UserPlus, AlertTriangle, X, Lock, Eye, EyeOff } from 'lucide-react';
+import { ArrowUp, ArrowDown, UserPlus, AlertTriangle, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {

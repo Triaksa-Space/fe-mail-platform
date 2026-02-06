@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Footer } from "@/components/layout";
 import axios from "axios";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 
 interface PrivacyResponse {
   content: string;

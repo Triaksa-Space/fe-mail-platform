@@ -2,8 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Check, ChevronDown, X } from "lucide-react";
+import { Check, ChevronDown} from "lucide-react";
 import { AVAILABLE_PERMISSIONS, getPermissionLabel } from "@/lib/admin-types";
+import { XMarkIcon } from "@heroicons/react/24/outline"
 
 interface PermissionMultiSelectProps {
   value: string[];

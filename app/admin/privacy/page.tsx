@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { Loader2, Edit3, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -12,7 +12,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface PrivacyResponse {
   content: string;

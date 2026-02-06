@@ -1,6 +1,7 @@
 import React from 'react';
-import { Mail, Send, Settings } from 'lucide-react';
+import { Mail, Settings } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 const FooterNav = () => {
   const router = useRouter();

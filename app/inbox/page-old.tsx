@@ -10,7 +10,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
-import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ArrowPathIcon} from "@heroicons/react/24/outline"
 
