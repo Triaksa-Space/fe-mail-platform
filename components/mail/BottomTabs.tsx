@@ -2,8 +2,9 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Inbox, Send, Settings, LogOut } from "lucide-react";
+import { Inbox, Settings, LogOut } from "lucide-react";
 import { ViewType } from "./types";
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 interface BottomTabsProps {
   currentView: ViewType;

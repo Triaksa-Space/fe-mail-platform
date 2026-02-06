@@ -3,12 +3,13 @@
 import React, { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { RefreshCw, Send, PenSquare } from "lucide-react";
+import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { LazyList } from "@/components/VirtualList";
+import { ArrowPathIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 interface SentListProps {
   emails: SentMail[];
