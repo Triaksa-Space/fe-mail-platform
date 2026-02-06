@@ -34,10 +34,8 @@ ENV NEXT_PUBLIC_API_BASE_URL=https://staging-api.mailria.com
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files from builder
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Copy standalone output ONLY
+COPY --from=builder /app/.next/standalone ./
 # Copy static files
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy public folder
