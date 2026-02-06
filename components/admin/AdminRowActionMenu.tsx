@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
 interface AdminRowActionMenuProps {
   onEdit: () => void;
@@ -56,7 +56,7 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
         )}
         aria-label="Actions"
       >
-        <MoreHorizontal className="h-4 w-4" />
+        <EllipsisHorizontalIcon className="h-4 w-4" />
       </button>
 
       {/* Dropdown Menu */}
@@ -77,7 +77,7 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
                 "text-gray-700 hover:bg-gray-50 transition-colors"
               )}
             >
-              <Pencil className="h-4 w-4 text-gray-500" />
+              <PencilSquareIcon className="h-4 w-4 text-gray-500" />
               <span>Edit</span>
             </button>
 
@@ -92,7 +92,7 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
                 "text-red-600 hover:bg-red-50 transition-colors"
               )}
             >
-              <Trash2 className="h-4 w-4" />
+              <TrashIcon className="h-4 w-4" />
               <span>Delete</span>
             </button>
           </div>

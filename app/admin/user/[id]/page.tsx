@@ -6,9 +6,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { apiClient } from "@/lib/api-client";
 import { Toaster } from "@/components/ui/toaster";
 import {
-  RefreshCw,
-  Inbox,
-  Send,
   ChevronRight,
   Users,
   User,
@@ -18,6 +15,7 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
+import { InboxIcon, ArrowPathIcon, PaperAirplaneIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -267,23 +265,23 @@ export default function UserDetailPage() {
               onClick={() => router.back()}
               className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
             >
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
+              <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
             </button>
-            <ChevronRight className="w-5 h-5 text-gray-300" />
+            <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
             {/* User list */}
             <button
               onClick={() => router.push("/admin")}
               className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
             >
-              <Users className="w-5 h-5 text-gray-600" />
+              <UserGroupIcon className="w-5 h-5 text-gray-600" />
               <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
             </button>
-            <ChevronRight className="w-5 h-5 text-gray-300" />
+            <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
             {/* Current user email */}
             <div className="flex justify-center items-center gap-1">
-              <User className="w-5 h-5 text-sky-600" />
+              <UserIcon className="w-5 h-5 text-sky-600" />
               <div className="justify-center text-sky-600 text-sm font-normal font-['Roboto'] leading-4">
                 {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
               </div>
@@ -299,7 +297,7 @@ export default function UserDetailPage() {
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
-            <RefreshCw className={cn("w-5 h-5 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
+            <ArrowPathIcon className={cn("w-5 h-5 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
           </button>
         </div>
 
@@ -314,13 +312,13 @@ export default function UserDetailPage() {
               {isLoadingInbox ? (
                 <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
               ) : inboxEmails.length === 0 ? (
                 <div className="self-stretch flex flex-col items-center justify-center py-8">
-                  <Inbox className="h-8 w-8 text-gray-300 mb-2" />
+                  <InboxIcon className="h-8 w-8 text-gray-300 mb-2" />
                   <p className="text-sm text-gray-500 text-center">No inbox emails</p>
                 </div>
               ) : (
@@ -356,13 +354,13 @@ export default function UserDetailPage() {
               {isLoadingSent ? (
                 <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
               ) : sentEmails.length === 0 ? (
                 <div className="self-stretch flex flex-col items-center justify-center py-8">
-                  <Send className="h-8 w-8 text-gray-300 mb-2" />
+                  <PaperAirplaneIcon className="h-8 w-8 text-gray-300 mb-2" />
                   <p className="text-sm text-gray-500 text-center">No sent emails</p>
                 </div>
               ) : (

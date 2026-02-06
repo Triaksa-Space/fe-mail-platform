@@ -6,23 +6,36 @@ import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuthStore, PermissionKey } from "@/stores/useAuthStore";
 import {
-  LayoutDashboard,
-  Users,
-  UserPlus,
-  UsersRound,
-  Inbox,
-  Send,
-  FileText,
-  Shield,
-  Settings,
-  LogOut,
-  Lock,
-} from "lucide-react";
+  UserGroupIcon as UserGroupOutlineIcon,
+  FolderPlusIcon as FolderPlusOutlineIcon,
+  PaperAirplaneIcon as PaperAirplaneOutlineIcon,
+  RectangleGroupIcon as RectangleGroupOutlineIcon,
+  DocumentPlusIcon as DocumentPlusOutlineIcon,
+  InboxArrowDownIcon as InboxArrowDownOutlineIcon,
+  DocumentCheckIcon as DocumentCheckOutlineIcon,
+  DocumentTextIcon as DocumentTextOutlineIcon,
+  KeyIcon as KeyOutlineIcon,
+  Cog6ToothIcon as Cog6ToothOutlineIcon,
+  ArrowRightStartOnRectangleIcon,
+} from "@heroicons/react/24/outline";
+import {
+  UserGroupIcon as UserGroupSolidIcon,
+  FolderPlusIcon as FolderPlusSolidIcon,
+  PaperAirplaneIcon as PaperAirplaneSolidIcon,
+  RectangleGroupIcon as RectangleGroupSolidIcon,
+  DocumentPlusIcon as DocumentPlusSolidIcon,
+  InboxArrowDownIcon as InboxArrowDownSolidIcon,
+  DocumentCheckIcon as DocumentCheckSolidIcon,
+  DocumentTextIcon as DocumentTextSolidIcon,
+  KeyIcon as KeySolidIcon,
+  Cog6ToothIcon as Cog6ToothSolidIcon,
+} from "@heroicons/react/20/solid";
 
 interface MenuItem {
   id: string;
   label: string;
-  icon: React.ElementType;
+  iconOutline: React.ElementType;
+  iconSolid: React.ElementType;
   href: string;
   permission?: PermissionKey; // Required permission to see this menu item
   superAdminOnly?: boolean;   // Only SuperAdmin can see (e.g., roles_permissions)
@@ -41,7 +54,8 @@ const menuGroups: MenuGroup[] = [
       {
         id: "overview",
         label: "Overview",
-        icon: LayoutDashboard,
+        iconOutline: RectangleGroupOutlineIcon,
+        iconSolid: RectangleGroupSolidIcon,
         href: "/admin/overview",
         permission: "overview",
       },
@@ -53,21 +67,24 @@ const menuGroups: MenuGroup[] = [
       {
         id: "users",
         label: "User list",
-        icon: Users,
+        iconOutline: UserGroupOutlineIcon,
+        iconSolid: UserGroupSolidIcon,
         href: "/admin",
         permission: "user_list",
       },
       {
         id: "create-single",
         label: "Create single",
-        icon: UserPlus,
+        iconOutline: DocumentPlusOutlineIcon,
+        iconSolid: DocumentPlusSolidIcon,
         href: "/admin/create-single-email",
         permission: "create_single",
       },
       {
         id: "create-bulk",
         label: "Create bulk",
-        icon: UsersRound,
+        iconOutline: FolderPlusOutlineIcon,
+        iconSolid: FolderPlusSolidIcon,
         href: "/admin/create-bulk-email",
         permission: "create_bulk",
       },
@@ -79,14 +96,16 @@ const menuGroups: MenuGroup[] = [
       {
         id: "all-inbox",
         label: "All inbox",
-        icon: Inbox,
+        iconOutline: InboxArrowDownOutlineIcon,
+        iconSolid: InboxArrowDownSolidIcon,
         href: "/admin/manage-email",
         permission: "all_inbox",
       },
       {
         id: "all-sent",
         label: "All sent",
-        icon: Send,
+        iconOutline: PaperAirplaneOutlineIcon,
+        iconSolid: PaperAirplaneSolidIcon,
         href: "/admin/all-sent",
         permission: "all_sent",
       },
@@ -98,14 +117,16 @@ const menuGroups: MenuGroup[] = [
       {
         id: "terms",
         label: "Terms of services",
-        icon: FileText,
+        iconOutline: DocumentCheckOutlineIcon,
+        iconSolid: DocumentCheckSolidIcon,
         href: "/admin/terms",
         permission: "terms_of_services",
       },
       {
         id: "privacy",
         label: "Privacy policy",
-        icon: Shield,
+        iconOutline: DocumentTextOutlineIcon,
+        iconSolid: DocumentTextSolidIcon,
         href: "/admin/privacy",
         permission: "privacy_policy",
       },
@@ -117,7 +138,8 @@ const menuGroups: MenuGroup[] = [
       {
         id: "roles",
         label: "Roles & permissions",
-        icon: Lock,
+        iconOutline: KeyOutlineIcon,
+        iconSolid: KeySolidIcon,
         href: "/admin/roles",
         permission: "roles_permissions",
         superAdminOnly: true, // Only SuperAdmin can access
@@ -161,6 +183,11 @@ const AdminSidebar: React.FC = () => {
     logout();
     router.push("/");
   };
+
+  const isSettingsActive = pathname.startsWith("/admin/settings");
+  const SettingsIcon = isSettingsActive
+    ? Cog6ToothSolidIcon
+    : Cog6ToothOutlineIcon;
 
   // Filter menu groups based on permissions
   // If not hydrated yet or roleId is null, show all menus for SuperAdmin/Admin
@@ -227,7 +254,7 @@ const AdminSidebar: React.FC = () => {
               {/* Group Items */}
               {group.items.map((item) => {
                 const active = isActive(item.href);
-                const Icon = item.icon;
+                const Icon = active ? item.iconSolid : item.iconOutline;
                 return (
                   <button
                     key={item.id}
@@ -269,22 +296,20 @@ const AdminSidebar: React.FC = () => {
             onClick={() => router.push("/admin/settings")}
             className={cn(
               "self-stretch px-3 py-1 inline-flex justify-between items-center",
-              pathname.startsWith("/admin/settings") && "bg-sky-100 rounded-xl"
+              isSettingsActive && "bg-sky-100 rounded-xl"
             )}
           >
             <div className="flex-1 flex justify-start items-center gap-5">
-              <Settings
+              <SettingsIcon
                 className={cn(
                   "w-5 h-5",
-                  pathname.startsWith("/admin/settings")
-                    ? "text-sky-600"
-                    : "text-gray-600"
+                  isSettingsActive ? "text-sky-600" : "text-gray-600"
                 )}
               />
               <div
                 className={cn(
                   "justify-center text-sm font-['Roboto'] leading-5",
-                  pathname.startsWith("/admin/settings")
+                  isSettingsActive
                     ? "text-sky-600 font-semibold"
                     : "text-gray-600 font-normal"
                 )}
@@ -300,7 +325,7 @@ const AdminSidebar: React.FC = () => {
             className="self-stretch px-3 py-1 inline-flex justify-between items-center"
           >
             <div className="flex-1 flex justify-start items-center gap-5">
-              <LogOut className="w-5 h-5 text-gray-600" />
+              <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-gray-600" />
               <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-5">
                 Log out
               </div>

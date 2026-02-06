@@ -11,15 +11,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { CARD_STYLES } from "@/lib/styles";
 import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
-  ArrowLeft,
-  ChevronRight,
   RefreshCw,
   Inbox,
   Mail,
-  User,
-  Users,
   FileText,
 } from "lucide-react";
+import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface InboxEmailDetail {
@@ -115,32 +112,32 @@ export default function AdminInboxDetailPage() {
               onClick={() => router.back()}
               className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
             >
-              <ArrowLeft className="w-6 h-6 text-gray-600" />
+              <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
             </button>
-            <ChevronRight className="h-5 w-5 text-gray-300" />
+            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
             
             {/* User list */}
             <button
               onClick={() => router.push("/admin")}
               className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
             >
-              <Users className="w-5 h-5 text-gray-600" />
+              <UserGroupIcon className="w-5 h-5 text-gray-600" />
               <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
             </button>
-            <ChevronRight className="w-5 h-5 text-gray-300" />
+            <ChevronRightIcon className="w-5 h-5 text-gray-300" />
             
             <div className="flex justify-center items-center gap-1">
-              <User className="w-5 h-5 text-gray-600" />
+              <UserIcon className="w-5 h-5 text-gray-600" />
               <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">
                 {userEmail}
               </div>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-300" />
+            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
             <div className="flex items-center gap-1 text-sm text-gray-600">
               <Inbox className="h-5 w-5" />
               <span>Inbox</span>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-300" />
+            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
             <div className="flex items-center gap-1 text-sm text-sky-600">
               <Mail className="h-5 w-5" />
               <span className="line-clamp-1">

@@ -66,7 +66,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               onClick={onBack}
               className="h-9 w-9 rounded-xl hover:bg-gray-100"
             >
-              <ChevronLeft className="h-5 w-5 text-gray-600" />
+              <ChevronLeftIcon className="h-5 w-5 text-gray-600" />
             </Button>
           )}
           <h2 className="text-lg font-semibold text-gray-900">Settings</h2>

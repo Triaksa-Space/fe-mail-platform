@@ -29,7 +29,7 @@ const FooterNav = () => {
           className={buttonClass(pathname === '/inbox/send')}
           onClick={() => router.push('/inbox/send')}
         >
-          <Send className="h-6 w-6" />
+          <PaperAirplaneIcon className="h-6 w-6" />
           <span className="text-xs mt-1">SEND</span>
         </button>
         <button

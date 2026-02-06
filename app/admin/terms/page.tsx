@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { Loader2, Edit3, X } from "lucide-react";
+import { Loader2, Edit3, X, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +12,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 interface TermsResponse {
   content: string;
@@ -203,7 +204,7 @@ const AdminTermsPageContent: React.FC = () => {
               onClick={handleEdit}
               className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
             >
-              <Edit3 className="w-5 h-5 text-gray-800" />
+              <PencilSquareIcon className="w-5 h-5 text-gray-800" />
               <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Edit</span>
             </button>
           )}

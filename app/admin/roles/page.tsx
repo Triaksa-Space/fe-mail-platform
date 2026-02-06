@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, ArrowUpDown, UserPlus, AlertTriangle, X, Lock, Eye, EyeOff, Edit3, Trash2 } from 'lucide-react';
+import { ArrowUp, ArrowDown, UserPlus, AlertTriangle, X, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -27,6 +27,7 @@ import {
     PermissionKey,
     formatDate,
 } from "@/lib/admin-types";
+import { ChevronUpDownIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
@@ -243,7 +244,7 @@ const RolesPermissionsPageContent: React.FC = () => {
         } else if (sortField === field && sortOrder === 'desc') {
             return <ArrowDown className="ml-1 h-4 w-4" />;
         }
-        return <ArrowUpDown className="ml-1 h-4 w-4 text-gray-400" />;
+        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-gray-400" />;
     };
 
     const handleEditClick = (admin: AdminUser) => {
@@ -425,7 +426,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 </div>
                                 <div className="flex-1 px-4 py-3 flex items-center gap-1">
                                     <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
-                                    <ArrowUpDown className="w-5 h-5 text-gray-500" />
+                                    <ChevronUpDownIcon className="w-5 h-5 text-gray-500" />
                                 </div>
                                 <div className="w-40 px-4 py-3">
                                     <button
@@ -490,13 +491,13 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                 onClick={() => handleEditClick(admin)}
                                                 className="w-8 h-8 bg-white rounded-md shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors"
                                             >
-                                                <Edit3 className="w-4 h-4 text-gray-600" />
+                                                <PencilSquareIcon className="w-4 h-4 text-gray-600" />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteClick(admin)}
                                                 className="w-8 h-8 bg-white rounded-md shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center hover:bg-red-50 transition-colors"
                                             >
-                                                <Trash2 className="w-4 h-4 text-red-500" />
+                                                <TrashIcon className="w-4 h-4 text-red-500" />
                                             </button>
                                         </div>
                                     </div>

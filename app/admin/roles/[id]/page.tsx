@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { ArrowLeft, ChevronRight, Shield, User, Edit3, Trash2, AlertTriangle, X } from 'lucide-react';
+import { Shield, AlertTriangle, X } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -18,6 +18,7 @@ import {
     PermissionChips
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse } from "@/lib/admin-types";
+import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const ViewAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -164,9 +165,9 @@ const ViewAdminPageContent: React.FC = () => {
                         onClick={() => router.push("/admin/roles")}
                         className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-gray-100 transition-colors"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeftIcon className="w-5 h-5 text-gray-600" />
                     </button>
-                    <ChevronRight className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
                     {/* Roles & permissions link */}
                     <button
@@ -176,11 +177,11 @@ const ViewAdminPageContent: React.FC = () => {
                         <Shield className="w-5 h-5 text-gray-600" />
                         <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </button>
-                    <ChevronRight className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
                     {/* Current admin */}
                     <div className="flex justify-center items-center gap-1">
-                        <User className="w-5 h-5 text-sky-600" />
+                        <UserIcon className="w-5 h-5 text-sky-600" />
                         <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
                     </div>
                 </div>
@@ -196,7 +197,7 @@ const ViewAdminPageContent: React.FC = () => {
                             onClick={handleEditClick}
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
                         >
-                            <Edit3 className="w-5 h-5 text-gray-800" />
+                            <PencilSquareIcon className="w-5 h-5 text-gray-800" />
                             <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Edit</span>
                         </button>
 
@@ -205,7 +206,7 @@ const ViewAdminPageContent: React.FC = () => {
                             onClick={() => setIsDeleteModalOpen(true)}
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-red-50 transition-colors"
                         >
-                            <Trash2 className="w-5 h-5 text-red-500" />
+                            <TrashIcon className="w-5 h-5 text-red-500" />
                             <span className="text-center text-red-500 text-base font-medium font-['Roboto'] leading-4">Delete</span>
                         </button>
                     </div>

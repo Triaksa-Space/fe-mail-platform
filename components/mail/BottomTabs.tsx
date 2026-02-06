@@ -62,7 +62,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
               : "text-gray-600 hover:text-gray-700"
           )}
         >
-          <Send className="w-5 h-5" />
+          <PaperAirplaneIcon className="w-5 h-5" />
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "sent" ? "font-semibold" : "font-normal"

@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, ArrowUpDown, Search, AlertTriangle, X, Lock, Eye, EyeOff } from 'lucide-react';
+import { ArrowUp, ArrowDown, Search, AlertTriangle, X, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/toaster";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, UserRowActionMenu } from "@/components/admin";
+import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 interface EmailUser {
     user_encode_id: string;
@@ -327,7 +328,7 @@ const EmailManagementPageContent: React.FC = () => {
         } else if (sortField === field && sortOrder === 'desc') {
             return <ArrowDown className="ml-1 h-4 w-4" />;
         }
-        return <ArrowUpDown className="ml-1 h-4 w-4 text-gray-400" />;
+        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-gray-400" />;
     };
 
     return (
@@ -341,10 +342,9 @@ const EmailManagementPageContent: React.FC = () => {
                     <div className="w-64 h-10 inline-flex flex-col justify-between items-start">
                         <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-between items-center">
                             <div className="flex justify-start items-center gap-2 flex-1">
-                                <Search className="w-4 h-4 text-gray-400" />
                                 <input
                                     id="by_username"
-                                    placeholder="Search by username..."
+                                    placeholder="Search user..."
                                     className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400"
                                     value={searchTerm}
                                     onChange={(e) => {
@@ -353,6 +353,7 @@ const EmailManagementPageContent: React.FC = () => {
                                         handleSearch(sanitizedValue);
                                     }}
                                 />
+                                <MagnifyingGlassIcon className="w-4 h-4 text-gray-800" />
                             </div>
                         </div>
                     </div>
@@ -379,7 +380,7 @@ const EmailManagementPageContent: React.FC = () => {
                             <div className="flex w-full bg-white border-b border-gray-200">
                                 <div className="w-80 px-4 py-3 flex items-center gap-1">
                                     <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
-                                    <ArrowUpDown className="w-5 h-5 text-gray-500" />
+                                    <ChevronUpDownIcon className="w-5 h-5 text-gray-500" />
                                 </div>
                                 <div className="flex-1 px-4 py-3">
                                     <button
@@ -401,7 +402,7 @@ const EmailManagementPageContent: React.FC = () => {
                                 </div>
                                 <div className="flex-1 px-4 py-3 flex items-center gap-1">
                                     <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
-                                    <ArrowUpDown className="w-5 h-5 text-gray-500" />
+                                    <ChevronUpDownIcon className="w-5 h-5 text-gray-500" />
                                 </div>
                                 <div className="w-20 px-4 py-3 flex justify-center items-center">
                                     <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>

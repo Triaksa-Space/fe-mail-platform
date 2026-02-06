@@ -3,6 +3,7 @@
 import React from "react";
 import { Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 interface FaqSearchProps {
   value: string;
@@ -49,7 +50,7 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
               <X className="h-4 w-4" />
             </button>
           )}
-          <Search className="h-5 w-5 text-gray-400" />
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
         </div>
       </div>
 

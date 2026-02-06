@@ -21,6 +21,7 @@ import {
   Send,
   RefreshCw,
 } from "lucide-react";
+import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -245,7 +246,7 @@ function LatestListCard({
               {type === "inbox" ? (
                 <Inbox className="h-5 w-5 text-gray-400" />
               ) : (
-                <Send className="h-5 w-5 text-gray-400" />
+                <PaperAirplaneIcon className="h-5 w-5 text-gray-400" />
               )}
             </div>
             <p className="text-sm font-medium text-gray-900 mb-1">
@@ -381,13 +382,13 @@ export default function OverviewPage() {
         {/* KPI Cards Row 1 */}
         <div className="self-stretch inline-flex justify-start items-start gap-5">
           <KPICard
-            icon={Users}
+            icon={UserGroupIcon}
             label="Total @mailria.com user"
             value={data?.stats?.totalUsersMailria ?? 0}
             isLoading={isLoading}
           />
           <KPICard
-            icon={Users}
+            icon={UserGroupIcon}
             label="Total @mailsaja.com user"
             value={data?.stats?.totalUsersMailsaja ?? 0}
             isLoading={isLoading}
@@ -397,13 +398,13 @@ export default function OverviewPage() {
         {/* KPI Cards Row 2 */}
         <div className="self-stretch inline-flex justify-start items-start gap-5">
           <KPICard
-            icon={Inbox}
+            icon={EnvelopeIcon}
             label="Total inbox"
             value={data?.stats?.totalInbox ?? 0}
             isLoading={isLoading}
           />
           <KPICard
-            icon={Send}
+            icon={PaperAirplaneIcon}
             label="Total email send"
             value={data?.stats?.totalSent ?? 0}
             isLoading={isLoading}

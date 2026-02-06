@@ -85,7 +85,7 @@ const TermsPage: React.FC = () => {
             )}
             aria-label="Go back"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeftIcon className="h-5 w-5" />
           </button>
         </div>
 

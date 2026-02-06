@@ -3,13 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  ChevronLeft,
   Download,
   Mail,
-  User,
   Clock,
   Paperclip,
-  RefreshCw,
   FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +19,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
+import { ArrowPathIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 interface EmailDetail {
   ID: number;
@@ -187,7 +185,7 @@ const EmailDetailPage: React.FC = () => {
   if (!authLoaded || roleId === 1) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+        <ArrowPathIcon className="h-6 w-6 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -205,7 +203,7 @@ const EmailDetailPage: React.FC = () => {
               onClick={() => router.back()}
               className="h-10 w-10 rounded-xl border-gray-200"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeftIcon className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
@@ -227,7 +225,7 @@ const EmailDetailPage: React.FC = () => {
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-2 text-gray-500">
-              <RefreshCw className="h-5 w-5 animate-spin" />
+              <ArrowPathIcon className="h-5 w-5 animate-spin" />
               <span>Loading email...</span>
             </div>
           </div>
@@ -273,7 +271,7 @@ const EmailDetailPage: React.FC = () => {
                 {/* To (if available) */}
                 {email.Recipient && (
                   <div className="flex items-center gap-2 text-sm text-gray-600 pl-14">
-                    <User className="h-4 w-4 text-gray-400" />
+                    <UserIcon className="h-4 w-4 text-gray-400" />
                     <span className="font-medium">To:</span>
                     <span>{email.Recipient}</span>
                   </div>
@@ -354,7 +352,7 @@ const EmailDetailPage: React.FC = () => {
                             className="h-9 w-9 p-0 rounded-lg flex-shrink-0"
                           >
                             {isDownloadingThis ? (
-                              <RefreshCw className="h-4 w-4 animate-spin text-gray-600" />
+                              <ArrowPathIcon className="h-4 w-4 animate-spin text-gray-600" />
                             ) : (
                               <Download className="h-4 w-4 text-gray-600" />
                             )}

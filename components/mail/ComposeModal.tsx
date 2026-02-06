@@ -412,7 +412,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   </>
                 ) : (
                   <>
-                    <Send className="h-5 w-5" />
+                    <PaperAirplaneIcon className="h-5 w-5" />
                     <span>Send</span>
                   </>
                 )}

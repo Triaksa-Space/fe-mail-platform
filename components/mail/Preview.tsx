@@ -230,7 +230,7 @@ const Preview: React.FC<PreviewProps> = ({
                   onClick={onBack}
                   className="w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors"
                 >
-                  <ChevronLeft className="w-6 h-6 text-gray-800" />
+                  <ChevronLeftIcon className="w-6 h-6 text-gray-800" />
                 </button>
               )}
               {!showBackButton && <div />}

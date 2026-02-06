@@ -140,7 +140,7 @@ const SentList: React.FC<SentListProps> = ({
           <div className="flex-1 py-12 flex items-start justify-center">
             <div className="w-full bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 px-3 py-12 flex flex-col justify-center items-center gap-3">
               <div className="w-10 h-10 flex items-center justify-center">
-                <Send className="w-9 h-9 text-gray-300" />
+                <PaperAirplaneIcon className="w-9 h-9 text-gray-300" />
               </div>
               <div className="flex flex-col justify-start items-center gap-1">
                 <p className="text-base font-medium text-gray-800">No Sent Email Yet</p>

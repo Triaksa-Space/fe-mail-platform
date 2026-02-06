@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { ArrowLeft, ChevronRight, Shield, User, Edit3, X, Check } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Shield, User, Edit3, X, Check, Pencil } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +16,7 @@ import {
     PermissionMultiSelect
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
+import { PencilSquareIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const EditAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -204,9 +205,9 @@ const EditAdminPageContent: React.FC = () => {
                         onClick={() => router.push(`/admin/roles/${adminId}`)}
                         className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-gray-100 transition-colors"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeftIcon className="w-5 h-5 text-gray-600" />
                     </button>
-                    <ChevronRight className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
                     {/* Roles & permissions link */}
                     <button
@@ -216,21 +217,21 @@ const EditAdminPageContent: React.FC = () => {
                         <Shield className="w-5 h-5 text-gray-600" />
                         <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </button>
-                    <ChevronRight className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
                     {/* Admin username link */}
                     <button
                         onClick={() => router.push(`/admin/roles/${adminId}`)}
                         className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
                     >
-                        <User className="w-5 h-5 text-gray-600" />
+                        <UserIcon className="w-5 h-5 text-gray-600" />
                         <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
                     </button>
-                    <ChevronRight className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
 
                     {/* Current page - Edit */}
                     <div className="flex justify-center items-center gap-1">
-                        <Edit3 className="w-5 h-5 text-sky-600" />
+                        <PencilSquareIcon className="w-5 h-5 text-sky-600" />
                         <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
                     </div>
                 </div>

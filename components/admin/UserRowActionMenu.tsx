@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
 interface UserRowActionMenuProps {
   onView: () => void;
@@ -49,7 +49,7 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
         )}
         aria-label="Actions"
       >
-        <MoreHorizontal className="h-4 w-4" />
+        <EllipsisHorizontalIcon className="h-4 w-4" />
       </button>
 
       {/* Dropdown Menu */}
@@ -67,7 +67,7 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
             onClick={() => handleAction(onChangePassword)}
             className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors"
           >
-            <Pencil className="w-5 h-5 text-gray-800" />
+            <PencilSquareIcon className="w-5 h-5 text-gray-800" />
             <div className="text-gray-800 text-base font-normal font-['Roboto'] leading-4 whitespace-nowrap">Change password</div>
           </button>
 
@@ -76,7 +76,7 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
             onClick={() => handleAction(onDelete)}
             className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-red-50 transition-colors"
           >
-            <Trash2 className="w-5 h-5 text-red-600" />
+            <TrashIcon className="w-5 h-5 text-red-600" />
             <div className="text-red-600 text-base font-normal font-['Roboto'] leading-4">Delete</div>
           </button>
         </div>
