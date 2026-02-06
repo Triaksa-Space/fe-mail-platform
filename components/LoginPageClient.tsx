@@ -229,7 +229,7 @@ export default function LoginPageClient() {
                   />
                   <Link
                     href="/forgot-password"
-                    className="text-sm font-normal text-sky-600 hover:text-sky-700 hover:underline transition-colors"
+                    className="text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                   >
                     Forgot password?
                   </Link>
@@ -253,7 +253,7 @@ export default function LoginPageClient() {
               <p className="text-xs font-normal text-center">
                 <span className="text-gray-800">Support by: </span>
                 <a
-                  className="text-sky-600 font-semibold underline"
+                  className="text-blue-600 font-semibold underline"
                   href="https://gamemarket.gg"
                   target="_blank"
                   rel="noopener noreferrer"

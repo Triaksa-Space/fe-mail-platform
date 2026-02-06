@@ -5,13 +5,13 @@
 // Card styles
 export const CARD_STYLES = {
   base: "bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200",
-  interactive: "bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 hover:bg-sky-100 transition-colors",
-  selected: "bg-sky-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200",
+  interactive: "bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 hover:bg-blue-100 transition-colors",
+  selected: "bg-blue-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200",
 } as const;
 
 // Button styles
 export const BUTTON_STYLES = {
-  primary: "h-10 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-sky-600 text-white text-base font-medium font-['Roboto'] leading-4",
+  primary: "h-10 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-600 text-white text-base font-medium font-['Roboto'] leading-4",
   secondary: "h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 hover:bg-gray-50 text-gray-700 text-base font-medium font-['Roboto'] leading-4",
   danger: "h-10 px-4 py-2.5 bg-red-600 hover:bg-red-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-600 text-white text-base font-medium font-['Roboto'] leading-4",
   icon: "w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors",
@@ -41,7 +41,7 @@ export const BADGE_STYLES = {
   success: "bg-green-100 text-green-700",
   warning: "bg-yellow-100 text-yellow-700",
   error: "bg-red-100 text-red-700",
-  info: "bg-sky-100 text-sky-700",
+  info: "bg-blue-100 text-blue-700",
   neutral: "bg-gray-100 text-gray-700",
 } as const;
 

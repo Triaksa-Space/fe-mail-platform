@@ -307,7 +307,7 @@ export default function ForgotPasswordClient() {
     <>
       <div className="min-h-screen bg-gray-50 flex flex-col justify-between items-center p-4 overflow-hidden relative">
         {/* Background glow */}
-        <div className="absolute w-[5000px] h-[5000px] -left-[2305px] top-[788px] bg-sky-100 rounded-full blur-[32px]" />
+        <div className="absolute w-[5000px] h-[5000px] -left-[2305px] top-[788px] bg-blue-100 rounded-full blur-[32px]" />
 
         {/* Main content */}
         <div className="flex-1 flex items-center justify-center w-full max-w-sm z-10">
@@ -418,7 +418,7 @@ export default function ForgotPasswordClient() {
 
                     <Link
                       href="/"
-                      className="h-9 flex items-center justify-center text-sky-600 text-base font-medium hover:text-sky-700"
+                      className="h-9 flex items-center justify-center text-blue-600 text-base font-medium hover:text-blue-700"
                     >
                       Back to login
                     </Link>
@@ -429,7 +429,7 @@ export default function ForgotPasswordClient() {
                 <p className="text-xs font-normal text-center">
                   <span className="text-gray-800">Support by: </span>
                   <a
-                    className="text-sky-600 font-semibold underline"
+                    className="text-blue-600 font-semibold underline"
                     href="https://gamemarket.gg"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -519,7 +519,7 @@ export default function ForgotPasswordClient() {
                       type="button"
                       onClick={handleResendCode}
                       disabled={isLoading}
-                      className="h-9 flex items-center justify-center text-sky-600 text-base font-medium hover:text-sky-700"
+                      className="h-9 flex items-center justify-center text-blue-600 text-base font-medium hover:text-blue-700"
                     >
                       Resend Code
                     </button>

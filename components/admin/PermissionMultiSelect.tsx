@@ -75,7 +75,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
           disabled
             ? "bg-gray-100 border-gray-200 cursor-not-allowed"
             : isOpen
-            ? "border-sky-500 ring-2 ring-sky-100"
+            ? "border-blue-500 ring-2 ring-blue-100"
             : error
             ? "border-red-500"
             : "border-gray-200 hover:border-gray-300"
@@ -94,7 +94,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
               className={cn(
                 "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5",
                 "text-xs font-medium",
-                "bg-sky-100 text-sky-600"
+                "bg-blue-100 text-blue-600"
               )}
             >
               {getPermissionLabel(permissionId)}
@@ -102,7 +102,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 <button
                   type="button"
                   onClick={(e) => removePermission(permissionId, e)}
-                  className="hover:bg-sky-200 rounded-full p-0.5 transition-colors"
+                  className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
                 >
                   <XMarkIcon className="h-3 w-3" />
                 </button>
@@ -138,14 +138,14 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 className={cn(
                   "flex w-full items-center gap-3 px-3 py-2 text-sm",
                   "hover:bg-gray-50 transition-colors text-left",
-                  isSelected && "bg-sky-50"
+                  isSelected && "bg-blue-50"
                 )}
               >
                 <div
                   className={cn(
                     "flex h-4 w-4 items-center justify-center rounded border shrink-0",
                     isSelected
-                      ? "bg-sky-600 border-sky-600"
+                      ? "bg-blue-600 border-blue-600"
                       : "border-gray-300"
                   )}
                 >
@@ -154,7 +154,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 <span
                   className={cn(
                     "flex-1",
-                    isSelected ? "text-sky-700 font-medium" : "text-gray-700"
+                    isSelected ? "text-blue-700 font-medium" : "text-gray-700"
                   )}
                 >
                   {permission.label}

@@ -28,7 +28,7 @@ const FaqPage: React.FC = () => {
   return (
     <div className="min-h-screen p-8 relative bg-gray-50 inline-flex flex-col justify-start items-center gap-10 overflow-hidden">
       {/* Background decorative blur */}
-      <div className="w-[5000px] h-[5000px] left-[-1780px] top-[2808px] absolute bg-sky-100 rounded-full blur-[32px]" />
+      <div className="w-[5000px] h-[5000px] left-[-1780px] top-[2808px] absolute bg-blue-100 rounded-full blur-[32px]" />
 
       {/* Main Content */}
       <div className="self-stretch flex flex-col justify-start items-start gap-8 relative z-10">

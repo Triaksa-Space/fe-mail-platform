@@ -81,7 +81,7 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
         textClass += " text-green-500";
         displayText = "Online";
     } else if (diffMins < 60) {
-        badgeClass += " bg-sky-100";
+        badgeClass += " bg-blue-100";
         textClass += " text-gray-700";
         displayText = `${diffMins} minutes ago`;
     } else if (diffHours < 24) {
@@ -391,7 +391,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                         <div className="flex justify-end items-center gap-3">
                             <button
                                 onClick={() => setIsCreateModalOpen(true)}
-                                className="h-10 px-4 py-2.5 bg-sky-600 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-sky-600 flex justify-center items-center gap-1.5 hover:bg-sky-700 transition-colors"
+                                className="h-10 px-4 py-2.5 bg-blue-600 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-600 flex justify-center items-center gap-1.5 hover:bg-blue-700 transition-colors"
                             >
                                 <UserPlus className="h-5 w-5 text-white" />
                                 <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">

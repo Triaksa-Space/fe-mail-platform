@@ -69,7 +69,7 @@ const TermsPage: React.FC = () => {
   return (
     <div className="min-h-screen p-8 relative bg-gray-50 inline-flex flex-col justify-start items-center gap-10 overflow-hidden">
       {/* Background decorative blur */}
-      <div className="w-[5000px] h-[5000px] left-[-1780px] top-[3542px] absolute bg-sky-100 rounded-full blur-[32px]" />
+      <div className="w-[5000px] h-[5000px] left-[-1780px] top-[3542px] absolute bg-blue-100 rounded-full blur-[32px]" />
 
       {/* Main Content */}
       <div className="self-stretch flex flex-col justify-start items-start gap-8 relative z-10">
@@ -108,7 +108,7 @@ const TermsPage: React.FC = () => {
                 <p className="text-red-500">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="mt-4 text-sky-600 hover:underline"
+                  className="mt-4 text-blue-600 hover:underline"
                 >
                   Try again
                 </button>
@@ -129,7 +129,7 @@ const TermsPage: React.FC = () => {
                     [&_h2]:text-gray-800 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:leading-6 [&_h2]:mt-4
                     [&_h3]:text-gray-800 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:leading-6 [&_h3]:mt-3
                     [&_p]:text-gray-600 [&_p]:text-sm [&_p]:font-normal [&_p]:leading-5
-                    [&_a]:text-sky-600 [&_a]:underline
+                    [&_a]:text-blue-600 [&_a]:underline
                     [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
                     [&_li]:text-gray-600 [&_li]:text-sm [&_li]:font-normal [&_li]:leading-5"
                   dangerouslySetInnerHTML={{ __html: sanitizedContent }}

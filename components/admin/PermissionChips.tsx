@@ -30,7 +30,7 @@ const PermissionChips: React.FC<PermissionChipsProps> = ({
           className={cn(
             "inline-flex items-center rounded-full px-2 py-0.5",
             "text-xs font-medium",
-            "bg-sky-100 text-sky-600"
+            "bg-blue-100 text-blue-600"
           )}
         >
           {getPermissionLabel(permission)}

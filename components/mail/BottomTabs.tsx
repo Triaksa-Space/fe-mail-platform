@@ -28,7 +28,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
       )}
     >
       {/* Background decorative blur - positioned behind the menu */}
-      <div className="absolute w-[5000px] h-[100px] left-[-2305px] bottom-0 bg-sky-100 rounded-full blur-[32px] pointer-events-none -z-10" />
+      <div className="absolute w-[5000px] h-[100px] left-[-2305px] bottom-0 bg-blue-100 rounded-full blur-[32px] pointer-events-none -z-10" />
 
       <nav
         className="flex items-center justify-start bg-white rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 px-4 py-2 gap-4"
@@ -42,7 +42,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 flex flex-col items-center justify-center gap-0.5 relative",
             currentView === "inbox"
-              ? "text-sky-600"
+              ? "text-blue-600"
               : "text-gray-600 hover:text-gray-700"
           )}
         >
@@ -59,7 +59,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "sent"
-              ? "text-sky-600"
+              ? "text-blue-600"
               : "text-gray-600 hover:text-gray-700"
           )}
         >
@@ -76,7 +76,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "settings"
-              ? "text-sky-600"
+              ? "text-blue-600"
               : "text-gray-600 hover:text-gray-700"
           )}
         >

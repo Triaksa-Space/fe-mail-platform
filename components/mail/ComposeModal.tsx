@@ -400,10 +400,10 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 className={cn(
                   "flex items-center gap-1.5 h-10 px-4",
                   "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] font-medium text-base font-['Roboto'] leading-4",
-                  "transition-colors focus:outline-none focus:ring-2 focus:ring-sky-300",
+                  "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300",
                   isDisabled
-                    ? "bg-sky-400 text-white cursor-not-allowed outline outline-1 outline-offset-[-1px] outline-sky-400"
-                    : "bg-sky-600 hover:bg-sky-700 text-white outline outline-1 outline-offset-[-1px] outline-sky-600"
+                    ? "bg-blue-400 text-white cursor-not-allowed outline outline-1 outline-offset-[-1px] outline-blue-400"
+                    : "bg-blue-600 hover:bg-blue-700 text-white outline outline-1 outline-offset-[-1px] outline-blue-600"
                 )}
               >
                 {isSending ? (
@@ -517,7 +517,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       {/* Header: File type + Close button */}
                       <div className="self-stretch inline-flex justify-between items-center">
                         <div className="flex justify-start items-center gap-0.5">
-                          <FileText className="w-5 h-5 text-sky-600" />
+                          <FileText className="w-5 h-5 text-blue-600" />
                           <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
                             {getFileExtension(file.name)}
                           </span>

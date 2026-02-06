@@ -271,7 +271,7 @@ const AdminTermsPageContent: React.FC = () => {
                     prose-headings:text-gray-400 prose-headings:font-semibold
                     prose-h1:text-2xl prose-h2:text-base prose-h3:text-base
                     prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
-                    prose-li:my-1 prose-a:text-sky-600 prose-a:underline
+                    prose-li:my-1 prose-a:text-blue-600 prose-a:underline
                     prose-strong:text-gray-400"
                   dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />

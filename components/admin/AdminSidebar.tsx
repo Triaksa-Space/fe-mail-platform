@@ -261,21 +261,21 @@ const AdminSidebar: React.FC = () => {
                     onClick={() => handleNavigation(item)}
                     className={cn(
                       "self-stretch px-3 py-1 inline-flex justify-between items-center",
-                      active && "bg-sky-100 rounded-xl"
+                      active && "bg-blue-100 rounded-xl"
                     )}
                   >
                     <div className="flex-1 flex justify-start items-center gap-5">
                       <Icon
                         className={cn(
                           "w-5 h-5",
-                          active ? "text-sky-600" : "text-gray-600"
+                          active ? "text-blue-600" : "text-gray-600"
                         )}
                       />
                       <div
                         className={cn(
                           "justify-center text-sm font-['Roboto'] leading-5",
                           active
-                            ? "text-sky-600 font-semibold"
+                            ? "text-blue-600 font-semibold"
                             : "text-gray-600 font-normal"
                         )}
                       >
@@ -296,21 +296,21 @@ const AdminSidebar: React.FC = () => {
             onClick={() => router.push("/admin/settings")}
             className={cn(
               "self-stretch px-3 py-1 inline-flex justify-between items-center",
-              isSettingsActive && "bg-sky-100 rounded-xl"
+              isSettingsActive && "bg-blue-100 rounded-xl"
             )}
           >
             <div className="flex-1 flex justify-start items-center gap-5">
               <SettingsIcon
                 className={cn(
                   "w-5 h-5",
-                  isSettingsActive ? "text-sky-600" : "text-gray-600"
+                  isSettingsActive ? "text-blue-600" : "text-gray-600"
                 )}
               />
               <div
                 className={cn(
                   "justify-center text-sm font-['Roboto'] leading-5",
                   isSettingsActive
-                    ? "text-sky-600 font-semibold"
+                    ? "text-blue-600 font-semibold"
                     : "text-gray-600 font-normal"
                 )}
               >

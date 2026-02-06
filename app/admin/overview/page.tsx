@@ -90,8 +90,8 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
       </div>
       <div className="self-stretch inline-flex justify-start items-center gap-1">
         <div className="flex justify-start items-center gap-1">
-          <div className="p-1 bg-sky-100 rounded-lg flex justify-start items-center gap-2.5">
-            <Icon className="w-5 h-5 text-sky-600" />
+          <div className="p-1 bg-blue-100 rounded-lg flex justify-start items-center gap-2.5">
+            <Icon className="w-5 h-5 text-blue-600" />
           </div>
           <div className="justify-center text-gray-800 text-xl font-semibold font-['Roboto'] leading-7">
             {formatNumber(value)}
@@ -145,7 +145,7 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
               {email.date}
             </div>
             {isUnread && (
-              <div className="w-2 h-2 bg-sky-600 rounded-full" />
+              <div className="w-2 h-2 bg-blue-600 rounded-full" />
             )}
           </div>
         </div>

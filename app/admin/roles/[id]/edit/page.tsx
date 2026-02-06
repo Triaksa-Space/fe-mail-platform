@@ -231,8 +231,8 @@ const EditAdminPageContent: React.FC = () => {
 
                     {/* Current page - Edit */}
                     <div className="flex justify-center items-center gap-1">
-                        <PencilSquareIcon className="w-5 h-5 text-sky-600" />
-                        <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
+                        <PencilSquareIcon className="w-5 h-5 text-blue-600" />
+                        <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
                     </div>
                 </div>
 
@@ -327,8 +327,8 @@ const EditAdminPageContent: React.FC = () => {
                             className={cn(
                                 "h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex justify-center items-center gap-1.5 transition-colors",
                                 isFormValid
-                                    ? "bg-sky-600 outline outline-1 outline-offset-[-1px] outline-sky-600 hover:bg-sky-700"
-                                    : "bg-sky-400 outline outline-1 outline-offset-[-1px] outline-sky-400 cursor-not-allowed"
+                                    ? "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-600 hover:bg-blue-700"
+                                    : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-400 cursor-not-allowed"
                             )}
                         >
                             <Check className="w-5 h-5 text-white" />

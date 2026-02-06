@@ -194,8 +194,8 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
         "w-full text-left px-4 py-2 transition-colors",
         "rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200",
         isUnread ? "bg-white" : "bg-white",
-        "hover:bg-sky-100 focus:outline-none focus:bg-sky-100",
-        isSelected && "bg-sky-100"
+        "hover:bg-blue-100 focus:outline-none focus:bg-blue-100",
+        isSelected && "bg-blue-100"
       )}
     >
       <div className="flex-1 flex flex-col gap-1">

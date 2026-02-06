@@ -41,7 +41,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
         onClick={() => onPageChange(page)}
         className="w-9 h-9 rounded-lg flex justify-center items-center transition-colors cursor-pointer hover:bg-gray-50"
       >
-        <span className={`text-sm font-medium font-['Roboto'] leading-4 ${isActive ? "text-sky-600" : "text-gray-800"}`}>
+        <span className={`text-sm font-medium font-['Roboto'] leading-4 ${isActive ? "text-blue-600" : "text-gray-800"}`}>
           {page.toString().padStart(2, '0')}
         </span>
       </button>

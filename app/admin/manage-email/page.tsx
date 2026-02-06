@@ -240,8 +240,8 @@ export default function AdminAllInboxPage() {
 
                 {/* Current email subject */}
                 <div className="flex justify-center items-center gap-1">
-                  <Mail className="w-5 h-5 text-sky-600" />
-                  <span className="text-sky-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                  <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
                     {selectedEmail.subject || "(No subject)"}
                   </span>
                 </div>
@@ -365,7 +365,7 @@ export default function AdminAllInboxPage() {
                             >
                               <div className="self-stretch inline-flex justify-between items-center">
                                 <div className="flex justify-start items-center gap-0.5">
-                                  <FileText className="w-5 h-5 text-sky-600" />
+                                  <FileText className="w-5 h-5 text-blue-600" />
                                   <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
                                 </div>
                                 <Download className="w-5 h-5 text-gray-800" />
@@ -495,7 +495,7 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
               {formatRelativeTime(email.received_at)}
             </div>
             {isUnread && (
-              <div className="w-2 h-2 bg-sky-600 rounded-full"></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
             )}
           </div>
         </div>

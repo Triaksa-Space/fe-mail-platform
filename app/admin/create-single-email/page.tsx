@@ -310,7 +310,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     {copiedField === 'email' ? (
                       <CheckIcon className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-sky-600" />
+                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-blue-600" />
                     )}
                   </button>
                 </div>
@@ -329,7 +329,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     {copiedField === 'password' ? (
                       <CheckIcon className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-sky-600" />
+                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-blue-600" />
                     )}
                   </button>
                 </div>

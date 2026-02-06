@@ -275,8 +275,8 @@ export default function UserDetailPage() {
 
             {/* Current user email */}
             <div className="flex justify-center items-center gap-1">
-              <UserIcon className="w-5 h-5 text-sky-600" />
-              <div className="justify-center text-sky-600 text-sm font-normal font-['Roboto'] leading-4">
+              <UserIcon className="w-5 h-5 text-blue-600" />
+              <div className="justify-center text-blue-600 text-sm font-normal font-['Roboto'] leading-4">
                 {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
               </div>
             </div>
@@ -417,7 +417,7 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
                 )}>
                   {email.RelativeTime}
                 </div>
-                {isUnread && <div className="w-2 h-2 bg-sky-600 rounded-full"></div>}
+                {isUnread && <div className="w-2 h-2 bg-blue-600 rounded-full"></div>}
               </div>
             </div>
             <div className={cn(
