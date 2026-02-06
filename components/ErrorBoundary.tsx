@@ -61,7 +61,7 @@ class ErrorBoundary extends Component<Props, State> {
               onClick={this.handleRetry}
               className="gap-2"
             >
-              <RefreshCw className="h-4 w-4" />
+              <ArrowPathIcon className="h-4 w-4" />
               Try again
             </Button>
             <Button

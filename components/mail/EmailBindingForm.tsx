@@ -139,7 +139,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           onClick={handleChangeEmail}
           className="h-10 px-4 py-2.5 bg-blue-600 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-blue-500 inline-flex justify-center items-center gap-1.5 hover:bg-blue-700 transition-colors"
         >
-          <RefreshCw className="w-5 h-5 text-white" />
+          <ArrowPathIcon className="w-5 h-5 text-white" />
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
             Change Email
           </span>

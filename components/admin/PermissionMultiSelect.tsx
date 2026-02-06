@@ -103,7 +103,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                   onClick={(e) => removePermission(permissionId, e)}
                   className="hover:bg-sky-200 rounded-full p-0.5 transition-colors"
                 >
-                  <X className="h-3 w-3" />
+                  <XMarkIcon className="h-3 w-3" />
                 </button>
               )}
             </span>

@@ -341,7 +341,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 onClick={() => setCreatedEmail(null)}
                 className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
               >
-                <X className="w-4 h-4" />
+                <XMarkIcon className="w-4 h-4" />
               </button>
             </div>
           </AdminContentCard>

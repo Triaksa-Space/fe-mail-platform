@@ -110,7 +110,7 @@ const SentList: React.FC<SentListProps> = ({
       {isRefreshing && emails.length > 0 && (
         <div className="px-4 py-2 bg-blue-50/80 border-b border-blue-100 relative z-10">
           <div className="flex items-center justify-center gap-2">
-            <RefreshCw className="h-3 w-3 animate-spin text-blue-600" />
+            <ArrowPathIcon className="h-3 w-3 animate-spin text-blue-600" />
             <span className="text-xs text-blue-600">Refreshing...</span>
           </div>
         </div>
@@ -132,7 +132,7 @@ const SentList: React.FC<SentListProps> = ({
               onClick={onRefresh}
               className="text-sm"
             >
-              <RefreshCw className="h-3 w-3 mr-1.5" />
+              <ArrowPathIcon className="h-3 w-3 mr-1.5" />
               Try again
             </Button>
           </div>

@@ -11,12 +11,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { CARD_STYLES } from "@/lib/styles";
 import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
-  RefreshCw,
   Inbox,
   Mail,
   FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface InboxEmailDetail {
@@ -158,7 +157,7 @@ export default function AdminInboxDetailPage() {
               onClick={fetchEmailDetail}
               className="rounded-xl"
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
+              <ArrowPathIcon className="h-4 w-4 mr-2" />
               Try again
             </Button>
           </div>

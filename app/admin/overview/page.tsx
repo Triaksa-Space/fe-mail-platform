@@ -21,7 +21,7 @@ import {
   Send,
   RefreshCw,
 } from "lucide-react";
-import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -370,7 +370,7 @@ export default function OverviewPage() {
             )}
             aria-label="Refresh data"
           >
-            <RefreshCw
+            <ArrowPathIcon
               className={cn(
                 "w-5 h-5 text-gray-800",
                 isRefreshing && "animate-spin"

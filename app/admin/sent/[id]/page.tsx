@@ -11,14 +11,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { CARD_STYLES } from "@/lib/styles";
 import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
-  ArrowLeft,
-  ChevronRight,
-  RefreshCw,
   Download,
   Mail,
   FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, PaperAirplaneIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserIcon, PaperAirplaneIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface SentEmailDetail {
@@ -162,7 +159,7 @@ export default function AdminSentDetailPage() {
               onClick={fetchEmailDetail}
               className="rounded-xl"
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
+              <ArrowPathIcon className="h-4 w-4 mr-2" />
               Try again
             </Button>
           </div>

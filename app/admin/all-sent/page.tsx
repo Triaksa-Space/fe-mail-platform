@@ -8,12 +8,7 @@ import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments, getFileExtension } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
 import {
-  RefreshCw,
-  Search,
-  ChevronRight,
-  Send as SendIcon,
   Download,
-  ArrowLeft,
   Mail,
   FileText,
 } from "lucide-react";
@@ -22,7 +17,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, ArrowPathIcon, ArrowLeftIcon, ChevronRightIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -202,7 +197,7 @@ export default function AdminAllSentPage() {
             )}
             aria-label="Refresh"
           >
-            <RefreshCw
+            <ArrowPathIcon
               className={cn("w-5 h-5 text-gray-800", isRefreshing && "animate-spin")}
             />
           </button>
@@ -229,7 +224,7 @@ export default function AdminAllSentPage() {
                   onClick={handleClosePreview}
                   className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
                 >
-                  <SendIcon className="w-5 h-5 text-gray-600" />
+                  <PaperAirplaneIcon className="w-5 h-5 text-gray-600" />
                   <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">All sent</span>
                 </button>
                 <ChevronRightIcon className="w-5 h-5 text-gray-300" />
@@ -246,7 +241,7 @@ export default function AdminAllSentPage() {
               {isLoadingDetail ? (
                 <div className="flex items-center justify-center h-32">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <RefreshCw className="w-6 h-6 animate-spin" />
+                    <ArrowPathIcon className="w-6 h-6 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
@@ -401,7 +396,7 @@ export default function AdminAllSentPage() {
                 {isLoading ? (
                   <div className="flex items-center justify-center h-32">
                     <div className="flex items-center gap-2 text-gray-500">
-                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <ArrowPathIcon className="h-4 w-4 animate-spin" />
                       <span className="text-sm">Loading emails...</span>
                     </div>
                   </div>
@@ -411,7 +406,7 @@ export default function AdminAllSentPage() {
                   </div>
                 ) : emails.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-32 px-4">
-                    <SendIcon className="h-8 w-8 text-gray-300 mb-2" />
+                    <PaperAirplaneIcon className="h-8 w-8 text-gray-300 mb-2" />
                     <p className="text-sm text-gray-500 text-center">
                       {debouncedSearch ? "No emails found" : "No sent emails yet"}
                     </p>

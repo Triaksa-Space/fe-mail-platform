@@ -74,7 +74,7 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
             )}
             aria-label="Close"
           >
-            <X className="h-4 w-4" />
+            <XMarkIcon className="h-4 w-4" />
           </button>
         </div>
 

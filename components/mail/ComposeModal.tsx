@@ -342,7 +342,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               )}
               aria-label="Close compose"
             >
-              <X className="h-5 w-5" />
+              <XMarkIcon className="h-5 w-5" />
             </button>
 
             {/* Right: Daily Send Badge, Attachment & Send Buttons */}
@@ -549,7 +549,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-red-600 transition-colors"
                         aria-label={`Remove ${file.name}`}
                       >
-                        <X className="w-4 h-4" />
+                        <XMarkIcon className="w-4 h-4" />
                       </button>
                     </div>
                     {/* Filename */}

@@ -16,7 +16,7 @@ import {
     PermissionMultiSelect
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
-import { PencilSquareIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const EditAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -318,7 +318,7 @@ const EditAdminPageContent: React.FC = () => {
                             onClick={handleCancel}
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
                         >
-                            <X className="w-5 h-5 text-gray-800" />
+                            <XMarkIcon className="w-5 h-5 text-gray-800" />
                             <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
                         </button>
                         <button

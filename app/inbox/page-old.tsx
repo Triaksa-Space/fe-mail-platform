@@ -12,6 +12,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ArrowPathIcon} from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -183,7 +184,7 @@ const InboxPageContent: React.FC = () => {
               handleRefresh();
             }}
           >
-            <RefreshCw className="h-6 w-6" />
+            <ArrowPathIcon className="h-6 w-6" />
           </Button>
         </h1>
         <h1

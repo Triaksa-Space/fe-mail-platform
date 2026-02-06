@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
+import { CircleXIcon, X, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +15,7 @@ import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
 import DOMPurify from 'dompurify';
+import { PaperAirplaneIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
 // Interfaces
 interface UploadedAttachment {
@@ -302,7 +303,7 @@ const Send: React.FC = () => {
             onClick={handleSendEmail}
             disabled={isLoading || uploading.length > 0}
           >
-            <SendIcon className="h-5 w-5" />
+            <PaperAirplaneIcon className="h-5 w-5" />
           </Button>
         </div>
       </header>
@@ -399,7 +400,7 @@ const Send: React.FC = () => {
                       className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
                       onClick={() => handleRemoveAttachment(index)}
                     >
-                      <X className="h-4 w-4" />
+                      <XMarkIcon className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}

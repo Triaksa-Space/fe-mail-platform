@@ -97,7 +97,7 @@ const InboxList: React.FC<InboxListProps> = ({
             disabled={isRefreshing}
             className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 hover:bg-gray-50"
           >
-            <RefreshCw
+            <ArrowPathIcon
               className={cn("h-4 w-4 text-gray-800", isRefreshing && "animate-spin")}
             />
           </Button>
@@ -113,7 +113,7 @@ const InboxList: React.FC<InboxListProps> = ({
       {isRefreshing && emails.length > 0 && (
         <div className="px-4 py-2 bg-blue-50/80 border-b border-blue-100 relative z-10">
           <div className="flex items-center justify-center gap-2">
-            <RefreshCw className="h-3 w-3 animate-spin text-blue-600" />
+            <ArrowPathIcon className="h-3 w-3 animate-spin text-blue-600" />
             <span className="text-xs text-blue-600">Refreshing...</span>
           </div>
         </div>
@@ -136,7 +136,7 @@ const InboxList: React.FC<InboxListProps> = ({
               onClick={onRefresh}
               className="text-sm"
             >
-              <RefreshCw className="h-3 w-3 mr-1.5" />
+              <ArrowPathIcon className="h-3 w-3 mr-1.5" />
               Try again
             </Button>
           </div>

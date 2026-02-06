@@ -47,7 +47,7 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
               className="flex h-5 w-5 items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Clear search"
             >
-              <X className="h-4 w-4" />
+              <XMarkIcon className="h-4 w-4" />
             </button>
           )}
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
