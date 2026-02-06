@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Required for Dockerfile to copy `.next/standalone`
+  output: "standalone",
+
   // Optimize images
   images: {
     formats: ["image/avif", "image/webp"],
