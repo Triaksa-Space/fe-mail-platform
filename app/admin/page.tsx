@@ -612,8 +612,8 @@ const EmailManagementPageContent: React.FC = () => {
                                 className={cn(
                                     "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-center items-center gap-1.5 transition-colors",
                                     !passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin
-                                        ? "bg-sky-400 outline-sky-400 cursor-not-allowed"
-                                        : "bg-sky-600 outline-sky-600 hover:bg-sky-700"
+                                        ? "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
+                                        : "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-500 hover:bg-blue-700"
                                 )}
                             >
                                 <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Change password</div>
