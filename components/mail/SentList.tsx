@@ -9,7 +9,8 @@ import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { LazyList } from "@/components/VirtualList";
-import { ArrowPathIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { ArrowPathIcon } from "@heroicons/react/24/outline"
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid"
 
 interface SentListProps {
   emails: SentMail[];
@@ -39,8 +40,6 @@ const SentList: React.FC<SentListProps> = ({
   className,
   fullWidth = false,
   userEmail,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  sentCount = 0,
   isComposeOpen = false,
 }) => {
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
@@ -146,10 +145,10 @@ const SentList: React.FC<SentListProps> = ({
             "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200 lg:border-none"
           )}>
             <div className="w-10 h-10 flex items-center justify-center">
-              <PaperAirplaneIcon className="w-9 h-9 text-gray-300" />
+              <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
             </div>
             <div className="flex flex-col justify-start items-center gap-1">
-              <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">No Sent Email Yet</p>
+              <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">No Outgoing Email</p>
               <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
                 Emails you send will appear here
               </p>

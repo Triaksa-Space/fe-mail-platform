@@ -553,9 +553,9 @@ const InboxPageContent: React.FC = () => {
         />
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0 h-full lg:pb-0">
+        <main className="flex-1 min-w-0 h-full lg:pb-0 ">
           {/* Content Area - Card only on desktop */}
-          <div className="h-full flex flex-col overflow-hidden lg:p-4 lg:bg-white lg:rounded-xl lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200">
+          <div className="h-full flex flex-col overflow-hidden lg:p-4e lg:rounded-xl lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] ">
             {renderContent()}
           </div>
         </main>
