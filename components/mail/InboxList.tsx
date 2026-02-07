@@ -102,7 +102,7 @@ const InboxList: React.FC<InboxListProps> = ({
           >
             <ArrowPathIcon
               className={cn(
-                "h-6 w-6",
+                "h-4 w-4",
                 isRefreshing ? "text-gray-300 animate-spin" : "text-gray-800"
               )}
             />
@@ -146,7 +146,7 @@ const InboxList: React.FC<InboxListProps> = ({
           </div>
         ) : emails.length === 0 ? (
           <div className={cn(
-            "flex-1 mx-4 lg:mx-0 px-3 py-12 flex flex-col justify-center items-center gap-3",
+            "flex-1 mx-4 lg:mx-0 px-3 py-12 flex flex-col justify-center items-center h-full px-4 gap-3",
             // Frosted glass on mobile
             "rounded-2xl bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
             // Desktop styling

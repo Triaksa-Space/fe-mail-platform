@@ -7,16 +7,18 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments, getFileExtension } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
-import {
-  Download,
-  Mail,
-  FileText,
-} from "lucide-react";
+import { Download, Mail, FileText } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { ArrowPathIcon, ArrowLeftIcon, ChevronRightIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowPathIcon,
+  ArrowLeftIcon,
+  ChevronRightIcon,
+  PaperAirplaneIcon,
+} from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -100,16 +102,13 @@ export default function AdminAllSentPage() {
     if (!token) return;
 
     try {
-      const response = await apiClient.get<AdminSentResponse>(
-        `/admin/sent`,
-        {
-          params: {
-            page,
-            page_size: pageSize,
-            ...(debouncedSearch && { search: debouncedSearch }),
-          },
-        }
-      );
+      const response = await apiClient.get<AdminSentResponse>(`/admin/sent`, {
+        params: {
+          page,
+          page_size: pageSize,
+          ...(debouncedSearch && { search: debouncedSearch }),
+        },
+      });
 
       const data = response.data;
 
@@ -117,7 +116,10 @@ export default function AdminAllSentPage() {
       if (data && Array.isArray(data.data)) {
         setEmails(data.data);
         setTotal(data.pagination?.total || data.data.length);
-        setTotalPages(data.pagination?.total_pages || Math.ceil((data.pagination?.total || data.data.length) / pageSize));
+        setTotalPages(
+          data.pagination?.total_pages ||
+            Math.ceil((data.pagination?.total || data.data.length) / pageSize),
+        );
       } else if (Array.isArray(data)) {
         setEmails(data);
         setTotal(data.length);
@@ -155,7 +157,7 @@ export default function AdminAllSentPage() {
       setIsLoadingDetail(true);
       try {
         const response = await apiClient.get<EmailDetail>(
-          `/admin/sent/${selectedEmail.id}`
+          `/admin/sent/${selectedEmail.id}`,
         );
         setEmailDetail(response.data);
       } catch (err) {
@@ -197,12 +199,15 @@ export default function AdminAllSentPage() {
             disabled={isRefreshing}
             className={cn(
               BUTTON_STYLES.icon,
-              "disabled:opacity-50 disabled:cursor-not-allowed"
+              "disabled:opacity-50 disabled:cursor-not-allowed",
             )}
             aria-label="Refresh"
           >
             <ArrowPathIcon
-              className={cn("w-5 h-5 text-gray-800", isRefreshing && "animate-spin")}
+              className={cn(
+                "w-4 h-4 text-gray-800",
+                isRefreshing && "animate-spin",
+              )}
             />
           </button>
         </div>
@@ -219,23 +224,25 @@ export default function AdminAllSentPage() {
                   onClick={handleClosePreview}
                   className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
                 >
-                  <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                  <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
                 </button>
-                <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
                 {/* All sent */}
                 <button
                   onClick={handleClosePreview}
                   className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
                 >
-                  <PaperAirplaneIcon className="w-5 h-5 text-gray-600" />
-                  <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">All sent</span>
+                  <PaperAirplaneIcon className="w-6 h-6 text-gray-600" />
+                  <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">
+                    All sent
+                  </span>
                 </button>
-                <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
                 {/* Current email subject */}
                 <div className="flex justify-center items-center gap-1">
-                  <Mail className="w-5 h-5 text-blue-600" />
+                  <Mail className="w-4 h-4 text-blue-600" />
                   <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
                     {selectedEmail.subject || "(No subject)"}
                   </span>
@@ -252,13 +259,21 @@ export default function AdminAllSentPage() {
               ) : (
                 <>
                   {/* Email Meta Card */}
-                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}>
+                  <div
+                    className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}
+                  >
                     <div className="flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
                         <div className="flex justify-start items-center gap-1">
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">From</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.from || selectedEmail.user_email}</span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                            From
+                          </span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                            :
+                          </span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                            {selectedEmail.from || selectedEmail.user_email}
+                          </span>
                         </div>
                         <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
                           {formatRelativeTime(selectedEmail.sent_at)}
@@ -266,16 +281,24 @@ export default function AdminAllSentPage() {
                       </div>
                       <div className="flex justify-start items-start gap-1">
                         <div className="flex justify-start items-center gap-1">
-                          <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.to || "Unknown"}</span>
+                          <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                            To
+                          </span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                            :
+                          </span>
+                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                            {selectedEmail.to || "Unknown"}
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Email Body Card */}
-                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}>
+                  <div
+                    className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}
+                  >
                     {/* Subject Title */}
                     <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
                       {selectedEmail.subject || "(No subject)"}
@@ -285,7 +308,7 @@ export default function AdminAllSentPage() {
                     <div className="w-full h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-200"></div>
 
                     {/* Email Body Content */}
-                    {(emailDetail?.Body || emailDetail?.body) ? (
+                    {emailDetail?.Body || emailDetail?.body ? (
                       <iframe
                         srcDoc={emailDetail.Body || emailDetail.body}
                         className="w-full"
@@ -324,7 +347,7 @@ export default function AdminAllSentPage() {
 
                             const height = Math.max(
                               iframeDoc.body.scrollHeight + 48,
-                              300
+                              300,
                             );
                             setIframeHeight(`${height}px`);
                           }
@@ -341,7 +364,10 @@ export default function AdminAllSentPage() {
 
                   {/* Attachments - Outside body card */}
                   {(() => {
-                    const attachments = parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments);
+                    const attachments = parseAttachments(
+                      emailDetail?.attachments,
+                      emailDetail?.ListAttachments,
+                    );
                     if (attachments.length === 0) return null;
                     return (
                       <div className="flex flex-col gap-2.5">
@@ -354,12 +380,17 @@ export default function AdminAllSentPage() {
                                 href={attachment.URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={cn(CARD_STYLES.base, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3 hover:bg-gray-50 transition-colors")}
+                                className={cn(
+                                  CARD_STYLES.base,
+                                  "w-32 p-3 inline-flex flex-col justify-start items-start gap-3 hover:bg-gray-50 transition-colors",
+                                )}
                               >
                                 <div className="self-stretch inline-flex justify-between items-center">
                                   <div className="flex justify-start items-center gap-0.5">
-                                    <FileText className="w-5 h-5 text-blue-600" />
-                                    <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
+                                    <FileText className="w-4 h-4 text-blue-600" />
+                                    <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
+                                      {ext}
+                                    </span>
                                   </div>
                                   <Download className="w-4 h-4 text-gray-800" />
                                 </div>
@@ -409,11 +440,18 @@ export default function AdminAllSentPage() {
                     <p className="text-sm text-red-600 text-center">{error}</p>
                   </div>
                 ) : emails.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-32 px-4">
-                    <PaperAirplaneIcon className="h-8 w-8 text-gray-300 mb-2" />
-                    <p className="text-sm text-gray-500 text-center">
-                      {debouncedSearch ? "No emails found" : "No sent emails yet"}
-                    </p>
+                  <div className="flex flex-col items-center justify-center h-full px-4 gap-3">
+                    <div className="w-10 h-10 flex items-center justify-center">
+                      <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+                    </div>
+                    <div className="flex flex-col justify-start items-center gap-1">
+                      <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+                        No Outgoing Email
+                      </p>
+                      <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                        Emails you send will appear here
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2 p-1">
@@ -469,7 +507,7 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
         isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
         "self-stretch w-full text-left px-4 py-2",
         "inline-flex justify-start items-center gap-2",
-        !isSelected && "hover:bg-gray-100"
+        !isSelected && "hover:bg-gray-100",
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">

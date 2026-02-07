@@ -259,23 +259,23 @@ export default function UserDetailPage() {
               onClick={() => router.back()}
               className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
             >
-              <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+              <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
             </button>
-            <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
             {/* User list */}
             <button
               onClick={() => router.push("/admin")}
               className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
             >
-              <UserGroupIcon className="w-5 h-5 text-gray-600" />
+              <UserGroupIcon className="w-4 h-4 text-gray-600" />
               <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
             </button>
-            <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
             {/* Current user email */}
             <div className="flex justify-center items-center gap-1">
-              <UserIcon className="w-5 h-5 text-blue-600" />
+              <UserIcon className="w-4 h-4 text-blue-600" />
               <div className="justify-center text-blue-600 text-sm font-normal font-['Roboto'] leading-4">
                 {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
               </div>
@@ -291,7 +291,7 @@ export default function UserDetailPage() {
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
-            <ArrowPathIcon className={cn("w-5 h-5 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
+            <ArrowPathIcon className={cn("w-4 h-4 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
           </button>
         </div>
 

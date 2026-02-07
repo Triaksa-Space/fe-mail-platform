@@ -111,9 +111,9 @@ export default function AdminSentDetailPage() {
               onClick={() => router.back()}
               className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
             >
-              <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+              <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
             </button>
-            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
             {/* User list */}
             <button
@@ -133,14 +133,14 @@ export default function AdminSentDetailPage() {
                 {userEmail}
               </div>
             </div>
-            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
             <div className="flex items-center gap-1 text-sm text-gray-600">
-              <PaperAirplaneIcon className="h-5 w-5" />
+              <PaperAirplaneIcon className="w-4 h-4" />
               <span>Sent</span>
             </div>
-            <ChevronRightIcon className="h-5 w-5 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
             <div className="flex items-center gap-1 text-sm text-blue-600">
-              <Mail className="h-5 w-5" />
+              <Mail className="w-4 h-4" />
               <span className="line-clamp-1">
                 {isLoading ? "Loading..." : subject}
               </span>

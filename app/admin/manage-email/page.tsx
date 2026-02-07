@@ -211,7 +211,7 @@ export default function AdminAllInboxPage() {
             aria-label="Refresh"
           >
             <ArrowPathIcon
-              className={cn("w-5 h-5 text-gray-800", isRefreshing && "animate-spin")}
+              className={cn("w-4 h-4 text-gray-800", isRefreshing && "animate-spin")}
             />
           </button>
         </div>
@@ -228,23 +228,23 @@ export default function AdminAllInboxPage() {
                   onClick={handleClosePreview}
                   className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
                 >
-                  <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
+                  <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
                 </button>
-                <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
                 {/* All inbox */}
                 <button
                   onClick={handleClosePreview}
                   className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
                 >
-                  <Inbox className="w-5 h-5 text-gray-600" />
+                  <Inbox className="w-4 h-4 text-gray-600" />
                   <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">All inbox</span>
                 </button>
-                <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                <ChevronRightIcon className="w-4 h-4 text-gray-300" />
 
                 {/* Current email subject */}
                 <div className="flex justify-center items-center gap-1">
-                  <Mail className="w-5 h-5 text-blue-600" />
+                  <Mail className="w-4 h-4 text-blue-600" />
                   <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
                     {selectedEmail.subject || "(No subject)"}
                   </span>
@@ -369,10 +369,10 @@ export default function AdminAllInboxPage() {
                             >
                               <div className="self-stretch inline-flex justify-between items-center">
                                 <div className="flex justify-start items-center gap-0.5">
-                                  <FileText className="w-5 h-5 text-blue-600" />
+                                  <FileText className="w-4 h-4 text-blue-600" />
                                   <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
                                 </div>
-                                <Download className="w-5 h-5 text-gray-800" />
+                                <Download className="w-4 h-4 text-gray-800" />
                               </div>
                               <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
                                 {filename}
