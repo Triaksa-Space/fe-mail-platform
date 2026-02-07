@@ -18,7 +18,7 @@ COPY . .
 # Set environment variables for build
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_API_BASE_URL=https://staging-api.mailria.com
-ENV NEXT_PUBLIC_TINYMCE_API_KEY=${NEXT_PUBLIC_TINYMCE_API_KEY}
+ENV NEXT_PUBLIC_TINYMCE_API_KEY=1gzd0onf3snt28tx5t3ky0v08ygvvp5r5tdalyrec8niqvl8
 
 
 # Build the application
@@ -31,7 +31,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_API_BASE_URL=https://staging-api.mailria.com
-ENV NEXT_PUBLIC_TINYMCE_API_KEY=${NEXT_PUBLIC_TINYMCE_API_KEY}
+ENV NEXT_PUBLIC_TINYMCE_API_KEY=1gzd0onf3snt28tx5t3ky0v08ygvvp5r5tdalyrec8niqvl8
 
 
 # Create a non-root user
