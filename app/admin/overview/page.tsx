@@ -15,10 +15,8 @@ import {
   transformInboxEmail,
   transformSentEmail,
 } from "@/lib/transformers";
-import {
-  Inbox,
-} from "lucide-react";
 import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -221,7 +219,8 @@ function LatestListCard({
       className={cn(
         "flex-1 p-4 bg-white rounded-lg",
         "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
-        "inline-flex flex-col justify-start items-start gap-4 overflow-hidden"
+        "inline-flex flex-col justify-start items-start gap-4 overflow-hidden",
+        "min-h-[550px]"
       )}
     >
       {/* Header */}
@@ -230,7 +229,7 @@ function LatestListCard({
       </div>
 
       {/* Email List */}
-      <div className="self-stretch flex flex-col justify-start items-start gap-2">
+      <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2">
         {isLoading ? (
           <>
             {Array.from({ length: 5 }).map((_, i) => (
@@ -238,22 +237,20 @@ function LatestListCard({
             ))}
           </>
         ) : emails.length === 0 ? (
-          <div className="self-stretch flex flex-col items-center justify-center py-12 px-4">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              {type === "inbox" ? (
-                <Inbox className="h-5 w-5 text-gray-400" />
-              ) : (
-                <PaperAirplaneIcon className="h-5 w-5 text-gray-400" />
-              )}
+          <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3 py-12 px-4">
+            <div className="w-10 h-10 flex items-center justify-center">
+              <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
             </div>
-            <p className="text-sm font-medium text-gray-900 mb-1">
-              No {type === "inbox" ? "emails" : "sent emails"} found
-            </p>
-            <p className="text-xs text-gray-500 text-center">
-              {type === "inbox"
-                ? "Your inbox is empty"
-                : "No emails have been sent yet"}
-            </p>
+            <div className="flex flex-col justify-start items-center gap-1">
+              <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+                {type === "inbox" ? "No Email Yet" : "No Outgoing Email"}
+              </p>
+              <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                {type === "inbox"
+                  ? "There are no email in inbox\nat the moment."
+                  : "Emails sent will appear here"}
+              </p>
+            </div>
           </div>
         ) : (
           <>
