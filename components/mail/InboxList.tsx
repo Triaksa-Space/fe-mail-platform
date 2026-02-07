@@ -144,7 +144,13 @@ const InboxList: React.FC<InboxListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className="flex-1 mx-4 lg:mx-0 px-3 py-12 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-center items-center gap-3">
+          <div className={cn(
+            "flex-1 mx-4 lg:mx-0 px-3 py-12 flex flex-col justify-center items-center gap-3",
+            // Frosted glass on mobile
+            "rounded-2xl bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
+            // Desktop styling
+            "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200 lg:border-none"
+          )}>
             <div className="w-10 h-10 flex items-center justify-center">
               <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
             </div>
@@ -191,10 +197,16 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
     <button
       onClick={onClick}
       className={cn(
-        "w-full px-4 py-2 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-start items-center gap-2 transition-colors",
-        isUnread ? "bg-white" : "bg-gray-100",
-        "hover:bg-blue-100 focus:outline-none focus:bg-blue-100",
-        isSelected && "bg-blue-100"
+        "w-full px-4 py-2 rounded-2xl flex justify-start items-center gap-2 transition-all",
+        // Frosted glass effect on mobile
+        "bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
+        // Desktop styling
+        "lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200 lg:border-none lg:rounded-xl",
+        // Unread state
+        isUnread ? "lg:bg-white" : "lg:bg-gray-100",
+        // Hover/focus states
+        "hover:bg-white/90 lg:hover:bg-blue-100 focus:outline-none focus:bg-white/90 lg:focus:bg-blue-100",
+        isSelected && "bg-white/90 lg:bg-blue-100"
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">

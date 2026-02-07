@@ -22,19 +22,13 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-50 flex justify-center items-center py-2",
+        "fixed bottom-4 left-0 right-0 z-50 flex justify-center items-center",
         "lg:hidden", // Hide on desktop
         className
       )}
     >
-      {/* Background decorative blur - positioned behind the menu */}
-      <div className="absolute w-[5000px] h-[100px] left-[-2305px] bottom-0 bg-blue-100 rounded-full blur-[32px] pointer-events-none -z-10" />
-
       <nav
-        className="flex items-center justify-start bg-white rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 px-4 py-2 gap-4"
-        style={{
-          boxShadow: "0 2px 6px rgba(16, 24, 40, 0.06)",
-        }}
+        className="flex items-center justify-start px-4 py-2 gap-4 rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
       >
         {/* Inbox tab */}
         <button

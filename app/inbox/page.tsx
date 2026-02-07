@@ -535,8 +535,12 @@ const InboxPageContent: React.FC = () => {
   };
 
   return (
-    <div className="h-screen py-5 bg-gray-50 inline-flex flex-col justify-start items-start gap-5 overflow-hidden w-full lg:max-w-[1440px] lg:mx-auto">
-      <div className="self-stretch flex-1 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
+    <div className="h-screen min-h-dvh relative inline-flex flex-col justify-start items-start gap-5 overflow-hidden w-full lg:max-w-[1440px] lg:mx-auto">
+      {/* iOS-style gradient background - mobile only */}
+      {/* <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-blue-100 via-white to-blue-50 -z-20" /> */}
+      {/* <div className="lg:hidden absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_rgba(147,197,253,0.4)_0%,_transparent_60%)] -z-10" /> */}
+
+      <div className="self-stretch flex-1 pt-5 lg:py-5 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
         {/* Desktop Sidebar - LEFT side */}
         <Sidebar
           currentView={currentView}
@@ -549,13 +553,16 @@ const InboxPageContent: React.FC = () => {
         />
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0 h-full pb-20 lg:pb-0">
+        <main className="flex-1 min-w-0 h-full lg:pb-0">
           {/* Content Area - Card only on desktop */}
           <div className="h-full flex flex-col overflow-hidden lg:p-4 lg:bg-white lg:rounded-xl lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200">
             {renderContent()}
           </div>
         </main>
       </div>
+
+      {/* Mobile Bottom Fade Gradient - smooth transition to floating tab bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-60 bg-gradient-to-t from-blue-100/80 via-blue-50/40 to-transparent pointer-events-none z-40" />
 
       {/* Mobile Bottom Tabs */}
       <BottomTabs
