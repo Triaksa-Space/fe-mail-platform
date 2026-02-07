@@ -12,12 +12,11 @@ import {
   Mail,
   FileText,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { MagnifyingGlassIcon, ArrowPathIcon, ArrowLeftIcon, ChevronRightIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ArrowLeftIcon, ChevronRightIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -64,7 +63,7 @@ export default function AdminAllSentPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Search state
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 

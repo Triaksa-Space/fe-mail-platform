@@ -12,12 +12,11 @@ import {
   Mail,
   FileText,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { MagnifyingGlassIcon,ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 // API response interfaces (snake_case from backend)
 interface ApiEmail {
@@ -73,7 +72,7 @@ export default function AdminAllInboxPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Search state
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
