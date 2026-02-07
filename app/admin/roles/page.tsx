@@ -119,6 +119,11 @@ const RolesPermissionsPageContent: React.FC = () => {
     // Auth loading state
     const [authLoaded, setAuthLoaded] = useState(false);
 
+    // Set page title
+    useEffect(() => {
+        document.title = "Roles & Permissions - Admin Mailria";
+    }, []);
+
     // Create admin modal state
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newUsername, setNewUsername] = useState('');

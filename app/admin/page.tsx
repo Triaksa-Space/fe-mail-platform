@@ -119,6 +119,11 @@ const EmailManagementPageContent: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const { toast } = useToast();
+
+    // Set page title
+    useEffect(() => {
+        document.title = "User List - Admin Mailria";
+    }, []);
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
     const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
 

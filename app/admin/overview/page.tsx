@@ -280,6 +280,11 @@ export default function OverviewPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [data, setData] = useState<OverviewData | null>(null);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Overview - Admin Mailria";
+  }, []);
+
   // Check if user is admin (roleId 0 = SuperAdmin, roleId 2 = Admin)
   const isAdmin = roleId === 0 || roleId === 2;
 

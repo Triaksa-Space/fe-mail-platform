@@ -74,6 +74,11 @@ export default function AdminAllSentPage() {
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [iframeHeight, setIframeHeight] = useState("400px");
 
+  // Set page title
+  useEffect(() => {
+    document.title = "All Sent - Admin Mailria";
+  }, []);
+
   // Debounce search
   useEffect(() => {
     if (searchTimeoutRef.current) {

@@ -69,6 +69,11 @@ const CreateBulkEmailPageContent: React.FC = () => {
     setAuthLoaded(true);
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Create Bulk - Admin Mailria";
+  }, []);
+
   // Redirect users based on authentication and role
   useEffect(() => {
     if (!authLoaded) return;

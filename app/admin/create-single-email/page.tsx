@@ -47,6 +47,11 @@ const CreateSingleEmailPageContent: React.FC = () => {
     setAuthLoaded(true);
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Create Single - Admin Mailria";
+  }, []);
+
   // Redirect users based on authentication and role
   useEffect(() => {
     if (!authLoaded) return;

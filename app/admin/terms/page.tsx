@@ -64,6 +64,11 @@ const AdminTermsPageContent: React.FC = () => {
     setAuthLoaded(true);
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Terms of Service - Admin Mailria";
+  }, []);
+
   useEffect(() => {
     if (!authLoaded) return;
 

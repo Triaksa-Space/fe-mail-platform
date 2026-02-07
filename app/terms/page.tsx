@@ -36,6 +36,11 @@ const TermsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [sanitizedContent, setSanitizedContent] = useState<string>("");
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Terms of Service - Mailria";
+  }, []);
+
   useEffect(() => {
     const fetchTerms = async () => {
       try {

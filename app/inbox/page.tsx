@@ -125,6 +125,20 @@ const InboxPageContent: React.FC = () => {
     setAuthLoaded(true);
   }, []);
 
+  // Update page title based on current view
+  useEffect(() => {
+    switch (currentView) {
+      case "sent":
+        document.title = "Sent - Mailria";
+        break;
+      case "settings":
+        document.title = "Settings - Mailria";
+        break;
+      default:
+        document.title = "Inbox - Mailria";
+    }
+  }, [currentView]);
+
   // Handle URL query parameters for routing
   useEffect(() => {
     if (!authLoaded) return;

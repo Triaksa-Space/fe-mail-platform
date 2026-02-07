@@ -64,6 +64,11 @@ const AdminPrivacyPageContent: React.FC = () => {
     setAuthLoaded(true);
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Privacy Policy - Admin Mailria";
+  }, []);
+
   useEffect(() => {
     if (!authLoaded) return;
 

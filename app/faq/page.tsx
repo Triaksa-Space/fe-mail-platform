@@ -12,6 +12,11 @@ const FaqPage: React.FC = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Set page title
+  React.useEffect(() => {
+    document.title = "FAQ - Mailria";
+  }, []);
+
   // Filter FAQs based on search query
   const filteredCategories = useMemo(() => {
     return searchFaqs(searchQuery);

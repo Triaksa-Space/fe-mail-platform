@@ -83,6 +83,11 @@ export default function AdminAllInboxPage() {
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [iframeHeight, setIframeHeight] = useState("400px");
 
+  // Set page title
+  useEffect(() => {
+    document.title = "All Inbox - Admin Mailria";
+  }, []);
+
   // Debounce search
   useEffect(() => {
     if (searchTimeoutRef.current) {

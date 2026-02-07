@@ -36,6 +36,11 @@ const PrivacyPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [sanitizedContent, setSanitizedContent] = useState<string>("");
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Privacy Policy - Mailria";
+  }, []);
+
   useEffect(() => {
     const fetchPrivacy = async () => {
       try {
