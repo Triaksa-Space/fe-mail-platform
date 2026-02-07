@@ -3,7 +3,8 @@
 import React, { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ArrowPathIcon, EnvelopeOpenIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid"
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
