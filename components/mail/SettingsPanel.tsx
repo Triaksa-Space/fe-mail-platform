@@ -15,8 +15,6 @@ interface SettingsPanelProps {
 }
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({
-  onBack,
-  showBackButton = false,
   className,
 }) => {
   const email = useAuthStore((state) => state.email);

@@ -31,7 +31,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
   unreadCount = 0,
   className,
-  userEmail,
 }) => {
   const navItems = [
     { id: "inbox" as ViewType, label: "Inbox", icon: EnvelopeIcon, iconSolid: EnvelopeIconSolid, badge: unreadCount > 0 ? unreadCount : undefined },
