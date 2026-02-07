@@ -50,7 +50,7 @@ const SentList: React.FC<SentListProps> = ({
   if (shouldShowLoading) {
     return (
       <InboxListSkeleton
-        rowCount={8}
+        rowCount={10}
         showHeader={true}
         fullWidth={fullWidth}
         className={className}
@@ -61,7 +61,7 @@ const SentList: React.FC<SentListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-gray-50 relative overflow-hidden gap-5",
+        "flex flex-col h-full relative overflow-hidden gap-5",
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
@@ -90,7 +90,7 @@ const SentList: React.FC<SentListProps> = ({
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden lg:flex relative z-20 bg-gray-50">
+      <div className="hidden lg:flex relative z-20">
         <div className="h-10 flex items-center justify-between w-full">
           {onCompose && (
             <Button
@@ -154,7 +154,7 @@ const SentList: React.FC<SentListProps> = ({
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.id}
-            className="flex flex-col gap-2"
+            className="flex flex-col gap-1.5"
             renderItem={(email) => (
               <SentRow
                 email={email}
@@ -192,7 +192,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
     <button
       onClick={onClick}
       className={cn(
-        "self-stretch px-4 py-2 bg-gray-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 transition-colors",
+        "self-stretch px-4 py-1.5 bg-gray-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 transition-colors",
         "hover:bg-blue-100 focus:outline-none focus:bg-blue-100",
         isSelected && "bg-blue-100"
       )}

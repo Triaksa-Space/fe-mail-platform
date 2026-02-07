@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface InboxListSkeletonProps {
-  /** Number of skeleton rows to display (default: 8) */
+  /** Number of skeleton rows to display (default: 10) */
   rowCount?: number;
   /** Whether to show the header skeleton */
   showHeader?: boolean;
@@ -21,7 +21,7 @@ interface InboxListSkeletonProps {
  */
 const InboxRowSkeleton = memo(function InboxRowSkeleton() {
   return (
-    <div className="px-4 py-4 border-b border-gray-100">
+    <div className="px-4 py-1.5 rounded-xl bg-gray-50">
       <div className="flex items-start gap-3">
         {/* Unread indicator dot placeholder */}
         <div className="flex-shrink-0 pt-1.5">
@@ -66,7 +66,7 @@ const InboxHeaderSkeleton = memo(function InboxHeaderSkeleton() {
  * Use this during initial page load.
  */
 const InboxListSkeleton: React.FC<InboxListSkeletonProps> = ({
-  rowCount = 8,
+  rowCount = 10,
   showHeader = true,
   className,
   fullWidth = false,
@@ -74,7 +74,7 @@ const InboxListSkeleton: React.FC<InboxListSkeletonProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white",
+        "flex flex-col h-full",
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
@@ -87,7 +87,7 @@ const InboxListSkeleton: React.FC<InboxListSkeletonProps> = ({
       {showHeader && <InboxHeaderSkeleton />}
 
       {/* Skeleton rows */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto flex flex-col gap-1.5">
         {Array.from({ length: rowCount }).map((_, index) => (
           <InboxRowSkeleton key={index} />
         ))}

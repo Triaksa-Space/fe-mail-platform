@@ -380,7 +380,7 @@ export default function AdminAllSentPage() {
           ) : (
             /* Email List View - Full Width */
             <AdminContentCard className="h-full flex flex-col overflow-hidden">
-              {/* Search Header */}
+              {/* Search Header
               <div className="flex items-center gap-3 p-4 border-b border-gray-100">
                 <div className="relative flex-1">
                   <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -394,7 +394,7 @@ export default function AdminAllSentPage() {
                 <span className="text-sm text-gray-500 whitespace-nowrap">
                   {total} emails
                 </span>
-              </div>
+              </div> */}
 
               {/* Email List */}
               <div className="flex-1 overflow-y-auto">
@@ -417,7 +417,7 @@ export default function AdminAllSentPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-2 p-4">
+                  <div className="flex flex-col gap-2 p-1">
                     {emails.map((email) => (
                       <AdminSentRow
                         key={email.id}

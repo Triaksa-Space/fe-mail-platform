@@ -47,9 +47,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-gray-50">
       {/* Desktop Layout */}
       <div className="w-full min-h-screen flex justify-center">
-        <div className="w-full max-w-[1920px] py-5 px-5 lg:px-8 xl:px-12 2xl:px-20 flex justify-start items-start gap-5">
+        <div className="w-full max-w-[1440px] py-5 px-4 lg:px-5 flex justify-start items-start gap-5">
           {/* Sidebar - Hidden on mobile */}
-          <div className="hidden lg:flex lg:flex-col h-[calc(100vh-40px)] sticky top-5 w-64 xl:w-72 2xl:w-80 flex-shrink-0">
+          <div className="hidden lg:flex lg:flex-col h-[calc(100vh-40px)] sticky top-5 w-[240px] flex-shrink-0">
             <AdminSidebar />
           </div>
 

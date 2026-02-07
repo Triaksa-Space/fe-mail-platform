@@ -285,7 +285,7 @@ export default function AdminAllInboxPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-4")}>
+                  <div className={cn(CARD_STYLES.base, "p-1 flex flex-col gap-4")}>
                     {/* Subject Title */}
                     <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
                       {selectedEmail.subject || "(No subject)"}
@@ -390,7 +390,7 @@ export default function AdminAllInboxPage() {
           ) : (
             /* Email List View - Full Width */
             <AdminContentCard className="h-full flex flex-col overflow-hidden">
-              {/* Search Header */}
+              {/* Search Header
               <div className="flex items-center gap-3 p-4 border-b border-gray-100">
                 <div className="relative flex-1">
                   <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -404,7 +404,7 @@ export default function AdminAllInboxPage() {
                 <span className="text-sm text-gray-500 whitespace-nowrap">
                   {total} emails
                 </span>
-              </div>
+              </div> */}
 
               {/* Email List */}
               <div className="flex-1 overflow-y-auto">
@@ -427,7 +427,7 @@ export default function AdminAllInboxPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-2 p-4">
+                  <div className="flex flex-col gap-2">
                     {emails.map((email) => (
                       <AdminInboxRow
                         key={email.id}
