@@ -1,11 +1,19 @@
 "use client";
 
 import React from "react";
-import { LucideIcon, Inbox, Shield, Ban, CreditCard } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ShieldCheckIcon, InboxStackIcon, CreditCardIcon } from "@heroicons/react/24/solid";
+import Icon from "@mdi/react";
+import { mdiAdvertisementsOff } from "@mdi/js";
+
+// Wrapper component for MDI icons to match the interface
+const MdiAdsOff = ({ className }: { className?: string }) => (
+  <Icon path={mdiAdvertisementsOff} className={className} />
+);
 
 interface FeatureItem {
-  icon: LucideIcon;
+  icon: LucideIcon | React.FC<{ className?: string }>;
   text: string;
 }
 
@@ -16,10 +24,10 @@ interface FeatureListProps {
 }
 
 const defaultFeatures: FeatureItem[] = [
-  { icon: Inbox, text: "Unlimited inbox" },
-  { icon: Ban, text: "No ads. No noise" },
-  { icon: Shield, text: "Protected access system" },
-  { icon: CreditCard, text: "Pay once. No subscription" },
+  { icon: InboxStackIcon, text: "Unlimited inbox" },
+  { icon: MdiAdsOff, text: "No ads. No noise" },
+  { icon: ShieldCheckIcon, text: "Protected access system" },
+  { icon: CreditCardIcon, text: "Pay once. No subscription" },
 ];
 
 /**
