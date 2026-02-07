@@ -138,7 +138,7 @@ const SentList: React.FC<SentListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className="flex-1 px-3 py-12 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-center items-center gap-3">
+          <div className="flex-1 mx-4 lg:mx-0 px-3 py-12 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-center items-center gap-3">
             <div className="w-10 h-10 flex items-center justify-center">
               <PaperAirplaneIcon className="w-9 h-9 text-gray-300" />
             </div>
@@ -154,7 +154,7 @@ const SentList: React.FC<SentListProps> = ({
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.id}
-            className="flex flex-col gap-1.5"
+            className="w-full flex flex-col gap-2 px-4 lg:px-0"
             renderItem={(email) => (
               <SentRow
                 email={email}
@@ -192,7 +192,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
     <button
       onClick={onClick}
       className={cn(
-        "self-stretch px-4 py-1.5 bg-gray-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 transition-colors",
+        "w-full px-4 py-2 bg-gray-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 transition-colors",
         "hover:bg-blue-100 focus:outline-none focus:bg-blue-100",
         isSelected && "bg-blue-100"
       )}
