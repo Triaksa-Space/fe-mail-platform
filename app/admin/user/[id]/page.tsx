@@ -9,7 +9,8 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
-import { InboxIcon, ArrowPathIcon, PaperAirplaneIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -250,7 +251,7 @@ export default function UserDetailPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full h-[calc(100vh-80px)]">
         {/* Breadcrumb Header */}
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">
@@ -296,13 +297,13 @@ export default function UserDetailPage() {
         </div>
 
         {/* Email Lists - Side by Side */}
-        <div className="self-stretch inline-flex justify-start items-start gap-5">
+        <div className="self-stretch flex-1 min-h-0 inline-flex justify-start items-stretch gap-5">
           {/* Inbox Panel */}
-          <div className="flex-1 self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+          <div className="flex-1 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
             <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Inbox</div>
 
             {/* Inbox List */}
-            <div className="self-stretch flex flex-col justify-start items-start gap-2">
+            <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-y-auto">
               {isLoadingInbox ? (
                 <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
@@ -311,9 +312,20 @@ export default function UserDetailPage() {
                   </div>
                 </div>
               ) : inboxEmails.length === 0 ? (
-                <div className="self-stretch flex flex-col items-center justify-center py-8">
-                  <InboxIcon className="h-8 w-8 text-gray-300 mb-2" />
-                  <p className="text-sm text-gray-500 text-center">No inbox emails</p>
+                <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+                  </div>
+                  <div className="flex flex-col justify-start items-center gap-1">
+                    <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+                      No Email Yet
+                    </p>
+                    <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                      There are no email in this inbox
+                      <br />
+                      at the moment.
+                    </p>
+                  </div>
                 </div>
               ) : (
                 inboxEmails.map((email) => (
@@ -340,11 +352,11 @@ export default function UserDetailPage() {
           </div>
 
           {/* Sent Panel */}
-          <div className="flex-1 self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+          <div className="flex-1 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
             <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Sent</div>
 
             {/* Sent List */}
-            <div className="self-stretch flex flex-col justify-start items-start gap-2">
+            <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-y-auto">
               {isLoadingSent ? (
                 <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
@@ -353,9 +365,18 @@ export default function UserDetailPage() {
                   </div>
                 </div>
               ) : sentEmails.length === 0 ? (
-                <div className="self-stretch flex flex-col items-center justify-center py-8">
-                  <PaperAirplaneIcon className="h-8 w-8 text-gray-300 mb-2" />
-                  <p className="text-sm text-gray-500 text-center">No sent emails</p>
+                <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+                  </div>
+                  <div className="flex flex-col justify-start items-center gap-1">
+                    <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+                      No Outgoing Email
+                    </p>
+                    <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                      Emails sent will appear here
+                    </p>
+                  </div>
                 </div>
               ) : (
                 sentEmails.map((email) => (
