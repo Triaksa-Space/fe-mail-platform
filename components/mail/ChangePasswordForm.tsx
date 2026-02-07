@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff, Lock, Check } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
@@ -69,7 +69,7 @@ const ChangePasswordForm: React.FC = () => {
   const isFormValid = currentPassword && newPassword && confirmPassword && newPassword.length >= 6 && newPassword === confirmPassword;
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between gap-5">
       <div className="flex flex-col gap-3">
         {/* Old Password */}
         <div className="relative flex flex-col">
@@ -191,10 +191,6 @@ const ChangePasswordForm: React.FC = () => {
             : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
         )}
       >
-        <Check className={cn(
-          "w-5 h-5",
-          isFormValid && !isLoading ? "text-white" : "text-blue-300"
-        )} />
         <span className={cn(
           "text-center text-base font-medium font-['Roboto'] leading-4",
           isFormValid && !isLoading ? "text-white" : "text-blue-300"

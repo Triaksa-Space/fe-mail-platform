@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"
-import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { apiClient } from "@/lib/api-client";
 import ChangePasswordForm from "./ChangePasswordForm";
@@ -56,50 +54,41 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{email}</span>
       </div>
 
-      {/* Desktop Header */}
-      <div className="hidden lg:flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 relative z-10">
-        <div className="flex items-center gap-3">
-          {showBackButton && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onBack}
-              className="h-9 w-9 rounded-xl hover:bg-gray-100"
-            >
-              <ChevronLeftIcon className="h-5 w-5 text-gray-600" />
-            </Button>
-          )}
-          <h2 className="text-lg font-semibold text-gray-900">Settings</h2>
-        </div>
-        <span className="text-sm text-gray-600">{email}</span>
-      </div>
-
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 lg:pb-6 relative z-10">
+      <div className="flex-1 overflow-y-auto px-4 lg:px-0 pb-24 lg:pb-0 relative z-10">
+        {/* Desktop View */}
+        <div className="hidden lg:flex flex-col gap-5">
+          {/* Desktop Header */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-gray-800 text-lg font-semibold font-['Roboto'] leading-7">Settings</h2>
+            <span className="text-gray-800 text-base font-semibold font-['Roboto'] leading-6">{email}</span>
+          </div>
 
-        {/* Web View: Horizontal card with both sections */}
-        <div className="hidden lg:block">
+          {/* Web View: Horizontal card with both sections */}
           <div
             className={cn(
-              "bg-white rounded-xl p-6",
-              "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200"
+              "bg-white rounded-lg p-4",
+              "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]"
             )}
           >
-            <div className="grid grid-cols-2 gap-8">
-              {/* Change Password Section */}
-              <div className="flex flex-col gap-4">
-                <h3 className="text-base font-semibold text-gray-800">Change password</h3>
-                <ChangePasswordForm />
+            <div className="flex items-stretch gap-4">
+              {/* Change Password Section - Left Side */}
+              <div className="flex-1 flex flex-col gap-4">
+                <h3 className="text-gray-800 text-base font-semibold font-['Roboto'] leading-6">Change Password</h3>
+                <div className="flex-1 flex flex-col">
+                  <ChangePasswordForm />
+                </div>
               </div>
 
-              {/* Divider */}
-              <div className="absolute left-1/2 top-6 bottom-6 w-px bg-gray-200" style={{ display: 'none' }} />
+              {/* Vertical Divider */}
+              <div className="w-0 self-stretch outline outline-1 outline-offset-[-0.5px] outline-gray-200" />
 
-              {/* Email Binding Section */}
-              <div className="flex flex-col gap-4 border-l border-gray-200 pl-8">
-                <h3 className="text-base font-semibold text-gray-800">Email binding</h3>
-                <EmailBindingForm initialEmail={bindingEmail} />
+              {/* Email Binding Section - Right Side */}
+              <div className="flex-1 flex flex-col gap-4">
+                <h3 className="text-gray-800 text-base font-semibold font-['Roboto'] leading-6">Email binding</h3>
+                <div className="flex-1 flex flex-col">
+                  <EmailBindingForm initialEmail={bindingEmail} />
+                </div>
               </div>
             </div>
           </div>

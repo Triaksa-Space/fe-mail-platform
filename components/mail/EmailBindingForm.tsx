@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
-import { ArrowPathIcon } from "@heroicons/react/24/outline"
+import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
 
 interface EmailBindingFormProps {
   initialEmail?: string;
@@ -88,7 +88,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between gap-5">
       <div className="flex flex-col gap-3">
         {/* Email Input */}
         <div className="relative flex flex-col">
@@ -157,7 +157,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
               : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
           )}
         >
-          <Check className={cn(
+          <CheckCircleIcon className={cn(
             "w-5 h-5",
             isFormValid && !isLoading ? "text-white" : "text-blue-300"
           )} />

@@ -301,7 +301,7 @@ export default function ForgotPasswordClient() {
     }
   };
 
-  const isFormValid = email.trim() !== "";
+  const isFormValid = email.trim() !== "" && bindingEmail.trim() !== "";
 
   return (
     <>
@@ -384,21 +384,22 @@ export default function ForgotPasswordClient() {
                             id="binding-email"
                             type="email"
                             autoComplete="off"
-                            placeholder="example@mailria.com"
+                            placeholder="example@gmail.com"
                             value={bindingEmail}
                             onChange={(e) => setBindingEmail(e.target.value)}
                             className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
+                            required
                           />
                         </div>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
-                        <span className="text-[10px] font-normal text-gray-800 leading-4">Binding email</span>
+                        <span className="text-[10px] font-normal text-gray-800 leading-4">Binding email <span className="text-red-500">*</span></span>
                       </div>
                     </div>
 
                     {/* Helper text */}
                     <p className="text-gray-500 text-xs leading-5">
-                      Binding email is an alternative email used to recover your password via the settings menu.
+                      Binding email is required to reset your password. You can set up a binding email in your account settings.
                     </p>
                   </div>
 
