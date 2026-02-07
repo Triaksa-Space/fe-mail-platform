@@ -26,7 +26,9 @@ jobs:
       - name: Build & push image
         run: |
           IMAGE_URI=888577043011.dkr.ecr.ap-southeast-1.amazonaws.com/gamemarket:prod-mailria-latest
-          docker build -t $IMAGE_URI .
+          docker build \
+          --build-arg NEXT_PUBLIC_TINYMCE_API_KEY=${{ secrets.NEXT_PUBLIC_TINYMCE_API_KEY }} \
+          -t $IMAGE_URI .
           docker push $IMAGE_URI
 
       - name: SSH into EC2 and deploy
