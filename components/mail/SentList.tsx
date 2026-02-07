@@ -61,7 +61,7 @@ const SentList: React.FC<SentListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-gray-50 relative overflow-hidden",
+        "flex flex-col h-full bg-gray-50 relative overflow-hidden gap-5",
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
@@ -90,7 +90,7 @@ const SentList: React.FC<SentListProps> = ({
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden lg:flex px-5 py-3 relative z-20 bg-gray-50">
+      <div className="hidden lg:flex relative z-20 bg-gray-50">
         <div className="h-10 flex items-center justify-between w-full">
           {onCompose && (
             <Button
@@ -109,20 +109,18 @@ const SentList: React.FC<SentListProps> = ({
         </div>
       </div>
 
-      {/* Refreshing indicator */}
+      {/* Loading indicator when refreshing */}
       {isRefreshing && emails.length > 0 && (
-        <div className="px-4 py-2 bg-blue-50/80 border-b border-blue-100 relative z-10">
-          <div className="flex items-center justify-center gap-2">
-            <ArrowPathIcon className="h-3 w-3 animate-spin text-blue-600" />
-            <span className="text-xs text-blue-600">Refreshing...</span>
-          </div>
+        <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
+          <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
+          <ArrowPathIcon className="w-4 h-4 text-blue-600 animate-spin" />
         </div>
       )}
 
       {/* Email List */}
       <div
         className={cn(
-          "flex-1 overflow-y-auto relative px-4 pb-24 lg:pb-4",
+          "flex-1 flex flex-col overflow-y-auto relative pb-24 lg:pb-0",
           isTransitioning && "animate-fade-in"
         )}
       >
@@ -140,17 +138,15 @@ const SentList: React.FC<SentListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className="flex-1 py-12 flex items-start justify-center">
-            <div className="w-full bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 px-3 py-12 flex flex-col justify-center items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center">
-                <PaperAirplaneIcon className="w-9 h-9 text-gray-300" />
-              </div>
-              <div className="flex flex-col justify-start items-center gap-1">
-                <p className="text-base font-medium text-gray-800">No Sent Email Yet</p>
-                <p className="text-center text-xs font-normal text-gray-600 leading-5">
-                  Emails you send will appear here
-                </p>
-              </div>
+          <div className="flex-1 px-3 py-12 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-center items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center">
+              <PaperAirplaneIcon className="w-9 h-9 text-gray-300" />
+            </div>
+            <div className="flex flex-col justify-start items-center gap-1">
+              <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">No Sent Email Yet</p>
+              <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                Emails you send will appear here
+              </p>
             </div>
           </div>
         ) : (
@@ -196,35 +192,36 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-4 py-2 transition-colors",
-        "rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200",
-        "bg-white hover:bg-blue-100 focus:outline-none focus:bg-blue-100",
+        "self-stretch px-4 py-2 bg-gray-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-2 transition-colors",
+        "hover:bg-blue-100 focus:outline-none focus:bg-blue-100",
         isSelected && "bg-blue-100"
       )}
     >
-      <div className="flex-1 flex flex-col gap-1">
-        <div className="flex flex-col gap-0.5">
-          {/* Top row: To + Time */}
-          <div className="flex items-center justify-between">
-            <div className="flex-1 flex items-center gap-0.5">
-              <span className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">To:</span>
-              <span className="text-gray-600 text-base font-normal font-['Roboto'] leading-6 truncate">
-                {email.to || "Unknown"}
+      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch inline-flex justify-start items-start gap-4">
+          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+            {/* Top row: To + Time */}
+            <div className="self-stretch inline-flex justify-between items-center">
+              <div className="flex items-center gap-0.5">
+                <span className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">To:</span>
+                <span className="text-gray-600 text-base font-normal font-['Roboto'] leading-6 truncate">
+                  {email.to || "Unknown"}
+                </span>
+              </div>
+              <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+                {email.date}
               </span>
             </div>
-            <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-              {email.date}
-            </span>
-          </div>
 
-          {/* Subject line */}
-          <p className="text-gray-600 text-sm font-normal font-['Roboto'] leading-5 truncate">
-            {email.subject || "(No subject)"}
-          </p>
+            {/* Subject line */}
+            <p className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+              {email.subject || "(No subject)"}
+            </p>
+          </div>
         </div>
 
         {/* Snippet/Preview */}
-        <p className="text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+        <p className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1 text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>

@@ -4,11 +4,15 @@ import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
-  Inbox,
-  Send,
-  Settings,
-  LogOut,
-} from "lucide-react";
+  EnvelopeIcon,
+  PaperAirplaneIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline";
+import {
+  EnvelopeIcon as EnvelopeIconSolid,
+  PaperAirplaneIcon as PaperAirplaneIconSolid,
+  Cog6ToothIcon as Cog6ToothIconSolid,
+} from "@heroicons/react/20/solid";
 import { ViewType } from "./types";
 
 interface SidebarProps {
@@ -16,87 +20,105 @@ interface SidebarProps {
   onViewChange: (view: ViewType) => void;
   onLogout: () => void;
   sentCount?: number;
+  unreadCount?: number;
   className?: string;
+  userEmail?: string;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   currentView,
   onViewChange,
   onLogout,
-  sentCount = 0,
+  unreadCount = 0,
   className,
+  userEmail,
 }) => {
   const navItems = [
-    { id: "inbox" as ViewType, label: "Inbox", icon: Inbox },
-    { id: "sent" as ViewType, label: "Sent", icon: Send, badge: `${sentCount}/3` },
-    { id: "settings" as ViewType, label: "Settings", icon: Settings },
+    { id: "inbox" as ViewType, label: "Inbox", icon: EnvelopeIcon, iconSolid: EnvelopeIconSolid, badge: unreadCount > 0 ? unreadCount : undefined },
+    { id: "sent" as ViewType, label: "Sent", icon: PaperAirplaneIcon, iconSolid: PaperAirplaneIconSolid },
+    { id: "settings" as ViewType, label: "Settings", icon: Cog6ToothIcon, iconSolid: Cog6ToothIconSolid },
   ];
 
   return (
     <aside
       className={cn(
-        "flex flex-col h-full bg-white border-r border-gray-200",
-        "w-[260px] lg:w-[280px]",
+        "w-[240px] h-full p-4 bg-white rounded-xl",
+        "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
+        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "flex flex-col justify-start items-start gap-5 shrink-0",
         className
       )}
     >
       {/* Logo */}
-      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
+      <div className="inline-flex justify-start items-center gap-4">
         <Image
           src="/mailria.png"
           alt="Mailria"
-          width={140}
-          height={36}
-          className="h-9 w-auto"
+          width={112}
+          height={40}
+          className="h-10 w-28"
           priority
         />
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 pt-3 space-y-1">
-        {navItems.map((item) => {
-          const isActive = currentView === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onViewChange(item.id)}
-              className={cn(
-                "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:bg-gray-100"
-              )}
-            >
-              <div className="flex items-center gap-3">
-                <item.icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </div>
-              {item.badge && (
-                <span
-                  className={cn(
-                    "text-xs px-2 py-0.5 rounded-full",
-                    isActive
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-gray-100 text-gray-600"
-                  )}
-                >
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+      {/* Menu Content */}
+      <div className="self-stretch flex-1 flex flex-col justify-between items-start">
+        {/* Navigation */}
+        <div className="self-stretch flex flex-col justify-start items-start gap-2">
+          {navItems.map((item) => {
+            const isActive = currentView === item.id;
+            const IconComponent = isActive ? item.iconSolid : item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => onViewChange(item.id)}
+                className={cn(
+                  "self-stretch px-3 py-1 inline-flex justify-between items-center transition-colors",
+                  isActive && "bg-blue-100 rounded-xl"
+                )}
+              >
+                <div className="flex-1 flex justify-start items-center gap-5">
+                  <IconComponent
+                    className={cn(
+                      "w-5 h-5",
+                      isActive ? "text-blue-600" : "text-gray-600"
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "text-sm font-['Roboto'] leading-5",
+                      isActive
+                        ? "text-blue-600 font-semibold"
+                        : "text-gray-600 font-normal"
+                    )}
+                  >
+                    {item.label}
+                  </span>
+                </div>
+                {item.badge && (
+                  <div className="w-4 h-4 p-0.5 bg-red-500 rounded-[40px] flex justify-center items-center">
+                    <span className="text-center text-red-50 text-[10px] font-medium font-['Roboto'] leading-4">
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
-      {/* Logout Button */}
-      <div className="p-4 border-t border-gray-200">
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-        >
-          <LogOut className="w-5 h-5" />
-          <span>Logout</span>
-        </button>
+        {/* Bottom Section */}
+        <div className="self-stretch flex flex-col justify-start items-start gap-2">
+          {/* Logout */}
+          <button
+            onClick={onLogout}
+            className="self-stretch h-9 px-4 py-2.5 bg-white rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200 inline-flex justify-center items-center gap-2 overflow-hidden hover:bg-red-50 transition-colors"
+          >
+            <span className="text-center text-red-500 text-base font-medium font-['Roboto'] leading-4">
+              Log out
+            </span>
+          </button>
+        </div>
       </div>
     </aside>
   );

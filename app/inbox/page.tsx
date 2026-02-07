@@ -521,23 +521,27 @@ const InboxPageContent: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-[#F9FAFB] flex overflow-hidden w-full lg:max-w-[1440px] lg:mx-auto">
-      {/* Desktop Sidebar */}
-      <Sidebar
-        currentView={currentView}
-        onViewChange={handleViewChange}
-        onLogout={handleLogout}
-        sentCount={sentCount}
-        className="hidden lg:flex"
-      />
+    <div className="h-screen py-5 bg-gray-50 inline-flex flex-col justify-start items-start gap-5 overflow-hidden w-full lg:max-w-[1440px] lg:mx-auto">
+      <div className="self-stretch flex-1 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
+        {/* Desktop Sidebar - LEFT side */}
+        <Sidebar
+          currentView={currentView}
+          onViewChange={handleViewChange}
+          onLogout={handleLogout}
+          sentCount={sentCount}
+          unreadCount={emails.filter(email => email.unread).length}
+          userEmail={userEmail}
+          className="hidden lg:flex h-full"
+        />
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 px-4 py-4 gap-4 lg:px-5 lg:py-5 lg:gap-5">
-        {/* Content Area */}
-        <div className="flex-1 flex overflow-hidden pb-20 lg:pb-0">
-          {renderContent()}
-        </div>
-      </main>
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col min-w-0 gap-5 h-full">
+          {/* Content Area */}
+          <div className="flex-1 flex flex-col overflow-hidden pb-20 lg:pb-0">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
 
       {/* Mobile Bottom Tabs */}
       <BottomTabs

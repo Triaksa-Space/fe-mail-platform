@@ -19,8 +19,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mailria",
-  description: "Where Simplicity Meets Speed.",
+  title: "Mailria: Nothing Extra. Just What Matters.",
+  description: "Experience the premium email platform with no monthly fees. Pay once for a secure, simple, and distraction-free inbox.",
   robots: "noindex, nofollow", // Private app - don't index
 };
 

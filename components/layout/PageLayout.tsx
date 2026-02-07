@@ -14,7 +14,7 @@ interface PageLayoutProps {
  *
  * Provides consistent layout across the application with:
  * - Mobile: 390px max-width, 16px padding
- * - Desktop: 1440px max-width, 32px vertical / 180px horizontal padding
+ * - Desktop: 1440px max-width, 32px vertical / 176px horizontal padding
  * - Background: Neutral-50 (#F9FAFB)
  */
 const PageLayout: React.FC<PageLayoutProps> = ({
@@ -34,7 +34,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     // Mobile first
     "w-full px-4 py-4",
     // Desktop
-    "md:px-[180px] md:py-8"
+    "md:px-44 md:py-8"
   );
 
   return (

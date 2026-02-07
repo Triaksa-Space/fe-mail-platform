@@ -119,7 +119,7 @@ export default function LoginPageClient() {
 
   return (
     <>
-      <PageLayout variant="auth" className="gap-8 py-4">
+      <PageLayout variant="auth" className="gap-8">
         {/* Main Content */}
         <div className="flex-1 flex flex-col items-center justify-center w-full gap-8">
           {/* Auth Card */}
