@@ -27,12 +27,12 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   const variantClasses = {
     default: "flex flex-col",
     centered: "flex flex-col items-center justify-center",
-    auth: "flex flex-col items-center justify-between",
+    auth: "h-screen flex flex-col items-center justify-between overflow-hidden",
   };
 
   const responsiveClasses = cn(
-    // Mobile first
-    "w-full px-4 py-4",
+    // Mobile first - tighter padding for mobile to prevent scroll
+    "w-full px-4 py-3",
     // Desktop
     "md:px-44 md:py-8"
   );

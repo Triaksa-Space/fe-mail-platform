@@ -119,13 +119,13 @@ export default function LoginPageClient() {
 
   return (
     <>
-      <PageLayout variant="auth" className="gap-8">
+      <PageLayout variant="auth" className="gap-4 md:gap-8">
         {/* Main Content */}
         <div className="flex-1 flex flex-col items-center justify-center w-full gap-8">
           {/* Auth Card */}
           <AuthCard>
             {/* Logo + Tagline */}
-            <div className="flex flex-col items-center gap-0.5 mb-4">
+            <div className="flex flex-col items-center gap-0.5 mb-3 md:mb-4">
               <Image
                 src="/mailria.png"
                 alt="Mailria"
@@ -140,9 +140,9 @@ export default function LoginPageClient() {
             </div>
 
             {/* Login Form */}
-            <form onSubmit={onSubmit} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-3">
+            <form onSubmit={onSubmit} className="flex flex-col gap-3 md:gap-4">
+              <div className="flex flex-col gap-4 md:gap-5">
+                <div className="flex flex-col gap-2.5 md:gap-3">
                   {/* Email Field with Floating Label */}
                   <div className="relative flex flex-col">
                     <div className="h-3.5" />

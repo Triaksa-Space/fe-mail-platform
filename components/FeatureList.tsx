@@ -44,11 +44,11 @@ const FeatureList: React.FC<FeatureListProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("w-full max-w-sm flex flex-col gap-3", className)}>
+    <div className={cn("w-full max-w-sm flex flex-col gap-2 md:gap-3", className)}>
       {title && (
         <p className="text-sm font-normal text-gray-600 text-center">{title}</p>
       )}
-      <div className="flex flex-wrap justify-center items-center gap-3">
+      <div className="flex flex-wrap justify-center items-center gap-2 md:gap-3">
         {features.map((feature, index) => (
           <div
             key={index}

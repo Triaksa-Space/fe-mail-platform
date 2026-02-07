@@ -37,9 +37,9 @@ const Footer: React.FC<FooterProps> = ({
 }) => {
   return (
     <footer className={cn("w-full max-w-sm relative overflow-visible", className)}>
-      {/* Subtle background glow */}
+      {/* Background glow */}
       <div
-        className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[150%] h-32 bg-blue-100 rounded-full blur-3xl opacity-50 pointer-events-none"
+        className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-[250%] h-32 bg-gradient-to-t from-blue-200 via-blue-100 to-transparent rounded-full blur-2xl opacity-80 pointer-events-none"
         aria-hidden="true"
       />
       <nav className="relative flex justify-between items-start">
@@ -50,7 +50,7 @@ const Footer: React.FC<FooterProps> = ({
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              className="text-xs md:text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
             >
               {link.label}
             </a>
@@ -58,7 +58,7 @@ const Footer: React.FC<FooterProps> = ({
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              className="text-xs md:text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
             >
               {link.label}
             </Link>
