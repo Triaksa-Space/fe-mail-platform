@@ -36,7 +36,7 @@ const Footer: React.FC<FooterProps> = ({
   className,
 }) => {
   return (
-    <footer className={cn("w-full max-w-sm relative overflow-visible", className)}>
+    <footer className={cn("self-stretch relative overflow-visible", className)}>
       {/* Background glow */}
       <div
         className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[250%] h-32 bg-gradient-to-t from-blue-200 via-blue-100 to-transparent rounded-full blur-2xl opacity-60 pointer-events-none"
@@ -50,7 +50,7 @@ const Footer: React.FC<FooterProps> = ({
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs md:text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              className="text-sm font-normal text-sky-600 hover:text-sky-700 hover:underline transition-colors leading-5"
             >
               {link.label}
             </a>
@@ -58,7 +58,7 @@ const Footer: React.FC<FooterProps> = ({
             <Link
               key={link.href}
               href={link.href}
-              className="text-xs md:text-sm font-normal text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              className="text-sm font-normal text-sky-600 hover:text-sky-700 hover:underline transition-colors leading-5"
             >
               {link.label}
             </Link>

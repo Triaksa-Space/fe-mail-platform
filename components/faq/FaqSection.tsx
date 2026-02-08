@@ -1,19 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Minus } from "lucide-react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
 import { FaqCategory, FaqItem } from "@/lib/faqData";
 
 interface FaqSectionProps {
   category: FaqCategory;
-  startIndex: number;
   className?: string;
 }
 
 interface FaqAccordionItemProps {
   item: FaqItem;
-  index: number;
   isOpen: boolean;
   onToggle: () => void;
   isLast: boolean;
@@ -21,7 +19,6 @@ interface FaqAccordionItemProps {
 
 const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
   item,
-  index,
   isOpen,
   onToggle,
   isLast,
@@ -40,14 +37,14 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
       >
         <div className="flex-1 flex justify-start items-center gap-3">
           <span className="flex-1 text-gray-900 text-base font-medium leading-6">
-            {index}. {item.question}
+            {item.question}
           </span>
         </div>
         <div className="flex justify-end items-center gap-2">
-          <Minus
+          <ChevronDownIcon
             className={cn(
               "w-5 h-5 text-gray-500 transition-transform duration-200",
-              isOpen && "rotate-0"
+              isOpen && "rotate-180"
             )}
           />
         </div>
@@ -70,7 +67,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
   );
 };
 
-const FaqSection: React.FC<FaqSectionProps> = ({ category, startIndex, className }) => {
+const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   const toggleItem = (itemId: string) => {
@@ -105,7 +102,6 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, startIndex, className
           <FaqAccordionItem
             key={item.id}
             item={item}
-            index={startIndex + idx}
             isOpen={openItems.has(item.id)}
             onToggle={() => toggleItem(item.id)}
             isLast={idx === category.items.length - 1}

@@ -49,16 +49,14 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
               <XMarkIcon className="h-4 w-4" />
             </button>
           )}
-          <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
         </div>
       </div>
 
       {/* Result Count */}
       {value.trim() && (
-        <p className="text-sm text-gray-500">
-          <span className="font-medium text-gray-900">{resultCount}</span>
-          {" "}result{resultCount !== 1 ? "s" : ""}{" "}
-          <span className="text-gray-400">&quot;{value}&quot;</span>
+        <p className="text-xs text-gray-500 leading-4">
+          {resultCount} result{resultCount !== 1 ? "s" : ""} &quot;{value}&quot;
         </p>
       )}
     </div>
