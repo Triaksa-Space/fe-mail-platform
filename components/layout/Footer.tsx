@@ -36,13 +36,13 @@ const Footer: React.FC<FooterProps> = ({
   className,
 }) => {
   return (
-    <footer className={cn("self-stretch relative overflow-visible", className)}>
+    <footer className={cn("self-stretch flex justify-center relative overflow-visible", className)}>
       {/* Background glow */}
       <div
         className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[250%] h-32 bg-gradient-to-t from-blue-200 via-blue-100 to-transparent rounded-full blur-2xl opacity-60 pointer-events-none"
         aria-hidden="true"
       />
-      <nav className="relative flex justify-between items-start">
+      <nav className="relative w-full max-w-sm flex justify-between items-start">
         {links.map((link) =>
           link.external ? (
             <a
