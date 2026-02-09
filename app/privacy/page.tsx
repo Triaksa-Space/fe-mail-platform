@@ -147,9 +147,9 @@ const PrivacyPage: React.FC = () => {
             </div>
 
             {/* Content Area */}
-            <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-8">
+            <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
               {/* Privacy Card */}
-              <div className="self-stretch p-4 md:p-6 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-4 md:gap-6">
+              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
                 {/* Title */}
                 <h1 className="text-gray-800 text-2xl font-medium leading-8">
                   Mailria Privacy Policy
@@ -170,7 +170,7 @@ const PrivacyPage: React.FC = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="self-stretch flex flex-col justify-start items-start gap-3">
+                  <div className="self-stretch flex flex-col justify-start items-start gap-4 md:gap-5">
                     {/* Effective Date */}
                     {effectiveDate && (
                       <p className="self-stretch text-gray-800 text-base font-semibold leading-6">
@@ -196,17 +196,17 @@ const PrivacyPage: React.FC = () => {
             </div>
           </div>
           {/* Scroll to Top Button - Fixed position outside scroll container */}
-        {showScrollTop && (
-          <div>
-            <div className="fixed bottom-4 right-4 md:right-8 z-20">
-              <ScrollToTopButton onClick={scrollToTop} />
+          {showScrollTop && (
+            <div>
+              <div className="fixed bottom-4 right-4 md:right-8 z-20">
+                <ScrollToTopButton onClick={scrollToTop} />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="p-4 md:p-8 pt-4 md:pt-8">
-          <Footer />
-        </div>
+          <div className="pb-4 pt-4 md:p-8 pt-4 md:pt-8">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>

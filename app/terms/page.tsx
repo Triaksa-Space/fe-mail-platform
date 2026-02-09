@@ -202,7 +202,7 @@ const TermsPage: React.FC = () => {
               </div>
           )}
 
-          <div className="p-4 md:p-8 pt-4 md:pt-8">
+          <div className="pb-4 pt-4 md:p-8 pt-4 md:pt-8">
             <Footer />
           </div>
         </div>
