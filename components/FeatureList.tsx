@@ -54,7 +54,7 @@ const FeatureList: React.FC<FeatureListProps> = ({
             key={index}
             className="flex items-center gap-1"
           >
-            <feature.icon className="h-3 w-3 text-blue-600" />
+            <feature.icon className="h-3 w-3 text-primary-600" />
             <span className="text-xs font-normal text-gray-600">{feature.text}</span>
           </div>
         ))}

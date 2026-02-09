@@ -3,7 +3,7 @@ const LoadingUploadingPage: React.FC = () => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg flex items-center space-x-4">
         <svg
-          className="animate-spin h-5 w-5 text-blue-500"
+          className="animate-spin h-5 w-5 text-primary-500"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

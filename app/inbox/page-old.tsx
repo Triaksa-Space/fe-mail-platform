@@ -253,7 +253,7 @@ const InboxPageContent: React.FC = () => {
             </div>
           ) : (
             <div
-              className="p-4 text-center cursor-pointer text-blue-500 underline"
+              className="p-4 text-center cursor-pointer text-primary-500 underline"
               onClick={() => window.location.reload()}
             >
               No emails found. Please refresh your browser.

@@ -207,7 +207,7 @@ const EmailDetailPage: React.FC = () => {
             </Button>
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-                <Mail className="h-6 w-6 text-blue-600" />
+                <Mail className="h-6 w-6 text-primary-600" />
               </div>
               <div>
                 <h1 className="text-2xl font-semibold text-gray-900">
@@ -246,7 +246,7 @@ const EmailDetailPage: React.FC = () => {
                 {/* From */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 flex-shrink-0">
-                    <span className="text-sm font-semibold text-blue-600">
+                    <span className="text-sm font-semibold text-primary-600">
                       {email.SenderName?.charAt(0)?.toUpperCase() || "?"}
                     </span>
                   </div>

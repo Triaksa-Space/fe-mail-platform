@@ -36,7 +36,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 flex flex-col items-center justify-center gap-0.5 relative",
             currentView === "inbox"
-              ? "text-blue-600"
+              ? "text-primary-600"
               : "text-gray-600 hover:text-gray-700"
           )}
         >
@@ -53,7 +53,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "sent"
-              ? "text-blue-600"
+              ? "text-primary-600"
               : "text-gray-600 hover:text-gray-700"
           )}
         >
@@ -70,7 +70,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "settings"
-              ? "text-blue-600"
+              ? "text-primary-600"
               : "text-gray-600 hover:text-gray-700"
           )}
         >

@@ -36,7 +36,7 @@ const DOMPURIFY_CONFIG = {
 
 const LoadingFallback: React.FC = () => (
   <div className="flex justify-center items-center h-full min-h-[400px]">
-    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+    <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
   </div>
 );
 
@@ -250,7 +250,7 @@ const AdminPrivacyPageContent: React.FC = () => {
                 />
                 {!editorReady && (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                    <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
                   </div>
                 )}
               </div>
@@ -271,7 +271,7 @@ const AdminPrivacyPageContent: React.FC = () => {
                     prose-headings:text-gray-400 prose-headings:font-semibold
                     prose-h1:text-2xl prose-h2:text-base prose-h3:text-base
                     prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
-                    prose-li:my-1 prose-a:text-blue-600 prose-a:underline
+                    prose-li:my-1 prose-a:text-primary-600 prose-a:underline
                     prose-strong:text-gray-400"
                   dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />

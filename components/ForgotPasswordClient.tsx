@@ -411,7 +411,7 @@ export default function ForgotPasswordClient() {
 
                     <Link
                       href="/"
-                      className="h-9 flex items-center justify-center text-blue-600 text-base font-medium hover:text-blue-700"
+                      className="h-9 flex items-center justify-center text-primary-600 text-base font-medium hover:text-primary-700"
                     >
                       Back to login
                     </Link>
@@ -422,7 +422,7 @@ export default function ForgotPasswordClient() {
                 <p className="text-xs font-normal text-center">
                   <span className="text-gray-800">Support by: </span>
                   <a
-                    className="text-blue-600 font-semibold underline"
+                    className="text-primary-500 font-medium underline"
                     href="https://gamemarket.gg"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -507,7 +507,7 @@ export default function ForgotPasswordClient() {
                       type="button"
                       onClick={handleResendCode}
                       disabled={isLoading}
-                      className="h-9 flex items-center justify-center text-blue-600 text-base font-medium hover:text-blue-700"
+                      className="h-9 flex items-center justify-center text-primary-600 text-base font-medium hover:text-primary-700"
                     >
                       Resend Code
                     </button>

@@ -50,7 +50,7 @@ const Footer: React.FC<FooterProps> = ({
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-normal text-sky-600 hover:text-sky-700 hover:underline transition-colors leading-5"
+              className="text-sm font-normal text-primary-500 hover:text-primary-600 hover:underline transition-colors leading-5"
             >
               {link.label}
             </a>
@@ -58,7 +58,7 @@ const Footer: React.FC<FooterProps> = ({
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-normal text-sky-600 hover:text-sky-700 hover:underline transition-colors leading-5"
+              className="text-sm font-normal text-primary-500 hover:text-primary-600 hover:underline transition-colors leading-5"
             >
               {link.label}
             </Link>

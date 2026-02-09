@@ -70,7 +70,7 @@ export function UserAvatar({ email, size = "md", className }: AvatarProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold",
+        "flex items-center justify-center rounded-full bg-blue-100 text-primary-600 font-semibold",
         sizeClasses[size],
         className
       )}

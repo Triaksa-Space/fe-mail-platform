@@ -94,7 +94,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
               className={cn(
                 "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5",
                 "text-xs font-medium",
-                "bg-blue-100 text-blue-600"
+                "bg-blue-100 text-primary-600"
               )}
             >
               {getPermissionLabel(permissionId)}
@@ -154,7 +154,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 <span
                   className={cn(
                     "flex-1",
-                    isSelected ? "text-blue-700 font-medium" : "text-gray-700"
+                    isSelected ? "text-primary-700 font-medium" : "text-gray-700"
                   )}
                 >
                   {permission.label}

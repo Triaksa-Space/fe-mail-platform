@@ -231,8 +231,8 @@ const EditAdminPageContent: React.FC = () => {
 
                     {/* Current page - Edit */}
                     <div className="flex justify-center items-center gap-1">
-                        <PencilSquareIcon className="w-5 h-5 text-blue-600" />
-                        <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
+                        <PencilSquareIcon className="w-5 h-5 text-primary-600" />
+                        <span className="text-primary-600 text-sm font-normal font-['Roboto'] leading-4">Edit</span>
                     </div>
                 </div>
 

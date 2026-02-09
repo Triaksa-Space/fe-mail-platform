@@ -514,7 +514,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       {/* Header: File type + Close button */}
                       <div className="self-stretch inline-flex justify-between items-center">
                         <div className="flex justify-start items-center gap-0.5">
-                          <FileText className="w-5 h-5 text-blue-600" />
+                          <FileText className="w-5 h-5 text-primary-600" />
                           <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
                             {getFileExtension(file.name)}
                           </span>

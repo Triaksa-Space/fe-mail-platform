@@ -80,14 +80,14 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <IconComponent
                     className={cn(
                       "w-5 h-5",
-                      isActive ? "text-blue-600" : "text-gray-600"
+                      isActive ? "text-primary-600" : "text-gray-600"
                     )}
                   />
                   <span
                     className={cn(
                       "text-sm font-['Roboto'] leading-5",
                       isActive
-                        ? "text-blue-600 font-semibold"
+                        ? "text-primary-600 font-semibold"
                         : "text-gray-600 font-normal"
                     )}
                   >

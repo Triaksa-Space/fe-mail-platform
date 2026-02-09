@@ -297,7 +297,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     "w-10 h-10 p-2 rounded-lg outline outline-1 flex justify-center items-center shrink-0",
                     count >= 100
                       ? "bg-gray-100 outline-gray-200 text-gray-300 cursor-not-allowed"
-                      : "bg-blue-100 outline-blue-100 text-blue-600 hover:bg-blue-200"
+                      : "bg-blue-100 outline-blue-100 text-primary-600 hover:bg-blue-200"
                   )}
                 >
                   <PlusIcon className="w-4 h-4" />
@@ -403,7 +403,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
                     !isRandomPasswordActive || passwordLength >= 32
                       ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                      : "bg-blue-100 outline-blue-100 text-blue-600 hover:bg-blue-200"
+                      : "bg-blue-100 outline-blue-100 text-primary-600 hover:bg-blue-200"
                   )}
                 >
                   <PlusIcon className="w-4 h-4" />

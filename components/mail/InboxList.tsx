@@ -118,8 +118,8 @@ const InboxList: React.FC<InboxListProps> = ({
       {/* Loading indicator when refreshing */}
       {isRefreshing && emails.length > 0 && (
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
-          <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
-          <ArrowPathIcon className="w-4 h-4 text-blue-600 animate-spin" />
+          <span className="text-primary-600 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
+          <ArrowPathIcon className="w-4 h-4 text-primary-600 animate-spin" />
         </div>
       )}
 

@@ -242,8 +242,8 @@ export default function AdminAllSentPage() {
 
                 {/* Current email subject */}
                 <div className="flex justify-center items-center gap-1">
-                  <Mail className="w-4 h-4 text-blue-600" />
-                  <span className="text-blue-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
+                  <Mail className="w-4 h-4 text-primary-600" />
+                  <span className="text-primary-600 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
                     {selectedEmail.subject || "(No subject)"}
                   </span>
                 </div>
@@ -387,7 +387,7 @@ export default function AdminAllSentPage() {
                               >
                                 <div className="self-stretch inline-flex justify-between items-center">
                                   <div className="flex justify-start items-center gap-0.5">
-                                    <FileText className="w-4 h-4 text-blue-600" />
+                                    <FileText className="w-4 h-4 text-primary-600" />
                                     <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
                                       {ext}
                                     </span>

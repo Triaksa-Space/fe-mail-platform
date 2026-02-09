@@ -276,8 +276,8 @@ export default function UserDetailPage() {
 
             {/* Current user email */}
             <div className="flex justify-center items-center gap-1">
-              <UserIcon className="w-4 h-4 text-blue-600" />
-              <div className="justify-center text-blue-600 text-sm font-normal font-['Roboto'] leading-4">
+              <UserIcon className="w-4 h-4 text-primary-600" />
+              <div className="justify-center text-primary-600 text-sm font-normal font-['Roboto'] leading-4">
                 {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
               </div>
             </div>
