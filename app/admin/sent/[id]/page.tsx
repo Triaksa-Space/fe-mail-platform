@@ -233,7 +233,7 @@ export default function AdminSentDetailPage() {
                             background: white;
                           }
                           img, table { max-width: 100%; height: auto; }
-                          a { color: #0284C7; }
+                          a { color: #027AEA; }
                           pre { white-space: pre-wrap; word-wrap: break-word; }
                         `;
                         iframeDoc.head.appendChild(style);

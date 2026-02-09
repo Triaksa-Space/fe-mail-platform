@@ -5,16 +5,16 @@ export const theme = {
   colors: {
     // Primary Colors (Blue) - New Design System
     blue: {
-      50: '#EFF6FF',
-      100: '#DBEAFE',
-      200: '#BFDBFE',
-      300: '#93C5FD',
-      400: '#60A5FA',
-      500: '#3B82F6',
-      600: '#2563EB',
-      700: '#1D4ED8',
-      800: '#1E40AF',
-      900: '#1E3A8A',
+      50: '#E6F2FF',
+      100: '#CDE5FF',
+      200: '#9BCCFF',
+      300: '#69B2FF',
+      400: '#3697FF',
+      500: '#027AEA',
+      600: '#026AD1',
+      700: '#025BAF',
+      800: '#01498D',
+      900: '#01366A',
     },
     // Yellow Colors - Legacy Brand Colors
     yellow: {

@@ -345,7 +345,7 @@ const Preview: React.FC<PreviewProps> = ({
                             box-sizing: border-box;
                           }
                           a {
-                            color: #2563EB;
+                            color: #027AEA;
                           }
                         `;
                         iframeDoc.head.appendChild(style);

@@ -321,7 +321,7 @@ export default function AdminAllInboxPage() {
                                   background: white;
                                 }
                                 img, table { max-width: 100%; height: auto; }
-                                a { color: #2563EB; }
+                                a { color: #027AEA; }
                                 pre { white-space: pre-wrap; word-wrap: break-word; }
                               `;
                               iframeDoc.head.appendChild(style);

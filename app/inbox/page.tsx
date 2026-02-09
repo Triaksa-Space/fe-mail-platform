@@ -535,7 +535,7 @@ const InboxPageContent: React.FC = () => {
   };
 
   return (
-    <div className="h-screen min-h-dvh relative inline-flex flex-col justify-start items-start gap-5 overflow-hidden w-full lg:max-w-[1440px] lg:mx-auto">
+    <div className="h-screen min-h-dvh relative inline-flex flex-col justify-start items-start gap-5 overflow-hidden w-full lg:w-full lg:mx-auto">
       {/* iOS-style gradient background - mobile only */}
       {/* <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-blue-100 via-white to-blue-50 -z-20" /> */}
       {/* <div className="lg:hidden absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_rgba(147,197,253,0.4)_0%,_transparent_60%)] -z-10" /> */}
@@ -555,7 +555,7 @@ const InboxPageContent: React.FC = () => {
         {/* Main Content */}
         <main className="flex-1 min-w-0 h-full lg:pb-0 ">
           {/* Content Area - Card only on desktop */}
-          <div className="h-full flex flex-col overflow-hidden lg:p-4e lg:rounded-xl lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] ">
+          <div className="h-full flex flex-col overflow-hidden lg:p-4e lg:rounded-xl">
             {renderContent()}
           </div>
         </main>

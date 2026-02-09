@@ -155,7 +155,7 @@ const EmailDetailPage: React.FC = () => {
           height: auto;
         }
         a {
-          color: #2563EB;
+          color: #027AEA;
         }
         pre {
           white-space: pre-wrap;
