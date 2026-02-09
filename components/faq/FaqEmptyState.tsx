@@ -10,7 +10,6 @@ interface FaqEmptyStateProps {
 }
 
 const FaqEmptyState: React.FC<FaqEmptyStateProps> = ({
-  searchQuery,
   className,
 }) => {
   return (
