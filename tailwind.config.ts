@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ["var(--font-roboto)", "var(--font-geist-sans)", "sans-serif"],
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

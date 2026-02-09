@@ -284,7 +284,7 @@ export default function AdminAllInboxPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div className={cn(CARD_STYLES.base, "p-1 flex flex-col gap-4")}>
+                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-4")}>
                     {/* Subject Title */}
                     <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
                       {selectedEmail.subject || "(No subject)"}

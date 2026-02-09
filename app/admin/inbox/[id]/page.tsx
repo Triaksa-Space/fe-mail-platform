@@ -197,7 +197,7 @@ export default function AdminInboxDetailPage() {
               </div>
             </div>
 
-            <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-2")}>
+            <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-4")}>
               <div className="text-gray-800 text-lg font-medium leading-7">
                 {subject}
               </div>
@@ -225,11 +225,11 @@ export default function AdminInboxDetailPage() {
                             font-family: system-ui, -apple-system, sans-serif;
                             font-size: 14px;
                             line-height: 1.6;
-                            color: #111827;
+                            color: #1F2937;
                             background: white;
                           }
                           img, table { max-width: 100%; height: auto; }
-                          a { color: #0284C7; }
+                          a { color: #2563EB; }
                           pre { white-space: pre-wrap; word-wrap: break-word; }
                         `;
                         iframeDoc.head.appendChild(style);
@@ -241,7 +241,7 @@ export default function AdminInboxDetailPage() {
                         });
 
                         const height = Math.max(
-                          iframeDoc.body.scrollHeight + 8,
+                          iframeDoc.body.scrollHeight + 48,
                           300,
                         );
                         setIframeHeight(`${height}px`);

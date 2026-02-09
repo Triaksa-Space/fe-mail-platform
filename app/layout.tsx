@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
@@ -16,6 +17,12 @@ const geistMono = localFont({
   weight: "100 900",
   display: "swap",
   preload: true,
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
+  variable: "--font-roboto",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -40,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <ErrorBoundary>{children}</ErrorBoundary>
       </body>
