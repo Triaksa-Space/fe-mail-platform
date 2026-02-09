@@ -614,12 +614,7 @@ const EmailManagementPageContent: React.FC = () => {
                             <button
                                 onClick={handleChangePasswordSubmit}
                                 disabled={!passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin}
-                                className={cn(
-                                    "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-center items-center gap-1.5 transition-colors",
-                                    !passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin
-                                        ? "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
-                                        : "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-500 hover:bg-blue-700"
-                                )}
+                                className="self-stretch h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
                             >
                                 <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Change password</div>
                             </button>

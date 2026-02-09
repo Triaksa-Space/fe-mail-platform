@@ -94,7 +94,7 @@ const SentList: React.FC<SentListProps> = ({
           {onCompose && (
             <Button
               onClick={onCompose}
-              className="h-10 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-600 text-white"
+              className="h-10 px-4 py-2.5"
             >
               <PenSquare className="h-4 w-4 mr-1.5 text-white" />
               <span className="text-base font-medium leading-4">Compose</span>
@@ -175,7 +175,7 @@ const SentList: React.FC<SentListProps> = ({
       {onCompose && !isComposeOpen && (
         <button
           onClick={onCompose}
-          className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 bg-blue-600 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-1.5 hover:bg-blue-700 transition-colors"
+          className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
         >
           <PenSquare className="w-5 h-5 text-white" />
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Compose</span>

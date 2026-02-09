@@ -335,10 +335,7 @@ export default function ForgotPasswordClient() {
                   <p className="text-sm text-gray-500 text-center mb-6">
                     Your password has been reset successfully. You can now login with your new password.
                   </p>
-                  <Button
-                    onClick={() => router.push("/")}
-                    className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                  >
+                  <Button onClick={() => router.push("/")} className="w-full text-base font-medium">
                     Back to Login
                   </Button>
                 </div>
@@ -407,12 +404,7 @@ export default function ForgotPasswordClient() {
                     <Button
                       type="submit"
                       disabled={isLoading || !isFormValid}
-                      className={cn(
-                        "w-full h-10 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] text-base font-medium",
-                        !isFormValid
-                          ? "bg-blue-400 text-blue-300 border border-blue-300 cursor-not-allowed"
-                          : "bg-blue-600 hover:bg-blue-700 text-white border border-blue-500"
-                      )}
+                      className="w-full text-base font-medium"
                     >
                       {isLoading ? "Sending..." : "Reset password"}
                     </Button>
@@ -506,12 +498,7 @@ export default function ForgotPasswordClient() {
                     <Button
                       type="submit"
                       disabled={isLoading || otp.join("").length !== 4 || !!blockedUntil}
-                      className={cn(
-                        "w-full h-10 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] text-base font-medium",
-                        otp.join("").length !== 4 || blockedUntil
-                          ? "bg-blue-400 text-blue-300 border border-blue-300 cursor-not-allowed"
-                          : "bg-blue-600 hover:bg-blue-700 text-white border border-blue-500"
-                      )}
+                      className="w-full text-base font-medium"
                     >
                       {isLoading ? "Verifying..." : "Verify Code"}
                     </Button>
@@ -634,12 +621,7 @@ export default function ForgotPasswordClient() {
                         !confirmPassword ||
                         newPassword !== confirmPassword
                       }
-                      className={cn(
-                        "w-full h-10 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] text-base font-medium",
-                        !newPassword || !confirmPassword || newPassword !== confirmPassword
-                          ? "bg-blue-400 text-blue-300 border border-blue-300 cursor-not-allowed"
-                          : "bg-blue-600 hover:bg-blue-700 text-white border border-blue-500"
-                      )}
+                      className="w-full text-base font-medium"
                     >
                       {isLoading ? "Resetting..." : "Reset Password"}
                     </Button>

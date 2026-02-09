@@ -398,12 +398,9 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 onClick={handleSend}
                 disabled={isDisabled}
                 className={cn(
-                  "flex items-center gap-1.5 h-10 px-4",
-                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] font-medium text-base font-['Roboto'] leading-4",
-                  "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300",
-                  isDisabled
-                    ? "bg-blue-400 text-white cursor-not-allowed outline outline-1 outline-offset-[-1px] outline-blue-400"
-                    : "bg-blue-600 hover:bg-blue-700 text-white outline outline-1 outline-offset-[-1px] outline-blue-600"
+                  "flex items-center gap-1.5 h-10 px-4 font-medium text-base font-['Roboto'] leading-4",
+                  "btn-primary-skin",
+                  "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
                 )}
               >
                 {isSending ? (

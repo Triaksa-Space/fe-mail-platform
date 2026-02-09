@@ -82,7 +82,7 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
             <button
               type="button"
               onClick={onDiscard}
-              className="flex-1 h-10 px-4 py-2.5 bg-blue-500 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-500 flex justify-center items-center gap-2 overflow-hidden hover:bg-blue-600 transition-colors"
+              className="flex-1 h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-2 overflow-hidden transition-colors"
             >
               <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Discard</span>
             </button>

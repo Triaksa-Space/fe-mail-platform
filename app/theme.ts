@@ -153,7 +153,7 @@ export const tw = {
   },
   // Button classes
   button: {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed',
+    primary: 'btn-primary-skin',
     secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700',
     ghost: 'hover:bg-gray-100 text-gray-700',
   },

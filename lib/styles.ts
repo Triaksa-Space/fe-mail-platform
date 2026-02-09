@@ -11,7 +11,8 @@ export const CARD_STYLES = {
 
 // Button styles
 export const BUTTON_STYLES = {
-  primary: "h-10 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-600 text-white text-base font-medium font-['Roboto'] leading-4",
+  primary:
+    "h-10 px-4 py-2.5 rounded-lg border border-[var(--primary-500-main)] bg-[var(--primary-500-main)] text-white text-base font-medium font-['Roboto'] leading-4 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] transition-colors hover:border-[var(--primary-600-main)] hover:bg-[var(--primary-600-main)] disabled:bg-[var(--primary-300-main)] disabled:border-[var(--primary-400-main)] disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed",
   secondary: "h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 hover:bg-gray-50 text-gray-700 text-base font-medium font-['Roboto'] leading-4",
   danger: "h-10 px-4 py-2.5 bg-red-600 hover:bg-red-700 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-600 text-white text-base font-medium font-['Roboto'] leading-4",
   icon: "w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center hover:bg-gray-50 transition-colors",

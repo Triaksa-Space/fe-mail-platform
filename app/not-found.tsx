@@ -18,10 +18,7 @@ export default function NotFound() {
         <p className="text-center text-gray-600">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        <Button
-          asChild
-          className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
-        >
+        <Button asChild className="mt-6">
           <Link href="/">Go Back Home</Link>
         </Button>
       </main>

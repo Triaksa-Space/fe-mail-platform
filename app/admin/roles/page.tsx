@@ -396,7 +396,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                         <div className="flex justify-end items-center gap-3">
                             <button
                                 onClick={() => setIsCreateModalOpen(true)}
-                                className="h-10 px-4 py-2.5 bg-blue-600 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-blue-600 flex justify-center items-center gap-1.5 hover:bg-blue-700 transition-colors"
+                                className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-1.5 transition-colors"
                             >
                                 <UserPlus className="h-5 w-5 text-white" />
                                 <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
@@ -631,12 +631,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                             <button
                                 onClick={handleCreateAdmin}
                                 disabled={!canCreate}
-                                className={cn(
-                                    "self-stretch h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
-                                    !canCreate
-                                        ? "bg-blue-400 cursor-not-allowed"
-                                        : "bg-blue-600 hover:bg-blue-700"
-                                )}
+                                className="self-stretch h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
                             >
                                 <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Create admin</div>
                             </button>

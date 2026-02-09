@@ -138,7 +138,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
         <button
           type="button"
           onClick={handleChangeEmail}
-          className="h-10 px-4 py-2.5 bg-blue-600 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-blue-500 inline-flex justify-center items-center gap-1.5 hover:bg-blue-700 transition-colors"
+          className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
         >
           <ArrowPathIcon className="w-5 h-5 text-white" />
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
@@ -150,21 +150,10 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
         <button
           type="submit"
           disabled={isLoading || !isFormValid}
-          className={cn(
-            "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] inline-flex justify-center items-center gap-1.5 transition-colors",
-            isFormValid && !isLoading
-              ? "bg-blue-600 outline outline-1 outline-offset-[-1px] outline-blue-500 hover:bg-blue-700"
-              : "bg-blue-400 outline outline-1 outline-offset-[-1px] outline-blue-300 cursor-not-allowed"
-          )}
+          className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
         >
-          <CheckCircleIcon className={cn(
-            "w-5 h-5",
-            isFormValid && !isLoading ? "text-white" : "text-blue-300"
-          )} />
-          <span className={cn(
-            "text-center text-base font-medium font-['Roboto'] leading-4",
-            isFormValid && !isLoading ? "text-white" : "text-blue-300"
-          )}>
+          <CheckCircleIcon className="w-5 h-5 text-white" />
+          <span className="text-center text-base font-medium font-['Roboto'] leading-4 text-white">
             {isLoading ? "Saving..." : "Save email"}
           </span>
         </button>

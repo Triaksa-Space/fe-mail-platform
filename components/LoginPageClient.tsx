@@ -237,11 +237,7 @@ export default function LoginPageClient() {
 
                 {/* Submit Button */}
                 <Button
-                  className={`w-full h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] text-base font-medium transition-colors ${
-                    !isFormValid
-                      ? "bg-blue-400 text-blue-300 border border-blue-300 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700 text-white border border-blue-500"
-                  }`}
+                  className="w-full text-base font-medium"
                   type="submit"
                   disabled={isLoading || !isFormValid}
                 >

@@ -189,12 +189,7 @@ const AdminTermsPageContent: React.FC = () => {
               <button
                 onClick={handleSave}
                 disabled={isSaving || isLoading}
-                className={cn(
-                  "h-10 px-4 py-2.5 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex justify-center items-center gap-2 overflow-hidden transition-colors",
-                  isSaving || isLoading
-                    ? "bg-blue-400 outline outline-1 outline-blue-300 text-blue-300 cursor-not-allowed"
-                    : "bg-blue-600 outline outline-1 outline-blue-500 text-white hover:bg-blue-700"
-                )}
+                className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-2 overflow-hidden transition-colors"
               >
                 {isSaving ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
