@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Footer, ScrollToTopButton } from "@/components/layout";
 import axios from "axios";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 interface PrivacyResponse {
   content: string;
@@ -16,13 +16,37 @@ interface PrivacyResponse {
 // DOMPurify config for safe HTML rendering
 const DOMPURIFY_CONFIG = {
   ALLOWED_TAGS: [
-    "h1", "h2", "h3", "h4", "h5", "h6",
-    "p", "br", "hr",
-    "ul", "ol", "li",
-    "strong", "b", "em", "i", "u", "s", "strike",
-    "a", "span", "div",
-    "table", "thead", "tbody", "tr", "th", "td",
-    "blockquote", "pre", "code"
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "p",
+    "br",
+    "hr",
+    "ul",
+    "ol",
+    "li",
+    "strong",
+    "b",
+    "em",
+    "i",
+    "u",
+    "s",
+    "strike",
+    "a",
+    "span",
+    "div",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
+    "blockquote",
+    "pre",
+    "code",
   ],
   ALLOWED_ATTR: ["href", "target", "rel", "class", "id", "style"],
   ALLOW_DATA_ATTR: false,
@@ -68,7 +92,7 @@ const PrivacyPage: React.FC = () => {
       try {
         setIsLoading(true);
         const response = await axios.get<PrivacyResponse>(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content/privacy`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content/privacy`,
         );
         setContent(response.data.content);
         setEffectiveDate(response.data.effective_date);
@@ -95,9 +119,6 @@ const PrivacyPage: React.FC = () => {
 
   return (
     <div className="h-screen w-full relative bg-gray-50 flex flex-col overflow-hidden">
-      {/* Background decorative blur */}
-      <div className="w-[5000px] h-[5000px] left-[-2305px] top-[2802px] absolute bg-blue-100 rounded-full blur-[32px]" />
-
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}
@@ -116,7 +137,7 @@ const PrivacyPage: React.FC = () => {
                     "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
                     "outline outline-1 outline-offset-[-1px] outline-gray-200",
                     "flex justify-center items-center",
-                    "text-gray-800 hover:bg-gray-50 transition-colors"
+                    "text-gray-800 hover:bg-gray-50 transition-colors",
                   )}
                   aria-label="Go back"
                 >
@@ -174,21 +195,20 @@ const PrivacyPage: React.FC = () => {
               </div>
             </div>
           </div>
+          {/* Scroll to Top Button - Fixed position outside scroll container */}
+        {showScrollTop && (
+          <div>
+            <div className="fixed bottom-4 right-4 md:right-8 z-20">
+              <ScrollToTopButton onClick={scrollToTop} />
+            </div>
+          </div>
+        )}
+
+        <div className="p-4 md:p-8 pt-4 md:pt-8">
+          <Footer />
         </div>
-
+        </div>
       </div>
-
-      {/* Scroll to Top Button - Fixed position outside scroll container */}
-            {showScrollTop && (
-              <div>
-              <div className="fixed bottom-4 right-4 md:right-8 z-20">
-                <ScrollToTopButton onClick={scrollToTop} />
-              </div>
-              <div className="p-4 md:p-8 pt-4 md:pt-8">
-                <Footer />
-              </div>
-              </div>
-            )}
     </div>
   );
 };

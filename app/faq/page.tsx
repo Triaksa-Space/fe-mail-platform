@@ -1,12 +1,18 @@
 "use client";
 
-import React, { useState, useMemo, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { searchFaqs, countFaqResults } from "@/lib/faqData";
 import { FaqSearch, FaqSection, FaqEmptyState } from "@/components/faq";
 import { Footer, ScrollToTopButton } from "@/components/layout";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 const FaqPage: React.FC = () => {
   const router = useRouter();
@@ -54,9 +60,6 @@ const FaqPage: React.FC = () => {
 
   return (
     <div className="h-screen w-full relative bg-gray-50 flex flex-col overflow-hidden">
-      {/* Background decorative blur */}
-      <div className="w-[5000px] h-[5000px] left-[-2305px] top-[2802px] absolute bg-blue-100 rounded-full blur-[32px]" />
-
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}
@@ -75,7 +78,7 @@ const FaqPage: React.FC = () => {
                     "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
                     "outline outline-1 outline-offset-[-1px] outline-gray-200",
                     "flex justify-center items-center",
-                    "text-gray-800 hover:bg-gray-50 transition-colors"
+                    "text-gray-800 hover:bg-gray-50 transition-colors",
                   )}
                   aria-label="Go back"
                 >
@@ -88,7 +91,9 @@ const FaqPage: React.FC = () => {
             <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
               {/* Header Card with Title and Search */}
               <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
-                <h1 className="text-gray-800 text-2xl md:text-3xl font-medium leading-8 md:leading-9">FAQs</h1>
+                <h1 className="text-gray-800 text-2xl md:text-3xl font-medium leading-8 md:leading-9">
+                  FAQs
+                </h1>
                 <FaqSearch
                   value={searchQuery}
                   onChange={setSearchQuery}
@@ -102,29 +107,27 @@ const FaqPage: React.FC = () => {
               ) : (
                 <div className="self-stretch flex flex-col justify-start items-start gap-4 md:gap-5">
                   {filteredCategories.map((category) => (
-                    <FaqSection
-                      key={category.key}
-                      category={category}
-                    />
+                    <FaqSection key={category.key} category={category} />
                   ))}
                 </div>
               )}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Scroll to Top Button - Fixed position outside scroll container */}
-      {showScrollTop && (
-        <div>
-        <div className="fixed bottom-4 right-4 md:right-8 z-20">
-          <ScrollToTopButton onClick={scrollToTop} />
-        </div>
+        {/* Scroll to Top Button - Fixed position outside scroll container */}
+        {showScrollTop && (
+          <div>
+            <div className="fixed bottom-4 right-4 md:right-8 z-20">
+              <ScrollToTopButton onClick={scrollToTop} />
+            </div>
+          </div>
+        )}
+
         <div className="p-4 md:p-8 pt-4 md:pt-8">
           <Footer />
         </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
