@@ -17,6 +17,7 @@ import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, UserRowActionMenu } from "@/components/admin";
 import { ChevronUpDownIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/20/solid';
 
 interface EmailUser {
     user_encode_id: string;
@@ -50,6 +51,16 @@ interface AdminUser {
 
 type SortField = 'last_login' | 'created_at';
 type SortOrder = 'asc' | 'desc' | '';
+
+const formatDate = (value: string) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    });
+};
 
 // Last Active Badge Component
 const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw }) => {
@@ -282,9 +293,9 @@ const EmailManagementPageContent: React.FC = () => {
                 return {
                     id: user.ID,
                     email: user.Email,
-                    lastActive: new Date(lastLoginDate).toLocaleString(),
+                    lastActive: formatDate(lastLoginDate),
                     lastActiveRaw: lastLoginDate,
-                    created: new Date(user.CreatedAt).toLocaleString(),
+                    created: formatDate(user.CreatedAt),
                     createdByName: user.CreatedByName,
                     user_encode_id: user.user_encode_id,
                 };
@@ -416,43 +427,54 @@ const EmailManagementPageContent: React.FC = () => {
 
                             {/* Table Body */}
                             {users.length === 0 ? (
-                                <div className="flex w-full bg-white border-b border-gray-200 px-4 py-3">
-                                    <div className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">
-                                        {isLoading ? "Loading..." : "No users found"}
+                                <div className="self-stretch h-96 flex flex-col justify-center items-center gap-1 bg-white">
+                                    <div className="inline-flex justify-center items-center gap-1">
+                                        <div className="w-5 h-5 relative overflow-hidden">
+                                            {/* <div className="w-4 h-4 left-[1.88px] top-[1.88px] absolute bg-red-500"></div> */}
+                                            <XCircleIcon className="w-5 h-5 absolute text-red-500" />
+                                        </div>
+                                        <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">
+                                            {searchTerm.trim().length > 0 ? "Email not found" : "No users found"}
+                                        </div>
+                                    </div>
+                                    <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                                        {searchTerm.trim().length > 0
+                                            ? "Please check your keyword and try again."
+                                            : "No users are available yet."}
                                     </div>
                                 </div>
                             ) : (
                                 users.map((user) => (
                                     <div
                                         key={user.email}
-                                        className="flex w-full bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+                                        className="flex w-full border-b border-gray-200 cursor-pointer bg-white hover:bg-gray-100"
                                         onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}
                                     >
                                         {/* Name */}
-                                        <div className="w-80 px-4 py-3 flex items-center">
+                                        <div className="w-80 h-11 px-4 py-3 flex items-center">
                                             <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.email}
                                             </div>
                                         </div>
                                         {/* Last Active */}
-                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                        <div className="flex-1 h-11 px-4 py-3 flex items-center">
                                             <LastActiveBadge lastActiveRaw={user.lastActiveRaw} />
                                         </div>
                                         {/* Created */}
-                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                        <div className="flex-1 h-11 px-4 py-3 flex items-center">
                                             <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.created}
                                             </div>
                                         </div>
                                         {/* Created By */}
-                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                        <div className="flex-1 h-11 px-4 py-3 flex items-center">
                                             <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.createdByName || "System"}
                                             </div>
                                         </div>
                                         {/* Action */}
                                         <div
-                                            className="w-20 px-4 py-3 flex justify-center items-center"
+                                            className="w-20 h-11 px-4 py-3 flex justify-center items-center"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <UserRowActionMenu
@@ -467,16 +489,18 @@ const EmailManagementPageContent: React.FC = () => {
                         </div>
 
                         {/* Pagination */}
-                        <div className="self-stretch">
-                            <PaginationComponent
-                                totalPages={totalPages}
-                                currentPage={currentPage}
-                                onPageChange={setCurrentPage}
-                                totalCount={totalCount}
-                                activeCount={activeCount}
-                                pageSize={pageSize}
-                            />
-                        </div>
+                        {users.length > 0 && !searchTerm.trim().length && (
+                            <div className="self-stretch">
+                                <PaginationComponent
+                                    totalPages={totalPages}
+                                    currentPage={currentPage}
+                                    onPageChange={setCurrentPage}
+                                    totalCount={totalCount}
+                                    activeCount={activeCount}
+                                    pageSize={pageSize}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 
