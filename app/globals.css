@@ -192,6 +192,18 @@
    ======================================== */
 
 @layer components {
+  .search-input {
+    @apply transition-all;
+  }
+
+  .search-input-wrapper:focus-within {
+    border-radius: 8px;
+    border: 1px solid var(--primary-300);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(225, 225, 254, 0.7);
+    outline: none;
+  }
+
   /* Page Layout - Mobile */
   .page-layout-mobile {
     @apply flex flex-col justify-between items-center;

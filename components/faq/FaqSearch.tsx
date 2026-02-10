@@ -31,11 +31,10 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder="Search any question here"
           className={cn(
-            "self-stretch w-full h-10 px-3 py-2 bg-white rounded-lg",
+            "search-input self-stretch w-full h-10 px-3 py-2 bg-white rounded-lg",
             "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
             "outline outline-1 outline-offset-[-1px] outline-gray-200",
             "text-sm text-gray-900 placeholder:text-gray-400",
-            "focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400",
             "transition-all pr-12"
           )}
         />

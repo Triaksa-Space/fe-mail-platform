@@ -392,13 +392,13 @@ export default function AdminAllInboxPage() {
               {/* Search Header
               <div className="flex items-center gap-3 p-4 border-b border-gray-100">
                 <div className="relative flex-1">
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Search by sender, recipient, or subject..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-10 rounded-xl border-gray-200"
-                  />
+                    <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      placeholder="Search by sender, recipient, or subject..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="search-input pl-10 h-10 rounded-xl border-gray-200"
+                    />
                 </div>
                 <span className="text-sm text-gray-500 whitespace-nowrap">
                   {total} emails

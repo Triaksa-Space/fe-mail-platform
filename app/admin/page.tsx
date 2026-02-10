@@ -356,12 +356,12 @@ const EmailManagementPageContent: React.FC = () => {
                         User list
                     </div>
                     <div className="w-64 h-10 inline-flex flex-col justify-between items-start">
-                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-between items-center">
+                        <div className="search-input-wrapper self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-between items-center">
                             <div className="flex justify-start items-center gap-2 flex-1">
                                 <input
                                     id="by_username"
                                     placeholder="Search user..."
-                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400"
+                                    className="search-input flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400"
                                     value={searchTerm}
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -369,14 +369,14 @@ const EmailManagementPageContent: React.FC = () => {
                                         handleSearch(sanitizedValue);
                                     }}
                                 />
-                                <MagnifyingGlassIcon className="w-4 h-4 text-gray-800" />
+                                <MagnifyingGlassIcon className="w-5 h-5 text-gray-800" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Table Card */}
-                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden relative">
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-visible relative">
                     <Toaster />
 
                     {/* Loading Overlay - only covers table card */}
@@ -391,7 +391,7 @@ const EmailManagementPageContent: React.FC = () => {
 
                     {/* Table Container */}
                     <div className="self-stretch flex flex-col justify-start items-start gap-4">
-                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 overflow-hidden">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 overflow-visible">
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-gray-200">
                                 <div className="w-80 px-4 py-3 flex items-center gap-1">
