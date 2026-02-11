@@ -24,6 +24,15 @@ export default function LoginPageClient() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
+  const passwordMaskLength = (() => {
+    if (!password) return 0;
+    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+      return Array.from(segmenter.segment(password)).length;
+    }
+    return Array.from(password).length;
+  })();
+
   const { setAuth } = useAuthStore();
   const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
@@ -182,23 +191,35 @@ export default function LoginPageClient() {
                     <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
                       <div className="flex-1 flex items-center gap-2">
                         <LockClosedIcon className="w-5 h-5 text-gray-400" />
-                        <input
-                          id="password"
-                          name="password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="***********"
-                          required
-                          value={password}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const sanitizedValue = DOMPurify.sanitize(value).replace(
-                              /\s/g,
-                              ""
-                            );
-                            setPassword(sanitizedValue);
-                          }}
-                          className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
-                        />
+                        <div className="relative flex-1">
+                          <input
+                            id="password"
+                            name="password"
+                            type="text"
+                            placeholder="***********"
+                            autoComplete="current-password"
+                            required
+                            value={password}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              const sanitizedValue = DOMPurify.sanitize(value).replace(
+                                /\s/g,
+                                ""
+                              );
+                              setPassword(sanitizedValue);
+                            }}
+                            className={`w-full text-sm font-normal placeholder:text-gray-400 bg-transparent outline-none ${
+                              showPassword
+                                ? "text-gray-800"
+                                : "text-transparent caret-gray-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
+                            }`}
+                          />
+                          {!showPassword && passwordMaskLength > 0 && (
+                            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-gray-800 font-mono tracking-[0.04em]">
+                              {"*".repeat(passwordMaskLength)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <button
                         type="button"
