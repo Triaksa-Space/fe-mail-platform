@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import LoadingProcessingPage from '@/components/ProcessLoading';
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import DOMPurify from 'dompurify';
 import {
     AdminLayout,
@@ -379,15 +379,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                 {/* Table Card */}
                 <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-visible relative">
 
-                    {/* Loading Overlay */}
-                    {isLoading && (
-                        <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-lg">
-                            <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                                <span className="text-gray-600 text-sm font-medium">Loading...</span>
-                            </div>
-                        </div>
-                    )}
+                    {/* Loading Overlay removed: loading is shown in card body only */}
 
                     {/* Header Row */}
                     <div className="self-stretch inline-flex justify-between items-center">
@@ -449,10 +441,12 @@ const RolesPermissionsPageContent: React.FC = () => {
                             </div>
 
                             {/* Table Body */}
-                            {admins.length === 0 ? (
+                            {isLoading ? (
+                                <AdminLoadingPlaceholder heightClassName="h-32" />
+                            ) : admins.length === 0 ? (
                                 <div className="flex w-full bg-white border-b border-gray-200 px-4 py-3">
                                     <div className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">
-                                        {isLoading ? "Loading..." : searchQuery ? "No admins found matching your search" : "No admins found"}
+                                        {searchQuery ? "No admins found matching your search" : "No admins found"}
                                     </div>
                                 </div>
                             ) : (
@@ -685,7 +679,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                 </Dialog>
             </div>
 
-            {isLoading && <LoadingProcessingPage />}
+            {/* Removed full-page loading overlay */}
         </AdminLayout>
     );
 };

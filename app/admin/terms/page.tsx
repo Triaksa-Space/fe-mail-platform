@@ -7,6 +7,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import AdminLayout from "@/components/admin/AdminLayout";
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
@@ -34,9 +35,7 @@ const DOMPURIFY_CONFIG = {
 };
 
 const LoadingFallback: React.FC = () => (
-  <div className="flex justify-center items-center h-full min-h-[400px]">
-    <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
-  </div>
+  <AdminLoadingPlaceholder heightClassName="min-h-[400px]" />
 );
 
 const AdminTermsPageContent: React.FC = () => {

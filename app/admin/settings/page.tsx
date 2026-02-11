@@ -12,10 +12,11 @@ import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout } from "@/components/admin";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
-    <div className="flex justify-center items-center h-full"></div>
+    <AdminLoadingPlaceholder heightClassName="h-64" />
 );
 
 // ============================================

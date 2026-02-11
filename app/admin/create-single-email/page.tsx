@@ -13,10 +13,11 @@ import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, AdminContentCard } from "@/components/admin";
 import { CheckCircleIcon, DocumentDuplicateIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline"
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
-  <div className="flex justify-center items-center h-full"></div>
+  <AdminLoadingPlaceholder heightClassName="h-64" />
 );
 
 interface CreatedEmail {

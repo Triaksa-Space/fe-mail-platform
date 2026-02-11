@@ -19,6 +19,7 @@ import { AdminLayout, UserRowActionMenu } from "@/components/admin";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { XCircleIcon, LockClosedIcon } from '@heroicons/react/20/solid';
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 interface EmailUser {
     user_encode_id: string;
@@ -128,7 +129,7 @@ const EmailManagementPageContent: React.FC = () => {
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
     const _hasHydrated = useAuthStore((state) => state._hasHydrated);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const { toast } = useToast();
 
@@ -427,7 +428,9 @@ const EmailManagementPageContent: React.FC = () => {
                             </div>
 
                             {/* Table Body */}
-                            {users.length === 0 ? (
+                            {isLoading ? (
+                                <AdminLoadingPlaceholder />
+                            ) : users.length === 0 ? (
                                 <div className="self-stretch h-96 flex flex-col justify-center items-center gap-1 bg-white">
                                     <div className="inline-flex justify-center items-center gap-1">
                                         <div className="w-5 h-5 relative overflow-hidden">

@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import { ArrowPathIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 interface EmailDetail {
   ID: number;
@@ -223,12 +224,7 @@ const EmailDetailPage: React.FC = () => {
 
         {/* Content */}
         {isLoading ? (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center gap-2 text-gray-500">
-              <ArrowPathIcon className="h-5 w-5 animate-spin" />
-              <span>Loading email...</span>
-            </div>
-          </div>
+          <AdminLoadingPlaceholder heightClassName="h-64" />
         ) : error ? (
           <AdminContentCard className="flex-1 flex items-center justify-center">
             <div className="text-center">

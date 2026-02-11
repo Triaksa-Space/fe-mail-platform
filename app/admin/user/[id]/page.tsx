@@ -11,6 +11,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
 import { ArrowPathIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -305,12 +306,7 @@ export default function UserDetailPage() {
             {/* Inbox List */}
             <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-y-auto">
               {isLoadingInbox ? (
-                <div className="self-stretch flex items-center justify-center py-8">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">Loading...</span>
-                  </div>
-                </div>
+                <AdminLoadingPlaceholder heightClassName="h-32" />
               ) : inboxEmails.length === 0 ? (
                 <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3">
                   <div className="w-10 h-10 flex items-center justify-center">
@@ -358,12 +354,7 @@ export default function UserDetailPage() {
             {/* Sent List */}
             <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-y-auto">
               {isLoadingSent ? (
-                <div className="self-stretch flex items-center justify-center py-8">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
-                    <span className="text-sm">Loading...</span>
-                  </div>
-                </div>
+                <AdminLoadingPlaceholder heightClassName="h-32" />
               ) : sentEmails.length === 0 ? (
                 <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3">
                   <div className="w-10 h-10 flex items-center justify-center">

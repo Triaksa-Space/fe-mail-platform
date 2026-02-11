@@ -17,6 +17,7 @@ import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // API response interfaces (snake_case from backend)
 interface ApiEmail {
@@ -252,12 +253,7 @@ export default function AdminAllInboxPage() {
               </div>
 
               {isLoadingDetail ? (
-                <div className="flex items-center justify-center h-32">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <ArrowPathIcon className="w-6 h-6 animate-spin" />
-                    <span className="text-sm">Loading...</span>
-                  </div>
-                </div>
+                <AdminLoadingPlaceholder heightClassName="h-32" />
               ) : (
                 <>
                   {/* Email Meta Card */}
@@ -408,12 +404,7 @@ export default function AdminAllInboxPage() {
               {/* Email List */}
               <div className="flex-1 overflow-y-auto">
                 {isLoading ? (
-                  <div className="flex items-center justify-center h-32">
-                    <div className="flex items-center gap-2 text-gray-500">
-                      <ArrowPathIcon className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">Loading emails...</span>
-                    </div>
-                  </div>
+                  <AdminLoadingPlaceholder heightClassName="h-32" />
                 ) : error ? (
                   <div className="flex items-center justify-center h-32 px-4">
                     <p className="text-sm text-red-600 text-center">{error}</p>
