@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, AlertTriangle, Lock, Eye, EyeOff } from 'lucide-react';
+import { ArrowUp, ArrowDown, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import { AdminLayout, UserRowActionMenu } from "@/components/admin";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { XCircleIcon } from '@heroicons/react/20/solid';
+import { XCircleIcon, LockClosedIcon } from '@heroicons/react/20/solid';
 
 interface EmailUser {
     user_encode_id: string;
@@ -538,7 +538,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                 : "outline-gray-200"
                                         )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <Lock className={cn(
+                                                <LockClosedIcon className={cn(
                                                     "w-5 h-5",
                                                     confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
                                                         ? "text-red-400"
@@ -590,7 +590,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                 : "outline-gray-200"
                                         )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <Lock className="w-5 h-5 text-gray-400" />
+                                                <LockClosedIcon className="w-5 h-5 text-gray-400" />
                                                 <input
                                                     type={showCPassword ? "text" : "password"}
                                                     value={confirmPasswordForAdmin}

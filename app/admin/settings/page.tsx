@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Lock, Eye, EyeOff, Check } from 'lucide-react';
+import { Eye, EyeOff, Check } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/toaster";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout } from "@/components/admin";
+import { LockClosedIcon } from "@heroicons/react-v1/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -108,7 +109,7 @@ const ChangePasswordSection: React.FC = () => {
                             <div className="self-stretch h-3.5"></div>
                             <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
                                 <div className="flex-1 flex justify-start items-center gap-2">
-                                    <Lock className="w-5 h-5 text-gray-400" />
+                                    <LockClosedIcon className="w-5 h-5 text-gray-400" />
                                     <input
                                         type={showOldPassword ? "text" : "password"}
                                         value={oldPassword}
@@ -145,7 +146,7 @@ const ChangePasswordSection: React.FC = () => {
                             <div className="self-stretch h-3.5"></div>
                             <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
                                 <div className="flex-1 flex justify-start items-center gap-2">
-                                    <Lock className="w-5 h-5 text-gray-400" />
+                                    <LockClosedIcon className="w-5 h-5 text-gray-400" />
                                     <input
                                         type={showNewPassword ? "text" : "password"}
                                         value={newPassword}
@@ -182,7 +183,7 @@ const ChangePasswordSection: React.FC = () => {
                             <div className="self-stretch h-3.5"></div>
                             <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
                                 <div className="flex-1 flex justify-start items-center gap-2">
-                                    <Lock className="w-5 h-5 text-gray-400" />
+                                    <LockClosedIcon className="w-5 h-5 text-gray-400" />
                                     <input
                                         type={showConfirmPassword ? "text" : "password"}
                                         value={confirmPassword}

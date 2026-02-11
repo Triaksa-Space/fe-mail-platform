@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, CheckCircle, AlertTriangle, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, CheckCircle, AlertTriangle, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -542,7 +542,7 @@ export default function ForgotPasswordClient() {
                       <div className="h-3.5" />
                       <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
                         <div className="flex-1 flex items-center gap-2">
-                          <Lock className="w-5 h-5 text-gray-400" />
+                          <LockClosedIcon className="w-5 h-5 text-gray-400" />
                           <input
                             id="new-password"
                             type={showNewPassword ? "text" : "password"}
@@ -580,7 +580,7 @@ export default function ForgotPasswordClient() {
                           : "border-gray-200"
                       )}>
                         <div className="flex-1 flex items-center gap-2">
-                          <Lock className="w-5 h-5 text-gray-400" />
+                          <LockClosedIcon className="w-5 h-5 text-gray-400" />
                           <input
                             id="confirm-password"
                             type={showConfirmPassword ? "text" : "password"}

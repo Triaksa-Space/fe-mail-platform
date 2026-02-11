@@ -11,7 +11,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
-import { PencilSquareIcon, X } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface TermsResponse {
   content: string;

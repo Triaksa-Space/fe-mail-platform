@@ -45,7 +45,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
       </label>
     )}
     <div className="relative">
-      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
       <Input
         className={cn(
           "h-10 text-sm pl-10 pr-10",

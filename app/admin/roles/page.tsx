@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, UserPlus, AlertTriangle, Lock, Eye, EyeOff } from 'lucide-react';
+import { ArrowUp, ArrowDown, UserPlus, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -27,7 +27,8 @@ import {
     PermissionKey,
     formatDate,
 } from "@/lib/admin-types";
-import { ChevronUpDownIcon, X } from '@heroicons/react/24/outline';
+import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { LockClosedIcon } from "@heroicons/react-v1/outline"
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
@@ -571,7 +572,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                         <div className="self-stretch h-3.5"></div>
                                         <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <Lock className="w-5 h-5 text-gray-400" />
+                                                <LockClosedIcon className="w-5 h-5 text-gray-400" />
                                                 <input
                                                     type={showNewPassword ? "text" : "password"}
                                                     value={newPassword}
