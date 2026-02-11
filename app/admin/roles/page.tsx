@@ -282,7 +282,7 @@ const RolesPermissionsPageContent: React.FC = () => {
             console.error('Failed to delete admin:', error);
             let errorMessage = "Failed to delete admin. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-                errorMessage = error.response.data.error.message;
+                errorMessage = error.response.data.message;
             }
             toast({
                 description: errorMessage,
@@ -343,7 +343,7 @@ const RolesPermissionsPageContent: React.FC = () => {
             console.error('Failed to create admin:', error);
             let errorMessage = "Failed to create admin. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-                errorMessage = error.response.data.error.message;
+                errorMessage = error.response.data.message;
             }
             toast({
                 description: errorMessage,

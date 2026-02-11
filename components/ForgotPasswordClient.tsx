@@ -19,6 +19,8 @@ type Step = "email" | "verify" | "reset" | "success";
 export default function ForgotPasswordClient() {
   const [step, setStep] = useState<Step>("email");
   const [isLoading, setIsLoading] = useState(false);
+  const [requestError, setRequestError] = useState("");
+  const [verifyError, setVerifyError] = useState("");
 
   // Step 1: Email & Binding Email
   const [email, setEmail] = useState("");
@@ -78,6 +80,7 @@ export default function ForgotPasswordClient() {
     e.preventDefault();
     if (!email) return;
 
+    setRequestError("");
     setIsLoading(true);
 
     try {
@@ -101,19 +104,12 @@ export default function ForgotPasswordClient() {
         otpRefs[0].current?.focus();
       }, 100);
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data?.error) {
-        toast({
-          description: error.response.data.error,
-          variant: "destructive",
-        });
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const data = error.response.data as { message?: string };
+        setRequestError(data.message || "Failed to send code.");
       } else {
         // Don't reveal if user exists - show generic message
-        toast({
-          description: "If this email exists, a verification code has been sent.",
-          variant: "default",
-        });
-        setStep("verify");
-        setAttemptsRemaining(5);
+        setRequestError("If this email exists, a verification code has been sent.");
       }
     } finally {
       setIsLoading(false);
@@ -160,13 +156,11 @@ export default function ForgotPasswordClient() {
     if (code.length !== 4) return;
 
     if (blockedUntil) {
-      toast({
-        description: `Too many failed attempts. Try again in ${formatCountdown(countdown)}.`,
-        variant: "destructive",
-      });
+      setVerifyError(`Too many failed attempts. Try again in ${formatCountdown(countdown)}.`);
       return;
     }
 
+    setVerifyError("");
     setIsLoading(true);
 
     try {
@@ -188,29 +182,19 @@ export default function ForgotPasswordClient() {
 
         if (data.blocked_until) {
           setBlockedUntil(new Date(data.blocked_until));
-          toast({
-            description: "Too many failed attempts. Try again in 5 minutes.",
-            variant: "destructive",
-          });
+          setVerifyError("Too many failed attempts. Try again in 5 minutes.");
         } else if (data.attempts_remaining !== undefined) {
           setAttemptsRemaining(data.attempts_remaining);
-          toast({
-            description: data.attempts_remaining === 1
+          setVerifyError(
+            data.attempts_remaining === 1
               ? "One more attempt before access is blocked."
-              : data.error || "Invalid verification code.",
-            variant: "destructive",
-          });
+              : data.message || "Invalid verification code."
+          );
         } else {
-          toast({
-            description: data.error || "Invalid verification code.",
-            variant: "destructive",
-          });
+          setVerifyError(data.message || "Invalid verification code.");
         }
       } else {
-        toast({
-          description: "Failed to verify code. Please try again.",
-          variant: "destructive",
-        });
+        setVerifyError("Failed to verify code. Please try again.");
       }
 
       setOtp(["", "", "", ""]);
@@ -290,8 +274,8 @@ export default function ForgotPasswordClient() {
       });
     } catch (error) {
       let errorMessage = "Failed to reset password. Please try again.";
-      if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
       }
       toast({
         description: errorMessage,
@@ -350,7 +334,12 @@ export default function ForgotPasswordClient() {
                     {/* Email Field */}
                     <div className="relative flex flex-col">
                       <div className="h-3.5" />
-                      <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
+                      <div
+                        className={cn(
+                          "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3",
+                          requestError ? "outline-red-500" : "outline-gray-200"
+                        )}
+                      >
                         <div className="flex-1 flex items-center gap-2">
                           <Mail className="w-5 h-5 text-gray-400" />
                           <input
@@ -373,7 +362,12 @@ export default function ForgotPasswordClient() {
                     {/* Binding Email Field */}
                     <div className="relative flex flex-col">
                       <div className="h-3.5" />
-                      <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
+                      <div
+                        className={cn(
+                          "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3",
+                          requestError ? "outline-red-500" : "outline-gray-200"
+                        )}
+                      >
                         <div className="flex-1 flex items-center gap-2">
                           <Mail className="w-5 h-5 text-gray-400" />
                           <input
@@ -393,6 +387,11 @@ export default function ForgotPasswordClient() {
                       </div>
                     </div>
 
+                    {requestError && (
+                      <p className="text-[12px] font-normal text-red-500">
+                        {requestError}
+                      </p>
+                    )}
                     {/* Helper text */}
                     <p className="text-gray-500 text-xs leading-5">
                       Binding email is required to reset your password. You can set up a binding email in your account settings.
@@ -410,7 +409,7 @@ export default function ForgotPasswordClient() {
 
                     <Link
                       href="/"
-                      className="h-9 flex items-center justify-center text-primary-600 text-base font-medium hover:text-primary-700"
+                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-600"
                     >
                       Back to login
                     </Link>
@@ -444,17 +443,6 @@ export default function ForgotPasswordClient() {
                       <span className="font-medium">{bindingEmail || email}</span>
                     </p>
 
-                    {/* Blocked Warning */}
-                    {blockedUntil && (
-                      <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                        <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                        <p className="text-sm text-red-600">
-                          Too many failed attempts. Try again in{" "}
-                          <span className="font-medium">{formatCountdown(countdown)}</span>
-                        </p>
-                      </div>
-                    )}
-
                     {/* Warning for last attempt */}
                     {!blockedUntil && attemptsRemaining === 1 && (
                       <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -480,6 +468,7 @@ export default function ForgotPasswordClient() {
                           disabled={!!blockedUntil}
                           className={cn(
                             "w-12 h-12 text-center text-xl font-semibold border-gray-200 rounded-lg",
+                            verifyError && "outline outline-1 outline-offset-[-1px] outline-red-500 border-transparent",
                             blockedUntil && "bg-gray-100 cursor-not-allowed"
                           )}
                         />
@@ -489,6 +478,11 @@ export default function ForgotPasswordClient() {
                     {attemptsRemaining !== null && !blockedUntil && attemptsRemaining < 5 && (
                       <p className="text-xs text-center text-gray-500">
                         {attemptsRemaining} attempts remaining
+                      </p>
+                    )}
+                    {verifyError && (
+                      <p className="text-[12px] font-normal text-red-500 text-center">
+                        {verifyError}
                       </p>
                     )}
                   </div>
@@ -506,7 +500,7 @@ export default function ForgotPasswordClient() {
                       type="button"
                       onClick={handleResendCode}
                       disabled={isLoading}
-                      className="h-9 flex items-center justify-center text-primary-600 text-base font-medium hover:text-primary-700"
+                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-600"
                     >
                       Resend Code
                     </button>

@@ -163,7 +163,7 @@ const EditAdminPageContent: React.FC = () => {
             console.error('Failed to update admin:', error);
             let errorMessage = "Failed to update admin. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-                errorMessage = error.response.data.error.message;
+                errorMessage = error.response.data.message;
             }
             toast({
                 description: errorMessage,

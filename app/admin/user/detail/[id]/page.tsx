@@ -120,7 +120,7 @@ const EmailDetailPage: React.FC = () => {
     } catch (error) {
       let errorMessage = "Failed to download file. Please try again.";
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+        errorMessage = error.response.data.message;
       }
       toast({
         description: errorMessage,

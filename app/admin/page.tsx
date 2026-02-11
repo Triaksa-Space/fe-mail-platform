@@ -212,7 +212,7 @@ const EmailManagementPageContent: React.FC = () => {
 
             let errorMessage = "Failed to change password. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
-                errorMessage = error.response.data.error;
+                errorMessage = error.response.data.message;
             }
             toast({
                 description: errorMessage,
@@ -247,7 +247,7 @@ const EmailManagementPageContent: React.FC = () => {
             console.error('Failed to delete user:', error);
             let errorMessage = "Failed to delete user. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
-                errorMessage = error.response.data.error;
+                errorMessage = error.response.data.message;
             }
             toast({
                 description: errorMessage,

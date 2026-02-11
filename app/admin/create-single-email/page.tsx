@@ -167,9 +167,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
         axios.isAxiosError(error) &&
         error.response &&
         error.response.data &&
-        error.response.data.error
+        error.response.data.message
       ) {
-        errorMessage = error.response.data.error;
+        errorMessage = error.response.data.message;
       }
       toast({
         description: errorMessage,

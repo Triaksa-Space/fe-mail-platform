@@ -222,7 +222,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       } else {
         let errorMessage = "Failed to send email. Please try again.";
         if (axios.isAxiosError(error) && error.response?.data?.error) {
-          errorMessage = error.response.data.error;
+          errorMessage = error.response.data.message;
         }
         toast({
           description: errorMessage,

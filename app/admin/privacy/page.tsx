@@ -149,7 +149,7 @@ const AdminPrivacyPageContent: React.FC = () => {
     } catch (error) {
       let errorMessage = "Failed to save Privacy Policy. Please try again.";
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+        errorMessage = error.response.data.message;
       }
       toast({
         description: errorMessage,

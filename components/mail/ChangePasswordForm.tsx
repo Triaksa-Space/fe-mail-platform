@@ -55,8 +55,8 @@ const ChangePasswordForm: React.FC = () => {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
           setError("Current password is incorrect");
-        } else if (err.response?.data?.error) {
-          setError(err.response.data.error);
+        } else if (err.response?.data?.message) {
+          setError(err.response.data.message);
         } else {
           setError("Failed to change password. Please try again.");
         }

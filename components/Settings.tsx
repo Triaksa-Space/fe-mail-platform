@@ -81,7 +81,7 @@ const Settings: React.FC = () => {
           setOldPasswordError("The password you entered is incorrect.");
         } else if (err.response?.data?.error) {
           toast({
-            description: `Failed to update password. ${err.response.data.error}`,
+            description: `Failed to update password. ${err.response.data.message}`,
             variant: "destructive",
           });
         } else {

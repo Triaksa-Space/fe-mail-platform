@@ -112,11 +112,9 @@ export default function LoginPageClient() {
     } catch (error) {
       let errorMessage = "Invalid email or password";
       if (axios.isAxiosError(error) && error.response?.data) {
-        const data = error.response.data as { error?: string; message?: string };
+        const data = error.response.data as { message?: string };
         if (data.message) {
           errorMessage = data.message;
-        } else if (data.error === "AUTH_INVALID_CREDENTIALS") {
-          errorMessage = "Invalid email or password";
         }
       }
       setLoginError(errorMessage);

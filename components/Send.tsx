@@ -141,7 +141,7 @@ const Send: React.FC = () => {
       } else {
         let errorMessage = "Failed to send email. Please try again.";
         if (axios.isAxiosError(error) && error.response?.data?.error) {
-          errorMessage = error.response.data.error;
+          errorMessage = error.response.data.message;
         }
         toast({
           description: errorMessage,
@@ -207,7 +207,7 @@ const Send: React.FC = () => {
         } catch (error) {
           let errorMsg = `Failed to upload "${file.name}".`;
           if (axios.isAxiosError(error) && error.response?.data?.error) {
-            errorMsg += ` ${error.response.data.error}`;
+            errorMsg += ` ${error.response.data.message}`;
           }
           toast({
             description: errorMsg,
@@ -235,7 +235,7 @@ const Send: React.FC = () => {
     } catch (error) {
       let errorMsg = `Failed to remove "${attachmentToRemove.name}".`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMsg += ` ${error.response.data.error}`;
+        errorMsg += ` ${error.response.data.message}`;
       }
       toast({
         description: errorMsg,
@@ -254,7 +254,7 @@ const Send: React.FC = () => {
     } catch (error) {
       let errorMsg = `Failed to remove attachments.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMsg += ` ${error.response.data.error}`;
+        errorMsg += ` ${error.response.data.message}`;
       }
       toast({
         description: errorMsg,

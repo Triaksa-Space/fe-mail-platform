@@ -151,7 +151,7 @@ const AdminTermsPageContent: React.FC = () => {
     } catch (error) {
       let errorMessage = "Failed to save Terms of Services. Please try again.";
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+        errorMessage = error.response.data.message;
       }
       toast({
         description: errorMessage,

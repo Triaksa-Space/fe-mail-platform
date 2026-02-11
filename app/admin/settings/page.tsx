@@ -75,7 +75,7 @@ const ChangePasswordSection: React.FC = () => {
         } catch (error) {
             let errorMessage = "Failed to change password. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
-                errorMessage = error.response.data.error;
+                errorMessage = error.response.data.message;
             }
             toast({
                 description: errorMessage,

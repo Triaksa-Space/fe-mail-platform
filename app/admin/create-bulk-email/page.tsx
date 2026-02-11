@@ -166,7 +166,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
     } catch (error) {
       let errorMessage = "Failed to create users. Please try again."
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error
+        errorMessage = error.response.data.message
       }
       toast({
         description: errorMessage,
