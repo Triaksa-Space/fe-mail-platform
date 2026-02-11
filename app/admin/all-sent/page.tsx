@@ -13,12 +13,12 @@ import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import {
-  ArrowPathIcon,
+  RefreshIcon,
   ArrowLeftIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
-} from "@heroicons/react/24/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
+} from "@heroicons/react/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/solid";
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -203,7 +203,7 @@ export default function AdminAllSentPage() {
             )}
             aria-label="Refresh"
           >
-            <ArrowPathIcon
+            <RefreshIcon
               className={cn(
                 "w-4 h-4 text-gray-800",
                 isRefreshing && "animate-spin",
@@ -252,7 +252,7 @@ export default function AdminAllSentPage() {
               {isLoadingDetail ? (
                 <div className="flex items-center justify-center h-32">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <ArrowPathIcon className="w-6 h-6 animate-spin" />
+                    <RefreshIcon className="w-6 h-6 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ export default function AdminAllSentPage() {
                 {isLoading ? (
                   <div className="flex items-center justify-center h-32">
                     <div className="flex items-center gap-2 text-gray-500">
-                      <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                      <RefreshIcon className="h-4 w-4 animate-spin" />
                       <span className="text-sm">Loading emails...</span>
                     </div>
                   </div>
@@ -539,3 +539,4 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
     </button>
   );
 };
+

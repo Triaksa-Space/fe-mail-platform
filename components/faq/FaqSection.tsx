@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/outline";
 import { cn } from "@/lib/utils";
 import { FaqCategory, FaqItem } from "@/lib/faqData";
 
@@ -113,3 +113,4 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
 };
 
 export default FaqSection;
+

@@ -19,7 +19,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
-import { ArrowPathIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { RefreshIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react/outline";
 
 interface EmailDetail {
   ID: number;
@@ -185,7 +185,7 @@ const EmailDetailPage: React.FC = () => {
   if (!authLoaded || roleId === 1) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <ArrowPathIcon className="h-6 w-6 animate-spin text-gray-400" />
+        <RefreshIcon className="h-6 w-6 animate-spin text-gray-400" />
       </div>
     );
   }
@@ -225,7 +225,7 @@ const EmailDetailPage: React.FC = () => {
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center">
             <div className="flex items-center gap-2 text-gray-500">
-              <ArrowPathIcon className="h-5 w-5 animate-spin" />
+              <RefreshIcon className="h-5 w-5 animate-spin" />
               <span>Loading email...</span>
             </div>
           </div>
@@ -352,7 +352,7 @@ const EmailDetailPage: React.FC = () => {
                             className="h-9 w-9 p-0 rounded-lg flex-shrink-0"
                           >
                             {isDownloadingThis ? (
-                              <ArrowPathIcon className="h-4 w-4 animate-spin text-gray-600" />
+                              <RefreshIcon className="h-4 w-4 animate-spin text-gray-600" />
                             ) : (
                               <Download className="h-4 w-4 text-gray-600" />
                             )}
@@ -386,3 +386,4 @@ const EmailDetailPage: React.FC = () => {
 };
 
 export default EmailDetailPage;
+

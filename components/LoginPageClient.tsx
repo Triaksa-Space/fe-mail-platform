@@ -15,6 +15,7 @@ import FeatureList from "@/components/FeatureList";
 import { PageLayout, AuthCard, Footer } from "@/components/layout";
 import DOMPurify from "dompurify";
 import { LoginResponse } from "@/lib/api-types";
+import { LockClosedIcon } from "@heroicons/react/outline";
 
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
@@ -180,7 +181,7 @@ export default function LoginPageClient() {
                     <div className="h-3.5" />
                     <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
                       <div className="flex-1 flex items-center gap-2">
-                        <Lock className="w-5 h-5 text-gray-400" />
+                        <LockClosedIcon className="w-5 h-5 text-gray-400" />
                         <input
                           id="password"
                           name="password"
@@ -205,9 +206,9 @@ export default function LoginPageClient() {
                         className="flex items-center"
                       >
                         {showPassword ? (
-                          <EyeOff className="w-5 h-5 text-gray-800" />
-                        ) : (
                           <Eye className="w-5 h-5 text-gray-800" />
+                        ) : (
+                          <EyeOff className="w-5 h-5 text-gray-800" />
                         )}
                       </button>
                     </div>
@@ -273,3 +274,4 @@ export default function LoginPageClient() {
     </>
   );
 }
+

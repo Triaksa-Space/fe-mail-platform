@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Footer, ScrollToTopButton } from "@/components/layout";
 import axios from "axios";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from "@heroicons/react/outline";
 
 interface PrivacyResponse {
   content: string;
@@ -214,3 +214,4 @@ const PrivacyPage: React.FC = () => {
 };
 
 export default PrivacyPage;
+

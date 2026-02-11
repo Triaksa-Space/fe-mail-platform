@@ -3,7 +3,7 @@
 import React from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ShieldCheckIcon, InboxStackIcon } from "@heroicons/react/24/solid";
+import { ShieldCheckIcon, InboxStackIcon } from "@heroicons/react/solid";
 import Icon from "@mdi/react";
 import { mdiAdvertisementsOff } from "@mdi/js";
 import { CardPayFill } from '@mingcute/react';
@@ -70,3 +70,4 @@ const FeatureList: React.FC<FeatureListProps> = ({
 };
 
 export default FeatureList;
+

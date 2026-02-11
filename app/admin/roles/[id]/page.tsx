@@ -18,7 +18,7 @@ import {
     PermissionChips
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse } from "@/lib/admin-types";
-import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, X } from '@heroicons/react/outline';
 
 const ViewAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -271,7 +271,7 @@ const ViewAdminPageContent: React.FC = () => {
                             onClick={() => setIsDeleteModalOpen(false)}
                             className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                         >
-                            <XMarkIcon className="w-4 h-4 text-gray-800" />
+                            <XIcon className="w-4 h-4 text-gray-800" />
                         </button>
 
                         <div className="self-stretch flex flex-col justify-start items-center gap-5">
@@ -325,3 +325,4 @@ const ViewAdminPage: React.FC = () => {
 };
 
 export default ViewAdminPage;
+

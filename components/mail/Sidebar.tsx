@@ -7,7 +7,7 @@ import {
   EnvelopeIcon,
   PaperAirplaneIcon,
   Cog6ToothIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/outline";
 import {
   EnvelopeIcon as EnvelopeIconSolid,
   PaperAirplaneIcon as PaperAirplaneIconSolid,
@@ -124,3 +124,4 @@ const Sidebar: React.FC<SidebarProps> = ({
 };
 
 export default Sidebar;
+

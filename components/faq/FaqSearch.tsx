@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, X } from '@heroicons/react/outline';
 
 interface FaqSearchProps {
   value: string;
@@ -45,7 +45,7 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
               className="flex h-5 w-5 items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
               aria-label="Clear search"
             >
-              <XMarkIcon className="h-4 w-4" />
+              <XIcon className="h-4 w-4" />
             </button>
           )}
           <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
@@ -63,3 +63,4 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
 };
 
 export default FaqSearch;
+

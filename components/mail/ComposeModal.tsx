@@ -9,7 +9,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
-import { XMarkIcon,PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { X,PaperAirplaneIcon } from "@heroicons/react/outline"
 
 interface ComposeModalProps {
   isOpen: boolean;
@@ -343,7 +343,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               )}
               aria-label="Close compose"
             >
-              <XMarkIcon className="h-5 w-5" />
+              <XIcon className="h-5 w-5" />
             </button>
 
             {/* Right: Daily Send Badge, Attachment & Send Buttons */}
@@ -525,7 +525,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                           className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-red-600 transition-colors"
                           aria-label={`Remove ${file.name}`}
                         >
-                          <XMarkIcon className="w-4 h-4" />
+                          <XIcon className="w-4 h-4" />
                         </button>
                       </div>
                       {/* Filename - truncated to 2 lines */}
@@ -561,3 +561,4 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 };
 
 export default ComposeModal;
+

@@ -9,8 +9,8 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowPathIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
+import { RefreshIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
+import { EnvelopeOpenIcon } from '@heroicons/react/solid';
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -292,7 +292,7 @@ export default function UserDetailPage() {
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
-            <ArrowPathIcon className={cn("w-4 h-4 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
+            <RefreshIcon className={cn("w-4 h-4 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
           </button>
         </div>
 
@@ -307,7 +307,7 @@ export default function UserDetailPage() {
               {isLoadingInbox ? (
                 <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                    <RefreshIcon className="h-4 w-4 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
@@ -360,7 +360,7 @@ export default function UserDetailPage() {
               {isLoadingSent ? (
                 <div className="self-stretch flex items-center justify-center py-8">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                    <RefreshIcon className="h-4 w-4 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
@@ -492,3 +492,4 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
     </button>
   );
 };
+

@@ -9,8 +9,8 @@ import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { LazyList } from "@/components/VirtualList";
-import { ArrowPathIcon } from "@heroicons/react/24/outline"
-import { EnvelopeOpenIcon } from "@heroicons/react/24/solid"
+import { RefreshIcon } from "@heroicons/react/outline"
+import { EnvelopeOpenIcon } from "@heroicons/react/solid"
 
 interface SentListProps {
   emails: SentMail[];
@@ -112,7 +112,7 @@ const SentList: React.FC<SentListProps> = ({
       {isRefreshing && emails.length > 0 && (
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
           <span className="text-primary-600 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
-          <ArrowPathIcon className="w-4 h-4 text-primary-600 animate-spin" />
+          <RefreshIcon className="w-4 h-4 text-primary-600 animate-spin" />
         </div>
       )}
 
@@ -132,7 +132,7 @@ const SentList: React.FC<SentListProps> = ({
               onClick={onRefresh}
               className="text-sm"
             >
-              <ArrowPathIcon className="h-3 w-3 mr-1.5" />
+              <RefreshIcon className="h-3 w-3 mr-1.5" />
               Try again
             </Button>
           </div>
@@ -240,3 +240,4 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
 });
 
 export default SentList;
+

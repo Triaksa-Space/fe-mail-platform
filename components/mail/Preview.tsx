@@ -14,7 +14,7 @@ import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon } from "@heroicons/react/outline"
 
 interface PreviewProps {
   email: Mail | null;
@@ -457,3 +457,4 @@ const Preview: React.FC<PreviewProps> = ({
 };
 
 export default Preview;
+

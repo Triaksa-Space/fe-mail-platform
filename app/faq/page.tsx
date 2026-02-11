@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { searchFaqs, countFaqResults } from "@/lib/faqData";
 import { FaqSearch, FaqSection, FaqEmptyState } from "@/components/faq";
 import { Footer, ScrollToTopButton } from "@/components/layout";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from "@heroicons/react/outline";
 
 const FaqPage: React.FC = () => {
   const router = useRouter();
@@ -133,3 +133,4 @@ const FaqPage: React.FC = () => {
 };
 
 export default FaqPage;
+

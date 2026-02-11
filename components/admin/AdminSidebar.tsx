@@ -17,7 +17,7 @@ import {
   KeyIcon as KeyOutlineIcon,
   Cog6ToothIcon as Cog6ToothOutlineIcon,
   ArrowRightStartOnRectangleIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/outline";
 import {
   UserGroupIcon as UserGroupSolidIcon,
   FolderPlusIcon as FolderPlusSolidIcon,
@@ -348,3 +348,4 @@ const AdminSidebar: React.FC = () => {
 };
 
 export default AdminSidebar;
+
