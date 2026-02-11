@@ -306,10 +306,8 @@ export default function ForgotPasswordClient() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-between items-center p-4 overflow-hidden relative">
-        {/* Background glow */}
-        <div className="absolute w-[5000px] h-[5000px] -left-[2305px] top-[788px] bg-blue-100 rounded-full blur-[32px]" />
-
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-between items-center p-4 md:p-8 overflow-hidden relative">
+        
         {/* Main content */}
         <div className="flex-1 flex items-center justify-center w-full max-w-sm z-10">
           {/* Card */}

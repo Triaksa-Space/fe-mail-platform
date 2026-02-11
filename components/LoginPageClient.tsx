@@ -9,8 +9,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Toaster } from "@/components/ui/toaster";
-import { useToast } from "@/hooks/use-toast";
 import FeatureList from "@/components/FeatureList";
 import { PageLayout, AuthCard, Footer } from "@/components/layout";
 import DOMPurify from "dompurify";
@@ -23,6 +21,7 @@ export default function LoginPageClient() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+  const [loginError, setLoginError] = useState("");
 
   const passwordMaskLength = (() => {
     if (!password) return 0;
@@ -38,8 +37,6 @@ export default function LoginPageClient() {
   const roleId = useAuthStore((state) => state.roleId);
 
   const router = useRouter();
-  const { toast } = useToast();
-
   // Redirect if already logged in
   useEffect(() => {
     if (!token || roleId === null) return;
@@ -57,6 +54,7 @@ export default function LoginPageClient() {
 
     if (!loginEmail || !password) return;
 
+    setLoginError("");
     setIsLoading(true);
 
     try {
@@ -112,14 +110,16 @@ export default function LoginPageClient() {
         router.push("/inbox");
       }
     } catch (error) {
-      let errorMessage = "Incorrect email or password. Please try again.";
-      if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+      let errorMessage = "Invalid email or password";
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const data = error.response.data as { error?: string; message?: string };
+        if (data.message) {
+          errorMessage = data.message;
+        } else if (data.error === "AUTH_INVALID_CREDENTIALS") {
+          errorMessage = "Invalid email or password";
+        }
       }
-      toast({
-        description: errorMessage,
-        variant: "destructive",
-      });
+      setLoginError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -156,7 +156,11 @@ export default function LoginPageClient() {
                   {/* Email Field with Floating Label */}
                   <div className="relative flex flex-col">
                     <div className="h-3.5" />
-                    <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
+                    <div
+                      className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3 ${
+                        loginError ? "outline-red-500" : "outline-gray-200"
+                      }`}
+                    >
                       <div className="flex-1 flex items-center gap-2">
                         <Mail className="w-5 h-5 text-gray-400" />
                         <input
@@ -188,7 +192,11 @@ export default function LoginPageClient() {
                   {/* Password Field with Floating Label */}
                   <div className="relative flex flex-col">
                     <div className="h-3.5" />
-                    <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
+                    <div
+                      className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3 ${
+                        loginError ? "outline-red-500" : "outline-gray-200"
+                      }`}
+                    >
                       <div className="flex-1 flex items-center gap-2">
                         <LockClosedIcon className="w-5 h-5 text-gray-400" />
                         <div className="relative flex-1">
@@ -240,6 +248,11 @@ export default function LoginPageClient() {
                     </div>
                   </div>
                 </div>
+                {loginError && (
+                  <p className="text-[12px] font-normal text-red-500">
+                    {loginError}
+                  </p>
+                )}
 
                 {/* Remember me + Forgot Password */}
                 <div className="flex items-center justify-between">
@@ -291,7 +304,6 @@ export default function LoginPageClient() {
         <Footer />
       </PageLayout>
 
-      <Toaster />
     </>
   );
 }

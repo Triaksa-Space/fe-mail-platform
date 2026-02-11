@@ -32,7 +32,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
 
   const responsiveClasses = cn(
     // Mobile first - tighter padding for mobile to prevent scroll
-    "w-full px-4 py-3",
+    "w-full px-4 py-4",
     // Desktop
     "md:px-44 md:py-8"
   );
