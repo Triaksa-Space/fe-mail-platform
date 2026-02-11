@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ExclamationCircleIcon } from "@heroicons/react-v1/solid";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
 
 interface FaqEmptyStateProps {

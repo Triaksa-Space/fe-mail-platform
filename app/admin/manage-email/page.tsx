@@ -16,7 +16,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react-v1/outline';
+import { ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/24/outline';
 
 // API response interfaces (snake_case from backend)
 interface ApiEmail {

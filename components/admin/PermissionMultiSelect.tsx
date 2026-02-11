@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Check, ChevronDown} from "lucide-react";
 import { AVAILABLE_PERMISSIONS, getPermissionLabel } from "@/lib/admin-types";
-import { XIcon } from "@heroicons/react-v1/outline"
+import { XMarkIcon } from "@heroicons/react/24/outline"
 
 interface PermissionMultiSelectProps {
   value: string[];
@@ -104,7 +104,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                   onClick={(e) => removePermission(permissionId, e)}
                   className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
                 >
-                  <XIcon className="h-3 w-3" />
+                  <XMarkIcon className="h-3 w-3" />
                 </button>
               )}
             </span>

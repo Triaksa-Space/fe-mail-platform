@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation"
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils"
 import { AdminLayout, AdminContentCard } from "@/components/admin"
-import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react-v1/outline"
+import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (

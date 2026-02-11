@@ -9,8 +9,8 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
-import { RefreshIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react-v1/outline';
-import { EnvelopeOpenIcon } from '@heroicons/react-v1/solid';
+import { RefreshIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {

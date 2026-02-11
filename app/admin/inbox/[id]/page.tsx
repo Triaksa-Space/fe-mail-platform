@@ -15,7 +15,7 @@ import {
   Mail,
   FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react-v1/outline';
+import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface InboxEmailDetail {

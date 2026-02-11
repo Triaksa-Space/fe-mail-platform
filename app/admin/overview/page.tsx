@@ -15,8 +15,8 @@ import {
   transformInboxEmail,
   transformSentEmail,
 } from "@/lib/transformers";
-import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon, RefreshIcon } from "@heroicons/react-v1/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react-v1/solid";
+import { UserGroupIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon, EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -369,7 +369,7 @@ export default function OverviewPage() {
             )}
             aria-label="Refresh data"
           >
-            <RefreshIcon
+            <ArrowPathIcon
               className={cn(
                 "w-5 h-5 text-gray-800",
                 isRefreshing && "animate-spin"

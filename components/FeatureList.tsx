@@ -3,7 +3,7 @@
 import React from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ShieldCheckIcon } from "@heroicons/react-v1/solid";
+import { ShieldCheckIcon } from "@heroicons/react/24/solid";
 import { InboxStackIcon } from "@heroicons/react/24/solid";
 import Icon from "@mdi/react";
 import { mdiAdvertisementsOff } from "@mdi/js";

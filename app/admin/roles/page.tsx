@@ -27,7 +27,7 @@ import {
     PermissionKey,
     formatDate,
 } from "@/lib/admin-types";
-import { ChevronUpDownIcon, X } from '@heroicons/react-v1/outline';
+import { ChevronUpDownIcon, X } from '@heroicons/react/24/outline';
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
@@ -535,7 +535,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 }}
                                 className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
                             >
-                                <XIcon className="w-5 h-5 text-gray-800" />
+                                <XMarkIcon className="w-5 h-5 text-gray-800" />
                             </button>
                         </div>
 
@@ -640,7 +640,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 onClick={() => setIsDeleteModalOpen(false)}
                                 className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                             >
-                                <XIcon className="w-4 h-4 text-gray-800" />
+                                <XMarkIcon className="w-4 h-4 text-gray-800" />
                             </button>
 
                             <div className="self-stretch flex flex-col justify-start items-center gap-5">

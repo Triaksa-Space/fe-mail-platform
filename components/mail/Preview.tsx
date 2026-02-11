@@ -14,7 +14,7 @@ import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
-import { ChevronLeftIcon } from "@heroicons/react-v1/outline"
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 
 interface PreviewProps {
   email: Mail | null;

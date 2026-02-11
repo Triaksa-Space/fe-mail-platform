@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Inbox, Settings, LogOut } from "lucide-react";
 import { ViewType } from "./types";
-import { PaperAirplaneIcon } from "@heroicons/react-v1/outline"
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 interface BottomTabsProps {
   currentView: ViewType;

@@ -19,7 +19,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
-import { RefreshIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react-v1/outline";
+import { RefreshIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 interface EmailDetail {
   ID: number;

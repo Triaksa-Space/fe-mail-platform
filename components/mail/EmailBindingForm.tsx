@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
-import { RefreshIcon, CheckCircleIcon } from "@heroicons/react-v1/outline"
+import { RefreshIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
 
 interface EmailBindingFormProps {
   initialEmail?: string;

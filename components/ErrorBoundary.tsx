@@ -3,7 +3,7 @@
 import React, { Component, ReactNode } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RefreshIcon } from "@heroicons/react-v1/outline"
+import { ArrowPathIcon } from "@heroicons/react/24/outline"
 
 interface Props {
   children: ReactNode;
@@ -62,7 +62,7 @@ class ErrorBoundary extends Component<Props, State> {
               onClick={this.handleRetry}
               className="gap-2"
             >
-              <RefreshIcon className="h-4 w-4" />
+              <ArrowPathIcon className="h-4 w-4" />
               Try again
             </Button>
             <Button

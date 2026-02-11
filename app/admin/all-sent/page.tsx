@@ -17,8 +17,8 @@ import {
   ArrowLeftIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
-} from "@heroicons/react-v1/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react-v1/solid";
+} from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
 interface AdminSentResponse {
   data: ApiSentEmail[];

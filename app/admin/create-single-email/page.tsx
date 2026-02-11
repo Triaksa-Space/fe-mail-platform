@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, AdminContentCard } from "@/components/admin";
-import { CheckCircleIcon, DocumentDuplicateIcon, XIcon, CheckIcon } from "@heroicons/react-v1/outline"
+import { CheckCircleIcon, DocumentDuplicateIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -340,7 +340,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 onClick={() => setCreatedEmail(null)}
                 className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
               >
-                <XIcon className="w-4 h-4" />
+                <XMarkIcon className="w-4 h-4" />
               </button>
             </div>
           </AdminContentCard>

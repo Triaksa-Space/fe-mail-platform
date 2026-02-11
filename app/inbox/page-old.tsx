@@ -11,7 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
 import { Button } from "@/components/ui/button";
-import { RefreshIcon} from "@heroicons/react-v1/outline"
+import { RefreshIcon} from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (

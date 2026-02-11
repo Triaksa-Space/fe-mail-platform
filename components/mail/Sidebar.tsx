@@ -4,10 +4,9 @@ import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
-  EnvelopeIcon,
   PaperAirplaneIcon,
-  Cog6ToothIcon,
-} from "@heroicons/react-v1/outline";
+} from "@heroicons/react/24/outline";
+import { EnvelopeIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import {
   EnvelopeIcon as EnvelopeIconSolid,
   PaperAirplaneIcon as PaperAirplaneIconSolid,

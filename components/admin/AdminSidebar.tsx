@@ -17,7 +17,7 @@ import {
   KeyIcon as KeyOutlineIcon,
   Cog6ToothIcon as Cog6ToothOutlineIcon,
   ArrowRightStartOnRectangleIcon,
-} from "@heroicons/react-v1/outline";
+} from "@heroicons/react/24/outline";
 import {
   UserGroupIcon as UserGroupSolidIcon,
   FolderPlusIcon as FolderPlusSolidIcon,
