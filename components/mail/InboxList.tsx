@@ -153,11 +153,11 @@ const InboxList: React.FC<InboxListProps> = ({
             "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200 lg:border-none"
           )}>
             <div className="w-10 h-10 flex items-center justify-center">
-              <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+              <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
             </div>
             <div className="flex flex-col justify-start items-center gap-1">
-              <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">No Email Yet</p>
-              <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+              <p className="text-base font-medium text-neutral-800 font-['Roboto'] leading-6">No Email Yet</p>
+              <p className="text-center text-xs font-normal text-neutral-600 font-['Roboto'] leading-5">
                 There are no email in your inbox
                 <br />
                 at the moment.

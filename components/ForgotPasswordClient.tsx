@@ -349,7 +349,7 @@ export default function ForgotPasswordClient() {
                             placeholder="example@mailria.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
@@ -377,7 +377,7 @@ export default function ForgotPasswordClient() {
                             placeholder="example@gmail.com"
                             value={bindingEmail}
                             onChange={(e) => setBindingEmail(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
@@ -542,7 +542,7 @@ export default function ForgotPasswordClient() {
                             placeholder="Enter new password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
@@ -580,7 +580,7 @@ export default function ForgotPasswordClient() {
                             placeholder="Confirm new password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>

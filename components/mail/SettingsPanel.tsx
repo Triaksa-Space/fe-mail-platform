@@ -49,7 +49,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             className="h-10 w-28"
           />
         </div>
-        <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{email}</span>
+        <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{email}</span>
       </div>
 
       {/* Content */}
@@ -58,8 +58,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         <div className="hidden lg:flex flex-col gap-5">
           {/* Desktop Header */}
           <div className="flex items-center justify-between">
-            <h2 className="text-gray-800 text-lg font-semibold font-['Roboto'] leading-7">Settings</h2>
-            <span className="text-gray-800 text-base font-semibold font-['Roboto'] leading-6">{email}</span>
+            <h2 className="text-neutral-800 text-lg font-semibold font-['Roboto'] leading-7">Settings</h2>
+            <span className="text-neutral-800 text-base font-semibold font-['Roboto'] leading-6">{email}</span>
           </div>
 
           {/* Web View: Horizontal card with both sections */}
@@ -72,7 +72,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <div className="flex items-stretch gap-4">
               {/* Change Password Section - Left Side */}
               <div className="flex-1 flex flex-col gap-4">
-                <h3 className="text-gray-800 text-base font-semibold font-['Roboto'] leading-6">Change Password</h3>
+                <h3 className="text-primary-500 text-base font-semibold font-['Roboto'] leading-6">Change Password</h3>
                 <div className="flex-1 flex flex-col">
                   <ChangePasswordForm />
                 </div>
@@ -83,7 +83,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
               {/* Email Binding Section - Right Side */}
               <div className="flex-1 flex flex-col gap-4">
-                <h3 className="text-gray-800 text-base font-semibold font-['Roboto'] leading-6">Email binding</h3>
+                <h3 className="text-primary-500 text-base font-semibold font-['Roboto'] leading-6">Email binding</h3>
                 <div className="flex-1 flex flex-col">
                   <EmailBindingForm initialEmail={bindingEmail} />
                 </div>
@@ -102,7 +102,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               "outline outline-1 outline-offset-[-1px] outline-gray-200"
             )}
           >
-            <h3 className="text-base font-semibold text-gray-800 mb-4">Change password</h3>
+            <h3 className="text-base font-semibold text-neutral-800 mb-4">Change password</h3>
             <ChangePasswordForm />
           </div>
 
@@ -114,7 +114,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               "outline outline-1 outline-offset-[-1px] outline-gray-200"
             )}
           >
-            <h3 className="text-base font-semibold text-gray-800 mb-4">Email binding</h3>
+            <h3 className="text-base font-semibold text-neutral-800 mb-4">Email binding</h3>
             <EmailBindingForm initialEmail={bindingEmail} />
           </div>
         </div>

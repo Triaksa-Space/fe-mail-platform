@@ -7,7 +7,7 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments, getFileExtension } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
-import { Download, Mail, FileText } from "lucide-react";
+import { Mail } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
@@ -18,6 +18,7 @@ import {
   ArrowLeftIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
@@ -383,12 +384,12 @@ export default function AdminAllSentPage() {
                               >
                                 <div className="self-stretch inline-flex justify-between items-center">
                                   <div className="flex justify-start items-center gap-0.5">
-                                    <FileText className="w-4 h-4 text-primary-500" />
+                                    <XMarkIcon className="w-4 h-4 text-primary-500" />
                                     <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
                                       {ext}
                                     </span>
                                   </div>
-                                  <Download className="w-4 h-4 text-gray-800" />
+                                  <XMarkIcon className="w-4 h-4 text-gray-800" />
                                 </div>
                                 <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
                                   {attachment.Filename}

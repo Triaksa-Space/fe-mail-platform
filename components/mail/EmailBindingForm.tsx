@@ -107,8 +107,8 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
                 }
                 disabled={isInputDisabled}
                 className={cn(
-                  "flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400",
-                  isInputDisabled && "text-gray-500 cursor-not-allowed"
+                  "flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200",
+                  isInputDisabled && "text-neutral-500 cursor-not-allowed"
                 )}
               />
             </div>
@@ -120,11 +120,11 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
             )}
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
+            <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
           </div>
         </div>
 
-        <p className="text-gray-500 text-xs font-normal font-['Roboto'] leading-4">
+        <p className="text-neutral-500 text-xs font-normal font-['Roboto'] leading-4">
           Link an email to your account. This email will be used to reset your
           password and recover your account if needed.
         </p>

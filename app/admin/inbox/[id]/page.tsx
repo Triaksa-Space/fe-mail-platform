@@ -13,9 +13,8 @@ import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/li
 import {
   Inbox,
   Mail,
-  FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface InboxEmailDetail {
@@ -275,7 +274,7 @@ export default function AdminInboxDetailPage() {
                       >
                         <div className="self-stretch inline-flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
-                            <FileText className="w-5 h-5 text-primary-500" />
+                            <XMarkIcon className="w-5 h-5 text-primary-500" />
                             <div className="text-gray-800 text-xs font-normal leading-5">
                               {fileType}
                             </div>

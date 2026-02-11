@@ -363,7 +363,7 @@ const EmailManagementPageContent: React.FC = () => {
                                 <input
                                     id="by_username"
                                     placeholder="Search user..."
-                                    className="search-input flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400"
+                                    className="search-input flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200"
                                     value={searchTerm}
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -556,7 +556,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                         setPasswordForAdmin(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
                                             <button
@@ -603,7 +603,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                         setConfirmPasswordForAdmin(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
                                             <button

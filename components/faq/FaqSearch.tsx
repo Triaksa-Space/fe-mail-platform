@@ -34,7 +34,7 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
             "search-input self-stretch w-full h-10 px-3 py-2 bg-white rounded-lg",
             "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
             "outline outline-1 outline-offset-[-1px] outline-gray-200",
-            "text-sm text-gray-900 placeholder:text-gray-400",
+            "text-sm text-gray-900 placeholder:text-neutral-200",
             "transition-all pr-12"
           )}
         />

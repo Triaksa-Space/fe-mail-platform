@@ -218,7 +218,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       placeholder="Insert email"
                       disabled={isRandomNameActive}
                       className={cn(
-                        "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                        "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
                         isRandomNameActive ? "text-gray-400" : "text-gray-800"
                       )}
                     />
@@ -327,7 +327,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       placeholder="Insert password"
                       disabled={isRandomPasswordActive}
                       className={cn(
-                        "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                        "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
                         isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
                       )}
                     />
@@ -424,7 +424,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       setReceiveEmail(sanitizedValue);
                     }}
                     placeholder="Insert email"
-                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400"
+                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
                   />
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">

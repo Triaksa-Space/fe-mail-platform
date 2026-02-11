@@ -176,7 +176,7 @@ export default function LoginPageClient() {
                             );
                             setLoginEmail(sanitizedValue);
                           }}
-                          className="flex-1 text-sm font-normal text-gray-800 placeholder:text-gray-400 bg-transparent outline-none"
+                          className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
                         />
                       </div>
                     </div>
@@ -214,7 +214,7 @@ export default function LoginPageClient() {
                               );
                               setPassword(sanitizedValue);
                             }}
-                            className={`w-full text-sm font-normal placeholder:text-gray-400 bg-transparent outline-none ${
+                            className={`w-full text-sm font-normal placeholder:text-neutral-200 bg-transparent outline-none ${
                               showPassword
                                 ? "text-gray-800"
                                 : "text-transparent caret-gray-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"

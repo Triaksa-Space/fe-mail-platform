@@ -20,6 +20,19 @@ const ChangePasswordForm: React.FC = () => {
 
   const { toast } = useToast();
 
+  const getMaskLength = (value: string) => {
+    if (!value) return 0;
+    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+      return Array.from(segmenter.segment(value)).length;
+    }
+    return Array.from(value).length;
+  };
+
+  const currentPasswordMaskLength = getMaskLength(currentPassword);
+  const newPasswordMaskLength = getMaskLength(newPassword);
+  const confirmPasswordMaskLength = getMaskLength(confirmPassword);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -77,17 +90,28 @@ const ChangePasswordForm: React.FC = () => {
           <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-gray-400" />
-              <input
-                type={showCurrentPassword ? "text" : "password"}
-                placeholder="***********"
-                value={currentPassword}
-                onChange={(e) =>
-                  setCurrentPassword(
-                    DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-                  )
-                }
-                className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
-              />
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="***********"
+                  value={currentPassword}
+                  onChange={(e) =>
+                    setCurrentPassword(
+                      DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
+                    )
+                  }
+                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 ${
+                    showCurrentPassword
+                      ? "text-neutral-800"
+                      : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
+                  }`}
+                />
+                {!showCurrentPassword && currentPasswordMaskLength > 0 && (
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
+                    {"*".repeat(currentPasswordMaskLength)}
+                  </span>
+                )}
+              </div>
             </div>
             <button
               type="button"
@@ -95,14 +119,14 @@ const ChangePasswordForm: React.FC = () => {
               className="flex justify-center items-center"
             >
               {showCurrentPassword ? (
-                <EyeOff className="w-5 h-5 text-gray-800" />
+                <EyeOff className="w-5 h-5 text-neutral-800" />
               ) : (
-                <Eye className="w-5 h-5 text-gray-800" />
+                <Eye className="w-5 h-5 text-neutral-800" />
               )}
             </button>
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
+            <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
           </div>
         </div>
 
@@ -112,17 +136,28 @@ const ChangePasswordForm: React.FC = () => {
           <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-gray-400" />
-              <input
-                type={showNewPassword ? "text" : "password"}
-                placeholder="***********"
-                value={newPassword}
-                onChange={(e) =>
-                  setNewPassword(
-                    DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-                  )
-                }
-                className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
-              />
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="***********"
+                  value={newPassword}
+                  onChange={(e) =>
+                    setNewPassword(
+                      DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
+                    )
+                  }
+                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 ${
+                    showNewPassword
+                      ? "text-neutral-800"
+                      : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
+                  }`}
+                />
+                {!showNewPassword && newPasswordMaskLength > 0 && (
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
+                    {"*".repeat(newPasswordMaskLength)}
+                  </span>
+                )}
+              </div>
             </div>
             <button
               type="button"
@@ -130,14 +165,14 @@ const ChangePasswordForm: React.FC = () => {
               className="flex justify-center items-center"
             >
               {showNewPassword ? (
-                <EyeOff className="w-5 h-5 text-gray-800" />
+                <EyeOff className="w-5 h-5 text-neutral-800" />
               ) : (
-                <Eye className="w-5 h-5 text-gray-800" />
+                <Eye className="w-5 h-5 text-neutral-800" />
               )}
             </button>
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
+            <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
           </div>
         </div>
 
@@ -147,17 +182,28 @@ const ChangePasswordForm: React.FC = () => {
           <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-gray-400" />
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="***********"
-                value={confirmPassword}
-                onChange={(e) =>
-                  setConfirmPassword(
-                    DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-                  )
-                }
-                className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
-              />
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="***********"
+                  value={confirmPassword}
+                  onChange={(e) =>
+                    setConfirmPassword(
+                      DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
+                    )
+                  }
+                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 ${
+                    showConfirmPassword
+                      ? "text-neutral-800"
+                      : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
+                  }`}
+                />
+                {!showConfirmPassword && confirmPasswordMaskLength > 0 && (
+                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
+                    {"*".repeat(confirmPasswordMaskLength)}
+                  </span>
+                )}
+              </div>
             </div>
             <button
               type="button"
@@ -165,14 +211,14 @@ const ChangePasswordForm: React.FC = () => {
               className="flex justify-center items-center"
             >
               {showConfirmPassword ? (
-                <EyeOff className="w-5 h-5 text-gray-800" />
+                <EyeOff className="w-5 h-5 text-neutral-800" />
               ) : (
-                <Eye className="w-5 h-5 text-gray-800" />
+                <Eye className="w-5 h-5 text-neutral-800" />
               )}
             </button>
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-            <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
+            <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
           </div>
         </div>
       </div>

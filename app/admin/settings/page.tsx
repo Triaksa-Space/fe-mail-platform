@@ -120,7 +120,7 @@ const ChangePasswordSection: React.FC = () => {
                                             setOldPassword(sanitizedValue);
                                         }}
                                         placeholder="***********"
-                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
                                 <button
@@ -157,7 +157,7 @@ const ChangePasswordSection: React.FC = () => {
                                             setNewPassword(sanitizedValue);
                                         }}
                                         placeholder="***********"
-                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
                                 <button
@@ -194,7 +194,7 @@ const ChangePasswordSection: React.FC = () => {
                                             setConfirmPassword(sanitizedValue);
                                         }}
                                         placeholder="***********"
-                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
                                 <button

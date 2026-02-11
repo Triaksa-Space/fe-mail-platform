@@ -11,11 +11,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { CARD_STYLES } from "@/lib/styles";
 import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
 import {
-  Download,
   Mail,
-  FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, PaperAirplaneIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserIcon, PaperAirplaneIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface SentEmailDetail {
@@ -279,12 +277,12 @@ export default function AdminSentDetailPage() {
                       >
                         <div className="self-stretch inline-flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
-                            <FileText className="w-5 h-5 text-primary-500" />
+                            <XMarkIcon className="w-5 h-5 text-primary-500" />
                             <div className="text-gray-800 text-xs font-normal leading-5">
                               {fileType}
                             </div>
                           </div>
-                          <Download className="w-5 h-5 text-gray-600" />
+                          <XMarkIcon className="w-5 h-5 text-gray-600" />
                         </div>
                         <div
                           className="self-stretch text-gray-800 text-sm font-normal leading-5 line-clamp-2"

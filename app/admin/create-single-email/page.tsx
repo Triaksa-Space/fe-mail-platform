@@ -213,7 +213,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                       setUsername(value);
                     }}
                     placeholder="Insert email"
-                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400"
+                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
                     required
                   />
                 </div>
@@ -249,7 +249,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     }}
                     placeholder="Insert password"
                     className={cn(
-                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-gray-400",
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
                       isRandomPasswordActive ? "text-gray-500" : "text-gray-800"
                     )}
                     disabled={isRandomPasswordActive}

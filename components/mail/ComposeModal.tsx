@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Paperclip, Loader2, Mail, FileText } from "lucide-react";
+import { Paperclip, Loader2, Mail } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
-import { XMarkIcon,PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 interface ComposeModalProps {
   isOpen: boolean;
@@ -455,7 +455,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         onChange={(e) =>
                           setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
                         }
-                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                       />
                     </div>
                   </div>
@@ -478,7 +478,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       placeholder="Enter subject"
                       value={subject}
                       onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                      className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                      className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                     />
                   </div>
                 </div>
@@ -494,7 +494,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         placeholder="Compose your email..."
                         value={message}
                         onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                        className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-gray-400 resize-none min-h-[200px] md:min-h-[280px]"
+                        className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px] md:min-h-[280px]"
                       />
                     </div>
                   </div>
@@ -514,7 +514,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       {/* Header: File type + Close button */}
                       <div className="self-stretch inline-flex justify-between items-center">
                         <div className="flex justify-start items-center gap-0.5">
-                          <FileText className="w-5 h-5 text-primary-500" />
+                          <XMarkIcon className="w-5 h-5 text-primary-500" />
                           <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
                             {getFileExtension(file.name)}
                           </span>

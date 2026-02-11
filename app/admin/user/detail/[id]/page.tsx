@@ -3,11 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Download,
   Mail,
   Clock,
-  Paperclip,
-  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -19,7 +16,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
-import { ArrowPathIcon, UserIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, UserIcon, ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 interface EmailDetail {
@@ -312,7 +309,7 @@ const EmailDetailPage: React.FC = () => {
               <AdminContentCard className="p-5">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <Paperclip className="h-5 w-5 text-gray-500" />
+                    <XMarkIcon className="h-5 w-5 text-gray-500" />
                     <h3 className="font-semibold text-gray-900">
                       Attachments ({email.ListAttachments.length})
                     </h3>
@@ -332,7 +329,7 @@ const EmailDetailPage: React.FC = () => {
                         >
                           <div className="flex items-center gap-3 min-w-0 flex-1">
                             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 flex-shrink-0">
-                              <FileText className="h-5 w-5 text-gray-500" />
+                              <XMarkIcon className="h-5 w-5 text-gray-500" />
                             </div>
                             <span className="text-sm text-gray-700 truncate">
                               {filename}
@@ -350,7 +347,7 @@ const EmailDetailPage: React.FC = () => {
                             {isDownloadingThis ? (
                               <ArrowPathIcon className="h-4 w-4 animate-spin text-gray-600" />
                             ) : (
-                              <Download className="h-4 w-4 text-gray-600" />
+                              <XMarkIcon className="h-4 w-4 text-gray-600" />
                             )}
                           </Button>
                         </div>

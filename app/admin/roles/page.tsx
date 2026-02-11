@@ -551,7 +551,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                     const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
                                                     setNewUsername(sanitizedValue);
                                                 }}
-                                                className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                             />
                                         </div>
                                         <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
@@ -576,7 +576,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                         setNewPassword(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-gray-400"
+                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
                                             <button

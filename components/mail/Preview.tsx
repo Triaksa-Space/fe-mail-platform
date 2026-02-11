@@ -5,16 +5,14 @@ import { cn } from "@/lib/utils";
 import {
   Reply,
   Forward,
-  Download,
   Inbox,
-  FileText,
 } from "lucide-react";
 import { Mail, EmailDetail } from "./types";
 import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
 interface PreviewProps {
   email: Mail | null;
@@ -392,7 +390,7 @@ const Preview: React.FC<PreviewProps> = ({
                         >
                           <div className="flex justify-between items-center">
                             <div className="flex justify-start items-center gap-0.5">
-                              <FileText className="w-5 h-5 text-primary-500" />
+                              <XMarkIcon className="w-5 h-5 text-primary-500" />
                               <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
                             </div>
                             <button
@@ -400,7 +398,7 @@ const Preview: React.FC<PreviewProps> = ({
                               disabled={isDownloading}
                               className="w-5 h-5 flex items-center justify-center hover:bg-gray-100 rounded transition-colors"
                             >
-                              <Download className="w-4 h-4 text-gray-800" />
+                              <XMarkIcon className="w-4 h-4 text-gray-800" />
                             </button>
                           </div>
                           <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
@@ -427,7 +425,7 @@ const Preview: React.FC<PreviewProps> = ({
                       >
                         <div className="flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
-                            <FileText className="w-5 h-5 text-primary-500" />
+                            <XMarkIcon className="w-5 h-5 text-primary-500" />
                             <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
                           </div>
                           <a
@@ -437,7 +435,7 @@ const Preview: React.FC<PreviewProps> = ({
                             download={filename}
                             className="w-5 h-5 flex items-center justify-center hover:bg-gray-100 rounded transition-colors"
                           >
-                            <Download className="w-4 h-4 text-gray-800" />
+                            <XMarkIcon className="w-4 h-4 text-gray-800" />
                           </a>
                         </div>
                         <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CircleXIcon, Paperclip } from 'lucide-react';
+import { Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
@@ -277,7 +277,7 @@ const Send: React.FC = () => {
               router.push('/inbox');
             }}
           >
-            <CircleXIcon className="h-5 w-5" />
+            <XMarkIcon className="h-5 w-5" />
           </Button>
         </div>
         <div className='flex items-center gap-2'>
