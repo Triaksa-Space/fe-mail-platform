@@ -47,7 +47,7 @@ const FeatureList: React.FC<FeatureListProps> = ({
   return (
     <div className={cn("w-full max-w-sm flex flex-col items-center gap-2 md:gap-3", className)}>
       {title && (
-        <p className="text-sm font-normal text-gray-600 text-center w-full">{title}</p>
+        <p className="text-sm font-normal text-neutral-600 text-center w-full">{title}</p>
       )}
       <div className="grid grid-cols-2 gap-2 md:gap-3">
         {features.map((feature, index) => {
@@ -61,7 +61,7 @@ const FeatureList: React.FC<FeatureListProps> = ({
             )}
           >
             <feature.icon className="h-3 w-3 text-primary-500 " color="[#027AEA]" />
-            <span className="text-xs font-normal text-gray-500">{feature.text}</span>
+            <span className="text-xs font-normal text-neutral-600">{feature.text}</span>
           </div>
         )})}
       </div>

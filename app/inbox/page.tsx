@@ -536,15 +536,6 @@ const InboxPageContent: React.FC = () => {
 
   return (
     <div className="h-screen min-h-dvh relative inline-flex flex-col justify-start items-start gap-5 overflow-hidden w-full lg:w-full lg:mx-auto">
-      {/* Background glow */}
-      {/* <div
-        className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[250%] h-32 bg-gradient-to-t from-primary-200 via-primary-100 to-transparent rounded-full blur-2xl opacity-60 pointer-events-none"
-        aria-hidden="true"
-      /> */}
-      {/* iOS-style gradient background - mobile only */}
-      {/* <div className="lg:hidden absolute inset-0 bg-gradient-to-b from-blue-100 via-white to-blue-50 -z-20" /> */}
-      {/* <div className="lg:hidden absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_center,_rgba(147,197,253,0.4)_0%,_transparent_60%)] -z-10" /> */}
-
       <div className="self-stretch flex-1 pt-5 lg:py-5 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
         {/* Desktop Sidebar - LEFT side */}
         <Sidebar
@@ -566,8 +557,6 @@ const InboxPageContent: React.FC = () => {
         </main>
       </div>
 
-      {/* Mobile Bottom Fade Gradient - smooth transition to floating tab bar */}
-      {/* <div className="lg:hidden fixed bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-100/80 via-blue-50/40 to-transparent pointer-events-none z-40" /> */}
       {/* Background glow */}
       <div
         className="lg:hidden fixed bottom-0 left-0 right-0 -translate-x-1/2 w-[250%] h-20 bg-gradient-to-t from-primary-200 via-primary-100 to-transparent rounded-full blur-2xl opacity-60 pointer-events-none z-40"

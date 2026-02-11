@@ -229,7 +229,7 @@ export default function LoginPageClient() {
                   />
                   <Link
                     href="/forgot-password"
-                    className="text-sm font-normal text-primary-600 hover:text-primary-700 hover:underline transition-colors"
+                    className="text-sm font-normal text-primary-500 hover:text-primary-600 hover:underline transition-colors"
                   >
                     Forgot password?
                   </Link>
