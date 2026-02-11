@@ -15,7 +15,7 @@ import {
   Mail,
   FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/outline';
+import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react-v1/outline';
 
 // API Response type
 interface InboxEmailDetail {
@@ -299,4 +299,5 @@ export default function AdminInboxDetailPage() {
     </AdminLayout>
   );
 }
+
 

@@ -15,7 +15,7 @@ import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
 import DOMPurify from 'dompurify';
-import { PaperAirplaneIcon, X } from "@heroicons/react/outline"
+import { PaperAirplaneIcon, X } from "@heroicons/react-v1/outline"
 
 // Interfaces
 interface UploadedAttachment {
@@ -416,3 +416,4 @@ const Send: React.FC = () => {
 };
 
 export default Send;
+

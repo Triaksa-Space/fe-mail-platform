@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Footer, ScrollToTopButton } from "@/components/layout";
 import axios from "axios";
-import { ChevronLeftIcon } from "@heroicons/react/outline";
+import { ChevronLeftIcon } from "@heroicons/react-v1/outline";
 
 interface TermsResponse {
   content: string;
@@ -212,4 +212,5 @@ const TermsPage: React.FC = () => {
 };
 
 export default TermsPage;
+
 

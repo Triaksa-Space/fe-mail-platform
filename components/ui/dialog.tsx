@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import XIcon } from "@heroicons/react/outline"
+import { XIcon } from "@heroicons/react-v1/outline"
 
 import { cn } from "@/lib/utils"
 
@@ -120,4 +120,5 @@ export {
   DialogTitle,
   DialogDescription,
 }
+
 

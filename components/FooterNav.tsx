@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mail, Settings } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
-import { PaperAirplaneIcon } from "@heroicons/react/outline"
+import { PaperAirplaneIcon } from "@heroicons/react-v1/outline"
 
 const FooterNav = () => {
   const router = useRouter();
@@ -46,3 +46,4 @@ const FooterNav = () => {
 };
 
 export default FooterNav;
+

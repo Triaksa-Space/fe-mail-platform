@@ -8,7 +8,7 @@ import {
   ToastProvider,
   ToastViewport,
 } from "@/components/ui/toast";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react-v1/solid";
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -64,5 +64,6 @@ export function Toaster() {
     </ToastProvider>
   );
 }
+
 
 

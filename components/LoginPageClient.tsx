@@ -15,7 +15,7 @@ import FeatureList from "@/components/FeatureList";
 import { PageLayout, AuthCard, Footer } from "@/components/layout";
 import DOMPurify from "dompurify";
 import { LoginResponse } from "@/lib/api-types";
-import { LockClosedIcon } from "@heroicons/react/outline";
+import { LockClosedIcon } from "@heroicons/react-v1/outline";
 
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
@@ -274,4 +274,5 @@ export default function LoginPageClient() {
     </>
   );
 }
+
 

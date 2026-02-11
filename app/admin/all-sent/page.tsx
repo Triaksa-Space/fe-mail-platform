@@ -17,8 +17,8 @@ import {
   ArrowLeftIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
-} from "@heroicons/react/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react/solid";
+} from "@heroicons/react-v1/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react-v1/solid";
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -539,4 +539,5 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
     </button>
   );
 };
+
 

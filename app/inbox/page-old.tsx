@@ -11,7 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
 import { Button } from "@/components/ui/button";
-import { RefreshIcon} from "@heroicons/react/outline"
+import { RefreshIcon} from "@heroicons/react-v1/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -280,4 +280,5 @@ const InboxPage: React.FC = () => (
 );
 
 export default InboxPage;
+
 

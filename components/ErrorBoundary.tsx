@@ -3,7 +3,7 @@
 import React, { Component, ReactNode } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RefreshIcon } from "@heroicons/react/outline"
+import { RefreshIcon } from "@heroicons/react-v1/outline"
 
 interface Props {
   children: ReactNode;
@@ -94,3 +94,4 @@ class ErrorBoundary extends Component<Props, State> {
 }
 
 export default ErrorBoundary;
+

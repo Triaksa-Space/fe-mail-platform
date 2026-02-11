@@ -15,7 +15,7 @@ import {
   Mail,
   FileText,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, PaperAirplaneIcon, ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/outline';
+import { UserGroupIcon, UserIcon, PaperAirplaneIcon, ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react-v1/outline';
 
 // API Response type
 interface SentEmailDetail {
@@ -304,4 +304,5 @@ export default function AdminSentDetailPage() {
     </AdminLayout>
   );
 }
+
 

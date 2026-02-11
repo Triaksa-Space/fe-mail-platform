@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { MagnifyingGlassIcon, X } from '@heroicons/react/outline';
+import { MagnifyingGlassIcon, X } from '@heroicons/react-v1/outline';
 
 interface FaqSearchProps {
   value: string;
@@ -63,4 +63,5 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
 };
 
 export default FaqSearch;
+
 

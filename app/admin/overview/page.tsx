@@ -15,8 +15,8 @@ import {
   transformInboxEmail,
   transformSentEmail,
 } from "@/lib/transformers";
-import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon, RefreshIcon } from "@heroicons/react/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react/solid";
+import { UserGroupIcon, EnvelopeIcon, PaperAirplaneIcon, RefreshIcon } from "@heroicons/react-v1/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react-v1/solid";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -431,4 +431,5 @@ export default function OverviewPage() {
     </AdminLayout>
   );
 }
+
 

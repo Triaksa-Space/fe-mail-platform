@@ -11,7 +11,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
-import { PencilSquareIcon, X } from '@heroicons/react/outline';
+import { PencilSquareIcon, X } from '@heroicons/react-v1/outline';
 
 interface PrivacyResponse {
   content: string;
@@ -290,4 +290,5 @@ const AdminPrivacyPage: React.FC = () => (
 );
 
 export default AdminPrivacyPage;
+
 

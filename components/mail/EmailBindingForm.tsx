@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
-import { RefreshIcon, CheckCircleIcon } from "@heroicons/react/outline"
+import { RefreshIcon, CheckCircleIcon } from "@heroicons/react-v1/outline"
 
 interface EmailBindingFormProps {
   initialEmail?: string;
@@ -163,4 +163,5 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
 };
 
 export default EmailBindingForm;
+
 

@@ -9,7 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/react": "1.0.6",
+    "@heroicons/react": "^2.2.0",
+    "@heroicons/react-v1": "npm:@heroicons/react@1.0.6",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "@mingcute/react": "^1.4.1",

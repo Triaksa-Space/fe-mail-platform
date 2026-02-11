@@ -16,7 +16,8 @@ import { Toaster } from "@/components/ui/toaster";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, UserRowActionMenu } from "@/components/admin";
-import { ChevronUpDownIcon, MagnifyingGlassIcon, X } from '@heroicons/react/outline';
+import { XIcon } from '@heroicons/react-v1/outline';
+import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { XCircleIcon } from '@heroicons/react/20/solid';
 
 interface EmailUser {
@@ -708,4 +709,5 @@ const EmailManagementPage: React.FC = () => {
 };
 
 export default EmailManagementPage;
+
 

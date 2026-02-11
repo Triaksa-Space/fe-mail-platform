@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, AdminContentCard } from "@/components/admin";
-import { CheckCircleIcon, DocumentDuplicateIcon, X, CheckIcon } from "@heroicons/react/outline"
+import { CheckCircleIcon, DocumentDuplicateIcon, XIcon, CheckIcon } from "@heroicons/react-v1/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -361,4 +361,5 @@ const CreateSingleEmailPage: React.FC = () => (
 );
 
 export default CreateSingleEmailPage;
+
 

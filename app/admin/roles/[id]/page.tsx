@@ -18,7 +18,7 @@ import {
     PermissionChips
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse } from "@/lib/admin-types";
-import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, X } from '@heroicons/react/outline';
+import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, X } from '@heroicons/react-v1/outline';
 
 const ViewAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -325,4 +325,5 @@ const ViewAdminPage: React.FC = () => {
 };
 
 export default ViewAdminPage;
+
 

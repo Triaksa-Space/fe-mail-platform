@@ -9,8 +9,8 @@ import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { LazyList } from "@/components/VirtualList";
-import { RefreshIcon } from "@heroicons/react/outline"
-import { EnvelopeOpenIcon } from "@heroicons/react/solid"
+import { RefreshIcon } from "@heroicons/react-v1/outline"
+import { EnvelopeOpenIcon } from "@heroicons/react-v1/solid"
 
 interface SentListProps {
   emails: SentMail[];
@@ -240,4 +240,5 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
 });
 
 export default SentList;
+
 

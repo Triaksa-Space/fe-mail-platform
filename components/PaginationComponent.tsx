@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import XIcon } from "@heroicons/react/outline"
+import { XIcon } from "@heroicons/react-v1/outline"
 
 interface PaginationComponentProps {
   totalCount: number;
@@ -155,4 +155,5 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
 };
 
 export default PaginationComponent;
+
 

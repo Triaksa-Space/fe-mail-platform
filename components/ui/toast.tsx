@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
-import { XIcon } from "@heroicons/react/outline"
+import { XIcon } from "@heroicons/react-v1/outline"
 
 import { cn } from "@/lib/utils"
 
@@ -126,4 +126,5 @@ export {
   ToastClose,
   ToastAction,
 }
+
 

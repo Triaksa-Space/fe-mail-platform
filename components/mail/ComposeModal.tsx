@@ -9,7 +9,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
-import { X,PaperAirplaneIcon } from "@heroicons/react/outline"
+import { XIcon,PaperAirplaneIcon } from "@heroicons/react-v1/outline"
 
 interface ComposeModalProps {
   isOpen: boolean;
@@ -561,4 +561,5 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 };
 
 export default ComposeModal;
+
 

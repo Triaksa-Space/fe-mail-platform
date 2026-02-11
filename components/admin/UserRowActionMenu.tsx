@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react/outline';
+import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react-v1/outline';
 
 interface UserRowActionMenuProps {
   onView: () => void;
@@ -86,4 +86,5 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
 };
 
 export default UserRowActionMenu;
+
 

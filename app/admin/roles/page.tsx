@@ -27,7 +27,7 @@ import {
     PermissionKey,
     formatDate,
 } from "@/lib/admin-types";
-import { ChevronUpDownIcon, X } from '@heroicons/react/outline';
+import { ChevronUpDownIcon, X } from '@heroicons/react-v1/outline';
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
@@ -698,4 +698,5 @@ const RolesPermissionsPage: React.FC = () => {
 };
 
 export default RolesPermissionsPage;
+
 

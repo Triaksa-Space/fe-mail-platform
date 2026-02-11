@@ -3,8 +3,8 @@
 import React, { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { RefreshIcon } from "@heroicons/react/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react/solid"
+import { RefreshIcon } from "@heroicons/react-v1/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react-v1/solid"
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
@@ -254,4 +254,5 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
 });
 
 export default InboxList;
+
 

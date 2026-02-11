@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Inbox, Settings, LogOut } from "lucide-react";
 import { ViewType } from "./types";
-import { PaperAirplaneIcon } from "@heroicons/react/outline"
+import { PaperAirplaneIcon } from "@heroicons/react-v1/outline"
 
 interface BottomTabsProps {
   currentView: ViewType;
@@ -95,4 +95,5 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
 };
 
 export default BottomTabs;
+
 

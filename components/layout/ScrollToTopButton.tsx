@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowUpIcon } from "@heroicons/react/outline";
+import { ArrowUpIcon } from "@heroicons/react-v1/outline";
 import { cn } from "@/lib/utils";
 
 interface ScrollToTopButtonProps {
@@ -32,4 +32,5 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
 };
 
 export default ScrollToTopButton;
+
 

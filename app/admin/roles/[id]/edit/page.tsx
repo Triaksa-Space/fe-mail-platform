@@ -15,7 +15,7 @@ import {
     PermissionMultiSelect
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
-import { PencilSquareIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, X } from '@heroicons/react/outline';
+import { PencilSquareIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, X } from '@heroicons/react-v1/outline';
 
 const EditAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -346,4 +346,5 @@ const EditAdminPage: React.FC = () => {
 };
 
 export default EditAdminPage;
+
 

@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Check, ChevronDown} from "lucide-react";
 import { AVAILABLE_PERMISSIONS, getPermissionLabel } from "@/lib/admin-types";
-import XIcon } from "@heroicons/react/outline"
+import { XIcon } from "@heroicons/react-v1/outline"
 
 interface PermissionMultiSelectProps {
   value: string[];
@@ -171,4 +171,5 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
 };
 
 export default PermissionMultiSelect;
+
 
