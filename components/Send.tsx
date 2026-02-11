@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CircleXMarkIcon, Paperclip } from 'lucide-react';
+import { CircleXIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +15,7 @@ import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
 import DOMPurify from 'dompurify';
-import { PaperAirplaneIcon, X } from "@heroicons/react/24/outline"
+import { PaperAirplaneIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
 // Interfaces
 interface UploadedAttachment {
@@ -277,7 +277,7 @@ const Send: React.FC = () => {
               router.push('/inbox');
             }}
           >
-            <CircleXMarkIcon className="h-5 w-5" />
+            <CircleXIcon className="h-5 w-5" />
           </Button>
         </div>
         <div className='flex items-center gap-2'>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuthStore } from "@/stores/useAuthStore";
