@@ -409,7 +409,7 @@ export default function ForgotPasswordClient() {
 
                     <Link
                       href="/"
-                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-600"
+                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-500"
                     >
                       Back to login
                     </Link>
@@ -500,7 +500,7 @@ export default function ForgotPasswordClient() {
                       type="button"
                       onClick={handleResendCode}
                       disabled={isLoading}
-                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-600"
+                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-500"
                     >
                       Resend Code
                     </button>
@@ -633,3 +633,4 @@ export default function ForgotPasswordClient() {
     </>
   );
 }
+

@@ -143,7 +143,7 @@ export const tw = {
     primary: 'text-gray-900',
     secondary: 'text-gray-500',
     muted: 'text-gray-400',
-    link: 'text-primary-600 hover:text-primary-700',
+    link: 'text-primary-500 hover:text-primary-500',
     white: 'text-white',
   },
   // Border classes
@@ -162,3 +162,4 @@ export const tw = {
     base: 'h-10 text-sm border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400',
   },
 };
+

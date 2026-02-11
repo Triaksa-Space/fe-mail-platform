@@ -260,7 +260,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     className={cn(
                       "w-5 h-5 flex items-center justify-center transition-colors",
                       isRandomPasswordActive
-                        ? "text-primary-600"
+                        ? "text-primary-500"
                         : "text-gray-500 hover:text-gray-700"
                     )}
                     title="Generate random password"
@@ -310,7 +310,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     {copiedField === 'email' ? (
                       <CheckIcon className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-primary-600" />
+                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-primary-500" />
                     )}
                   </button>
                 </div>
@@ -329,7 +329,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     {copiedField === 'password' ? (
                       <CheckIcon className="w-3.5 h-3.5 text-green-600" />
                     ) : (
-                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-primary-600" />
+                      <DocumentDuplicateIcon className="w-3.5 h-3.5 text-primary-500" />
                     )}
                   </button>
                 </div>
@@ -361,5 +361,6 @@ const CreateSingleEmailPage: React.FC = () => (
 );
 
 export default CreateSingleEmailPage;
+
 
 

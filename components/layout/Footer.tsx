@@ -53,7 +53,7 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-normal text-primary-500 hover:text-primary-600 hover:underline transition-colors leading-5"
+                className="text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors leading-5"
               >
                 {link.label}
               </a>
@@ -61,7 +61,7 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-normal text-primary-500 hover:text-primary-600 hover:underline transition-colors leading-5"
+                className="text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors leading-5"
               >
                 {link.label}
               </Link>
@@ -74,3 +74,4 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
 };
 
 export default Footer;
+

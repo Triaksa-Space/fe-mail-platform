@@ -157,14 +157,14 @@ const TermsPage: React.FC = () => {
 
                 {isLoading ? (
                   <div className="flex items-center justify-center py-12 w-full">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
+                    <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
                   </div>
                 ) : error ? (
                   <div className="text-center py-12 w-full">
                     <p className="text-red-500">{error}</p>
                     <button
                       onClick={() => window.location.reload()}
-                      className="mt-4 text-primary-600 hover:underline"
+                      className="mt-4 text-primary-500 hover:underline"
                     >
                       Try again
                     </button>
@@ -185,7 +185,7 @@ const TermsPage: React.FC = () => {
                         [&_h2]:text-gray-800 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:leading-6 [&_h2]:mt-4
                         [&_h3]:text-gray-800 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:leading-6 [&_h3]:mt-3
                         [&_p]:text-gray-600 [&_p]:text-sm [&_p]:font-normal [&_p]:leading-5
-                        [&_a]:text-primary-600 [&_a]:underline
+                        [&_a]:text-primary-500 [&_a]:underline
                         [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
                         [&_li]:text-gray-600 [&_li]:text-sm [&_li]:font-normal [&_li]:leading-5"
                       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
@@ -212,5 +212,6 @@ const TermsPage: React.FC = () => {
 };
 
 export default TermsPage;
+
 
 

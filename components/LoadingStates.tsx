@@ -18,7 +18,7 @@ export function Spinner({ size = "md", className }: SpinnerProps) {
 
   return (
     <Loader2
-      className={cn("animate-spin text-primary-600", sizeClasses[size], className)}
+      className={cn("animate-spin text-primary-500", sizeClasses[size], className)}
     />
   );
 }
@@ -187,7 +187,7 @@ export function ErrorState({
       {onRetry && (
         <button
           onClick={onRetry}
-          className="px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-blue-50 rounded-lg transition-colors"
+          className="px-4 py-2 text-sm font-medium text-primary-500 hover:text-primary-500 hover:bg-blue-50 rounded-lg transition-colors"
         >
           Try again
         </button>
@@ -206,3 +206,4 @@ const LoadingStates = {
 };
 
 export default LoadingStates;
+

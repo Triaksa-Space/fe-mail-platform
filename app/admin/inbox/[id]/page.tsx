@@ -137,7 +137,7 @@ export default function AdminInboxDetailPage() {
               <span>Inbox</span>
             </div>
             <ChevronRightIcon className="h-4 w-4 text-gray-300" />
-            <div className="flex items-center gap-1 text-sm text-primary-600">
+            <div className="flex items-center gap-1 text-sm text-primary-500">
               <Mail className="h-4 w-4" />
               <span className="line-clamp-1">
                 {isLoading ? "Loading..." : subject}
@@ -275,7 +275,7 @@ export default function AdminInboxDetailPage() {
                       >
                         <div className="self-stretch inline-flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
-                            <FileText className="w-5 h-5 text-primary-600" />
+                            <FileText className="w-5 h-5 text-primary-500" />
                             <div className="text-gray-800 text-xs font-normal leading-5">
                               {fileType}
                             </div>
@@ -299,5 +299,6 @@ export default function AdminInboxDetailPage() {
     </AdminLayout>
   );
 }
+
 
 

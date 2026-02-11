@@ -392,7 +392,7 @@ const Preview: React.FC<PreviewProps> = ({
                         >
                           <div className="flex justify-between items-center">
                             <div className="flex justify-start items-center gap-0.5">
-                              <FileText className="w-5 h-5 text-primary-600" />
+                              <FileText className="w-5 h-5 text-primary-500" />
                               <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
                             </div>
                             <button
@@ -427,7 +427,7 @@ const Preview: React.FC<PreviewProps> = ({
                       >
                         <div className="flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
-                            <FileText className="w-5 h-5 text-primary-600" />
+                            <FileText className="w-5 h-5 text-primary-500" />
                             <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
                           </div>
                           <a
@@ -457,5 +457,6 @@ const Preview: React.FC<PreviewProps> = ({
 };
 
 export default Preview;
+
 
 

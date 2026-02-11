@@ -15,8 +15,8 @@ import {
   transformInboxEmail,
   transformSentEmail,
 } from "@/lib/transformers";
-import { UserGroupIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
-import { EnvelopeIcon, EnvelopeOpenIcon } from "@heroicons/react/24/solid";
+import { EnvelopeIcon, UserGroupIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -89,7 +89,7 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
       <div className="self-stretch inline-flex justify-start items-center gap-1">
         <div className="flex justify-start items-center gap-1">
           <div className="p-1 bg-blue-100 rounded-lg flex justify-start items-center gap-2.5">
-            <Icon className="w-5 h-5 text-primary-600" />
+            <Icon className="w-5 h-5 text-primary-500" />
           </div>
           <div className="justify-center text-gray-800 text-xl font-semibold font-['Roboto'] leading-7">
             {formatNumber(value)}
@@ -431,5 +431,6 @@ export default function OverviewPage() {
     </AdminLayout>
   );
 }
+
 
 

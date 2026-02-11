@@ -127,7 +127,7 @@ const AdminMobileNav: React.FC = () => {
               className={cn(
                 "flex-1 flex flex-col items-center justify-center py-3 transition-colors",
                 isActive
-                  ? "bg-blue-50 text-primary-600"
+                  ? "bg-blue-50 text-primary-500"
                   : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               )}
               onClick={() => handleNavigation(item)}
@@ -143,3 +143,4 @@ const AdminMobileNav: React.FC = () => {
 };
 
 export default AdminMobileNav;
+

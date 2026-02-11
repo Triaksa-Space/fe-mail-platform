@@ -181,8 +181,8 @@ const ViewAdminPageContent: React.FC = () => {
 
                     {/* Current admin */}
                     <div className="flex justify-center items-center gap-1">
-                        <UserIcon className="w-5 h-5 text-primary-600" />
-                        <span className="text-primary-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
+                        <UserIcon className="w-5 h-5 text-primary-500" />
+                        <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
                     </div>
                 </div>
 
@@ -325,5 +325,6 @@ const ViewAdminPage: React.FC = () => {
 };
 
 export default ViewAdminPage;
+
 
 

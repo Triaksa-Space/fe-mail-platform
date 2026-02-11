@@ -268,14 +268,14 @@ const AdminSidebar: React.FC = () => {
                       <Icon
                         className={cn(
                           "w-5 h-5",
-                          active ? "text-primary-600" : "text-gray-600"
+                          active ? "text-primary-500" : "text-gray-600"
                         )}
                       />
                       <div
                         className={cn(
                           "justify-center text-sm font-['Roboto'] leading-5",
                           active
-                            ? "text-primary-600 font-semibold"
+                            ? "text-primary-500 font-semibold"
                             : "text-gray-600 font-normal"
                         )}
                       >
@@ -303,14 +303,14 @@ const AdminSidebar: React.FC = () => {
               <SettingsIcon
                 className={cn(
                   "w-5 h-5",
-                  isSettingsActive ? "text-primary-600" : "text-gray-600"
+                  isSettingsActive ? "text-primary-500" : "text-gray-600"
                 )}
               />
               <div
                 className={cn(
                   "justify-center text-sm font-['Roboto'] leading-5",
                   isSettingsActive
-                    ? "text-primary-600 font-semibold"
+                    ? "text-primary-500 font-semibold"
                     : "text-gray-600 font-normal"
                 )}
               >
@@ -348,5 +348,6 @@ const AdminSidebar: React.FC = () => {
 };
 
 export default AdminSidebar;
+
 
 
