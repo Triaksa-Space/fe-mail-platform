@@ -3,7 +3,7 @@
 import React, { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { RefreshIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid"
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
@@ -100,7 +100,7 @@ const InboxList: React.FC<InboxListProps> = ({
                 : "bg-white hover:bg-gray-50"
             )}
           >
-            <RefreshIcon
+            <ArrowPathIcon
               className={cn(
                 "h-4 w-4",
                 isRefreshing ? "text-gray-300 animate-spin" : "text-gray-800"
@@ -119,7 +119,7 @@ const InboxList: React.FC<InboxListProps> = ({
       {isRefreshing && emails.length > 0 && (
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
           <span className="text-primary-600 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
-          <RefreshIcon className="w-4 h-4 text-primary-600 animate-spin" />
+          <ArrowPathIcon className="w-4 h-4 text-primary-600 animate-spin" />
         </div>
       )}
 
@@ -140,7 +140,7 @@ const InboxList: React.FC<InboxListProps> = ({
               onClick={onRefresh}
               className="text-sm"
             >
-              <RefreshIcon className="h-3 w-3 mr-1.5" />
+              <ArrowPathIcon className="h-3 w-3 mr-1.5" />
               Try again
             </Button>
           </div>

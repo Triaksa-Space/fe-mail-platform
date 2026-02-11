@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
-import { RefreshIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
+import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
 
 interface EmailBindingFormProps {
   initialEmail?: string;
@@ -140,7 +140,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           onClick={handleChangeEmail}
           className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
         >
-          <RefreshIcon className="w-5 h-5 text-white" />
+          <ArrowPathIcon className="w-5 h-5 text-white" />
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
             Change Email
           </span>

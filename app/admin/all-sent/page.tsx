@@ -13,7 +13,7 @@ import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import {
-  RefreshIcon,
+  ArrowPathIcon,
   ArrowLeftIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
@@ -203,7 +203,7 @@ export default function AdminAllSentPage() {
             )}
             aria-label="Refresh"
           >
-            <RefreshIcon
+            <ArrowPathIcon
               className={cn(
                 "w-4 h-4 text-gray-800",
                 isRefreshing && "animate-spin",
@@ -252,7 +252,7 @@ export default function AdminAllSentPage() {
               {isLoadingDetail ? (
                 <div className="flex items-center justify-center h-32">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <RefreshIcon className="w-6 h-6 animate-spin" />
+                    <ArrowPathIcon className="w-6 h-6 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ export default function AdminAllSentPage() {
                 {isLoading ? (
                   <div className="flex items-center justify-center h-32">
                     <div className="flex items-center gap-2 text-gray-500">
-                      <RefreshIcon className="h-4 w-4 animate-spin" />
+                      <ArrowPathIcon className="h-4 w-4 animate-spin" />
                       <span className="text-sm">Loading emails...</span>
                     </div>
                   </div>

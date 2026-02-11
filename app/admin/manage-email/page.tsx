@@ -16,7 +16,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { ArrowLeftIcon, ChevronRightIcon, RefreshIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 // API response interfaces (snake_case from backend)
 interface ApiEmail {
@@ -210,7 +210,7 @@ export default function AdminAllInboxPage() {
             )}
             aria-label="Refresh"
           >
-            <RefreshIcon
+            <ArrowPathIcon
               className={cn("w-4 h-4 text-gray-800", isRefreshing && "animate-spin")}
             />
           </button>
@@ -254,7 +254,7 @@ export default function AdminAllInboxPage() {
               {isLoadingDetail ? (
                 <div className="flex items-center justify-center h-32">
                   <div className="flex items-center gap-2 text-gray-500">
-                    <RefreshIcon className="w-6 h-6 animate-spin" />
+                    <ArrowPathIcon className="w-6 h-6 animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 </div>
@@ -410,7 +410,7 @@ export default function AdminAllInboxPage() {
                 {isLoading ? (
                   <div className="flex items-center justify-center h-32">
                     <div className="flex items-center gap-2 text-gray-500">
-                      <RefreshIcon className="h-4 w-4 animate-spin" />
+                      <ArrowPathIcon className="h-4 w-4 animate-spin" />
                       <span className="text-sm">Loading emails...</span>
                     </div>
                   </div>

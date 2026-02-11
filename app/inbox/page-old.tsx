@@ -11,7 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
 import { Button } from "@/components/ui/button";
-import { RefreshIcon} from "@heroicons/react/24/outline"
+import { ArrowPathIcon} from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -183,7 +183,7 @@ const InboxPageContent: React.FC = () => {
               handleRefresh();
             }}
           >
-            <RefreshIcon className="h-6 w-6" />
+            <ArrowPathIcon className="h-6 w-6" />
           </Button>
         </h1>
         <h1
