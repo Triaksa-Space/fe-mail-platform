@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
+import { LockClosedIcon } from "@heroicons/react-v1/outline"
 
 const ChangePasswordForm: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");

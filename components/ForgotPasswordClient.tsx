@@ -12,6 +12,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/layout/Footer";
+import { LockClosedIcon } from "@heroicons/react-v1/outline"
 
 type Step = "email" | "verify" | "reset" | "success";
 

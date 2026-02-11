@@ -1,8 +1,9 @@
 "use client";
 
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Input } from "./ui/input";
 import { cn } from "@/lib/utils";
+import { LockClosedIcon } from "@heroicons/react-v1/outline"
 
 interface PasswordInputProps {
   id: string;
