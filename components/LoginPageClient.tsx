@@ -20,7 +20,7 @@ export default function LoginPageClient() {
   const [loginEmail, setLoginEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState("");
 
   const passwordMaskLength = (() => {
@@ -133,7 +133,7 @@ export default function LoginPageClient() {
           {/* Auth Card */}
           <AuthCard>
             {/* Logo + Tagline */}
-            <div className="flex flex-col items-center gap-0.5 mb-3 md:mb-4">
+            <div className="flex flex-col items-center gap-0.5 mb-4 md:mb-4">
               <Image
                 src="/mailria.png"
                 alt="Mailria"
