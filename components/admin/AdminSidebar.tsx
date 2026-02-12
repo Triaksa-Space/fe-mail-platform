@@ -225,7 +225,7 @@ const AdminSidebar: React.FC = () => {
       className={cn(
         "w-full h-full p-4 bg-white rounded-xl",
         "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "outline outline-1 outline-offset-[-1px] outline-neutral-200",
         "flex flex-col justify-start items-start gap-5"
       )}
     >
@@ -248,7 +248,7 @@ const AdminSidebar: React.FC = () => {
           {filteredGroups.map((group) => (
             <React.Fragment key={group.title}>
               {/* Group Title */}
-              <div className="justify-center text-gray-400 text-xs font-normal font-['Roboto'] leading-5">
+              <div className="justify-center text-neutral-400 text-xs font-normal font-['Roboto'] leading-5">
                 {group.title}
               </div>
               {/* Group Items */}
@@ -268,7 +268,7 @@ const AdminSidebar: React.FC = () => {
                       <Icon
                         className={cn(
                           "w-5 h-5",
-                          active ? "text-primary-500" : "text-gray-600"
+                          active ? "text-primary-500" : "text-neutral-600"
                         )}
                       />
                       <div
@@ -276,7 +276,7 @@ const AdminSidebar: React.FC = () => {
                           "justify-center text-sm font-['Roboto'] leading-5",
                           active
                             ? "text-primary-500 font-semibold"
-                            : "text-gray-600 font-normal"
+                            : "text-neutral-600 font-normal"
                         )}
                       >
                         {item.label}
@@ -303,7 +303,7 @@ const AdminSidebar: React.FC = () => {
               <SettingsIcon
                 className={cn(
                   "w-5 h-5",
-                  isSettingsActive ? "text-primary-500" : "text-gray-600"
+                  isSettingsActive ? "text-primary-500" : "text-neutral-600"
                 )}
               />
               <div
@@ -311,7 +311,7 @@ const AdminSidebar: React.FC = () => {
                   "justify-center text-sm font-['Roboto'] leading-5",
                   isSettingsActive
                     ? "text-primary-500 font-semibold"
-                    : "text-gray-600 font-normal"
+                    : "text-neutral-600 font-normal"
                 )}
               >
                 Settings
@@ -325,19 +325,19 @@ const AdminSidebar: React.FC = () => {
             className="self-stretch px-3 py-1 inline-flex justify-between items-center"
           >
             <div className="flex-1 flex justify-start items-center gap-5">
-              <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-gray-600" />
-              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-5">
+              <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-neutral-600" />
+              <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-5">
                 Log out
               </div>
             </div>
           </button>
 
           {/* Divider */}
-          <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-gray-300" />
+          <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-neutral-300" />
 
           {/* User Info */}
-          <div className="self-stretch px-3 py-1 bg-gray-100 rounded-xl inline-flex justify-center items-center gap-2.5">
-            <div className="justify-center text-gray-800 text-base font-semibold font-['Roboto'] leading-6 truncate">
+          <div className="self-stretch px-3 py-1 bg-neutral-100 rounded-xl inline-flex justify-center items-center gap-2.5">
+            <div className="justify-center text-neutral-800 text-base font-semibold font-['Roboto'] leading-6 truncate">
               {email || "Admin"}
             </div>
           </div>

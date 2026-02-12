@@ -116,7 +116,7 @@ const AdminMobileNav: React.FC = () => {
   };
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white lg:hidden z-50">
+    <footer className="fixed bottom-0 left-0 right-0 border-t border-neutral-200 bg-white lg:hidden z-50">
       <div className="flex">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -128,7 +128,7 @@ const AdminMobileNav: React.FC = () => {
                 "flex-1 flex flex-col items-center justify-center py-3 transition-colors",
                 isActive
                   ? "bg-blue-50 text-primary-500"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                  : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700"
               )}
               onClick={() => handleNavigation(item)}
             >

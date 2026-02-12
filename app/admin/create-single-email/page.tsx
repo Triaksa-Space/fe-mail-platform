@@ -189,7 +189,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-start items-center gap-5">
-          <div className="text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+          <div className="text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             Create Single
           </div>
         </div>
@@ -202,7 +202,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
               {/* Email Input with Floating Label */}
               <div className="flex-1 relative flex flex-col">
                 <div className="h-3.5"></div>
-                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3">
                   <input
                     type="text"
                     value={username}
@@ -213,12 +213,12 @@ const CreateSingleEmailPageContent: React.FC = () => {
                       setUsername(value);
                     }}
                     placeholder="Insert email"
-                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
+                    className="flex-1 bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
                     required
                   />
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
-                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
                 </div>
               </div>
 
@@ -228,17 +228,17 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 <DomainSelector
                   value={selectedDomain}
                   onChange={(value) => setSelectedDomain(value)}
-                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 text-gray-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
+                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
                 />
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
-                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
                 </div>
               </div>
 
               {/* Password Input with Floating Label */}
               <div className="flex-1 relative flex flex-col">
                 <div className="h-3.5"></div>
-                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3">
                   <input
                     type="text"
                     value={password}
@@ -250,7 +250,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     placeholder="Insert password"
                     className={cn(
                       "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
-                      isRandomPasswordActive ? "text-gray-500" : "text-gray-800"
+                      isRandomPasswordActive ? "text-neutral-500" : "text-neutral-800"
                     )}
                     disabled={isRandomPasswordActive}
                     required
@@ -262,20 +262,20 @@ const CreateSingleEmailPageContent: React.FC = () => {
                       "w-5 h-5 flex items-center justify-center transition-colors",
                       isRandomPasswordActive
                         ? "text-primary-500"
-                        : "text-gray-500 hover:text-gray-700"
+                        : "text-neutral-500 hover:text-neutral-700"
                     )}
                     title="Generate random password"
                   >
                   </button>
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
-                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                 </div>
               </div>
             </div>
 
             {/* Divider */}
-            <div className="w-full h-px bg-gray-300"></div>
+            <div className="w-full h-px bg-neutral-300"></div>
 
             {/* Submit Button - Right Aligned */}
             <div className="flex justify-end">
@@ -295,15 +295,15 @@ const CreateSingleEmailPageContent: React.FC = () => {
         {createdEmail && (
           <AdminContentCard className="w-full">
             <div className="flex items-start gap-4">
-              {/* Gray Card - Full Width */}
-              <div className="flex-1 p-4 bg-gray-50 rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-wrap justify-start items-start gap-10">
+              {/* neutral Card - Full Width */}
+              <div className="flex-1 p-4 bg-neutral-50 rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-wrap justify-start items-start gap-10">
                 {/* Email */}
                 <div className="flex justify-start items-start gap-1">
                   <div className="flex justify-start items-center gap-1">
-                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">Email</span>
-                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
+                    <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">Email</span>
+                    <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
                   </div>
-                  <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{createdEmail.email}</span>
+                  <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{createdEmail.email}</span>
                   <button
                     onClick={() => handleCopy(createdEmail.email, 'email')}
                     className="w-5 h-5 flex items-center justify-center transition-colors"
@@ -319,10 +319,10 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 {/* Password */}
                 <div className="flex justify-start items-start gap-1">
                   <div className="flex justify-start items-center gap-1">
-                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">Password</span>
-                    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
+                    <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">Password</span>
+                    <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
                   </div>
-                  <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5 font-mono">{createdEmail.password}</span>
+                  <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5 font-mono">{createdEmail.password}</span>
                   <button
                     onClick={() => handleCopy(createdEmail.password, 'password')}
                     className="w-5 h-5 flex items-center justify-center transition-colors"
@@ -336,10 +336,10 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 </div>
               </div>
 
-              {/* Close Button - Outside Gray Card */}
+              {/* Close Button - Outside neutral Card */}
               <button
                 onClick={() => setCreatedEmail(null)}
-                className="w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                className="w-5 h-5 flex items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
               >
                 <XMarkIcon className="w-4 h-4" />
               </button>

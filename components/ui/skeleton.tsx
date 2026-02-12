@@ -16,7 +16,7 @@ function Skeleton({
   return (
     <div
       className={cn(
-        "animate-pulse bg-gray-200",
+        "animate-pulse bg-neutral-200",
         variant === "default" && "rounded",
         variant === "circular" && "rounded-full",
         variant === "rounded" && "rounded-xl",

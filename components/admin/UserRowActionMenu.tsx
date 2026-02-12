@@ -43,8 +43,8 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex h-9 w-9 items-center justify-center",
-          "rounded-lg border border-gray-200 bg-white",
-          "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+          "rounded-lg border border-neutral-200 bg-white",
+          "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900",
           "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
         )}
         aria-label="Actions"
@@ -65,10 +65,10 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
           {/* Change Password */}
           <button
             onClick={() => handleAction(onChangePassword)}
-            className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-gray-50 transition-colors"
+            className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-neutral-50 transition-colors"
           >
-            <PencilSquareIcon className="w-5 h-5 text-gray-800" />
-            <div className="text-gray-800 text-base font-normal font-['Roboto'] leading-4 whitespace-nowrap">Change password</div>
+            <PencilSquareIcon className="w-5 h-5 text-neutral-800" />
+            <div className="text-neutral-800 text-base font-normal font-['Roboto'] leading-4 whitespace-nowrap">Change password</div>
           </button>
 
           {/* Delete */}

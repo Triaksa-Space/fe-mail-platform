@@ -322,7 +322,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-modal="true"
           aria-labelledby="compose-title"
           className={cn(
-            "relative w-full bg-gray-50 flex flex-col",
+            "relative w-full bg-neutral-50 flex flex-col",
             // Mobile: full screen with py-4 and gap-4
             "h-full py-4 gap-4",
             // Desktop: centered modal with max dimensions
@@ -337,8 +337,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               onClick={requestClose}
               className={cn(
                 "flex items-center justify-center h-10 w-10",
-                "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 bg-white",
-                "text-gray-800 hover:bg-gray-50",
+                "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 bg-white",
+                "text-neutral-800 hover:bg-neutral-50",
                 "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
               )}
               aria-label="Close compose"
@@ -350,13 +350,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
             <div className="flex items-center gap-3">
               {/* Daily Send Badge */}
               <div className="flex items-center gap-1">
-                <span className="text-sm text-gray-600 font-normal font-['Roboto'] leading-5">Daily send</span>
+                <span className="text-sm text-neutral-600 font-normal font-['Roboto'] leading-5">Daily send</span>
                 <span
                   className={cn(
                     "inline-flex items-center justify-center w-11 h-5 px-1.5 py-0.5 rounded-3xl text-xs font-medium font-['Roboto'] leading-5",
                     isLimitReached
                       ? "text-red-600 outline outline-1 outline-offset-[-1px] outline-red-200"
-                      : "text-gray-400 outline outline-1 outline-offset-[-1px] outline-gray-200"
+                      : "text-neutral-400 outline outline-1 outline-offset-[-1px] outline-neutral-200"
                   )}
                 >
                   {sentCount} of {maxDailySend}
@@ -377,8 +377,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 htmlFor="compose-attachments"
                 className={cn(
                   "flex items-center justify-center h-10 w-10",
-                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 bg-white",
-                  "text-gray-800 hover:bg-gray-50",
+                  "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 bg-white",
+                  "text-neutral-800 hover:bg-neutral-50",
                   "transition-colors cursor-pointer",
                   "focus-within:ring-2 focus-within:ring-blue-200",
                   isUploading && "opacity-50 cursor-not-allowed"
@@ -421,21 +421,21 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           {/* Form Content - Scrollable */}
           <div className="flex-1 overflow-y-auto px-4 flex flex-col justify-start items-start gap-4 md:p-4 md:bg-white">
             {/* Card A: From / To */}
-            <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-3">
+            <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
               {/* From Field */}
               <div className="self-stretch flex flex-col justify-start items-start gap-2">
                 <div className="self-stretch relative flex flex-col justify-start items-start">
                   <div className="self-stretch h-3.5"></div>
-                  <div className="self-stretch h-10 px-3 py-2 bg-gray-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                  <div className="self-stretch h-10 px-3 py-2 bg-neutral-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                     <div className="flex-1 flex justify-start items-center gap-2">
-                      <Mail className="w-5 h-5 text-gray-400" />
+                      <Mail className="w-5 h-5 text-neutral-400" />
                       <div className="flex justify-start items-center gap-0.5">
-                        <span className="text-gray-400 text-sm font-normal font-['Roboto'] leading-4">{email || ""}</span>
+                        <span className="text-neutral-400 text-sm font-normal font-['Roboto'] leading-4">{email || ""}</span>
                       </div>
                     </div>
                   </div>
                   <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                    <span className="text-gray-400 text-[10px] font-normal font-['Roboto'] leading-4">From</span>
+                    <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">From</span>
                   </div>
                 </div>
               </div>
@@ -444,9 +444,9 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               <div className="self-stretch flex flex-col justify-start items-start gap-2">
                 <div className="self-stretch relative flex flex-col justify-start items-start">
                   <div className="self-stretch h-3.5"></div>
-                  <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                  <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
                     <div className="flex-1 flex justify-start items-center gap-2">
-                      <Mail className="w-5 h-5 text-gray-400" />
+                      <Mail className="w-5 h-5 text-neutral-400" />
                       <input
                         id="compose-to"
                         type="email"
@@ -455,22 +455,22 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         onChange={(e) =>
                           setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
                         }
-                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                       />
                     </div>
                   </div>
                   <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">To</span>
+                    <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">To</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Card B: Subject & Body */}
-            <div className="self-stretch flex-1 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start gap-3">
+            <div className="self-stretch flex-1 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
               {/* Subject Field */}
               <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                   <div className="flex-1 flex justify-start items-center gap-2">
                     <input
                       id="compose-subject"
@@ -478,7 +478,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       placeholder="Enter subject"
                       value={subject}
                       onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                      className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                      className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                     />
                   </div>
                 </div>
@@ -487,14 +487,14 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               {/* Body Field */}
               <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2">
                 <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
-                  <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-start gap-3">
+                  <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-start gap-3">
                     <div className="flex-1 flex justify-start items-start gap-2">
                       <textarea
                         id="compose-body"
                         placeholder="Compose your email..."
                         value={message}
                         onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                        className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px] md:min-h-[280px]"
+                        className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px] md:min-h-[280px]"
                       />
                     </div>
                   </div>
@@ -509,27 +509,27 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   {attachments.map((file, index) => (
                     <div
                       key={index}
-                      className="w-32 h-[88px] p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-3 flex-shrink-0"
+                      className="w-32 h-[88px] p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex flex-col justify-start items-start gap-3 flex-shrink-0"
                     >
                       {/* Header: File type + Close button */}
                       <div className="self-stretch inline-flex justify-between items-center">
                         <div className="flex justify-start items-center gap-0.5">
                           <XMarkIcon className="w-5 h-5 text-primary-500" />
-                          <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">
+                          <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
                             {getFileExtension(file.name)}
                           </span>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleRemoveAttachment(index)}
-                          className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-red-600 transition-colors"
+                          className="w-5 h-5 flex items-center justify-center text-neutral-800 hover:text-red-600 transition-colors"
                           aria-label={`Remove ${file.name}`}
                         >
                           <XMarkIcon className="w-4 h-4" />
                         </button>
                       </div>
                       {/* Filename - truncated to 2 lines */}
-                      <div className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
+                      <div className="self-stretch text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
                         {file.name}
                       </div>
                     </div>

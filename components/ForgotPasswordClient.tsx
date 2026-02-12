@@ -290,12 +290,12 @@ export default function ForgotPasswordClient() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-between items-center p-4 md:p-8 overflow-hidden relative">
+      <div className="min-h-screen bg-neutral-50 flex flex-col justify-between items-center p-4 md:p-8 overflow-hidden relative">
         
         {/* Main content */}
         <div className="flex-1 flex items-center justify-center w-full max-w-sm z-10">
           {/* Card */}
-          <div className="w-full p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-gray-200 flex flex-col gap-4">
+          <div className="w-full p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-neutral-200 flex flex-col gap-4">
             {/* Logo */}
             <Image
               src="/mailria.png"
@@ -309,13 +309,13 @@ export default function ForgotPasswordClient() {
             {/* Success State */}
             {step === "success" && (
               <>
-                <div className="text-gray-800 text-2xl font-medium">Password Reset</div>
+                <div className="text-neutral-800 text-2xl font-medium">Password Reset</div>
                 <div className="flex flex-col items-center py-6">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Success!</h2>
-                  <p className="text-sm text-gray-500 text-center mb-6">
+                  <h2 className="text-xl font-semibold text-neutral-900 mb-2">Success!</h2>
+                  <p className="text-sm text-neutral-500 text-center mb-6">
                     Your password has been reset successfully. You can now login with your new password.
                   </p>
                   <Button onClick={() => router.push("/")} className="w-full text-base font-medium">
@@ -328,7 +328,7 @@ export default function ForgotPasswordClient() {
             {/* Email & Binding Email Step */}
             {step === "email" && (
               <>
-                <div className="text-gray-800 text-2xl font-medium">Forgot Password</div>
+                <div className="text-neutral-800 text-2xl font-medium">Forgot Password</div>
                 <form onSubmit={handleRequestReset} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
                     {/* Email Field */}
@@ -337,11 +337,11 @@ export default function ForgotPasswordClient() {
                       <div
                         className={cn(
                           "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3",
-                          requestError ? "outline-red-500" : "outline-gray-200"
+                          requestError ? "outline-red-500" : "outline-neutral-200"
                         )}
                       >
                         <div className="flex-1 flex items-center gap-2">
-                          <Mail className="w-5 h-5 text-gray-400" />
+                          <Mail className="w-5 h-5 text-neutral-400" />
                           <input
                             id="email"
                             type="email"
@@ -349,13 +349,13 @@ export default function ForgotPasswordClient() {
                             placeholder="example@mailria.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
-                        <span className="text-[10px] font-normal text-gray-800 leading-4">Email</span>
+                        <span className="text-[10px] font-normal text-neutral-800 leading-4">Email</span>
                       </div>
                     </div>
 
@@ -365,11 +365,11 @@ export default function ForgotPasswordClient() {
                       <div
                         className={cn(
                           "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3",
-                          requestError ? "outline-red-500" : "outline-gray-200"
+                          requestError ? "outline-red-500" : "outline-neutral-200"
                         )}
                       >
                         <div className="flex-1 flex items-center gap-2">
-                          <Mail className="w-5 h-5 text-gray-400" />
+                          <Mail className="w-5 h-5 text-neutral-400" />
                           <input
                             id="binding-email"
                             type="email"
@@ -377,13 +377,13 @@ export default function ForgotPasswordClient() {
                             placeholder="example@gmail.com"
                             value={bindingEmail}
                             onChange={(e) => setBindingEmail(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
-                        <span className="text-[10px] font-normal text-gray-800 leading-4">Binding email <span className="text-red-500">*</span></span>
+                        <span className="text-[10px] font-normal text-neutral-800 leading-4">Binding email <span className="text-red-500">*</span></span>
                       </div>
                     </div>
 
@@ -393,7 +393,7 @@ export default function ForgotPasswordClient() {
                       </p>
                     )}
                     {/* Helper text */}
-                    <p className="text-gray-500 text-xs leading-5">
+                    <p className="text-neutral-500 text-xs leading-5">
                       Binding email is required to reset your password. You can set up a binding email in your account settings.
                     </p>
                   </div>
@@ -418,7 +418,7 @@ export default function ForgotPasswordClient() {
 
                 {/* Support */}
                 <p className="text-xs font-normal text-center">
-                  <span className="text-gray-800">Support by: </span>
+                  <span className="text-neutral-800">Support by: </span>
                   <a
                     className="text-primary-500 font-medium underline"
                     href="https://gamemarket.gg"
@@ -427,7 +427,7 @@ export default function ForgotPasswordClient() {
                   >
                     GameMarket.gg
                   </a>{" "}
-                  <span className="text-gray-800">Ultimate gaming marketplace!</span>
+                  <span className="text-neutral-800">Ultimate gaming marketplace!</span>
                 </p>
               </>
             )}
@@ -435,10 +435,10 @@ export default function ForgotPasswordClient() {
             {/* Verify Code Step */}
             {step === "verify" && (
               <>
-                <div className="text-gray-800 text-2xl font-medium">Enter Verification Code</div>
+                <div className="text-neutral-800 text-2xl font-medium">Enter Verification Code</div>
                 <form onSubmit={handleVerifyCode} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-neutral-500">
                       Enter the 4-digit code sent to{" "}
                       <span className="font-medium">{bindingEmail || email}</span>
                     </p>
@@ -467,16 +467,16 @@ export default function ForgotPasswordClient() {
                           onKeyDown={(e) => handleOtpKeyDown(index, e)}
                           disabled={!!blockedUntil}
                           className={cn(
-                            "w-12 h-12 text-center text-xl font-semibold border-gray-200 rounded-lg",
+                            "w-12 h-12 text-center text-xl font-semibold border-neutral-200 rounded-lg",
                             verifyError && "outline outline-1 outline-offset-[-1px] outline-red-500 border-transparent",
-                            blockedUntil && "bg-gray-100 cursor-not-allowed"
+                            blockedUntil && "bg-neutral-100 cursor-not-allowed"
                           )}
                         />
                       ))}
                     </div>
 
                     {attemptsRemaining !== null && !blockedUntil && attemptsRemaining < 5 && (
-                      <p className="text-xs text-center text-gray-500">
+                      <p className="text-xs text-center text-neutral-500">
                         {attemptsRemaining} attempts remaining
                       </p>
                     )}
@@ -511,7 +511,7 @@ export default function ForgotPasswordClient() {
                         setStep("email");
                         setOtp(["", "", "", ""]);
                       }}
-                      className="h-9 flex items-center justify-center text-gray-500 text-sm hover:text-gray-700"
+                      className="h-9 flex items-center justify-center text-neutral-500 text-sm hover:text-neutral-700"
                     >
                       Back
                     </button>
@@ -523,26 +523,26 @@ export default function ForgotPasswordClient() {
             {/* Reset Password Step */}
             {step === "reset" && (
               <>
-                <div className="text-gray-800 text-2xl font-medium">Set New Password</div>
+                <div className="text-neutral-800 text-2xl font-medium">Set New Password</div>
                 <form onSubmit={handleResetPassword} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-neutral-500">
                       Create a strong password for your account
                     </p>
 
                     {/* New Password Field */}
                     <div className="relative flex flex-col">
                       <div className="h-3.5" />
-                      <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 flex items-center gap-3">
+                      <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 flex items-center gap-3">
                         <div className="flex-1 flex items-center gap-2">
-                          <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                          <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                           <input
                             id="new-password"
                             type={showNewPassword ? "text" : "password"}
                             placeholder="Enter new password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
@@ -552,14 +552,14 @@ export default function ForgotPasswordClient() {
                           className="flex items-center"
                         >
                           {showNewPassword ? (
-                            <EyeOff className="w-5 h-5 text-gray-800" />
+                            <EyeOff className="w-5 h-5 text-neutral-800" />
                           ) : (
-                            <Eye className="w-5 h-5 text-gray-800" />
+                            <Eye className="w-5 h-5 text-neutral-800" />
                           )}
                         </button>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
-                        <span className="text-[10px] font-normal text-gray-800 leading-4">New Password</span>
+                        <span className="text-[10px] font-normal text-neutral-800 leading-4">New Password</span>
                       </div>
                     </div>
 
@@ -570,17 +570,17 @@ export default function ForgotPasswordClient() {
                         "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border flex items-center gap-3",
                         confirmPassword && newPassword !== confirmPassword
                           ? "border-red-300"
-                          : "border-gray-200"
+                          : "border-neutral-200"
                       )}>
                         <div className="flex-1 flex items-center gap-2">
-                          <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                          <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                           <input
                             id="confirm-password"
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirm new password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
+                            className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
                             required
                           />
                         </div>
@@ -590,14 +590,14 @@ export default function ForgotPasswordClient() {
                           className="flex items-center"
                         >
                           {showConfirmPassword ? (
-                            <EyeOff className="w-5 h-5 text-gray-800" />
+                            <EyeOff className="w-5 h-5 text-neutral-800" />
                           ) : (
-                            <Eye className="w-5 h-5 text-gray-800" />
+                            <Eye className="w-5 h-5 text-neutral-800" />
                           )}
                         </button>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
-                        <span className="text-[10px] font-normal text-gray-800 leading-4">Confirm Password</span>
+                        <span className="text-[10px] font-normal text-neutral-800 leading-4">Confirm Password</span>
                       </div>
                       {confirmPassword && newPassword !== confirmPassword && (
                         <p className="text-xs text-red-500 mt-1">Passwords do not match</p>

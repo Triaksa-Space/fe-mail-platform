@@ -63,7 +63,7 @@ const SentList: React.FC<SentListProps> = ({
         "flex flex-col h-full relative overflow-hidden gap-5",
         fullWidth
           ? "w-full"
-          : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
+          : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
         className
       )}
       aria-busy={isRefreshing}
@@ -142,7 +142,7 @@ const SentList: React.FC<SentListProps> = ({
             // Frosted glass on mobile
             "rounded-2xl bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
             // Desktop styling
-            "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200 lg:border-none"
+            "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-neutral-200 lg:border-none"
           )}>
             <div className="w-10 h-10 flex items-center justify-center">
               <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
@@ -201,7 +201,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
         // Frosted glass effect on mobile
         "bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
         // Desktop styling
-        "lg:bg-gray-100 lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-gray-200 lg:border-none lg:rounded-xl",
+        "lg:bg-neutral-100 lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-neutral-200 lg:border-none lg:rounded-xl",
         // Hover/focus states
         "hover:bg-white/90 lg:hover:bg-blue-100 focus:outline-none focus:bg-white/90 lg:focus:bg-blue-100",
         isSelected && "bg-white/90 lg:bg-blue-100"
@@ -213,25 +213,25 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
             {/* Top row: To + Time */}
             <div className="self-stretch inline-flex justify-between items-center">
               <div className="flex items-center gap-0.5">
-                <span className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">To:</span>
-                <span className="text-gray-600 text-base font-normal font-['Roboto'] leading-6 truncate">
+                <span className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6">To:</span>
+                <span className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6 truncate">
                   {email.to || "Unknown"}
                 </span>
               </div>
-              <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+              <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
                 {email.date}
               </span>
             </div>
 
             {/* Subject line */}
-            <p className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+            <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
               {email.subject || "(No subject)"}
             </p>
           </div>
         </div>
 
         {/* Snippet/Preview */}
-        <p className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1 text-left">
+        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1 text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>

@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       className={cn(
         "w-[240px] h-full p-4 bg-white rounded-xl",
         "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "outline outline-1 outline-offset-[-1px] outline-gray-200",
+        "outline outline-1 outline-offset-[-1px] outline-neutral-200",
         "flex flex-col justify-start items-start gap-5 shrink-0",
         className
       )}
@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   <IconComponent
                     className={cn(
                       "w-5 h-5",
-                      isActive ? "text-primary-500" : "text-gray-600"
+                      isActive ? "text-primary-500" : "text-neutral-600"
                     )}
                   />
                   <span
@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       "text-sm font-['Roboto'] leading-5",
                       isActive
                         ? "text-primary-500 font-semibold"
-                        : "text-gray-600 font-normal"
+                        : "text-neutral-600 font-normal"
                     )}
                   >
                     {item.label}

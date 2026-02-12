@@ -183,7 +183,7 @@ const EmailDetailPage: React.FC = () => {
   if (!authLoaded || roleId === 1) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <ArrowPathIcon className="h-6 w-6 animate-spin text-gray-400" />
+        <ArrowPathIcon className="h-6 w-6 animate-spin text-neutral-400" />
       </div>
     );
   }
@@ -199,7 +199,7 @@ const EmailDetailPage: React.FC = () => {
               variant="outline"
               size="icon"
               onClick={() => router.back()}
-              className="h-10 w-10 rounded-xl border-gray-200"
+              className="h-10 w-10 rounded-xl border-neutral-200"
             >
               <ChevronLeftIcon className="h-5 w-5" />
             </Button>
@@ -208,10 +208,10 @@ const EmailDetailPage: React.FC = () => {
                 <Mail className="h-6 w-6 text-primary-500" />
               </div>
               <div>
-                <h1 className="text-2xl font-semibold text-gray-900">
+                <h1 className="text-2xl font-semibold text-neutral-900">
                   Email Detail
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-neutral-500">
                   {email?.Subject || "Loading..."}
                 </p>
               </div>
@@ -246,14 +246,14 @@ const EmailDetailPage: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-neutral-900">
                           {email.SenderName || "Unknown Sender"}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-neutral-500">
                           {email.SenderEmail}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <div className="flex items-center gap-2 text-sm text-neutral-500">
                         <Clock className="h-4 w-4" />
                         <span>{email.RelativeTime}</span>
                       </div>
@@ -263,8 +263,8 @@ const EmailDetailPage: React.FC = () => {
 
                 {/* To (if available) */}
                 {email.Recipient && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600 pl-14">
-                    <UserIcon className="h-4 w-4 text-gray-400" />
+                  <div className="flex items-center gap-2 text-sm text-neutral-600 pl-14">
+                    <UserIcon className="h-4 w-4 text-neutral-400" />
                     <span className="font-medium">To:</span>
                     <span>{email.Recipient}</span>
                   </div>
@@ -272,7 +272,7 @@ const EmailDetailPage: React.FC = () => {
 
                 {/* Subject */}
                 <div className="pl-14">
-                  <h2 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-lg font-semibold text-neutral-900">
                     {email.Subject || "(No Subject)"}
                   </h2>
                 </div>
@@ -297,7 +297,7 @@ const EmailDetailPage: React.FC = () => {
                     sandbox="allow-same-origin allow-scripts allow-popups"
                   />
                 ) : (
-                  <div className="p-6 text-gray-500 text-center">
+                  <div className="p-6 text-neutral-500 text-center">
                     No content available
                   </div>
                 )}
@@ -309,8 +309,8 @@ const EmailDetailPage: React.FC = () => {
               <AdminContentCard className="p-5">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <XMarkIcon className="h-5 w-5 text-gray-500" />
-                    <h3 className="font-semibold text-gray-900">
+                    <XMarkIcon className="h-5 w-5 text-neutral-500" />
+                    <h3 className="font-semibold text-neutral-900">
                       Attachments ({email.ListAttachments.length})
                     </h3>
                   </div>
@@ -323,15 +323,15 @@ const EmailDetailPage: React.FC = () => {
                         <div
                           key={index}
                           className={cn(
-                            "flex items-center justify-between p-3 rounded-xl border border-gray-200",
-                            "hover:bg-gray-50 transition-colors"
+                            "flex items-center justify-between p-3 rounded-xl border border-neutral-200",
+                            "hover:bg-neutral-50 transition-colors"
                           )}
                         >
                           <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 flex-shrink-0">
-                              <XMarkIcon className="h-5 w-5 text-gray-500" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-100 flex-shrink-0">
+                              <XMarkIcon className="h-5 w-5 text-neutral-500" />
                             </div>
-                            <span className="text-sm text-gray-700 truncate">
+                            <span className="text-sm text-neutral-700 truncate">
                               {filename}
                             </span>
                           </div>
@@ -345,9 +345,9 @@ const EmailDetailPage: React.FC = () => {
                             className="h-9 w-9 p-0 rounded-lg flex-shrink-0"
                           >
                             {isDownloadingThis ? (
-                              <ArrowPathIcon className="h-4 w-4 animate-spin text-gray-600" />
+                              <ArrowPathIcon className="h-4 w-4 animate-spin text-neutral-600" />
                             ) : (
-                              <XMarkIcon className="h-4 w-4 text-gray-600" />
+                              <XMarkIcon className="h-4 w-4 text-neutral-600" />
                             )}
                           </Button>
                         </div>
@@ -361,8 +361,8 @@ const EmailDetailPage: React.FC = () => {
         ) : (
           <AdminContentCard className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <Mail className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">Email not found</p>
+              <Mail className="h-12 w-12 text-neutral-300 mx-auto mb-4" />
+              <p className="text-neutral-500">Email not found</p>
               <Button
                 onClick={() => router.back()}
                 variant="outline"

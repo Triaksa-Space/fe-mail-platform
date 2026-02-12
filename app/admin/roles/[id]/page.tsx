@@ -147,7 +147,7 @@ const ViewAdminPageContent: React.FC = () => {
                 <div className="flex items-center justify-center py-20">
                     <div className="flex items-center gap-2">
                         <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                        <span className="text-neutral-600 text-sm font-medium">Loading...</span>
                     </div>
                 </div>
             </AdminLayout>
@@ -163,21 +163,21 @@ const ViewAdminPageContent: React.FC = () => {
                     {/* Back Button */}
                     <button
                         onClick={() => router.push("/admin/roles")}
-                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-gray-100 transition-colors"
+                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors"
                     >
-                        <ArrowLeftIcon className="w-5 h-5 text-gray-600" />
+                        <ArrowLeftIcon className="w-5 h-5 text-neutral-600" />
                     </button>
-                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Roles & permissions link */}
                     <button
                         onClick={() => router.push("/admin/roles")}
-                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
                     >
-                        <Shield className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
+                        <Shield className="w-5 h-5 text-neutral-600" />
+                        <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </button>
-                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Current admin */}
                     <div className="flex justify-center items-center gap-1">
@@ -188,17 +188,17 @@ const ViewAdminPageContent: React.FC = () => {
 
                 {/* Page Header */}
                 <div className="self-stretch inline-flex justify-between items-center">
-                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                    <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
                         View admin
                     </div>
                     <div className="flex justify-end items-center gap-3">
                         {/* Edit Button */}
                         <button
                             onClick={handleEditClick}
-                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                         >
-                            <PencilSquareIcon className="w-5 h-5 text-gray-800" />
-                            <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Edit</span>
+                            <PencilSquareIcon className="w-5 h-5 text-neutral-800" />
+                            <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Edit</span>
                         </button>
 
                         {/* Delete Button */}
@@ -220,15 +220,15 @@ const ViewAdminPageContent: React.FC = () => {
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
-                                <div className="self-stretch h-10 px-3 py-2 bg-gray-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                <div className="self-stretch h-10 px-3 py-2 bg-neutral-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                                     <div className="flex-1 flex justify-start items-center gap-2">
-                                        <span className="text-gray-400 text-sm font-normal font-['Roboto'] leading-4">
+                                        <span className="text-neutral-400 text-sm font-normal font-['Roboto'] leading-4">
                                             {admin?.username}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                    <span className="text-gray-400 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
+                                    <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
                                 </div>
                             </div>
                         </div>
@@ -237,15 +237,15 @@ const ViewAdminPageContent: React.FC = () => {
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
-                                <div className="self-stretch h-10 px-3 py-2 bg-gray-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                <div className="self-stretch h-10 px-3 py-2 bg-neutral-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                                     <div className="flex-1 flex justify-start items-center gap-2">
-                                        <span className="text-gray-400 text-sm font-normal font-['Roboto'] leading-4">
+                                        <span className="text-neutral-400 text-sm font-normal font-['Roboto'] leading-4">
                                             {admin?.password}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                    <span className="text-gray-400 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                                    <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                                 </div>
                             </div>
                         </div>
@@ -253,7 +253,7 @@ const ViewAdminPageContent: React.FC = () => {
 
                     {/* Role Section */}
                     <div className="flex flex-col justify-start items-start gap-1">
-                        <span className="text-gray-700 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
+                        <span className="text-neutral-700 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
                         <PermissionChips
                             permissions={admin?.permissions || []}
                             className="flex-wrap"
@@ -271,7 +271,7 @@ const ViewAdminPageContent: React.FC = () => {
                             onClick={() => setIsDeleteModalOpen(false)}
                             className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                         >
-                            <XMarkIcon className="w-4 h-4 text-gray-800" />
+                            <XMarkIcon className="w-4 h-4 text-neutral-800" />
                         </button>
 
                         <div className="self-stretch flex flex-col justify-start items-center gap-5">
@@ -282,12 +282,12 @@ const ViewAdminPageContent: React.FC = () => {
 
                             {/* Title & Description */}
                             <div className="self-stretch flex flex-col justify-start items-center gap-2">
-                                <div className="self-stretch text-center justify-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7">
+                                <div className="self-stretch text-center justify-center text-neutral-900 text-lg font-medium font-['Roboto'] leading-7">
                                     Delete admin?
                                 </div>
                                 <div className="self-stretch flex flex-col justify-start items-center text-center">
-                                    <span className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
-                                    <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{admin?.username}?</span>
+                                    <span className="text-neutral-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
+                                    <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{admin?.username}?</span>
                                 </div>
                             </div>
                         </div>
@@ -296,9 +296,9 @@ const ViewAdminPageContent: React.FC = () => {
                         <div className="self-stretch inline-flex justify-start items-center gap-3">
                             <button
                                 onClick={() => setIsDeleteModalOpen(false)}
-                                className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                             >
-                                <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
+                                <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
                             </button>
                             <button
                                 onClick={handleDeleteConfirm}

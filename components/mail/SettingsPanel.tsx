@@ -37,7 +37,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   }, []);
 
   return (
-    <div className={cn("flex-1 flex flex-col bg-gray-50 relative overflow-hidden", className)}>
+    <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden", className)}>
       {/* Mobile Header */}
       <div className="lg:hidden flex items-center justify-between px-4 py-3 relative z-10">
         <div className="flex items-center gap-4">
@@ -79,7 +79,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
 
               {/* Vertical Divider */}
-              <div className="w-0 self-stretch outline outline-1 outline-offset-[-0.5px] outline-gray-200" />
+              <div className="w-0 self-stretch outline outline-1 outline-offset-[-0.5px] outline-neutral-200" />
 
               {/* Email Binding Section - Right Side */}
               <div className="flex-1 flex flex-col gap-4">
@@ -99,7 +99,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             className={cn(
               "bg-white rounded-xl p-4",
               "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200"
+              "outline outline-1 outline-offset-[-1px] outline-neutral-200"
             )}
           >
             <h3 className="text-base font-semibold text-neutral-800 mb-4">Change password</h3>
@@ -111,7 +111,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             className={cn(
               "bg-white rounded-xl p-4",
               "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-              "outline outline-1 outline-offset-[-1px] outline-gray-200"
+              "outline outline-1 outline-offset-[-1px] outline-neutral-200"
             )}
           >
             <h3 className="text-base font-semibold text-neutral-800 mb-4">Email binding</h3>

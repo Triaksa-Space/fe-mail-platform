@@ -87,9 +87,9 @@ const ChangePasswordForm: React.FC = () => {
         {/* Old Password */}
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
-          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
             <div className="flex-1 flex justify-start items-center gap-2">
-              <LockClosedIcon className="w-5 h-5 text-gray-400" />
+              <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
                 <input
                   type="text"
@@ -133,9 +133,9 @@ const ChangePasswordForm: React.FC = () => {
         {/* New Password */}
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
-          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
             <div className="flex-1 flex justify-start items-center gap-2">
-              <LockClosedIcon className="w-5 h-5 text-gray-400" />
+              <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
                 <input
                   type="text"
@@ -179,9 +179,9 @@ const ChangePasswordForm: React.FC = () => {
         {/* Confirm Password */}
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
-          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
             <div className="flex-1 flex justify-start items-center gap-2">
-              <LockClosedIcon className="w-5 h-5 text-gray-400" />
+              <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
                 <input
                   type="text"

@@ -136,30 +136,30 @@ export const tw = {
     card: 'bg-white',
     primary: 'bg-blue-600',
     primaryHover: 'hover:bg-blue-700',
-    muted: 'bg-gray-100',
+    muted: 'bg-neutral-100',
   },
   // Text classes
   text: {
-    primary: 'text-gray-900',
-    secondary: 'text-gray-500',
-    muted: 'text-gray-400',
+    primary: 'text-neutral-900',
+    secondary: 'text-neutral-500',
+    muted: 'text-neutral-400',
     link: 'text-primary-500 hover:text-primary-500',
     white: 'text-white',
   },
   // Border classes
   border: {
-    default: 'border-gray-200',
+    default: 'border-neutral-200',
     focus: 'focus:border-blue-500 focus:ring-2 focus:ring-blue-100',
   },
   // Button classes
   button: {
     primary: 'btn-primary-skin',
-    secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700',
-    ghost: 'hover:bg-gray-100 text-gray-700',
+    secondary: 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700',
+    ghost: 'hover:bg-neutral-100 text-neutral-700',
   },
   // Input classes
   input: {
-    base: 'h-10 text-sm border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-neutral-200',
+    base: 'h-10 text-sm border-neutral-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-neutral-200',
   },
 };
 

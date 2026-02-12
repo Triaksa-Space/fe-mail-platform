@@ -35,7 +35,7 @@ export function OptimizedImage({
   return (
     <div className={cn("relative overflow-hidden", className)}>
       {showSkeleton && isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        <div className="absolute inset-0 bg-neutral-200 animate-pulse" />
       )}
       <Image
         {...props}

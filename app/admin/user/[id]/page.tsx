@@ -259,21 +259,21 @@ export default function UserDetailPage() {
             {/* Back */}
             <button
               onClick={() => router.back()}
-              className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
+              className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
             >
-              <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
+              <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
             </button>
-            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
             {/* User list */}
             <button
               onClick={() => router.push("/admin")}
-              className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+              className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
             >
-              <UserGroupIcon className="w-4 h-4 text-gray-600" />
-              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
+              <UserGroupIcon className="w-4 h-4 text-neutral-600" />
+              <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
             </button>
-            <ChevronRightIcon className="w-4 h-4 text-gray-300" />
+            <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
             {/* Current user email */}
             <div className="flex justify-center items-center gap-1">
@@ -293,7 +293,7 @@ export default function UserDetailPage() {
               "disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
-            <ArrowPathIcon className={cn("w-4 h-4 text-gray-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
+            <ArrowPathIcon className={cn("w-4 h-4 text-neutral-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
           </button>
         </div>
 
@@ -301,7 +301,7 @@ export default function UserDetailPage() {
         <div className="self-stretch flex-1 min-h-0 inline-flex justify-start items-stretch gap-5">
           {/* Inbox Panel */}
           <div className="flex-1 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
-            <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Inbox</div>
+            <div className="justify-center text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">Inbox</div>
 
             {/* Inbox List */}
             <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-y-auto">
@@ -310,13 +310,13 @@ export default function UserDetailPage() {
               ) : inboxEmails.length === 0 ? (
                 <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3">
                   <div className="w-10 h-10 flex items-center justify-center">
-                    <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+                    <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
                   </div>
                   <div className="flex flex-col justify-start items-center gap-1">
-                    <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+                    <p className="text-base font-medium text-neutral-800 font-['Roboto'] leading-6">
                       No Email Yet
                     </p>
-                    <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                    <p className="text-center text-xs font-normal text-neutral-600 font-['Roboto'] leading-5">
                       There are no email in this inbox
                       <br />
                       at the moment.
@@ -349,7 +349,7 @@ export default function UserDetailPage() {
 
           {/* Sent Panel */}
           <div className="flex-1 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
-            <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">Sent</div>
+            <div className="justify-center text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">Sent</div>
 
             {/* Sent List */}
             <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-y-auto">
@@ -358,13 +358,13 @@ export default function UserDetailPage() {
               ) : sentEmails.length === 0 ? (
                 <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3">
                   <div className="w-10 h-10 flex items-center justify-center">
-                    <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+                    <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
                   </div>
                   <div className="flex flex-col justify-start items-center gap-1">
-                    <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+                    <p className="text-base font-medium text-neutral-800 font-['Roboto'] leading-6">
                       No Outgoing Email
                     </p>
-                    <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+                    <p className="text-center text-xs font-normal text-neutral-600 font-['Roboto'] leading-5">
                       Emails sent will appear here
                     </p>
                   </div>
@@ -418,14 +418,14 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
             <div className="self-stretch inline-flex justify-between items-center">
               <div className={cn(
                 "text-base font-['Roboto'] leading-6",
-                isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+                isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
               )}>
                 {email.SenderName || email.SenderEmail || "Unknown"}
               </div>
               <div className="flex justify-end items-center gap-0.5">
                 <div className={cn(
                   "text-xs font-['Roboto'] leading-5 line-clamp-1",
-                  isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+                  isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
                 )}>
                   {email.RelativeTime}
                 </div>
@@ -434,13 +434,13 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
             </div>
             <div className={cn(
               "self-stretch text-sm font-['Roboto'] leading-5",
-              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+              isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
             )}>
               {email.Subject || "(No subject)"}
             </div>
           </div>
         </div>
-        <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+        <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
           {email.Preview || "No preview available"}
         </div>
       </div>
@@ -464,19 +464,19 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
         <div className="self-stretch inline-flex justify-start items-start gap-4">
           <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
             <div className="self-stretch inline-flex justify-between items-center">
-              <div className="text-gray-600 text-base font-normal font-['Roboto'] leading-6">
+              <div className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6">
                 To: {email.to || "Unknown"}
               </div>
-              <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+              <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
                 {formatRelativeTime(email.sent_at)}
               </div>
             </div>
-            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5">
+            <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5">
               {email.subject || "(No subject)"}
             </div>
           </div>
         </div>
-        <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+        <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
           {email.body_preview || "No preview available"}
         </div>
       </div>

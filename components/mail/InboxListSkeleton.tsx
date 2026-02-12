@@ -21,7 +21,7 @@ interface InboxListSkeletonProps {
  */
 const InboxRowSkeleton = memo(function InboxRowSkeleton() {
   return (
-    <div className="px-4 py-1.5 rounded-xl bg-gray-50">
+    <div className="px-4 py-1.5 rounded-xl bg-neutral-50">
       <div className="flex items-start gap-3">
         {/* Unread indicator dot placeholder */}
         <div className="flex-shrink-0 pt-1.5">
@@ -52,7 +52,7 @@ const InboxRowSkeleton = memo(function InboxRowSkeleton() {
  */
 const InboxHeaderSkeleton = memo(function InboxHeaderSkeleton() {
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+    <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200">
       {/* Title */}
       <Skeleton className="h-6 w-16" />
       {/* Refresh button */}
@@ -77,7 +77,7 @@ const InboxListSkeleton: React.FC<InboxListSkeletonProps> = ({
         "flex flex-col h-full",
         fullWidth
           ? "w-full"
-          : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-gray-200",
+          : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
         className
       )}
       role="status"

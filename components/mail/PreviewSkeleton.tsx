@@ -20,7 +20,7 @@ const PreviewHeaderSkeleton = memo(function PreviewHeaderSkeleton({
   showBackButton?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between px-4 md:px-6 py-3 bg-white border-b border-gray-200">
+    <div className="flex items-center justify-between px-4 md:px-6 py-3 bg-white border-b border-neutral-200">
       <div className="flex items-center gap-2">
         {showBackButton && (
           <Skeleton className="h-9 w-9 rounded-xl" />
@@ -44,7 +44,7 @@ const PreviewHeaderSkeleton = memo(function PreviewHeaderSkeleton({
  */
 const EmailHeaderCardSkeleton = memo(function EmailHeaderCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 md:p-5">
+    <div className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 md:p-5">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           {/* Avatar */}
@@ -68,7 +68,7 @@ const EmailHeaderCardSkeleton = memo(function EmailHeaderCardSkeleton() {
  */
 const EmailBodyCardSkeleton = memo(function EmailBodyCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+    <div className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-5">
       <div className="space-y-3">
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-11/12" />
@@ -93,13 +93,13 @@ const AttachmentsSkeleton = memo(function AttachmentsSkeleton({
   count?: number;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 md:p-5">
+    <div className="bg-white rounded-2xl border border-neutral-200 shadow-sm p-4 md:p-5">
       <Skeleton className="h-4 w-28 mb-3" />
       <div className="space-y-2">
         {Array.from({ length: count }).map((_, index) => (
           <div
             key={index}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-xl"
+            className="flex items-center justify-between p-3 bg-neutral-50 rounded-xl"
           >
             <Skeleton className="h-4 w-40" />
             <Skeleton className="h-8 w-8 rounded-lg" />

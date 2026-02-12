@@ -224,7 +224,7 @@ export function LazyList<T>({
           ref={loadMoreRef}
           className="h-10 flex items-center justify-center"
         >
-          <span className="text-sm text-gray-400">Loading more...</span>
+          <span className="text-sm text-neutral-400">Loading more...</span>
         </div>
       )}
     </div>

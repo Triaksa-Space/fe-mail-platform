@@ -169,7 +169,7 @@ const AdminPrivacyPageContent: React.FC = () => {
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-between items-center">
-          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+          <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             Privacy policy
           </div>
           {isEditing ? (
@@ -177,10 +177,10 @@ const AdminPrivacyPageContent: React.FC = () => {
               <button
                 onClick={handleCancel}
                 disabled={isSaving}
-                className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors disabled:opacity-50"
               >
-                <XMarkIcon className="w-5 h-5 text-gray-800" />
-                <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">
+                <XMarkIcon className="w-5 h-5 text-neutral-800" />
+                <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">
                   Cancel
                 </span>
               </button>
@@ -200,10 +200,10 @@ const AdminPrivacyPageContent: React.FC = () => {
           ) : (
             <button
               onClick={handleEdit}
-              className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+              className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
             >
-              <PencilSquareIcon className="w-5 h-5 text-gray-800" />
-              <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">
+              <PencilSquareIcon className="w-5 h-5 text-neutral-800" />
+              <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">
                 Edit
               </span>
             </button>
@@ -216,7 +216,7 @@ const AdminPrivacyPageContent: React.FC = () => {
             <LoadingFallback />
           ) : isEditing ? (
             /* Editor Mode */
-            <div className="self-stretch flex-1 bg-gray-100 rounded-md outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start overflow-hidden">
+            <div className="self-stretch flex-1 bg-neutral-100 rounded-md outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start overflow-hidden">
               <div className="self-stretch flex-1 relative">
                 <Editor
                   apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
@@ -317,24 +317,24 @@ const AdminPrivacyPageContent: React.FC = () => {
             </div>
           ) : (
             /* View Mode */
-            <div className="self-stretch flex-1 bg-gray-100 rounded-md outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start overflow-hidden">
+            <div className="self-stretch flex-1 bg-neutral-100 rounded-md outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start overflow-hidden">
               {/* Disabled Toolbar (visual only) */}
-              <div className="self-stretch p-2 bg-gray-300 inline-flex justify-start items-center gap-5">
+              <div className="self-stretch p-2 bg-neutral-300 inline-flex justify-start items-center gap-5">
                 <div className="flex justify-start items-start gap-2">
                   <div className="h-7 px-2 rounded flex justify-center items-center">
-                    <span className="text-gray-500 text-sm font-normal">Paragraph</span>
+                    <span className="text-neutral-500 text-sm font-normal">Paragraph</span>
                   </div>
                 </div>
               </div>
               {/* Content Display */}
               <div className="self-stretch p-5 flex flex-col justify-start items-start gap-5 overflow-y-auto max-h-[600px]">
                 <div
-                  className="prose prose-sm max-w-none text-gray-400 leading-relaxed
-                    prose-headings:text-gray-400 prose-headings:font-semibold
+                  className="prose prose-sm max-w-none text-neutral-400 leading-relaxed
+                    prose-headings:text-neutral-400 prose-headings:font-semibold
                     prose-h1:text-2xl prose-h2:text-base prose-h3:text-base
                     prose-p:mb-3 prose-ul:my-2 prose-ol:my-2
                     prose-li:my-1 prose-a:text-primary-500 prose-a:underline
-                    prose-strong:text-gray-400"
+                    prose-strong:text-neutral-400"
                   dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
               </div>

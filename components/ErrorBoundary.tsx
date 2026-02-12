@@ -45,14 +45,14 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex flex-col items-center justify-center min-h-[200px] p-6 bg-white rounded-2xl border border-gray-200">
+        <div className="flex flex-col items-center justify-center min-h-[200px] p-6 bg-white rounded-2xl border border-neutral-200">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
             <AlertCircle className="h-6 w-6 text-red-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">
             Something went wrong
           </h3>
-          <p className="text-sm text-gray-500 text-center mb-4 max-w-md">
+          <p className="text-sm text-neutral-500 text-center mb-4 max-w-md">
             An unexpected error occurred. Please try again or refresh the page.
           </p>
           <div className="flex gap-3">
@@ -74,7 +74,7 @@ class ErrorBoundary extends Component<Props, State> {
             </Button>
           </div>
           {process.env.NODE_ENV === "development" && this.state.error && (
-            <details className="mt-4 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 max-w-full overflow-auto">
+            <details className="mt-4 p-3 bg-neutral-50 rounded-lg text-xs text-neutral-600 max-w-full overflow-auto">
               <summary className="cursor-pointer font-medium">
                 Error details
               </summary>

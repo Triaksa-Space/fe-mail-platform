@@ -162,7 +162,7 @@ const Settings: React.FC = () => {
               <Button
                 className={`w-3/4 py-2 px-4 shadow appearance-non font-bold rounded focus:outline-none focus:shadow-outline ${
                   isLoading || !currentPassword || !newPassword || !confirmPassword
-                    ? 'bg-gray-300 text-black cursor-not-allowed'
+                    ? 'bg-neutral-300 text-black cursor-not-allowed'
                     : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
                 }`}
                 onClick={handleSubmit}

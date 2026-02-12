@@ -37,7 +37,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
             "w-14 flex flex-col items-center justify-center gap-0.5 relative",
             currentView === "inbox"
               ? "text-primary-500"
-              : "text-gray-600 hover:text-gray-700"
+              : "text-neutral-600 hover:text-neutral-700"
           )}
         >
           <Inbox className="w-5 h-5" />
@@ -54,7 +54,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
             "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "sent"
               ? "text-primary-500"
-              : "text-gray-600 hover:text-gray-700"
+              : "text-neutral-600 hover:text-neutral-700"
           )}
         >
           <PaperAirplaneIcon className="w-5 h-5" />
@@ -71,7 +71,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
             "w-14 flex flex-col items-center justify-center gap-0.5",
             currentView === "settings"
               ? "text-primary-500"
-              : "text-gray-600 hover:text-gray-700"
+              : "text-neutral-600 hover:text-neutral-700"
           )}
         >
           <Settings className="w-5 h-5" />
@@ -84,7 +84,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
         {/* Logout tab */}
         <button
           onClick={onLogout}
-          className="w-14 flex flex-col items-center justify-center gap-0.5 text-gray-600 hover:text-gray-700"
+          className="w-14 flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-700"
         >
           <LogOut className="w-5 h-5" />
           <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>

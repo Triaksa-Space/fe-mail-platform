@@ -34,7 +34,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   if (!_hasHydrated) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F9FAFB]">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-neutral-500">Loading...</div>
       </div>
     );
   }
@@ -44,7 +44,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-neutral-50">
       {/* Desktop Layout */}
       <div className="w-full min-h-screen flex justify-center">
         <div className="w-full max-w-[1440px] py-5 px-4 lg:px-5 flex justify-start items-start gap-5">

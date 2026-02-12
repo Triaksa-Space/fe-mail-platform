@@ -59,7 +59,7 @@ const FaqPage: React.FC = () => {
   const isSearching = searchQuery.trim().length > 0;
 
   return (
-    <div className="h-screen w-full relative bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen w-full relative bg-neutral-50 flex flex-col overflow-hidden">
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}
@@ -76,9 +76,9 @@ const FaqPage: React.FC = () => {
                   className={cn(
                     "w-10 h-10 bg-white rounded-lg",
                     "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-                    "outline outline-1 outline-offset-[-1px] outline-gray-200",
+                    "outline outline-1 outline-offset-[-1px] outline-neutral-200",
                     "flex justify-center items-center",
-                    "text-gray-800 hover:bg-gray-50 transition-colors",
+                    "text-neutral-800 hover:bg-neutral-50 transition-colors",
                   )}
                   aria-label="Go back"
                 >
@@ -90,8 +90,8 @@ const FaqPage: React.FC = () => {
             {/* Content Area */}
             <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
               {/* Header Card with Title and Search */}
-              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
-                <h1 className="text-gray-800 text-2xl md:text-3xl font-medium leading-8 md:leading-9">
+              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-center gap-4">
+                <h1 className="text-neutral-800 text-2xl md:text-3xl font-medium leading-8 md:leading-9">
                   FAQs
                 </h1>
                 <FaqSearch

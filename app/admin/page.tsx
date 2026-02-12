@@ -72,8 +72,8 @@ const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw })
     // Check for invalid date
     if (isNaN(lastActiveDate.getTime())) {
         return (
-            <div className="h-5 px-1.5 py-0.5 bg-gray-100 rounded-3xl flex justify-center items-center gap-1">
-                <div className="text-center justify-center text-gray-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
+            <div className="h-5 px-1.5 py-0.5 bg-neutral-100 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-neutral-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
             </div>
         );
     }
@@ -96,15 +96,15 @@ const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw })
     } else if (diffMins < 60) {
         // Recent (sky/blue)
         badgeClass += " bg-blue-100";
-        textClass += " text-gray-700";
+        textClass += " text-neutral-700";
         displayText = `${diffMins} minutes ago`;
     } else if (diffHours < 24) {
-        badgeClass += " bg-gray-100";
-        textClass += " text-gray-700";
+        badgeClass += " bg-neutral-100";
+        textClass += " text-neutral-700";
         displayText = `${diffHours} hours ago`;
     } else {
-        badgeClass += " bg-gray-100";
-        textClass += " text-gray-700";
+        badgeClass += " bg-neutral-100";
+        textClass += " text-neutral-700";
         displayText = `${diffDays} days ago`;
     }
 
@@ -346,7 +346,7 @@ const EmailManagementPageContent: React.FC = () => {
         } else if (sortField === field && sortOrder === 'desc') {
             return <ArrowDown className="ml-1 h-4 w-4" />;
         }
-        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-gray-400" />;
+        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-neutral-400" />;
     };
 
     return (
@@ -354,16 +354,16 @@ const EmailManagementPageContent: React.FC = () => {
             <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
                 {/* Header */}
                 <div className="self-stretch inline-flex justify-between items-center">
-                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                    <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
                         User list
                     </div>
                     <div className="w-64 h-10 inline-flex flex-col justify-between items-start">
-                        <div className="search-input-wrapper self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-between items-center">
+                        <div className="search-input-wrapper self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-between items-center">
                             <div className="flex justify-start items-center gap-2 flex-1">
                                 <input
                                     id="by_username"
                                     placeholder="Search user..."
-                                    className="search-input flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200"
+                                    className="search-input flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200"
                                     value={searchTerm}
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -371,7 +371,7 @@ const EmailManagementPageContent: React.FC = () => {
                                         handleSearch(sanitizedValue);
                                     }}
                                 />
-                                <MagnifyingGlassIcon className="w-5 h-5 text-gray-800" />
+                                <MagnifyingGlassIcon className="w-5 h-5 text-neutral-800" />
                             </div>
                         </div>
                     </div>
@@ -386,44 +386,44 @@ const EmailManagementPageContent: React.FC = () => {
                         <div className="absolute inset-0 bg-white/70 flex items-center justify-center z-10 rounded-lg">
                             <div className="flex items-center gap-2">
                                 <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                                <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                                <span className="text-neutral-600 text-sm font-medium">Loading...</span>
                             </div>
                         </div>
                     )}
 
                     {/* Table Container */}
                     <div className="self-stretch flex flex-col justify-start items-start gap-4">
-                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 overflow-visible">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-visible">
                             {/* Table Header */}
-                            <div className="flex w-full bg-white border-b border-gray-200">
+                            <div className="flex w-full bg-white border-b border-neutral-200">
                                 <div className="w-80 px-4 py-3 flex items-center gap-1">
-                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
-                                    <ChevronUpDownIcon className="w-5 h-5 text-gray-500" />
+                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
+                                    <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
                                 <div className="flex-1 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('last_login')}
-                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
-                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
                                         {renderSortIcon('last_login')}
                                     </button>
                                 </div>
                                 <div className="flex-1 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('created_at')}
-                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
-                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created</div>
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created</div>
                                         {renderSortIcon('created_at')}
                                     </button>
                                 </div>
                                 <div className="flex-1 px-4 py-3 flex items-center gap-1">
-                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
-                                    <ChevronUpDownIcon className="w-5 h-5 text-gray-500" />
+                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
+                                    <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
                                 <div className="w-20 px-4 py-3 flex justify-center items-center">
-                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
+                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
                                 </div>
                             </div>
 
@@ -437,11 +437,11 @@ const EmailManagementPageContent: React.FC = () => {
                                             {/* <div className="w-4 h-4 left-[1.88px] top-[1.88px] absolute bg-red-500"></div> */}
                                             <XCircleIcon className="w-5 h-5 absolute text-red-500" />
                                         </div>
-                                        <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">
+                                        <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">
                                             {searchTerm.trim().length > 0 ? "Email not found" : "No users found"}
                                         </div>
                                     </div>
-                                    <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                                    <div className="justify-center text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">
                                         {searchTerm.trim().length > 0
                                             ? "Please check your keyword and try again."
                                             : "No users are available yet."}
@@ -451,12 +451,12 @@ const EmailManagementPageContent: React.FC = () => {
                                 users.map((user) => (
                                     <div
                                         key={user.email}
-                                        className="flex w-full border-b border-gray-200 cursor-pointer bg-white hover:bg-gray-100"
+                                        className="flex w-full border-b border-neutral-200 cursor-pointer bg-white hover:bg-neutral-100"
                                         onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}
                                     >
                                         {/* Name */}
                                         <div className="w-80 h-11 px-4 py-3 flex items-center">
-                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                            <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.email}
                                             </div>
                                         </div>
@@ -466,13 +466,13 @@ const EmailManagementPageContent: React.FC = () => {
                                         </div>
                                         {/* Created */}
                                         <div className="flex-1 h-11 px-4 py-3 flex items-center">
-                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                            <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.created}
                                             </div>
                                         </div>
                                         {/* Created By */}
                                         <div className="flex-1 h-11 px-4 py-3 flex items-center">
-                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                            <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.createdByName || "System"}
                                             </div>
                                         </div>
@@ -513,7 +513,7 @@ const EmailManagementPageContent: React.FC = () => {
                     <DialogContent className="p-4 w-auto max-w-none border-0 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
                         {/* Header */}
                         <div className="w-[518px] inline-flex justify-between items-center">
-                            <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">Change Password</div>
+                            <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Change Password</div>
                             <button
                                 onClick={() => {
                                     setIsChangePasswordDialogOpen(false);
@@ -521,9 +521,9 @@ const EmailManagementPageContent: React.FC = () => {
                                     setConfirmPasswordForAdmin("");
                                     setSelectedAdmin(null);
                                 }}
-                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                             >
-                                <XMarkIcon className="w-5 h-5 text-gray-800" />
+                                <XMarkIcon className="w-5 h-5 text-neutral-800" />
                             </button>
                         </div>
 
@@ -538,14 +538,14 @@ const EmailManagementPageContent: React.FC = () => {
                                             "self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3",
                                             confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
                                                 ? "outline-red-500"
-                                                : "outline-gray-200"
+                                                : "outline-neutral-200"
                                         )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
                                                 <LockClosedIcon className={cn(
                                                     "w-5 h-5",
                                                     confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
                                                         ? "text-red-400"
-                                                        : "text-gray-400"
+                                                        : "text-neutral-400"
                                                 )} />
                                                 <input
                                                     type={showPassword ? "text" : "password"}
@@ -556,7 +556,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                         setPasswordForAdmin(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                                    className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
                                             <button
@@ -565,9 +565,9 @@ const EmailManagementPageContent: React.FC = () => {
                                                 className="flex justify-center items-center"
                                             >
                                                 {showPassword ? (
-                                                    <EyeOff className="w-5 h-5 text-gray-800" />
+                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
                                                 ) : (
-                                                    <Eye className="w-5 h-5 text-gray-800" />
+                                                    <Eye className="w-5 h-5 text-neutral-800" />
                                                 )}
                                             </button>
                                         </div>
@@ -576,7 +576,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                 "justify-center text-[10px] font-normal font-['Roboto'] leading-4",
                                                 confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
                                                     ? "text-red-500"
-                                                    : "text-gray-800"
+                                                    : "text-neutral-800"
                                             )}>New password</div>
                                         </div>
                                     </div>
@@ -590,10 +590,10 @@ const EmailManagementPageContent: React.FC = () => {
                                             "self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3",
                                             confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
                                                 ? "outline-red-500"
-                                                : "outline-gray-200"
+                                                : "outline-neutral-200"
                                         )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                                                <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                                                 <input
                                                     type={showCPassword ? "text" : "password"}
                                                     value={confirmPasswordForAdmin}
@@ -603,7 +603,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                         setConfirmPasswordForAdmin(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                                    className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
                                             <button
@@ -612,9 +612,9 @@ const EmailManagementPageContent: React.FC = () => {
                                                 className="flex justify-center items-center"
                                             >
                                                 {showCPassword ? (
-                                                    <EyeOff className="w-5 h-5 text-gray-800" />
+                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
                                                 ) : (
-                                                    <Eye className="w-5 h-5 text-gray-800" />
+                                                    <Eye className="w-5 h-5 text-neutral-800" />
                                                 )}
                                             </button>
                                         </div>
@@ -625,7 +625,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                 "justify-center text-[10px] font-normal font-['Roboto'] leading-4",
                                                 confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
                                                     ? "text-red-500"
-                                                    : "text-gray-800"
+                                                    : "text-neutral-800"
                                             )}>Confirm password</div>
                                         </div>
                                     </div>
@@ -659,7 +659,7 @@ const EmailManagementPageContent: React.FC = () => {
                                 onClick={() => setIsDialogDeleteOpen(false)}
                                 className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                             >
-                                <XMarkIcon className="w-4 h-4 text-gray-800" />
+                                <XMarkIcon className="w-4 h-4 text-neutral-800" />
                             </button>
 
                             <div className="self-stretch flex flex-col justify-start items-center gap-5">
@@ -670,12 +670,12 @@ const EmailManagementPageContent: React.FC = () => {
 
                                 {/* Title & Description */}
                                 <div className="self-stretch flex flex-col justify-start items-center gap-2">
-                                    <div className="self-stretch text-center justify-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7">
+                                    <div className="self-stretch text-center justify-center text-neutral-900 text-lg font-medium font-['Roboto'] leading-7">
                                         Delete user?
                                     </div>
                                     <div className="self-stretch flex flex-col justify-start items-center text-center">
-                                        <span className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
-                                        <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{selectedUser?.email}?</span>
+                                        <span className="text-neutral-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
+                                        <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{selectedUser?.email}?</span>
                                     </div>
                                 </div>
                             </div>
@@ -684,9 +684,9 @@ const EmailManagementPageContent: React.FC = () => {
                             <div className="self-stretch inline-flex justify-start items-center gap-3">
                                 <button
                                     onClick={() => setIsDialogDeleteOpen(false)}
-                                    className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                    className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                                 >
-                                    <div className="text-center justify-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
+                                    <div className="text-center justify-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
                                 </button>
                                 <button
                                     onClick={handleDeleteConfirm}

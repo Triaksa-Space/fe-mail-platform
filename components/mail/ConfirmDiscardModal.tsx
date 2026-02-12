@@ -57,13 +57,13 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
             <div className="self-stretch flex flex-col justify-start items-center gap-2">
               <h2
                 id="discard-title"
-                className="self-stretch text-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7"
+                className="self-stretch text-center text-neutral-900 text-lg font-medium font-['Roboto'] leading-7"
               >
                 Discard email?
               </h2>
               <p
                 id="discard-description"
-                className="self-stretch text-center text-gray-500 text-sm font-normal font-['Roboto'] leading-5"
+                className="self-stretch text-center text-neutral-500 text-sm font-normal font-['Roboto'] leading-5"
               >
                 Are you sure you want to discard this email? Any unsaved changes will be lost.
               </p>
@@ -75,9 +75,9 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+              className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
             >
-              <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
+              <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
             </button>
             <button
               type="button"

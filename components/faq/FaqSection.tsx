@@ -27,7 +27,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
     <div
       className={cn(
         "self-stretch p-4 flex flex-col justify-start items-start gap-3",
-        !isLast && "border-b border-gray-200"
+        !isLast && "border-b border-neutral-200"
       )}
     >
       <button
@@ -36,14 +36,14 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
         aria-expanded={isOpen}
       >
         <div className="flex-1 flex justify-start items-center gap-3">
-          <span className="flex-1 text-gray-900 text-base font-medium leading-6">
+          <span className="flex-1 text-neutral-900 text-base font-medium leading-6">
             {item.question}
           </span>
         </div>
         <div className="flex justify-end items-center gap-2">
           <ChevronDownIcon
             className={cn(
-              "w-5 h-5 text-gray-500 transition-transform duration-200",
+              "w-5 h-5 text-neutral-500 transition-transform duration-200",
               isOpen && "rotate-180"
             )}
           />
@@ -58,7 +58,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
         )}
       >
         <div className="self-stretch pl-6 inline-flex justify-center items-start gap-2.5">
-          <p className="flex-1 text-gray-500 text-sm font-normal leading-5">
+          <p className="flex-1 text-neutral-500 text-sm font-normal leading-5">
             {item.answer}
           </p>
         </div>
@@ -85,13 +85,13 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
   return (
     <div
       className={cn(
-        "self-stretch bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-start",
+        "self-stretch bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start",
         className
       )}
     >
       {/* Category Header */}
       <div className="self-stretch px-4 pt-4 inline-flex justify-start items-center gap-2.5">
-        <h3 className="text-gray-800 text-lg font-semibold leading-6">
+        <h3 className="text-neutral-800 text-lg font-semibold leading-6">
           {category.title}
         </h3>
       </div>

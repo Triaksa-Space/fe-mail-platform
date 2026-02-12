@@ -142,7 +142,7 @@ export default function LoginPageClient() {
                 className="h-10 w-28"
                 priority
               />
-              <p className="text-sm font-normal text-gray-400">
+              <p className="text-sm font-normal text-neutral-400">
                 Nothing Extra. Just What Matters.
               </p>
             </div>
@@ -156,11 +156,11 @@ export default function LoginPageClient() {
                     <div className="h-3.5" />
                     <div
                       className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3 ${
-                        loginError ? "outline-red-500" : "outline-gray-200"
+                        loginError ? "outline-red-500" : "outline-neutral-200"
                       }`}
                     >
                       <div className="flex-1 flex items-center gap-2">
-                        <Mail className="w-5 h-5 text-gray-400" />
+                        <Mail className="w-5 h-5 text-neutral-400" />
                         <input
                           id="email"
                           name="email"
@@ -176,12 +176,12 @@ export default function LoginPageClient() {
                             );
                             setLoginEmail(sanitizedValue);
                           }}
-                          className="flex-1 text-sm font-normal text-gray-800 placeholder:text-neutral-200 bg-transparent outline-none"
+                          className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
                         />
                       </div>
                     </div>
                     <div className="px-1 absolute left-2 top-0 bg-white">
-                      <span className="text-[10px] font-normal text-gray-800 leading-4">
+                      <span className="text-[10px] font-normal text-neutral-800 leading-4">
                         Email
                       </span>
                     </div>
@@ -192,11 +192,11 @@ export default function LoginPageClient() {
                     <div className="h-3.5" />
                     <div
                       className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3 ${
-                        loginError ? "outline-red-500" : "outline-gray-200"
+                        loginError ? "outline-red-500" : "outline-neutral-200"
                       }`}
                     >
                       <div className="flex-1 flex items-center gap-2">
-                        <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                        <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                         <div className="relative flex-1">
                           <input
                             id="password"
@@ -216,12 +216,12 @@ export default function LoginPageClient() {
                             }}
                             className={`w-full text-sm font-normal placeholder:text-neutral-200 bg-transparent outline-none ${
                               showPassword
-                                ? "text-gray-800"
-                                : "text-transparent caret-gray-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
+                                ? "text-neutral-800"
+                                : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
                             }`}
                           />
                           {!showPassword && passwordMaskLength > 0 && (
-                            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-gray-800 font-mono tracking-[0.04em]">
+                            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
                               {"*".repeat(passwordMaskLength)}
                             </span>
                           )}
@@ -233,14 +233,14 @@ export default function LoginPageClient() {
                         className="flex items-center"
                       >
                         {showPassword ? (
-                          <Eye className="w-5 h-5 text-gray-800" />
+                          <Eye className="w-5 h-5 text-neutral-800" />
                         ) : (
-                          <EyeOff className="w-5 h-5 text-gray-800" />
+                          <EyeOff className="w-5 h-5 text-neutral-800" />
                         )}
                       </button>
                     </div>
                     <div className="px-1 absolute left-2 top-0 bg-white">
-                      <span className="text-[10px] font-normal text-gray-800 leading-4">
+                      <span className="text-[10px] font-normal text-neutral-800 leading-4">
                         Password
                       </span>
                     </div>
@@ -280,7 +280,7 @@ export default function LoginPageClient() {
 
               {/* Support By */}
               <p className="text-xs font-normal text-center">
-                <span className="text-gray-800">Support by: </span>
+                <span className="text-neutral-800">Support by: </span>
                 <a
                   className="text-primary-500 font-medium underline"
                   href="https://gamemarket.gg"
@@ -289,7 +289,7 @@ export default function LoginPageClient() {
                 >
                   GameMarket.gg
                 </a>{" "}
-                <span className="text-gray-800">Ultimate gaming marketplace!</span>
+                <span className="text-neutral-800">Ultimate gaming marketplace!</span>
               </p>
             </form>
           </AuthCard>

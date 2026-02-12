@@ -41,21 +41,21 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
 }) => (
   <div className={cn("space-y-1", className)}>
     {label && (
-      <label htmlFor={id} className="text-xs text-gray-600 font-medium">
+      <label htmlFor={id} className="text-xs text-neutral-600 font-medium">
         {label}
       </label>
     )}
     <div className="relative">
-      <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
       <Input
         className={cn(
           "h-10 text-sm pl-10 pr-10",
-          "border-gray-200 rounded-lg",
+          "border-neutral-200 rounded-lg",
           "focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
           "placeholder:text-neutral-200",
           "transition-colors duration-200",
           error && "border-red-500 focus:border-red-500 focus:ring-red-100",
-          disabled && "bg-gray-100 cursor-not-allowed"
+          disabled && "bg-neutral-100 cursor-not-allowed"
         )}
         id={id}
         type={showPassword ? "text" : "password"}
@@ -68,7 +68,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         type="button"
         className={cn(
           "absolute inset-y-0 right-0 pr-3 flex items-center",
-          "text-gray-400 hover:text-gray-600 transition-colors",
+          "text-neutral-400 hover:text-neutral-600 transition-colors",
           disabled && "cursor-not-allowed"
         )}
         onClick={() => !disabled && setShowPassword(!showPassword)}

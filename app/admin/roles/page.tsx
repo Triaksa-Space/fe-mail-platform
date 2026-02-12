@@ -50,8 +50,8 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
     // Calculate time difference
     if (!lastActiveAt) {
         return (
-            <div className="h-5 px-1.5 py-0.5 bg-gray-100 rounded-3xl flex justify-center items-center gap-1">
-                <div className="text-center justify-center text-gray-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
+            <div className="h-5 px-1.5 py-0.5 bg-neutral-100 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-neutral-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
             </div>
         );
     }
@@ -62,8 +62,8 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
     // Check for invalid date
     if (isNaN(lastActiveDate.getTime())) {
         return (
-            <div className="h-5 px-1.5 py-0.5 bg-gray-100 rounded-3xl flex justify-center items-center gap-1">
-                <div className="text-center justify-center text-gray-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
+            <div className="h-5 px-1.5 py-0.5 bg-neutral-100 rounded-3xl flex justify-center items-center gap-1">
+                <div className="text-center justify-center text-neutral-700 text-xs font-medium font-['Roboto'] leading-5">-</div>
             </div>
         );
     }
@@ -83,15 +83,15 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
         displayText = "Online";
     } else if (diffMins < 60) {
         badgeClass += " bg-blue-100";
-        textClass += " text-gray-700";
+        textClass += " text-neutral-700";
         displayText = `${diffMins} minutes ago`;
     } else if (diffHours < 24) {
-        badgeClass += " bg-gray-100";
-        textClass += " text-gray-700";
+        badgeClass += " bg-neutral-100";
+        textClass += " text-neutral-700";
         displayText = `${diffHours} hours ago`;
     } else {
-        badgeClass += " bg-gray-100";
-        textClass += " text-gray-700";
+        badgeClass += " bg-neutral-100";
+        textClass += " text-neutral-700";
         displayText = `${diffDays} days ago`;
     }
 
@@ -250,7 +250,7 @@ const RolesPermissionsPageContent: React.FC = () => {
         } else if (sortField === field && sortOrder === 'desc') {
             return <ArrowDown className="ml-1 h-4 w-4" />;
         }
-        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-gray-400" />;
+        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-neutral-400" />;
     };
 
     const handleEditClick = (admin: AdminUser) => {
@@ -369,7 +369,7 @@ const RolesPermissionsPageContent: React.FC = () => {
             <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
                 {/* Page Header */}
                 <div className="self-stretch inline-flex justify-start items-center gap-5">
-                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                    <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
                         Roles & permissions
                     </div>
                 </div>
@@ -383,7 +383,7 @@ const RolesPermissionsPageContent: React.FC = () => {
 
                     {/* Header Row */}
                     <div className="self-stretch inline-flex justify-between items-center">
-                        <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+                        <div className="justify-center text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
                             Admin list
                         </div>
                         <div className="flex justify-end items-center gap-3">
@@ -401,42 +401,42 @@ const RolesPermissionsPageContent: React.FC = () => {
 
                     {/* Table Container */}
                     <div className="self-stretch flex flex-col justify-start items-start gap-4">
-        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-200 overflow-visible">
+        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-visible">
                             {/* Table Header */}
-                            <div className="flex w-full bg-white border-b border-gray-200">
+                            <div className="flex w-full bg-white border-b border-neutral-200">
                                 <div className="w-56 px-4 py-3 flex items-center gap-1">
                                     <button
                                         onClick={() => toggleSort('username')}
-                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
-                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Username</div>
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Username</div>
                                         {renderSortIcon('username')}
                                     </button>
                                 </div>
                                 <div className="w-40 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('last_active_at')}
-                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
-                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
                                         {renderSortIcon('last_active_at')}
                                     </button>
                                 </div>
                                 <div className="flex-1 px-4 py-3 flex items-center gap-1">
-                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
-                                    <ChevronUpDownIcon className="w-5 h-5 text-gray-500" />
+                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
+                                    <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
                                 <div className="w-40 px-4 py-3">
                                     <button
                                         onClick={() => toggleSort('created_at')}
-                                        className="inline-flex items-center gap-1 hover:text-gray-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
-                                        <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Created date</div>
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created date</div>
                                         {renderSortIcon('created_at')}
                                     </button>
                                 </div>
                                 <div className="w-24 px-4 py-3 flex justify-center items-center">
-                                    <div className="text-gray-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
+                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
                                 </div>
                             </div>
 
@@ -444,8 +444,8 @@ const RolesPermissionsPageContent: React.FC = () => {
                             {isLoading ? (
                                 <AdminLoadingPlaceholder heightClassName="h-32" />
                             ) : admins.length === 0 ? (
-                                <div className="flex w-full bg-white border-b border-gray-200 px-4 py-3">
-                                    <div className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">
+                                <div className="flex w-full bg-white border-b border-neutral-200 px-4 py-3">
+                                    <div className="text-neutral-500 text-sm font-normal font-['Roboto'] leading-5">
                                         {searchQuery ? "No admins found matching your search" : "No admins found"}
                                     </div>
                                 </div>
@@ -453,12 +453,12 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 admins.map((admin) => (
                                     <div
                                         key={admin.id}
-                                        className="flex w-full bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+                                        className="flex w-full bg-white border-b border-neutral-200 hover:bg-neutral-50 transition-colors cursor-pointer"
                                         onClick={() => router.push(`/admin/roles/${admin.id}`)}
                                     >
                                         {/* Username */}
                                         <div className="w-56 px-4 py-3 flex items-center">
-                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                            <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {admin.username}
                                             </div>
                                         </div>
@@ -478,7 +478,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                         </div>
                                         {/* Created Date */}
                                         <div className="w-40 px-4 py-3 flex items-center">
-                                            <div className="text-gray-900 text-sm font-medium font-['Roboto'] leading-5">
+                                            <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {formatDate(admin.created_at)}
                                             </div>
                                         </div>
@@ -522,15 +522,15 @@ const RolesPermissionsPageContent: React.FC = () => {
                     <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
                         {/* Header */}
                         <div className="self-stretch inline-flex justify-between items-center">
-                            <div className="justify-center text-gray-800 text-base font-medium font-['Roboto'] leading-6">Create admin</div>
+                            <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Create admin</div>
                             <button
                                 onClick={() => {
                                     setIsCreateModalOpen(false);
                                     resetCreateForm();
                                 }}
-                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                             >
-                                <XMarkIcon className="w-5 h-5 text-gray-800" />
+                                <XMarkIcon className="w-5 h-5 text-neutral-800" />
                             </button>
                         </div>
 
@@ -541,7 +541,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
                                     <div className="self-stretch relative flex flex-col justify-start items-start">
                                         <div className="self-stretch h-3.5"></div>
-                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
                                             <input
                                                 type="text"
                                                 placeholder="Enter username"
@@ -551,11 +551,11 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                     const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
                                                     setNewUsername(sanitizedValue);
                                                 }}
-                                                className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                                className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                             />
                                         </div>
                                         <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</div>
+                                            <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</div>
                                         </div>
                                     </div>
                                 </div>
@@ -564,9 +564,9 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 <div className="self-stretch flex flex-col justify-start items-start gap-2">
                                     <div className="self-stretch relative flex flex-col justify-start items-start">
                                         <div className="self-stretch h-3.5"></div>
-                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3">
+                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <LockClosedIcon className="w-5 h-5 text-gray-400" />
+                                                <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                                                 <input
                                                     type={showNewPassword ? "text" : "password"}
                                                     value={newPassword}
@@ -576,7 +576,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                         setNewPassword(sanitizedValue);
                                                     }}
                                                     placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-gray-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                                    className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
                                             <button
@@ -585,17 +585,17 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                 className="flex justify-center items-center"
                                             >
                                                 {showNewPassword ? (
-                                                    <EyeOff className="w-5 h-5 text-gray-800" />
+                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
                                                 ) : (
-                                                    <Eye className="w-5 h-5 text-gray-800" />
+                                                    <Eye className="w-5 h-5 text-neutral-800" />
                                                 )}
                                             </button>
                                         </div>
                                         <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</div>
+                                            <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</div>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-gray-500">Minimum 6 characters</p>
+                                    <p className="text-xs text-neutral-500">Minimum 6 characters</p>
                                 </div>
 
                                 {/* Permissions */}
@@ -607,10 +607,10 @@ const RolesPermissionsPageContent: React.FC = () => {
                                             onChange={(values) => setNewPermissions(values as PermissionKey[])}
                                         />
                                         <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
-                                            <div className="justify-center text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Permissions</div>
+                                            <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Permissions</div>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-gray-500">Select at least one permission</p>
+                                    <p className="text-xs text-neutral-500">Select at least one permission</p>
                                 </div>
                             </div>
 
@@ -635,7 +635,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 onClick={() => setIsDeleteModalOpen(false)}
                                 className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
                             >
-                                <XMarkIcon className="w-4 h-4 text-gray-800" />
+                                <XMarkIcon className="w-4 h-4 text-neutral-800" />
                             </button>
 
                             <div className="self-stretch flex flex-col justify-start items-center gap-5">
@@ -646,12 +646,12 @@ const RolesPermissionsPageContent: React.FC = () => {
 
                                 {/* Title & Description */}
                                 <div className="self-stretch flex flex-col justify-start items-center gap-2">
-                                    <div className="self-stretch text-center justify-center text-gray-900 text-lg font-medium font-['Roboto'] leading-7">
+                                    <div className="self-stretch text-center justify-center text-neutral-900 text-lg font-medium font-['Roboto'] leading-7">
                                         Delete admin?
                                     </div>
                                     <div className="self-stretch flex flex-col justify-start items-center text-center">
-                                        <span className="text-gray-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
-                                        <span className="text-gray-800 text-sm font-semibold font-['Roboto'] leading-5">{selectedAdmin?.username}?</span>
+                                        <span className="text-neutral-500 text-sm font-normal font-['Roboto'] leading-5">Are you sure you want to delete</span>
+                                        <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{selectedAdmin?.username}?</span>
                                     </div>
                                 </div>
                             </div>
@@ -663,9 +663,9 @@ const RolesPermissionsPageContent: React.FC = () => {
                                         setIsDeleteModalOpen(false);
                                         setSelectedAdmin(null);
                                     }}
-                                    className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                                    className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                                 >
-                                    <div className="text-center justify-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
+                                    <div className="text-center justify-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
                                 </button>
                                 <button
                                     onClick={handleDeleteConfirm}

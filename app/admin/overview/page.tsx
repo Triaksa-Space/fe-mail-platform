@@ -83,7 +83,7 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
         "inline-flex flex-col justify-start items-start gap-2 overflow-hidden"
       )}
     >
-      <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-4">
+      <div className="justify-center text-neutral-600 text-xs font-normal font-['Roboto'] leading-4">
         {label}
       </div>
       <div className="self-stretch inline-flex justify-start items-center gap-1">
@@ -91,7 +91,7 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
           <div className="p-1 bg-blue-100 rounded-lg flex justify-start items-center gap-2.5">
             <Icon className="w-5 h-5 text-primary-500" />
           </div>
-          <div className="justify-center text-gray-800 text-xl font-semibold font-['Roboto'] leading-7">
+          <div className="justify-center text-neutral-800 text-xl font-semibold font-['Roboto'] leading-7">
             {formatNumber(value)}
           </div>
         </div>
@@ -125,8 +125,8 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
             className={cn(
               "justify-center text-base font-['Roboto'] leading-6",
               isUnread
-                ? "text-gray-800 font-semibold"
-                : "text-gray-600 font-normal"
+                ? "text-neutral-800 font-semibold"
+                : "text-neutral-600 font-normal"
             )}
           >
             {type === "sent" ? `To: ${email.name}` : email.name}
@@ -136,8 +136,8 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
               className={cn(
                 "justify-center text-xs font-['Roboto'] leading-5 line-clamp-1",
                 isUnread
-                  ? "text-gray-800 font-semibold"
-                  : "text-gray-600 font-normal"
+                  ? "text-neutral-800 font-semibold"
+                  : "text-neutral-600 font-normal"
               )}
             >
               {email.date}
@@ -156,19 +156,19 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
               className={cn(
                 "self-stretch justify-center text-sm font-['Roboto'] leading-5 line-clamp-1",
                 isUnread
-                  ? "text-gray-800 font-semibold"
-                  : "text-gray-600 font-normal"
+                  ? "text-neutral-800 font-semibold"
+                  : "text-neutral-600 font-normal"
               )}
             >
               {email.subject}
             </div>
             {/* Preview/Snippet */}
-            <div className="self-stretch justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+            <div className="self-stretch justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
               {email.snippet}
             </div>
           </div>
           {/* User email badge */}
-          <div className="justify-center text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+          <div className="justify-center text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
             {email.email}
           </div>
         </div>
@@ -224,7 +224,7 @@ function LatestListCard({
       )}
     >
       {/* Header */}
-      <div className="justify-center text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+      <div className="justify-center text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
         {title}
       </div>
 
@@ -239,13 +239,13 @@ function LatestListCard({
         ) : emails.length === 0 ? (
           <div className="self-stretch flex-1 flex flex-col items-center justify-center gap-3 py-12 px-4">
             <div className="w-10 h-10 flex items-center justify-center">
-              <EnvelopeOpenIcon className="w-9 h-9 text-gray-300" />
+              <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
             </div>
             <div className="flex flex-col justify-start items-center gap-1">
-              <p className="text-base font-medium text-gray-800 font-['Roboto'] leading-6">
+              <p className="text-base font-medium text-neutral-800 font-['Roboto'] leading-6">
                 {type === "inbox" ? "No Email Yet" : "No Outgoing Email"}
               </p>
-              <p className="text-center text-xs font-normal text-gray-600 font-['Roboto'] leading-5">
+              <p className="text-center text-xs font-normal text-neutral-600 font-['Roboto'] leading-5">
                 {type === "inbox"
                   ? "There are no email in inbox\nat the moment."
                   : "Emails sent will appear here"}
@@ -357,7 +357,7 @@ export default function OverviewPage() {
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Header */}
         <div className="self-stretch inline-flex justify-between items-center">
-          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+          <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             Overview
           </div>
           <button
@@ -371,7 +371,7 @@ export default function OverviewPage() {
           >
             <ArrowPathIcon
               className={cn(
-                "w-5 h-5 text-gray-800",
+                "w-5 h-5 text-neutral-800",
                 isRefreshing && "animate-spin"
               )}
             />

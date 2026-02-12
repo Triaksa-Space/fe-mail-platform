@@ -118,7 +118,7 @@ const PrivacyPage: React.FC = () => {
   }, [content]);
 
   return (
-    <div className="h-screen w-full relative bg-gray-50 flex flex-col overflow-hidden">
+    <div className="h-screen w-full relative bg-neutral-50 flex flex-col overflow-hidden">
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}
@@ -135,9 +135,9 @@ const PrivacyPage: React.FC = () => {
                   className={cn(
                     "w-10 h-10 bg-white rounded-lg",
                     "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-                    "outline outline-1 outline-offset-[-1px] outline-gray-200",
+                    "outline outline-1 outline-offset-[-1px] outline-neutral-200",
                     "flex justify-center items-center",
-                    "text-gray-800 hover:bg-gray-50 transition-colors",
+                    "text-neutral-800 hover:bg-neutral-50 transition-colors",
                   )}
                   aria-label="Go back"
                 >
@@ -149,9 +149,9 @@ const PrivacyPage: React.FC = () => {
             {/* Content Area */}
             <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
               {/* Privacy Card */}
-              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
+              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-center gap-4">
                 {/* Title */}
-                <h1 className="text-gray-800 text-2xl font-medium leading-8 text-left w-full">
+                <h1 className="text-neutral-800 text-2xl font-medium leading-8 text-left w-full">
                   Mailria Privacy Policy
                 </h1>
 
@@ -173,7 +173,7 @@ const PrivacyPage: React.FC = () => {
                   <div className="self-stretch flex flex-col justify-start items-start gap-4 md:gap-5">
                     {/* Effective Date */}
                     {effectiveDate && (
-                      <p className="self-stretch text-gray-800 text-base font-semibold leading-6">
+                      <p className="self-stretch text-neutral-800 text-base font-semibold leading-6">
                         Effective Date: {effectiveDate}
                       </p>
                     )}

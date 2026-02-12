@@ -37,7 +37,7 @@ interface InboxEmailDetail {
 function DetailSkeleton() {
   return (
     <div className="max-w-4xl mx-auto space-y-4">
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="bg-white rounded-xl border border-neutral-200 p-4">
         <div className="flex items-start gap-4">
           <Skeleton className="w-12 h-12 rounded-full" />
           <div className="flex-1 space-y-2">
@@ -47,7 +47,7 @@ function DetailSkeleton() {
           </div>
         </div>
       </div>
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <div className="bg-white rounded-xl border border-neutral-200 p-6">
         <div className="space-y-3">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-5/6" />
@@ -108,34 +108,34 @@ export default function AdminInboxDetailPage() {
             {/* Back */}
             <button
               onClick={() => router.back()}
-              className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
+              className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
             >
-              <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
+              <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
             </button>
-            <ChevronRightIcon className="h-4 w-4 text-gray-300" />
+            <ChevronRightIcon className="h-4 w-4 text-neutral-300" />
             
             {/* User list */}
             <button
               onClick={() => router.push("/admin")}
-              className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+              className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
             >
-              <UserGroupIcon className="w-5 h-5 text-gray-600" />
-              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
+              <UserGroupIcon className="w-5 h-5 text-neutral-600" />
+              <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
             </button>
-            <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+            <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
             
             <div className="flex justify-center items-center gap-1">
-              <UserIcon className="w-5 h-5 text-gray-600" />
-              <div className="justify-center text-gray-600 text-sm font-normal font-['Roboto'] leading-4">
+              <UserIcon className="w-5 h-5 text-neutral-600" />
+              <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">
                 {userEmail}
               </div>
             </div>
-            <ChevronRightIcon className="h-4 w-4 text-gray-300" />
-            <div className="flex items-center gap-1 text-sm text-gray-600">
+            <ChevronRightIcon className="h-4 w-4 text-neutral-300" />
+            <div className="flex items-center gap-1 text-sm text-neutral-600">
               <Inbox className="h-4 w-4" />
               <span>Inbox</span>
             </div>
-            <ChevronRightIcon className="h-4 w-4 text-gray-300" />
+            <ChevronRightIcon className="h-4 w-4 text-neutral-300" />
             <div className="flex items-center gap-1 text-sm text-primary-500">
               <Mail className="h-4 w-4" />
               <span className="line-clamp-1">
@@ -166,29 +166,29 @@ export default function AdminInboxDetailPage() {
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">
                   <div className="flex justify-start items-center gap-1">
-                    <div className="text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                    <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                       From
                     </div>
-                    <div className="text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                    <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                       :
                     </div>
-                    <div className="text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                    <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                       {email.from || "Unknown Sender"}
                     </div>
                   </div>
-                  <div className="text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                  <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                     {formatRelativeTime(email.received_at)}
                   </div>
                 </div>
                 <div className="self-stretch inline-flex justify-start items-start gap-1">
                   <div className="flex justify-start items-center gap-1">
-                    <div className="w-7 text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                    <div className="w-7 text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                       To
                     </div>
-                    <div className="text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                    <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                       :
                     </div>
-                    <div className="text-gray-600 text-xs font-normal leading-5 line-clamp-1">
+                    <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
                       {userEmail}
                     </div>
                   </div>
@@ -197,11 +197,11 @@ export default function AdminInboxDetailPage() {
             </div>
 
             <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-4")}>
-              <div className="text-gray-800 text-lg font-medium leading-7">
+              <div className="text-neutral-800 text-lg font-medium leading-7">
                 {subject}
               </div>
-              <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-gray-200"></div>
-              <div className="self-stretch text-gray-900 text-sm font-normal leading-5">
+              <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
+              <div className="self-stretch text-neutral-900 text-sm font-normal leading-5">
                 {email.body ? (
                   <iframe
                     srcDoc={email.body}
@@ -275,13 +275,13 @@ export default function AdminInboxDetailPage() {
                         <div className="self-stretch inline-flex justify-between items-center">
                           <div className="flex justify-start items-center gap-0.5">
                             <XMarkIcon className="w-5 h-5 text-primary-500" />
-                            <div className="text-gray-800 text-xs font-normal leading-5">
+                            <div className="text-neutral-800 text-xs font-normal leading-5">
                               {fileType}
                             </div>
                           </div>
                         </div>
                         <div
-                          className="self-stretch text-gray-800 text-sm font-normal leading-5 line-clamp-2"
+                          className="self-stretch text-neutral-800 text-sm font-normal leading-5 line-clamp-2"
                           title={filename}
                         >
                           {filename}

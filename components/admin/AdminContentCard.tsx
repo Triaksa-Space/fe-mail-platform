@@ -19,7 +19,7 @@ const AdminContentCard: React.FC<AdminContentCardProps> = ({
   return (
     <div
       className={cn(
-        "rounded-xl bg-white p-4 md:p-6 border border-gray-100",
+        "rounded-xl bg-white p-4 md:p-6 border border-neutral-100",
         "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]",
         className
       )}
@@ -28,7 +28,7 @@ const AdminContentCard: React.FC<AdminContentCardProps> = ({
       {(title || headerRight) && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           {title && (
-            <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
+            <h1 className="text-xl font-semibold text-neutral-900">{title}</h1>
           )}
           {headerRight && <div className="flex-shrink-0">{headerRight}</div>}
         </div>

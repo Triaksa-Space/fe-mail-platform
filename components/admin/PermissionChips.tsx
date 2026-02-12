@@ -41,7 +41,7 @@ const PermissionChips: React.FC<PermissionChipsProps> = ({
           className={cn(
             "inline-flex items-center rounded-full px-2.5 py-0.5",
             "text-xs font-medium",
-            "bg-gray-100 text-gray-600"
+            "bg-neutral-100 text-neutral-600"
           )}
         >
           +{remainingCount} more

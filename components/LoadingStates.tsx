@@ -61,10 +61,10 @@ interface LoadingCardProps {
 export function LoadingCard({ rows = 3, className }: LoadingCardProps) {
   return (
     <div className={cn("bg-white rounded-2xl p-6 animate-pulse", className)}>
-      <div className="h-6 w-1/3 bg-gray-200 rounded mb-4" />
+      <div className="h-6 w-1/3 bg-neutral-200 rounded mb-4" />
       <div className="space-y-3">
         {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className="h-4 bg-gray-100 rounded" />
+          <div key={i} className="h-4 bg-neutral-100 rounded" />
         ))}
       </div>
     </div>
@@ -85,21 +85,21 @@ export function LoadingTable({
   return (
     <div className={cn("bg-white rounded-2xl overflow-hidden", className)}>
       {/* Header */}
-      <div className="flex border-b border-gray-100 p-4 gap-4">
+      <div className="flex border-b border-neutral-100 p-4 gap-4">
         {Array.from({ length: columns }).map((_, i) => (
-          <div key={i} className="h-4 flex-1 bg-gray-200 rounded animate-pulse" />
+          <div key={i} className="h-4 flex-1 bg-neutral-200 rounded animate-pulse" />
         ))}
       </div>
       {/* Rows */}
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={rowIndex}
-          className="flex border-b border-gray-50 p-4 gap-4"
+          className="flex border-b border-neutral-50 p-4 gap-4"
         >
           {Array.from({ length: columns }).map((_, colIndex) => (
             <div
               key={colIndex}
-              className="h-4 flex-1 bg-gray-100 rounded animate-pulse"
+              className="h-4 flex-1 bg-neutral-100 rounded animate-pulse"
               style={{ animationDelay: `${(rowIndex * columns + colIndex) * 50}ms` }}
             />
           ))}
@@ -132,13 +132,13 @@ export function EmptyState({
       )}
     >
       {icon && (
-        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
           {icon}
         </div>
       )}
-      <h3 className="text-base font-semibold text-gray-900 mb-1">{title}</h3>
+      <h3 className="text-base font-semibold text-neutral-900 mb-1">{title}</h3>
       {description && (
-        <p className="text-sm text-gray-500 text-center mb-4 max-w-sm">
+        <p className="text-sm text-neutral-500 text-center mb-4 max-w-sm">
           {description}
         </p>
       )}
@@ -182,8 +182,8 @@ export function ErrorState({
           />
         </svg>
       </div>
-      <h3 className="text-base font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-sm text-gray-500 text-center mb-4">{message}</p>
+      <h3 className="text-base font-semibold text-neutral-900 mb-1">{title}</h3>
+      <p className="text-sm text-neutral-500 text-center mb-4">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}

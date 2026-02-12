@@ -50,8 +50,8 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex h-9 w-9 items-center justify-center",
-          "rounded-lg border border-gray-200 bg-white",
-          "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+          "rounded-lg border border-neutral-200 bg-white",
+          "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900",
           "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
         )}
         aria-label="Actions"
@@ -64,7 +64,7 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
         <div
           className={cn(
             "absolute right-0 mt-2 w-36 z-50",
-            "rounded-xl border border-gray-200 bg-white shadow-lg",
+            "rounded-xl border border-neutral-200 bg-white shadow-lg",
             "overflow-hidden"
           )}
         >
@@ -74,15 +74,15 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
               onClick={() => handleAction(onEdit)}
               className={cn(
                 "flex w-full items-center gap-3 px-4 py-2.5 text-sm",
-                "text-gray-700 hover:bg-gray-50 transition-colors"
+                "text-neutral-700 hover:bg-neutral-50 transition-colors"
               )}
             >
-              <PencilSquareIcon className="h-4 w-4 text-gray-500" />
+              <PencilSquareIcon className="h-4 w-4 text-neutral-500" />
               <span>Edit</span>
             </button>
 
             {/* Divider */}
-            <div className="my-1 border-t border-gray-100" />
+            <div className="my-1 border-t border-neutral-100" />
 
             {/* Delete */}
             <button

@@ -24,7 +24,7 @@ export default function SettingPage() {
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#F9FAFB]">
-      <div className="text-gray-500">Loading...</div>
+      <div className="text-neutral-500">Loading...</div>
     </div>
   );
 }

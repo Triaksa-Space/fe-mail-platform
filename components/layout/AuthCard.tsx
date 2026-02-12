@@ -23,7 +23,7 @@ const AuthCard: React.FC<AuthCardProps> = ({ children, className }) => {
       className={cn(
         "bg-white rounded-xl",
         "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
-        "border border-gray-200",
+        "border border-neutral-200",
         "w-full max-w-sm",
         "p-4",
         className

@@ -94,8 +94,8 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
           <div className={cn(
-            "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3",
-            isInputDisabled && "bg-gray-50"
+            "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3",
+            isInputDisabled && "bg-neutral-50"
           )}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <input

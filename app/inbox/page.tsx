@@ -30,7 +30,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const LoadingFallback: React.FC = () => (
   <div className="h-screen bg-[#F9FAFB] flex overflow-hidden">
     {/* Sidebar skeleton - desktop only */}
-    <div className="hidden lg:flex w-64 flex-col bg-white border-r border-gray-200 p-4">
+    <div className="hidden lg:flex w-64 flex-col bg-white border-r border-neutral-200 p-4">
       {/* Logo area */}
       <Skeleton className="h-8 w-24 mb-6" />
       {/* Compose button */}
@@ -50,7 +50,7 @@ const LoadingFallback: React.FC = () => (
     {/* Main content area */}
     <main className="flex-1 flex flex-col min-w-0">
       {/* Mobile header skeleton */}
-      <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
+      <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-neutral-200">
         <Skeleton className="h-4 w-40" />
         <Skeleton className="h-4 w-16" />
       </header>
@@ -62,7 +62,7 @@ const LoadingFallback: React.FC = () => (
     </main>
 
     {/* Mobile bottom tabs skeleton */}
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-4 py-3">
       <div className="flex justify-around">
         <Skeleton className="h-10 w-16 rounded-lg" />
         <Skeleton className="h-10 w-16 rounded-lg" />

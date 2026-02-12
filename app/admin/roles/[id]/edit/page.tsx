@@ -187,7 +187,7 @@ const EditAdminPageContent: React.FC = () => {
                 <div className="flex items-center justify-center py-20">
                     <div className="flex items-center gap-2">
                         <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-gray-600 text-sm font-medium">Loading...</span>
+                        <span className="text-neutral-600 text-sm font-medium">Loading...</span>
                     </div>
                 </div>
             </AdminLayout>
@@ -203,31 +203,31 @@ const EditAdminPageContent: React.FC = () => {
                     {/* Back Button */}
                     <button
                         onClick={() => router.push(`/admin/roles/${adminId}`)}
-                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-gray-100 transition-colors"
+                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors"
                     >
-                        <ArrowLeftIcon className="w-5 h-5 text-gray-600" />
+                        <ArrowLeftIcon className="w-5 h-5 text-neutral-600" />
                     </button>
-                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Roles & permissions link */}
                     <button
                         onClick={() => router.push("/admin/roles")}
-                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
                     >
-                        <Shield className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
+                        <Shield className="w-5 h-5 text-neutral-600" />
+                        <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </button>
-                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Admin username link */}
                     <button
                         onClick={() => router.push(`/admin/roles/${adminId}`)}
-                        className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
                     >
-                        <UserIcon className="w-5 h-5 text-gray-600" />
-                        <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
+                        <UserIcon className="w-5 h-5 text-neutral-600" />
+                        <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
                     </button>
-                    <ChevronRightIcon className="w-5 h-5 text-gray-300" />
+                    <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Current page - Edit */}
                     <div className="flex justify-center items-center gap-1">
@@ -238,7 +238,7 @@ const EditAdminPageContent: React.FC = () => {
 
                 {/* Page Header */}
                 <div className="self-stretch inline-flex justify-start items-center gap-5">
-                    <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+                    <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
                         Edit
                     </div>
                 </div>
@@ -251,7 +251,7 @@ const EditAdminPageContent: React.FC = () => {
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
-                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                                     <input
                                         type="text"
                                         value={username}
@@ -261,11 +261,11 @@ const EditAdminPageContent: React.FC = () => {
                                             setUsername(sanitizedValue);
                                         }}
                                         placeholder="Enter username"
-                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
                                 <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
+                                    <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
                                 </div>
                             </div>
                         </div>
@@ -274,7 +274,7 @@ const EditAdminPageContent: React.FC = () => {
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
-                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                                     <input
                                         type="text"
                                         value={password}
@@ -284,11 +284,11 @@ const EditAdminPageContent: React.FC = () => {
                                             setPassword(sanitizedValue);
                                         }}
                                         placeholder="Enter new password"
-                                        className="flex-1 bg-transparent border-none outline-none text-gray-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
                                 <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
+                                    <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                                 </div>
                             </div>
                         </div>
@@ -303,23 +303,23 @@ const EditAdminPageContent: React.FC = () => {
                                     displayMode="text"
                                 />
                                 <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
-                                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
+                                    <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Divider */}
-                    <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-300"></div>
+                    <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.5px] outline-neutral-300"></div>
 
                     {/* Action Buttons */}
                     <div className="self-stretch inline-flex justify-end items-start gap-2.5">
                         <button
                             onClick={handleCancel}
-                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-gray-50 transition-colors"
+                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                         >
-                            <XMarkIcon className="w-5 h-5 text-gray-800" />
-                            <span className="text-center text-gray-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
+                            <XMarkIcon className="w-5 h-5 text-neutral-800" />
+                            <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
                         </button>
                         <button
                             onClick={handleSave}

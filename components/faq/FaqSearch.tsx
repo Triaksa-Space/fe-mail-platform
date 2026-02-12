@@ -33,8 +33,8 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
           className={cn(
             "search-input self-stretch w-full h-10 px-3 py-2 bg-white rounded-lg",
             "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-            "outline outline-1 outline-offset-[-1px] outline-gray-200",
-            "text-sm text-gray-900 placeholder:text-neutral-200",
+            "outline outline-1 outline-offset-[-1px] outline-neutral-200",
+            "text-sm text-neutral-900 placeholder:text-neutral-200",
             "transition-all pr-12"
           )}
         />
@@ -42,19 +42,19 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
           {value && (
             <button
               onClick={handleClear}
-              className="flex h-5 w-5 items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+              className="flex h-5 w-5 items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
               aria-label="Clear search"
             >
               <XMarkIcon className="h-4 w-4" />
             </button>
           )}
-          <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
+          <MagnifyingGlassIcon className="h-5 w-5 text-neutral-500" />
         </div>
       </div>
 
       {/* Result Count */}
       {value.trim() && (
-        <p className="text-xs text-gray-500 leading-4">
+        <p className="text-xs text-neutral-500 leading-4">
           {resultCount} result{resultCount !== 1 ? "s" : ""} &quot;{value}&quot;
         </p>
       )}

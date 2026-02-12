@@ -73,18 +73,18 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
           "min-h-[42px] px-3 py-2 rounded-lg border transition-colors cursor-pointer",
           "flex flex-wrap gap-1.5 items-center",
           disabled
-            ? "bg-gray-100 border-gray-200 cursor-not-allowed"
+            ? "bg-neutral-100 border-neutral-200 cursor-not-allowed"
             : isOpen
             ? "border-blue-500 ring-2 ring-blue-100"
             : error
             ? "border-red-500"
-            : "border-gray-200 hover:border-gray-300"
+            : "border-neutral-200 hover:border-neutral-300"
         )}
       >
         {value.length === 0 ? (
-          <span className="text-sm text-gray-400">Select permissions...</span>
+          <span className="text-sm text-neutral-400">Select permissions...</span>
         ) : displayMode === "text" ? (
-          <span className="text-sm text-gray-800 truncate flex-1">
+          <span className="text-sm text-neutral-800 truncate flex-1">
             {value.map((id) => getPermissionLabel(id)).join(", ")}
           </span>
         ) : (
@@ -112,7 +112,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
         )}
         <ChevronDown
           className={cn(
-            "ml-auto h-4 w-4 text-gray-400 shrink-0 transition-transform",
+            "ml-auto h-4 w-4 text-neutral-400 shrink-0 transition-transform",
             isOpen && "rotate-180"
           )}
         />
@@ -123,7 +123,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
         <div
           className={cn(
             "absolute z-50 w-full max-h-60 overflow-auto",
-            "rounded-lg border border-gray-200 bg-white shadow-lg",
+            "rounded-lg border border-neutral-200 bg-white shadow-lg",
             "py-1",
             dropdownPosition === "top" ? "bottom-full mb-1" : "mt-1"
           )}
@@ -137,7 +137,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 onClick={() => togglePermission(permission.id)}
                 className={cn(
                   "flex w-full items-center gap-3 px-3 py-2 text-sm",
-                  "hover:bg-gray-50 transition-colors text-left",
+                  "hover:bg-neutral-50 transition-colors text-left",
                   isSelected && "bg-blue-50"
                 )}
               >
@@ -146,7 +146,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                     "flex h-4 w-4 items-center justify-center rounded border shrink-0",
                     isSelected
                       ? "bg-blue-600 border-blue-600"
-                      : "border-gray-300"
+                      : "border-neutral-300"
                   )}
                 >
                   {isSelected && <Check className="h-3 w-3 text-white" />}
@@ -154,7 +154,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 <span
                   className={cn(
                     "flex-1",
-                    isSelected ? "text-primary-500 font-medium" : "text-gray-700"
+                    isSelected ? "text-primary-500 font-medium" : "text-neutral-700"
                   )}
                 >
                   {permission.label}

@@ -35,14 +35,14 @@ const ToggleSwitch: React.FC<{
     >
       <div className={cn(
         "w-10 h-6 rounded-3xl transition-colors",
-        active ? "bg-blue-600" : "bg-gray-200"
+        active ? "bg-blue-600" : "bg-neutral-200"
       )}></div>
       <div className={cn(
         "w-5 h-5 absolute top-[1.5px] bg-white rounded-full transition-all",
         active ? "left-[18.5px]" : "left-[1.5px]"
       )}></div>
     </button>
-    <span className="text-gray-800 text-sm font-normal font-['Roboto'] leading-4">{label}</span>
+    <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-4">{label}</span>
   </div>
 );
 
@@ -188,7 +188,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-start items-center gap-5">
-          <div className="text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+          <div className="text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             Create Bulk
           </div>
         </div>
@@ -203,8 +203,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 <div className="flex-1 relative flex flex-col">
                   <div className="h-3.5"></div>
                   <div className={cn(
-                    "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3",
-                    isRandomNameActive ? "bg-gray-100" : "bg-white"
+                    "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3",
+                    isRandomNameActive ? "bg-neutral-100" : "bg-white"
                   )}>
                     <input
                       type="text"
@@ -219,14 +219,14 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       disabled={isRandomNameActive}
                       className={cn(
                         "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
-                        isRandomNameActive ? "text-gray-400" : "text-gray-800"
+                        isRandomNameActive ? "text-neutral-400" : "text-neutral-800"
                       )}
                     />
                   </div>
                   <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
                     <span className={cn(
                       "text-[10px] font-normal font-['Roboto'] leading-4",
-                      isRandomNameActive ? "text-gray-400" : "text-gray-800"
+                      isRandomNameActive ? "text-neutral-400" : "text-neutral-800"
                     )}>Email</span>
                   </div>
                 </div>
@@ -244,10 +244,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 <DomainSelector
                   value={selectedDomain}
                   onChange={(value) => setSelectedDomain(value)}
-                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-gray-200 text-gray-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
+                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
                 />
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
-                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
                 </div>
               </div>
 
@@ -255,7 +255,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
               <div className="flex-1 flex justify-start items-end gap-2">
                 <div className="flex-1 relative flex flex-col">
                   <div className="h-3.5"></div>
-                  <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center justify-center gap-3">
+                  <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center justify-center gap-3">
                     <input
                       type="text"
                       value={count}
@@ -270,11 +270,11 @@ const CreateBulkEmailPageContent: React.FC = () => {
                           }
                         }
                       }}
-                      className="w-full bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none text-center"
+                      className="w-full bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none text-center"
                     />
                   </div>
                   <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
-                    <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4 whitespace-nowrap">Quantity (minimum 2, maximum 100)</span>
+                    <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4 whitespace-nowrap">Quantity (minimum 2, maximum 100)</span>
                   </div>
                 </div>
                 <button
@@ -282,10 +282,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   onClick={() => updateCount(count - 1)}
                   disabled={count <= 2}
                   className={cn(
-                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-neutral-200 flex justify-center items-center shrink-0",
                     count <= 2
-                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? "bg-neutral-100 text-neutral-300 cursor-not-allowed"
+                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
                   )}
                 >
                   <MinusIcon className="w-4 h-4" />
@@ -297,7 +297,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   className={cn(
                     "w-10 h-10 p-2 rounded-lg outline outline-1 flex justify-center items-center shrink-0",
                     count >= 100
-                      ? "bg-gray-100 outline-gray-200 text-gray-300 cursor-not-allowed"
+                      ? "bg-neutral-100 outline-neutral-200 text-neutral-300 cursor-not-allowed"
                       : "bg-blue-100 outline-blue-100 text-primary-500 hover:bg-blue-200"
                   )}
                 >
@@ -313,8 +313,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 <div className="flex-1 relative flex flex-col">
                   <div className="h-3.5"></div>
                   <div className={cn(
-                    "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3",
-                    isRandomPasswordActive ? "bg-gray-100" : "bg-white"
+                    "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3",
+                    isRandomPasswordActive ? "bg-neutral-100" : "bg-white"
                   )}>
                     <input
                       type="text"
@@ -328,14 +328,14 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       disabled={isRandomPasswordActive}
                       className={cn(
                         "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
-                        isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
+                        isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
                       )}
                     />
                   </div>
                   <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
                     <span className={cn(
                       "text-[10px] font-normal font-['Roboto'] leading-4",
-                      isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
+                      isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
                     )}>Same password</span>
                   </div>
                 </div>
@@ -352,8 +352,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 <div className="flex-1 relative flex flex-col">
                   <div className="h-3.5"></div>
                   <div className={cn(
-                    "h-10 px-3 py-2 rounded-lg outline outline-1 outline-gray-200 flex items-center justify-center gap-3 overflow-hidden",
-                    !isRandomPasswordActive ? "bg-gray-100" : "bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]"
+                    "h-10 px-3 py-2 rounded-lg outline outline-1 outline-neutral-200 flex items-center justify-center gap-3 overflow-hidden",
+                    !isRandomPasswordActive ? "bg-neutral-100" : "bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]"
                   )}>
                     <input
                       type="text"
@@ -372,14 +372,14 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       disabled={!isRandomPasswordActive}
                       className={cn(
                         "w-full bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none text-center",
-                        !isRandomPasswordActive ? "text-gray-300" : "text-gray-800"
+                        !isRandomPasswordActive ? "text-neutral-300" : "text-neutral-800"
                       )}
                     />
                   </div>
                   <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
                     <span className={cn(
                       "text-[10px] font-normal font-['Roboto'] leading-4",
-                      !isRandomPasswordActive ? "text-gray-400" : "text-gray-800"
+                      !isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
                     )}>Password length</span>
                   </div>
                 </div>
@@ -388,10 +388,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   onClick={() => updatePasswordLength(passwordLength - 1)}
                   disabled={!isRandomPasswordActive || passwordLength <= 6}
                   className={cn(
-                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-neutral-200 flex justify-center items-center shrink-0",
                     !isRandomPasswordActive || passwordLength <= 6
-                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? "bg-neutral-100 text-neutral-300 cursor-not-allowed"
+                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
                   )}
                 >
                   <MinusIcon className="w-4 h-4" />
@@ -401,9 +401,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   onClick={() => updatePasswordLength(passwordLength + 1)}
                   disabled={!isRandomPasswordActive || passwordLength >= 32}
                   className={cn(
-                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-gray-200 flex justify-center items-center shrink-0",
+                    "w-10 h-10 p-2 rounded-lg outline outline-1 outline-neutral-200 flex justify-center items-center shrink-0",
                     !isRandomPasswordActive || passwordLength >= 32
-                      ? "bg-gray-100 text-gray-300 cursor-not-allowed"
+                      ? "bg-neutral-100 text-neutral-300 cursor-not-allowed"
                       : "bg-blue-100 outline-blue-100 text-primary-500 hover:bg-blue-200"
                   )}
                 >
@@ -414,7 +414,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
               {/* Email for Receiving List */}
               <div className="flex-[1] relative flex flex-col">
                 <div className="h-3.5"></div>
-                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-gray-200 flex items-center gap-3">
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3">
                   <input
                     type="email"
                     value={receiveEmail}
@@ -424,17 +424,17 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       setReceiveEmail(sanitizedValue);
                     }}
                     placeholder="Insert email"
-                    className="flex-1 bg-transparent text-gray-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
+                    className="flex-1 bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
                   />
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
-                  <span className="text-gray-800 text-[10px] font-normal font-['Roboto'] leading-4">Email for receiving list</span>
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Email for receiving list</span>
                 </div>
               </div>
             </div>
 
             {/* Divider */}
-            <div className="w-full h-px bg-gray-300"></div>
+            <div className="w-full h-px bg-neutral-300"></div>
 
             {/* Submit Button - Right Aligned */}
             <div className="flex justify-end">

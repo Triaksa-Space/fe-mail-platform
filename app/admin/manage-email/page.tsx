@@ -197,7 +197,7 @@ export default function AdminAllInboxPage() {
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full h-[calc(100vh-80px)]">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-between items-center">
-          <div className="justify-center text-gray-800 text-2xl font-semibold font-['Roboto'] leading-8">
+          <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             All inbox
           </div>
           <button
@@ -210,7 +210,7 @@ export default function AdminAllInboxPage() {
             aria-label="Refresh"
           >
             <ArrowPathIcon
-              className={cn("w-4 h-4 text-gray-800", isRefreshing && "animate-spin")}
+              className={cn("w-4 h-4 text-neutral-800", isRefreshing && "animate-spin")}
             />
           </button>
         </div>
@@ -225,21 +225,21 @@ export default function AdminAllInboxPage() {
                 {/* Back */}
                 <button
                   onClick={handleClosePreview}
-                  className="w-8 h-8 rounded flex justify-center items-center hover:bg-gray-100 transition-colors"
+                  className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
                 >
-                  <ArrowLeftIcon className="w-4 h-4 text-gray-600" />
+                  <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
                 </button>
-                <ChevronRightIcon className="w-4 h-4 text-gray-300" />
+                <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
                 {/* All inbox */}
                 <button
                   onClick={handleClosePreview}
-                  className="flex justify-center items-center gap-1 hover:bg-gray-100 rounded px-1 transition-colors"
+                  className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
                 >
-                  <Inbox className="w-4 h-4 text-gray-600" />
-                  <span className="text-gray-600 text-sm font-normal font-['Roboto'] leading-4">All inbox</span>
+                  <Inbox className="w-4 h-4 text-neutral-600" />
+                  <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">All inbox</span>
                 </button>
-                <ChevronRightIcon className="w-4 h-4 text-gray-300" />
+                <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
                 {/* Current email subject */}
                 <div className="flex justify-center items-center gap-1">
@@ -259,19 +259,19 @@ export default function AdminAllInboxPage() {
                     <div className="flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
                         <div className="flex justify-start items-center gap-1">
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">From</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.from}</span>
+                          <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">From</span>
+                          <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
+                          <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.from}</span>
                         </div>
-                        <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">
+                        <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">
                           {formatRelativeTime(selectedEmail.received_at)}
                         </span>
                       </div>
                       <div className="flex justify-start items-start gap-1">
                         <div className="flex justify-start items-center gap-1">
-                          <span className="w-7 text-gray-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
-                          <span className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.user_email || "Unknown"}</span>
+                          <span className="w-7 text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">To</span>
+                          <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">:</span>
+                          <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">{selectedEmail.user_email || "Unknown"}</span>
                         </div>
                       </div>
                     </div>
@@ -280,12 +280,12 @@ export default function AdminAllInboxPage() {
                   {/* Email Body Card */}
                   <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-4")}>
                     {/* Subject Title */}
-                    <div className="text-gray-800 text-lg font-medium font-['Roboto'] leading-7">
+                    <div className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
                       {selectedEmail.subject || "(No subject)"}
                     </div>
 
                     {/* Divider */}
-                    <div className="w-full h-0 outline outline-1 outline-offset-[-0.5px] outline-gray-200"></div>
+                    <div className="w-full h-0 outline outline-1 outline-offset-[-0.5px] outline-neutral-200"></div>
 
                     {/* Email Body Content */}
                     <div className="flex flex-col">
@@ -337,7 +337,7 @@ export default function AdminAllInboxPage() {
                           sandbox="allow-same-origin allow-scripts allow-popups"
                         />
                       ) : (
-                        <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                        <p className="text-sm text-neutral-600 whitespace-pre-wrap">
                           {selectedEmail.preview || "No content"}
                         </p>
                       )}
@@ -364,11 +364,11 @@ export default function AdminAllInboxPage() {
                               <div className="self-stretch inline-flex justify-between items-center">
                                 <div className="flex justify-start items-center gap-0.5">
                                   <XMarkIcon className="w-4 h-4 text-primary-500" />
-                                  <span className="text-gray-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
+                                  <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
                                 </div>
-                                <XMarkIcon className="w-4 h-4 text-gray-800" />
+                                <XMarkIcon className="w-4 h-4 text-neutral-800" />
                               </div>
-                              <span className="self-stretch text-gray-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
+                              <span className="self-stretch text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
                                 {filename}
                               </span>
                             </a>
@@ -384,17 +384,17 @@ export default function AdminAllInboxPage() {
             /* Email List View - Full Width */
             <AdminContentCard className="h-full flex flex-col overflow-hidden">
               {/* Search Header
-              <div className="flex items-center gap-3 p-4 border-b border-gray-100">
+              <div className="flex items-center gap-3 p-4 border-b border-neutral-100">
                 <div className="relative flex-1">
-                    <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
                     <Input
                       placeholder="Search by sender, recipient, or subject..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="search-input pl-10 h-10 rounded-xl border-gray-200"
+                      className="search-input pl-10 h-10 rounded-xl border-neutral-200"
                     />
                 </div>
-                <span className="text-sm text-gray-500 whitespace-nowrap">
+                <span className="text-sm text-neutral-500 whitespace-nowrap">
                   {total} emails
                 </span>
               </div> */}
@@ -409,8 +409,8 @@ export default function AdminAllInboxPage() {
                   </div>
                 ) : emails.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-32 px-4">
-                    <Inbox className="h-8 w-8 text-gray-300 mb-2" />
-                    <p className="text-sm text-gray-500 text-center">
+                    <Inbox className="h-8 w-8 text-neutral-300 mb-2" />
+                    <p className="text-sm text-neutral-500 text-center">
                       {debouncedSearch ? "No emails found" : "No emails yet"}
                     </p>
                   </div>
@@ -430,7 +430,7 @@ export default function AdminAllInboxPage() {
 
               {/* Pagination */}
               {totalPages > 0 && (
-                <div className="border-t border-gray-100 pt-4 px-4 pb-4">
+                <div className="border-t border-neutral-100 pt-4 px-4 pb-4">
                   <PaginationComponent
                     totalPages={totalPages}
                     currentPage={page}
@@ -476,14 +476,14 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
         <div className="self-stretch inline-flex justify-between items-center">
           <div className={cn(
             "text-base font-['Roboto'] leading-6",
-            isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+            isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
           )}>
             {email.from_name || email.from || "Unknown"}
           </div>
           <div className="flex justify-end items-center gap-0.5">
             <div className={cn(
               "text-xs font-['Roboto'] leading-5 line-clamp-1",
-              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+              isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
             )}>
               {formatRelativeTime(email.received_at)}
             </div>
@@ -498,15 +498,15 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
           <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
             <div className={cn(
               "self-stretch text-sm font-['Roboto'] leading-5 line-clamp-1",
-              isUnread ? "text-gray-800 font-semibold" : "text-gray-600 font-normal"
+              isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
             )}>
               {email.subject || "(No subject)"}
             </div>
-            <div className="self-stretch text-gray-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+            <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
               {email.preview || "No preview available"}
             </div>
           </div>
-          <div className="text-gray-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+          <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
             {email.user_email || "Unknown"}
           </div>
         </div>

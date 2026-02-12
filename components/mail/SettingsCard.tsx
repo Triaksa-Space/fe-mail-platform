@@ -22,7 +22,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({
         className
       )}
     >
-      <h3 className="text-sm font-medium text-gray-900 mb-4">{title}</h3>
+      <h3 className="text-sm font-medium text-neutral-900 mb-4">{title}</h3>
       {children}
     </div>
   );

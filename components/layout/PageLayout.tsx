@@ -22,7 +22,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   className,
   variant = "default",
 }) => {
-  const baseClasses = "min-h-screen bg-gray-50 overflow-x-hidden";
+  const baseClasses = "min-h-screen bg-neutral-50 overflow-x-hidden";
 
   const variantClasses = {
     default: "flex flex-col",

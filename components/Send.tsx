@@ -322,23 +322,23 @@ const Send: React.FC = () => {
               {/* Email Composition Form */}
               <div className="flex bg-white text-sm">
                 <div className="flex items-center gap-2 w-12">
-                  <label className="mt-2 text-gray-700 text-sm mb-2" htmlFor="from">
+                  <label className="mt-2 text-neutral-700 text-sm mb-2" htmlFor="from">
                     From
                   </label>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="ml-2 text-gray-700 text-sm">{email}</span>
+                  <span className="ml-2 text-neutral-700 text-sm">{email}</span>
                 </div>
               </div>
               <div className="flex bg-white text-sm w-full">
                 <div className="flex items-center gap-2 w-12">
-                  <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
+                  <label className="mt-3 text-neutral-700 text-sm mb-2" htmlFor="to">
                     To
                   </label>
                 </div>
                 <div className="mt-2 flex-1">
                   <Input
-                    className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="text-sm shadow appearance-none border w-full py-1 px-2 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="to"
                     type="email"
                     placeholder="Recipient's email"
@@ -353,7 +353,7 @@ const Send: React.FC = () => {
               </div>
               <div className="mb-2 mt-2">
                 <Input
-                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="subject"
                   placeholder="Subject"
                   value={subject}
@@ -366,7 +366,7 @@ const Send: React.FC = () => {
               </div>
               <div className="mb-4">
                 <Textarea
-                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="message"
                   rows={13}
                   placeholder="Compose email"
@@ -388,9 +388,9 @@ const Send: React.FC = () => {
                 {attachments.map((file, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-2 bg-gray-50"
+                    className="flex items-center justify-between p-2 bg-neutral-50"
                   >
-                    <span className="text-sm text-gray-600 truncate">
+                    <span className="text-sm text-neutral-600 truncate">
                       {file.name}
                     </span>
                     <Button
