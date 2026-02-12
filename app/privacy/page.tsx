@@ -149,7 +149,7 @@ const PrivacyPage: React.FC = () => {
             {/* Content Area */}
             <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
               {/* Privacy Card */}
-              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-center gap-4">
+              <div className="self-stretch p-4 lg:p-6 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-center gap-4">
                 {/* Title */}
                 <h1 className="text-neutral-800 text-2xl font-medium leading-8 text-left w-full">
                   Mailria Privacy Policy

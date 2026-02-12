@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
 
 interface FaqEmptyStateProps {
@@ -24,7 +24,7 @@ const FaqEmptyState: React.FC<FaqEmptyStateProps> = ({
     >
       <div className="flex flex-col justify-start items-center gap-1">
         <div className="inline-flex justify-center items-center gap-1">
-          <ExclamationCircleIcon className="w-5 h-5 text-red-500" />
+          <XCircleIcon className="w-5 h-5 text-red-500" />
           <span className="text-neutral-800 text-base font-medium leading-6">
             No FAQs found
           </span>

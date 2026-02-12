@@ -38,8 +38,8 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
             "transition-all pr-12"
           )}
         />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-          {value && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
+          {value ? (
             <button
               onClick={handleClear}
               className="flex h-5 w-5 items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
@@ -47,8 +47,9 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
             >
               <XMarkIcon className="h-4 w-4" />
             </button>
+          ) : (
+            <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />
           )}
-          <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />
         </div>
       </div>
 

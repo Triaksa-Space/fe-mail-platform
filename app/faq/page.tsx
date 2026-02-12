@@ -65,67 +65,69 @@ const FaqPage: React.FC = () => {
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto relative z-10"
       >
-        {/* Main Content with padding */}
-        <div className="p-4 md:p-8 pb-0 md:pb-0">
-          <div className="flex flex-col justify-start items-start gap-4 md:gap-8">
-            {/* Back Button */}
-            <div className="self-stretch inline-flex justify-start items-center gap-2.5">
-              <div className="flex justify-start items-center gap-4">
-                <button
-                  onClick={() => router.back()}
-                  className={cn(
-                    "w-10 h-10 bg-white rounded-lg",
-                    "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-                    "outline outline-1 outline-offset-[-1px] outline-gray-200",
-                    "flex justify-center items-center",
-                    "text-gray-800 hover:bg-gray-50 transition-colors",
-                  )}
-                  aria-label="Go back"
-                >
-                  <ChevronLeftIcon className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Content Area */}
-            <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
-              {/* Header Card with Title and Search */}
-              <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
-                <h1 className="text-gray-800 text-2xl md:text-3xl font-medium leading-8 md:leading-9">
-                  FAQs
-                </h1>
-                <FaqSearch
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  resultCount={resultCount}
-                />
-              </div>
-
-              {/* FAQ Content */}
-              {isSearching && !hasResults ? (
-                <FaqEmptyState searchQuery={searchQuery} />
-              ) : (
-                <div className="self-stretch flex flex-col justify-start items-start gap-4 md:gap-5">
-                  {filteredCategories.map((category) => (
-                    <FaqSection key={category.key} category={category} />
-                  ))}
+        <div className="min-h-full flex flex-col">
+          {/* Main Content with padding */}
+          <div className="p-4 lg:p-6 md:p-8 pb-0 md:pb-0">
+            <div className="flex flex-col justify-start items-start gap-4 md:gap-8">
+              {/* Back Button */}
+              <div className="self-stretch inline-flex justify-start items-center gap-2.5">
+                <div className="flex justify-start items-center gap-4">
+                  <button
+                    onClick={() => router.back()}
+                    className={cn(
+                      "w-10 h-10 bg-white rounded-lg",
+                      "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+                      "outline outline-1 outline-offset-[-1px] outline-gray-200",
+                      "flex justify-center items-center",
+                      "text-gray-800 hover:bg-gray-50 transition-colors",
+                    )}
+                    aria-label="Go back"
+                  >
+                    <ChevronLeftIcon className="h-4 w-4" />
+                  </button>
                 </div>
-              )}
+              </div>
+
+              {/* Content Area */}
+              <div className="self-stretch md:px-44 flex flex-col justify-start items-start gap-4 md:gap-5">
+                {/* Header Card with Title and Search */}
+                <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
+                  <h1 className="text-gray-800 text-2xl md:text-3xl font-medium leading-8 md:leading-9">
+                    FAQs
+                  </h1>
+                  <FaqSearch
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    resultCount={resultCount}
+                  />
+                </div>
+
+                {/* FAQ Content */}
+                {isSearching && !hasResults ? (
+                  <FaqEmptyState searchQuery={searchQuery} />
+                ) : (
+                  <div className="self-stretch flex flex-col justify-start items-start gap-4 md:gap-5">
+                    {filteredCategories.map((category) => (
+                      <FaqSection key={category.key} category={category} />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Scroll to Top Button - Fixed position outside scroll container */}
-        {showScrollTop && (
-          <div className="mb-4 lg:mb-8">
-            <div className="fixed bottom-4 right-4 md:right-8 z-20">
-              <ScrollToTopButton onClick={scrollToTop} />
+          {/* Scroll to Top Button - Fixed position outside scroll container */}
+          {showScrollTop && (
+            <div className="mb-4 lg:mb-8">
+              <div className="fixed bottom-4 right-4 md:right-8 z-20">
+                <ScrollToTopButton onClick={scrollToTop} />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="p-4 md:p-8 pt-4 md:pt-8">
-          <Footer />
+          <div className="mt-auto p-4 md:p-8 pt-4 md:pt-8">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
