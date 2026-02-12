@@ -237,8 +237,70 @@ const AdminTermsPageContent: React.FC = () => {
                       "bold italic underline strikethrough | alignleft aligncenter " +
                       "alignright alignjustify | bullist numlist outdent indent | " +
                       "link | removeformat",
-                    content_style:
-                      "body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; color: #374151; padding: 20px; }",
+                    content_style: `
+                      body {
+                        max-width: 860px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        font-family: Roboto, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+                        background: #ffffff;
+                      }
+
+                      h2 {
+                        color: var(--Neutral-800, #1F2937);
+                        font-size: 16px;
+                        font-weight: 600;
+                        line-height: 24px;
+                        margin: 24px 0 10px;
+                        padding-top: 8px;
+                      }
+
+                      h2:first-of-type {
+                        border-top: 0;
+                        padding-top: 0;
+                        margin-top: 12px;
+                      }
+
+                      p {
+                        color: var(--Neutral-600, #4B5563);
+                        font-size: 14px;
+                        font-weight: 400;
+                        line-height: 20px;
+                        margin: 8px 0;
+                      }
+
+                      strong {
+                        color: var(--Neutral-800, #1F2937);
+                        font-weight: 600;
+                      }
+
+                      ul, ol {
+                        margin: 8px 0 12px;
+                        padding-left: 18px;
+                        color: var(--Neutral-600, #4B5563);
+                        font-size: 14px;
+                        font-weight: 400;
+                        line-height: 20px;
+                      }
+
+                      li {
+                        margin: 6px 0;
+                      }
+
+                      li p {
+                        margin: 0;
+                      }
+
+                      a {
+                        color: var(--Neutral-800, #1F2937);
+                        text-decoration: underline;
+                        text-underline-offset: 0px;
+                      }
+
+                      a:hover {
+                        text-decoration-thickness: 2px;
+                      }
+                    `,
                     branding: false,
                     promotion: false,
                     statusbar: false,

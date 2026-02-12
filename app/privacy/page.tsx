@@ -151,7 +151,7 @@ const PrivacyPage: React.FC = () => {
               {/* Privacy Card */}
               <div className="self-stretch p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col justify-start items-center gap-4">
                 {/* Title */}
-                <h1 className="text-gray-800 text-2xl font-medium leading-8">
+                <h1 className="text-gray-800 text-2xl font-medium leading-8 text-left w-full">
                   Mailria Privacy Policy
                 </h1>
 
@@ -180,14 +180,16 @@ const PrivacyPage: React.FC = () => {
 
                     {/* Rendered HTML Content */}
                     <div
-                      className="self-stretch text-gray-600 text-sm font-normal leading-5
-                        [&_h1]:text-gray-800 [&_h1]:text-base [&_h1]:font-semibold [&_h1]:leading-6 [&_h1]:mt-4
-                        [&_h2]:text-gray-800 [&_h2]:text-base [&_h2]:font-semibold [&_h2]:leading-6 [&_h2]:mt-4
-                        [&_h3]:text-gray-800 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:leading-6 [&_h3]:mt-3
-                        [&_p]:text-gray-600 [&_p]:text-sm [&_p]:font-normal [&_p]:leading-5
-                        [&_a]:text-primary-500 [&_a]:underline
-                        [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
-                        [&_li]:text-gray-600 [&_li]:text-sm [&_li]:font-normal [&_li]:leading-5"
+                      className="self-stretch bg-white max-w-full mx-auto font-['Roboto'] text-[14px] leading-5 text-[#4B5563]
+                        [&_h2]:text-[#1F2937] [&_h2]:text-[16px] [&_h2]:font-semibold [&_h2]:leading-6 [&_h2]:mt-6 [&_h2]:mb-2.5 [&_h2]:pt-2
+                        [&_h2:first-of-type]:border-t-0 [&_h2:first-of-type]:pt-0 [&_h2:first-of-type]:mt-3
+                        [&_p]:text-[#4B5563] [&_p]:text-[14px] [&_p]:font-normal [&_p]:leading-5 [&_p]:my-2
+                        [&_strong]:text-[#1F2937] [&_strong]:font-semibold
+                        [&_ul]:my-2 [&_ul]:mb-3 [&_ul]:pl-[18px] [&_ul]:list-disc
+                        [&_ol]:my-2 [&_ol]:mb-3 [&_ol]:pl-[18px] [&_ol]:list-decimal
+                        [&_li]:my-1.5
+                        [&_li_p]:m-0
+                        [&_a]:text-[#1F2937] [&_a]:underline [&_a]:underline-offset-0 hover:[&_a]:decoration-2"
                       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                     />
                   </div>
