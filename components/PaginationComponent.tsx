@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 
 interface PaginationComponentProps {
   totalCount: number;
@@ -37,23 +38,27 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
     }
 
     const PageButton = ({ page, isActive }: { page: number; isActive: boolean }) => (
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={() => onPageChange(page)}
-        className="w-9 h-9 rounded-lg flex justify-center items-center transition-colors cursor-pointer hover:bg-neutral-50"
+        className="w-9 h-9 rounded-lg cursor-pointer hover:bg-neutral-50"
       >
         <span className={`text-sm font-medium font-['Roboto'] leading-4 ${isActive ? "text-primary-500" : "text-neutral-800"}`}>
           {page.toString().padStart(2, '0')}
         </span>
-      </button>
+      </Button>
     );
 
     const Ellipsis = () => (
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={() => setIsDialogOpen(true)}
-        className="w-9 h-9 rounded-lg hover:bg-neutral-50 flex justify-center items-center cursor-pointer"
+        className="w-9 h-9 rounded-lg hover:bg-neutral-50 cursor-pointer"
       >
         <span className="text-neutral-800 text-sm font-medium font-['Roboto'] leading-4">...</span>
-      </button>
+      </Button>
     );
 
     pages.push(<PageButton key={1} page={1} isActive={1 === currentPage} />);
@@ -111,12 +116,14 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
           {/* Header */}
           <div className="self-stretch inline-flex justify-between items-center">
             <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Go to Page</div>
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => setIsDialogOpen(false)}
-              className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
+              className="w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 overflow-hidden hover:bg-neutral-50"
             >
               <XMarkIcon className="w-5 h-5 text-neutral-800" />
-            </button>
+            </Button>
           </div>
 
           {/* Input */}
@@ -141,13 +148,13 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
           </div>
 
           {/* Button */}
-          <button
+          <Button
             onClick={handlePageInputSubmit}
             disabled={!pageInput}
-            className="self-stretch h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
+            className="self-stretch h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
           >
             <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Go</div>
-          </button>
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

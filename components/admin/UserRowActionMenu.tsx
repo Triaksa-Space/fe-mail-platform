@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 
 interface UserRowActionMenuProps {
   onView: () => void;
@@ -39,18 +40,20 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
   return (
     <div className="relative inline-block" ref={menuRef}>
       {/* Trigger Button */}
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex h-9 w-9 items-center justify-center",
-          "rounded-lg border border-neutral-200 bg-white",
+          "h-9 w-9",
+          "rounded-lg border-neutral-200 bg-white",
           "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900",
-          "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
+          "focus:outline-none focus:ring-2 focus:ring-blue-200"
         )}
         aria-label="Actions"
       >
         <EllipsisHorizontalIcon className="h-4 w-4" />
-      </button>
+      </Button>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -63,22 +66,24 @@ const UserRowActionMenu: React.FC<UserRowActionMenuProps> = ({
           )}
         >
           {/* Change Password */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => handleAction(onChangePassword)}
-            className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-neutral-50 transition-colors"
+            className="h-9 p-2 w-full rounded-lg justify-start gap-2 hover:bg-neutral-50"
           >
             <PencilSquareIcon className="w-5 h-5 text-neutral-800" />
             <div className="text-neutral-800 text-base font-normal font-['Roboto'] leading-4 whitespace-nowrap">Change password</div>
-          </button>
+          </Button>
 
           {/* Delete */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => handleAction(onDelete)}
-            className="h-9 p-2 w-full bg-white rounded-lg inline-flex justify-start items-center gap-2 hover:bg-red-50 transition-colors"
+            className="h-9 p-2 w-full rounded-lg justify-start gap-2 hover:bg-red-50"
           >
             <TrashIcon className="w-5 h-5 text-red-600" />
             <div className="text-red-600 text-base font-normal font-['Roboto'] leading-4">Delete</div>
-          </button>
+          </Button>
         </div>
       )}
     </div>

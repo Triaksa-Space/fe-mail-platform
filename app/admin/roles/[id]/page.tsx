@@ -19,6 +19,7 @@ import {
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse } from "@/lib/admin-types";
 import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 
 const ViewAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -161,22 +162,25 @@ const ViewAdminPageContent: React.FC = () => {
                 {/* Breadcrumb Navigation */}
                 <div className="h-5 inline-flex justify-start items-center gap-1">
                     {/* Back Button */}
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => router.push("/admin/roles")}
-                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors"
+                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors h-auto"
                     >
                         <ArrowLeftIcon className="w-5 h-5 text-neutral-600" />
-                    </button>
+                    </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Roles & permissions link */}
-                    <button
+                    <Button
+                        variant="ghost"
                         onClick={() => router.push("/admin/roles")}
-                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors h-auto"
                     >
                         <Shield className="w-5 h-5 text-neutral-600" />
                         <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
-                    </button>
+                    </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Current admin */}
@@ -193,22 +197,24 @@ const ViewAdminPageContent: React.FC = () => {
                     </div>
                     <div className="flex justify-end items-center gap-3">
                         {/* Edit Button */}
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={handleEditClick}
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                         >
                             <PencilSquareIcon className="w-5 h-5 text-neutral-800" />
                             <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Edit</span>
-                        </button>
+                        </Button>
 
                         {/* Delete Button */}
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={() => setIsDeleteModalOpen(true)}
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-red-50 transition-colors"
                         >
                             <TrashIcon className="w-5 h-5 text-red-500" />
                             <span className="text-center text-red-500 text-base font-medium font-['Roboto'] leading-4">Delete</span>
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -267,12 +273,14 @@ const ViewAdminPageContent: React.FC = () => {
                 <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
                     <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
                         {/* Close Button */}
-                        <button
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => setIsDeleteModalOpen(false)}
-                            className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
+                            className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity h-auto p-0"
                         >
                             <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                        </button>
+                        </Button>
 
                         <div className="self-stretch flex flex-col justify-start items-center gap-5">
                             {/* Icon */}
@@ -294,18 +302,20 @@ const ViewAdminPageContent: React.FC = () => {
 
                         {/* Buttons */}
                         <div className="self-stretch inline-flex justify-start items-center gap-3">
-                            <button
+                            <Button
+                                variant="outline"
                                 onClick={() => setIsDeleteModalOpen(false)}
                                 className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                             >
                                 <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
-                            </button>
-                            <button
+                            </Button>
+                            <Button
+                                variant="destructive"
                                 onClick={handleDeleteConfirm}
                                 className="flex-1 h-10 px-4 py-2.5 bg-red-500 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-600 flex justify-center items-center gap-1.5 overflow-hidden hover:bg-red-600 transition-colors"
                             >
                                 <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Delete</span>
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </DialogContent>

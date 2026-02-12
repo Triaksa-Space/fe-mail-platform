@@ -7,6 +7,7 @@ import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import {
   ApiInboxEmail,
@@ -111,11 +112,12 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
   const isUnread = type === "inbox" && email.isUnread;
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
         CARD_STYLES.interactive,
-        "px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left"
+        "h-auto px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left"
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
@@ -173,7 +175,7 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
           </div>
         </div>
       </div>
-    </button>
+    </Button>
   );
 }
 
@@ -360,7 +362,9 @@ export default function OverviewPage() {
           <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             Overview
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleRefresh}
             disabled={isRefreshing || isLoading}
             className={cn(
@@ -375,7 +379,7 @@ export default function OverviewPage() {
                 isRefreshing && "animate-spin"
               )}
             />
-          </button>
+          </Button>
         </div>
 
         {/* KPI Cards Row 1 */}

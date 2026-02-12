@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 
 interface AdminRowActionMenuProps {
   onEdit: () => void;
@@ -46,18 +47,20 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
   return (
     <div className="relative inline-block" ref={menuRef}>
       {/* Trigger Button */}
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex h-9 w-9 items-center justify-center",
-          "rounded-lg border border-neutral-200 bg-white",
+          "h-9 w-9",
+          "rounded-lg border-neutral-200 bg-white",
           "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900",
-          "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
+          "focus:outline-none focus:ring-2 focus:ring-blue-200"
         )}
         aria-label="Actions"
       >
         <EllipsisHorizontalIcon className="h-4 w-4" />
-      </button>
+      </Button>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -70,31 +73,33 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
         >
           <div className="py-1">
             {/* Edit */}
-            <button
+            <Button
+              variant="ghost"
               onClick={() => handleAction(onEdit)}
               className={cn(
-                "flex w-full items-center gap-3 px-4 py-2.5 text-sm",
-                "text-neutral-700 hover:bg-neutral-50 transition-colors"
+                "w-full justify-start gap-3 px-4 py-2.5 h-auto rounded-none text-sm",
+                "text-neutral-700 hover:bg-neutral-50"
               )}
             >
               <PencilSquareIcon className="h-4 w-4 text-neutral-500" />
               <span>Edit</span>
-            </button>
+            </Button>
 
             {/* Divider */}
             <div className="my-1 border-t border-neutral-100" />
 
             {/* Delete */}
-            <button
+            <Button
+              variant="ghost"
               onClick={() => handleAction(onDelete)}
               className={cn(
-                "flex w-full items-center gap-3 px-4 py-2.5 text-sm",
-                "text-red-600 hover:bg-red-50 transition-colors"
+                "w-full justify-start gap-3 px-4 py-2.5 h-auto rounded-none text-sm",
+                "text-red-600 hover:bg-red-50"
               )}
             >
               <TrashIcon className="h-4 w-4" />
               <span>Delete</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}

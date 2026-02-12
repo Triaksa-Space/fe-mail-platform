@@ -290,17 +290,19 @@ export default function LoginPageClient() {
                           )}
                         </div>
                       </div>
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="flex items-center"
+                        className="h-auto w-auto p-0 hover:bg-transparent"
                       >
                         {showPassword ? (
                           <Eye className="w-5 h-5 text-neutral-800" />
                         ) : (
                           <EyeOff className="w-5 h-5 text-neutral-800" />
                         )}
-                      </button>
+                      </Button>
                     </div>
                     <div className="px-1 absolute left-2 top-0 bg-white">
                       <span className="text-[10px] font-normal text-neutral-800 leading-4">

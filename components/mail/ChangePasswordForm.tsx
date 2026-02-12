@@ -7,6 +7,7 @@ import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
+import { Button } from "@/components/ui/button";
 
 const ChangePasswordForm: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -113,17 +114,19 @@ const ChangePasswordForm: React.FC = () => {
                 )}
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              className="flex justify-center items-center"
+              className="h-auto w-auto p-0 hover:bg-transparent"
             >
               {showCurrentPassword ? (
                 <EyeOff className="w-5 h-5 text-neutral-800" />
               ) : (
                 <Eye className="w-5 h-5 text-neutral-800" />
               )}
-            </button>
+            </Button>
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
@@ -159,17 +162,19 @@ const ChangePasswordForm: React.FC = () => {
                 )}
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setShowNewPassword(!showNewPassword)}
-              className="flex justify-center items-center"
+              className="h-auto w-auto p-0 hover:bg-transparent"
             >
               {showNewPassword ? (
                 <EyeOff className="w-5 h-5 text-neutral-800" />
               ) : (
                 <Eye className="w-5 h-5 text-neutral-800" />
               )}
-            </button>
+            </Button>
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
@@ -205,17 +210,19 @@ const ChangePasswordForm: React.FC = () => {
                 )}
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="flex justify-center items-center"
+              className="h-auto w-auto p-0 hover:bg-transparent"
             >
               {showConfirmPassword ? (
                 <EyeOff className="w-5 h-5 text-neutral-800" />
               ) : (
                 <Eye className="w-5 h-5 text-neutral-800" />
               )}
-            </button>
+            </Button>
           </div>
           <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
@@ -227,15 +234,15 @@ const ChangePasswordForm: React.FC = () => {
       {error && <p className="text-sm text-red-600">{error}</p>}
 
       {/* Submit Button */}
-      <button
+      <Button
         type="submit"
         disabled={isLoading || !isFormValid}
-        className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
+        className="h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
       >
         <span className="text-center text-base font-medium font-['Roboto'] leading-4 text-white">
           {isLoading ? "Changing..." : "Change password"}
         </span>
-      </button>
+      </Button>
     </form>
   );
 };

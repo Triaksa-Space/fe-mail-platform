@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Input } from "./ui/input";
 import { cn } from "@/lib/utils";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
+import { Button } from "@/components/ui/button";
 
 interface PasswordInputProps {
   id: string;
@@ -64,11 +65,12 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         onChange={onChange}
         disabled={disabled}
       />
-      <button
+      <Button
         type="button"
+        variant="ghost"
         className={cn(
-          "absolute inset-y-0 right-0 pr-3 flex items-center",
-          "text-neutral-400 hover:text-neutral-600 transition-colors",
+          "absolute inset-y-0 right-0 pr-3 h-auto",
+          "text-neutral-400 hover:text-neutral-600 hover:bg-transparent transition-colors",
           disabled && "cursor-not-allowed"
         )}
         onClick={() => !disabled && setShowPassword(!showPassword)}
@@ -79,7 +81,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         ) : (
           <Eye className="h-4 w-4" />
         )}
-      </button>
+      </Button>
     </div>
     {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
   </div>

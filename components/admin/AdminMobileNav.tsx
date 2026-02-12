@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuthStore, PermissionKey } from "@/stores/useAuthStore";
 import { LayoutDashboard, Users, UserPlus, Settings, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface NavItem {
   id: string;
@@ -122,10 +123,11 @@ const AdminMobileNav: React.FC = () => {
           const Icon = item.icon;
           const isActive = getIsActive(item);
           return (
-            <button
+            <Button
               key={item.id}
+              variant="ghost"
               className={cn(
-                "flex-1 flex flex-col items-center justify-center py-3 transition-colors",
+                "flex-1 flex flex-col items-center justify-center py-3 h-auto rounded-none transition-colors",
                 isActive
                   ? "bg-blue-50 text-primary-500"
                   : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700"
@@ -134,7 +136,7 @@ const AdminMobileNav: React.FC = () => {
             >
               <Icon className="h-5 w-5" />
               <span className="text-xs mt-1 font-medium">{item.label}</span>
-            </button>
+            </Button>
           );
         })}
       </div>

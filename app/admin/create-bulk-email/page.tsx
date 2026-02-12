@@ -13,6 +13,7 @@ import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils"
 import { AdminLayout, AdminContentCard } from "@/components/admin"
 import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // Loading fallback component
@@ -28,10 +29,11 @@ const ToggleSwitch: React.FC<{
   className?: string;
 }> = ({ active, onChange, label, className }) => (
   <div className={cn("h-10 flex justify-start items-center gap-1 shrink-0", className)}>
-    <button
+    <Button
+      variant="ghost"
       type="button"
       onClick={onChange}
-      className="w-10 h-6 relative"
+      className="w-10 h-6 p-0 relative"
     >
       <div className={cn(
         "w-10 h-6 rounded-3xl transition-colors",
@@ -41,7 +43,7 @@ const ToggleSwitch: React.FC<{
         "w-5 h-5 absolute top-[1.5px] bg-white rounded-full transition-all",
         active ? "left-[18.5px]" : "left-[1.5px]"
       )}></div>
-    </button>
+    </Button>
     <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-4">{label}</span>
   </div>
 );
@@ -277,7 +279,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4 whitespace-nowrap">Quantity (minimum 2, maximum 100)</span>
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="outline"
+                  size="icon"
                   type="button"
                   onClick={() => updateCount(count - 1)}
                   disabled={count <= 2}
@@ -289,8 +293,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   )}
                 >
                   <MinusIcon className="w-4 h-4" />
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
                   type="button"
                   onClick={() => updateCount(count + 1)}
                   disabled={count >= 100}
@@ -302,7 +308,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   )}
                 >
                   <PlusIcon className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -383,7 +389,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     )}>Password length</span>
                   </div>
                 </div>
-                <button
+                <Button
+                  variant="outline"
+                  size="icon"
                   type="button"
                   onClick={() => updatePasswordLength(passwordLength - 1)}
                   disabled={!isRandomPasswordActive || passwordLength <= 6}
@@ -395,8 +403,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   )}
                 >
                   <MinusIcon className="w-4 h-4" />
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
                   type="button"
                   onClick={() => updatePasswordLength(passwordLength + 1)}
                   disabled={!isRandomPasswordActive || passwordLength >= 32}
@@ -408,7 +418,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   )}
                 >
                   <PlusIcon className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
 
               {/* Email for Receiving List */}
@@ -438,14 +448,14 @@ const CreateBulkEmailPageContent: React.FC = () => {
 
             {/* Submit Button - Right Aligned */}
             <div className="flex justify-end">
-              <button
+              <Button
                 type="submit"
                 disabled={!isFormValid || isLoading}
                 className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
               >
                 <CheckCircleIcon className="w-5 h-5" />
                 <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
-              </button>
+              </Button>
             </div>
           </form>
         </AdminContentCard>

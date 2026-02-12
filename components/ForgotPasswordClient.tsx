@@ -552,25 +552,27 @@ export default function ForgotPasswordClient() {
                       )}
                     </Button>
 
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       onClick={handleResendCode}
                       disabled={isLoading}
-                      className="h-9 flex items-center justify-center text-primary-500 text-base font-medium hover:text-primary-500"
+                      className="h-9 text-primary-500 text-base font-medium hover:text-primary-500 hover:bg-transparent"
                     >
                       Resend Code
-                    </button>
+                    </Button>
 
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       onClick={() => {
                         setStep("email");
                         setOtp(["", "", "", ""]);
                       }}
-                      className="h-9 flex items-center justify-center text-neutral-500 text-sm hover:text-neutral-700"
+                      className="h-9 text-neutral-500 text-sm hover:text-neutral-700 hover:bg-transparent"
                     >
                       Back
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </>
@@ -602,17 +604,19 @@ export default function ForgotPasswordClient() {
                             required
                           />
                         </div>
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon"
                           onClick={() => setShowNewPassword(!showNewPassword)}
-                          className="flex items-center"
+                          className="h-auto w-auto p-0 hover:bg-transparent"
                         >
                           {showNewPassword ? (
                             <EyeOff className="w-5 h-5 text-neutral-800" />
                           ) : (
                             <Eye className="w-5 h-5 text-neutral-800" />
                           )}
-                        </button>
+                        </Button>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
                         <span className="text-[10px] font-normal text-neutral-800 leading-4">New Password</span>
@@ -640,17 +644,19 @@ export default function ForgotPasswordClient() {
                             required
                           />
                         </div>
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="flex items-center"
+                          className="h-auto w-auto p-0 hover:bg-transparent"
                         >
                           {showConfirmPassword ? (
                             <EyeOff className="w-5 h-5 text-neutral-800" />
                           ) : (
                             <Eye className="w-5 h-5 text-neutral-800" />
                           )}
-                        </button>
+                        </Button>
                       </div>
                       <div className="px-1 absolute left-2 top-0 bg-white">
                         <span className="text-[10px] font-normal text-neutral-800 leading-4">Confirm Password</span>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   InboxIcon as InboxOutlineIcon,
   PaperAirplaneIcon as PaperAirplaneOutlineIcon,
@@ -41,10 +42,11 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
         className="flex items-center justify-start px-4 py-2 gap-4 rounded-xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
       >
         {/* Inbox tab */}
-        <button
+        <Button
+          variant="ghost"
           onClick={() => onViewChange("inbox")}
           className={cn(
-            "w-14 flex flex-col items-center justify-center gap-0.5 relative",
+            "w-14 h-auto flex flex-col items-center justify-center gap-0.5 relative px-0",
             currentView === "inbox"
               ? "text-primary-500"
               : "text-neutral-600 hover:text-neutral-700"
@@ -59,13 +61,14 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "inbox" ? "font-semibold" : "font-normal"
           )}>Inbox</span>
-        </button>
+        </Button>
 
         {/* Sent tab */}
-        <button
+        <Button
+          variant="ghost"
           onClick={() => onViewChange("sent")}
           className={cn(
-            "w-14 flex flex-col items-center justify-center gap-0.5",
+            "w-14 h-auto flex flex-col items-center justify-center gap-0.5 px-0",
             currentView === "sent"
               ? "text-primary-500"
               : "text-neutral-600 hover:text-neutral-700"
@@ -80,13 +83,14 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "sent" ? "font-semibold" : "font-normal"
           )}>Sent</span>
-        </button>
+        </Button>
 
         {/* Settings tab */}
-        <button
+        <Button
+          variant="ghost"
           onClick={() => onViewChange("settings")}
           className={cn(
-            "w-14 flex flex-col items-center justify-center gap-0.5",
+            "w-14 h-auto flex flex-col items-center justify-center gap-0.5 px-0",
             currentView === "settings"
               ? "text-primary-500"
               : "text-neutral-600 hover:text-neutral-700"
@@ -101,16 +105,17 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "settings" ? "font-semibold" : "font-normal"
           )}>Settings</span>
-        </button>
+        </Button>
 
         {/* Logout tab */}
-        <button
+        <Button
+          variant="ghost"
           onClick={onLogout}
-          className="w-14 flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-700"
+          className="w-14 h-auto flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-700 px-0"
         >
           <LogoutSolidIcon className="w-5 h-5" />
           <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>
-        </button>
+        </Button>
       </nav>
     </div>
   );

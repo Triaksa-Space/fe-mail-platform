@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Footer, ScrollToTopButton } from "@/components/layout";
 import axios from "axios";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/components/ui/button";
 
 interface PrivacyResponse {
   content: string;
@@ -130,19 +131,20 @@ const PrivacyPage: React.FC = () => {
             {/* Back Button */}
             <div className="self-stretch inline-flex justify-start items-center gap-2.5">
               <div className="flex justify-start items-center gap-4">
-                <button
+                <Button
+                  variant="outline"
+                  size="icon"
                   onClick={() => router.push("/")}
                   className={cn(
                     "w-10 h-10 bg-white rounded-lg",
                     "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-                    "outline outline-1 outline-offset-[-1px] outline-neutral-200",
-                    "flex justify-center items-center",
-                    "text-neutral-800 hover:bg-neutral-50 transition-colors",
+                    "outline-neutral-200",
+                    "text-neutral-800 hover:bg-neutral-50",
                   )}
                   aria-label="Go back"
                 >
                   <ChevronLeftIcon className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -162,12 +164,13 @@ const PrivacyPage: React.FC = () => {
                 ) : error ? (
                   <div className="text-center py-12 w-full">
                     <p className="text-red-500">{error}</p>
-                    <button
+                    <Button
+                      variant="link"
                       onClick={() => window.location.reload()}
                       className="mt-4 text-primary-500 hover:underline"
                     >
                       Try again
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="self-stretch flex flex-col justify-start items-start gap-4 md:gap-5">

@@ -10,6 +10,7 @@ import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
 import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 
 interface ComposeModalProps {
   isOpen: boolean;
@@ -332,19 +333,21 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           {/* Header Action Row */}
           <div className="flex items-center justify-between px-4 md:py-3 md:bg-white md:rounded-t-2xl">
             {/* Left: Close Button */}
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="icon"
               onClick={requestClose}
               className={cn(
-                "flex items-center justify-center h-10 w-10",
-                "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 bg-white",
+                "h-10 w-10",
+                "rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border-neutral-200 bg-white",
                 "text-neutral-800 hover:bg-neutral-50",
-                "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-200"
+                "focus:outline-none focus:ring-2 focus:ring-blue-200"
               )}
               aria-label="Close compose"
             >
               <XMarkIcon className="h-5 w-5" />
-            </button>
+            </Button>
 
             {/* Right: Daily Send Badge, Attachment & Send Buttons */}
             <div className="flex items-center gap-3">
@@ -393,14 +396,14 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               </label>
 
               {/* Send Button */}
-              <button
+              <Button
                 type="button"
                 onClick={handleSend}
                 disabled={isDisabled}
                 className={cn(
-                  "flex items-center gap-1.5 h-10 px-4 font-medium text-base font-['Roboto'] leading-4",
+                  "gap-1.5 h-10 px-4 font-medium text-base font-['Roboto'] leading-4",
                   "btn-primary-skin",
-                  "transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  "focus:outline-none focus:ring-2 focus:ring-blue-300"
                 )}
               >
                 {isSending ? (
@@ -414,7 +417,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                     <span>Send</span>
                   </>
                 )}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -519,14 +522,16 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                             {getFileExtension(file.name)}
                           </span>
                         </div>
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
+                          size="icon"
                           onClick={() => handleRemoveAttachment(index)}
-                          className="w-5 h-5 flex items-center justify-center text-neutral-800 hover:text-red-600 transition-colors"
+                          className="w-5 h-5 text-neutral-800 hover:text-red-600 hover:bg-transparent"
                           aria-label={`Remove ${file.name}`}
                         >
                           <XMarkIcon className="w-4 h-4" />
-                        </button>
+                        </Button>
                       </div>
                       {/* Filename - truncated to 2 lines */}
                       <div className="self-stretch text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">

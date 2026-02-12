@@ -13,6 +13,7 @@ import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 
 interface PreviewProps {
   email: Mail | null;
@@ -224,31 +225,35 @@ const Preview: React.FC<PreviewProps> = ({
             {/* Header with Back and Action Buttons */}
             <div className="px-4 flex justify-between items-center">
               {showBackButton && (
-                <button
+                <Button
+                  variant="outline"
+                  size="icon"
                   onClick={onBack}
-                  className="w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center hover:bg-neutral-50 transition-colors"
+                  className="w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 hover:bg-neutral-50"
                 >
                   <ChevronLeftIcon className="w-4 h-4 text-neutral-800" />
-                </button>
+                </Button>
               )}
               {!showBackButton && <div />}
 
               {!isSentView && (
                 <div className="flex justify-end items-center gap-3">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={onReply}
-                    className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 hover:bg-neutral-50 transition-colors"
+                    className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 gap-2 hover:bg-neutral-50"
                   >
                     <Reply className="w-4 h-4 text-neutral-800" />
                     <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Reply</span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="outline"
                     onClick={onForward}
-                    className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 hover:bg-neutral-50 transition-colors"
+                    className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 gap-2 hover:bg-neutral-50"
                   >
                     <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Forward</span>
                     <Forward className="w-4 h-4 text-neutral-800" />
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
@@ -393,13 +398,15 @@ const Preview: React.FC<PreviewProps> = ({
                               <XMarkIcon className="w-5 h-5 text-primary-500" />
                               <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
                             </div>
-                            <button
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               onClick={() => handleDownload(attachment.URL, filename)}
                               disabled={isDownloading}
-                              className="w-5 h-5 flex items-center justify-center hover:bg-neutral-100 rounded transition-colors"
+                              className="w-5 h-5 hover:bg-neutral-100 rounded"
                             >
                               <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                            </button>
+                            </Button>
                           </div>
                           <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
                             {filename}

@@ -3,6 +3,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 
 interface FaqSearchProps {
   value: string;
@@ -40,13 +41,15 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
           {value ? (
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={handleClear}
-              className="flex h-5 w-5 items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
+              className="h-5 w-5 text-neutral-400 hover:text-neutral-600 hover:bg-transparent transition-colors"
               aria-label="Clear search"
             >
               <XMarkIcon className="h-4 w-4" />
-            </button>
+            </Button>
           ) : (
             <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />
           )}

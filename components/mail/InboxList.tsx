@@ -95,11 +95,13 @@ const InboxList: React.FC<InboxListProps> = ({
               {formatUserEmail(userEmail)}
             </span>
           )}
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={onRefresh}
             disabled={isRefreshing}
             className={cn(
-              "w-8 h-8 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden",
+              "w-8 h-8 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden",
               isRefreshing
                 ? "bg-neutral-100 cursor-not-allowed"
                 : "bg-white hover:bg-neutral-50",
@@ -114,18 +116,20 @@ const InboxList: React.FC<InboxListProps> = ({
                   : "text-neutral-800",
               )}
             />
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Desktop Header */}
       <div className="hidden lg:flex relative z-20">
         <div className="self-stretch h-10 inline-flex justify-between items-center w-full">
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={onRefresh}
             disabled={isRefreshing}
             className={cn(
-              "w-10 h-10 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden",
+              "w-10 h-10 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden",
               isRefreshing
                 ? "bg-neutral-100 cursor-not-allowed"
                 : "bg-white hover:bg-neutral-50",
@@ -139,7 +143,7 @@ const InboxList: React.FC<InboxListProps> = ({
                   : "text-neutral-800",
               )}
             />
-          </button>
+          </Button>
           {userEmail && (
             <span className="text-base font-semibold font-['Roboto'] leading-6 text-neutral-800 truncate max-w-[220px]">
               {userEmail}
@@ -236,13 +240,13 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
   const isUnread = email.unread;
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
-        "w-full px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+        "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2",
         "border border-neutral-200 shadow-[0_2px_6px_0_rgba(16,24,40,0.06)] transition-all",
         isUnread ? "bg-white" : "bg-neutral-100",
-        // Hover/focus states
         "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
         !isUnread &&
           "hover:shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]",
@@ -300,7 +304,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
           {email.snippet || "No preview available"}
         </p>
       </div>
-    </button>
+    </Button>
   );
 });
 

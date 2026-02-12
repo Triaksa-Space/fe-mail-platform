@@ -2,6 +2,7 @@ import React from 'react';
 import { Mail, Settings } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 
 const FooterNav = () => {
   const router = useRouter();
@@ -19,27 +20,30 @@ const FooterNav = () => {
   return (
     <footer className="border-t bg-background">
       <div className="flex">
-        <button
+        <Button
+          variant="ghost"
           className={buttonClass(isInboxActive)}
           onClick={() => router.push('/inbox')}
         >
           <Mail className="h-6 w-6" />
           <span className="text-xs mt-1">INBOX</span>
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
           className={buttonClass(pathname === '/inbox/send')}
           onClick={() => router.push('/inbox/send')}
         >
           <PaperAirplaneIcon className="h-6 w-6" />
           <span className="text-xs mt-1">SEND</span>
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
           className={buttonClass(pathname === '/inbox/setting')}
           onClick={() => router.push('/inbox/setting')}
         >
           <Settings className="h-6 w-6" />
           <span className="text-xs mt-1">SETTINGS</span>
-        </button>
+        </Button>
       </div>
     </footer>
   );

@@ -8,6 +8,7 @@ import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments, getFileExtension } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
 import { Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
@@ -196,7 +197,9 @@ export default function AdminAllSentPage() {
           <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             All sent
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleRefresh}
             disabled={isRefreshing}
             className={cn(
@@ -211,7 +214,7 @@ export default function AdminAllSentPage() {
                 isRefreshing && "animate-spin",
               )}
             />
-          </button>
+          </Button>
         </div>
 
         {/* Main Content - Full width single view */}
@@ -222,24 +225,27 @@ export default function AdminAllSentPage() {
               {/* Breadcrumb Navigation */}
               <div className="self-stretch inline-flex justify-start items-center gap-1">
                 {/* Back */}
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleClosePreview}
                   className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
                 >
                   <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
-                </button>
+                </Button>
                 <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
                 {/* All sent */}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={handleClosePreview}
-                  className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+                  className="h-auto flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
                 >
                   <PaperAirplaneIcon className="w-6 h-6 text-neutral-600" />
                   <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">
                     All sent
                   </span>
-                </button>
+                </Button>
                 <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
                 {/* Current email subject */}
@@ -493,11 +499,12 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
   onClick,
 }) => {
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
         isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
-        "self-stretch w-full text-left px-4 py-2",
+        "h-auto self-stretch w-full text-left px-4 py-2",
         "inline-flex justify-start items-center gap-2",
         !isSelected && "hover:bg-neutral-100",
       )}
@@ -528,7 +535,7 @@ const AdminSentRow: React.FC<AdminSentRowProps> = ({
           </div>
         </div>
       </div>
-    </button>
+    </Button>
   );
 };
 

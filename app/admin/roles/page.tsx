@@ -29,6 +29,7 @@ import {
 } from "@/lib/admin-types";
 import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
+import { Button } from "@/components/ui/button";
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
@@ -387,7 +388,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                             Admin list
                         </div>
                         <div className="flex justify-end items-center gap-3">
-                            <button
+                            <Button
                                 onClick={() => setIsCreateModalOpen(true)}
                                 className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-1.5 transition-colors"
                             >
@@ -395,7 +396,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
                                     Create admin
                                 </span>
-                            </button>
+                            </Button>
                         </div>
                     </div>
 
@@ -405,35 +406,38 @@ const RolesPermissionsPageContent: React.FC = () => {
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-neutral-200">
                                 <div className="w-56 px-4 py-3 flex items-center gap-1">
-                                    <button
+                                    <Button
+                                        variant="ghost"
                                         onClick={() => toggleSort('username')}
-                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors h-auto p-0"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Username</div>
                                         {renderSortIcon('username')}
-                                    </button>
+                                    </Button>
                                 </div>
                                 <div className="w-40 px-4 py-3">
-                                    <button
+                                    <Button
+                                        variant="ghost"
                                         onClick={() => toggleSort('last_active_at')}
-                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors h-auto p-0"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
                                         {renderSortIcon('last_active_at')}
-                                    </button>
+                                    </Button>
                                 </div>
                                 <div className="flex-1 px-4 py-3 flex items-center gap-1">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
                                     <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
                                 <div className="w-40 px-4 py-3">
-                                    <button
+                                    <Button
+                                        variant="ghost"
                                         onClick={() => toggleSort('created_at')}
-                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
+                                        className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors h-auto p-0"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created date</div>
                                         {renderSortIcon('created_at')}
-                                    </button>
+                                    </Button>
                                 </div>
                                 <div className="w-24 px-4 py-3 flex justify-center items-center">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
@@ -523,7 +527,9 @@ const RolesPermissionsPageContent: React.FC = () => {
                         {/* Header */}
                         <div className="self-stretch inline-flex justify-between items-center">
                             <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Create admin</div>
-                            <button
+                            <Button
+                                variant="outline"
+                                size="icon"
                                 onClick={() => {
                                     setIsCreateModalOpen(false);
                                     resetCreateForm();
@@ -531,7 +537,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                             >
                                 <XMarkIcon className="w-5 h-5 text-neutral-800" />
-                            </button>
+                            </Button>
                         </div>
 
                         {/* Form */}
@@ -579,17 +585,19 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                     className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                                 />
                                             </div>
-                                            <button
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
                                                 type="button"
                                                 onClick={() => setShowNewPassword(!showNewPassword)}
-                                                className="flex justify-center items-center"
+                                                className="flex justify-center items-center h-auto w-auto p-0"
                                             >
                                                 {showNewPassword ? (
                                                     <EyeOff className="w-5 h-5 text-neutral-800" />
                                                 ) : (
                                                     <Eye className="w-5 h-5 text-neutral-800" />
                                                 )}
-                                            </button>
+                                            </Button>
                                         </div>
                                         <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                             <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</div>
@@ -615,13 +623,13 @@ const RolesPermissionsPageContent: React.FC = () => {
                             </div>
 
                             {/* Submit Button */}
-                            <button
+                            <Button
                                 onClick={handleCreateAdmin}
                                 disabled={!canCreate}
                                 className="self-stretch h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
                             >
                                 <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Create admin</div>
-                            </button>
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -631,12 +639,14 @@ const RolesPermissionsPageContent: React.FC = () => {
                     <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
                         <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
                             {/* Close Button */}
-                            <button
+                            <Button
+                                variant="ghost"
+                                size="icon"
                                 onClick={() => setIsDeleteModalOpen(false)}
-                                className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity"
+                                className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity h-auto p-0"
                             >
                                 <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                            </button>
+                            </Button>
 
                             <div className="self-stretch flex flex-col justify-start items-center gap-5">
                                 {/* Icon */}
@@ -658,7 +668,8 @@ const RolesPermissionsPageContent: React.FC = () => {
 
                             {/* Buttons */}
                             <div className="self-stretch inline-flex justify-start items-center gap-3">
-                                <button
+                                <Button
+                                    variant="outline"
                                     onClick={() => {
                                         setIsDeleteModalOpen(false);
                                         setSelectedAdmin(null);
@@ -666,13 +677,14 @@ const RolesPermissionsPageContent: React.FC = () => {
                                     className="flex-1 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                                 >
                                     <div className="text-center justify-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</div>
-                                </button>
-                                <button
+                                </Button>
+                                <Button
+                                    variant="destructive"
                                     onClick={handleDeleteConfirm}
                                     className="flex-1 h-10 px-4 py-2.5 bg-red-500 rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-600 flex justify-center items-center gap-1.5 overflow-hidden hover:bg-red-600 transition-colors"
                                 >
                                     <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Delete</div>
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </DialogContent>

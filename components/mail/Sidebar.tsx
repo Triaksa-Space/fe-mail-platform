@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   PaperAirplaneIcon,
   Cog6ToothIcon,
@@ -68,11 +69,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             const isActive = currentView === item.id;
             const IconComponent = isActive ? item.iconSolid : item.icon;
             return (
-              <button
+              <Button
                 key={item.id}
+                variant="ghost"
                 onClick={() => onViewChange(item.id)}
                 className={cn(
-                  "self-stretch px-3 py-1 inline-flex justify-between items-center transition-colors",
+                  "self-stretch px-3 py-1 h-auto justify-between transition-colors",
                   isActive && "bg-primary-50 rounded-xl"
                 )}
               >
@@ -101,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     </span>
                   </div>
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -109,14 +111,15 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Bottom Section */}
         <div className="self-stretch flex flex-col justify-start items-start gap-2">
           {/* Logout */}
-          <button
+          <Button
+            variant="outline"
             onClick={onLogout}
-            className="self-stretch h-9 px-4 py-2.5 bg-white rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200 inline-flex justify-center items-center gap-2 overflow-hidden hover:bg-red-50 transition-colors"
+            className="self-stretch h-9 px-4 py-2.5 bg-white rounded-lg shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200 gap-2 overflow-hidden hover:bg-red-50 transition-colors"
           >
             <span className="text-center text-red-500 text-base font-medium font-['Roboto'] leading-4">
               Log out
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     </aside>

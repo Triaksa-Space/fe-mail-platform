@@ -13,6 +13,7 @@ import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
 import { AdminLayout, AdminContentCard } from "@/components/admin";
 import { CheckCircleIcon, DocumentDuplicateIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // Loading fallback component
@@ -255,7 +256,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     disabled={isRandomPasswordActive}
                     required
                   />
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     type="button"
                     onClick={toggleRandomPassword}
                     className={cn(
@@ -266,7 +269,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     )}
                     title="Generate random password"
                   >
-                  </button>
+                  </Button>
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
                   <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
@@ -279,14 +282,14 @@ const CreateSingleEmailPageContent: React.FC = () => {
 
             {/* Submit Button - Right Aligned */}
             <div className="flex justify-end">
-              <button
+              <Button
                 type="submit"
                 disabled={!isFormValid || isLoading}
                 className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
               >
                 <CheckCircleIcon className="w-5 h-5" />
                 <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
-              </button>
+              </Button>
             </div>
           </form>
         </AdminContentCard>
@@ -304,7 +307,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
                   </div>
                   <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{createdEmail.email}</span>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => handleCopy(createdEmail.email, 'email')}
                     className="w-5 h-5 flex items-center justify-center transition-colors"
                   >
@@ -313,7 +318,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     ) : (
                       <DocumentDuplicateIcon className="w-3.5 h-3.5 text-primary-500" />
                     )}
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Password */}
@@ -323,7 +328,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
                   </div>
                   <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5 font-mono">{createdEmail.password}</span>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={() => handleCopy(createdEmail.password, 'password')}
                     className="w-5 h-5 flex items-center justify-center transition-colors"
                   >
@@ -332,17 +339,19 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     ) : (
                       <DocumentDuplicateIcon className="w-3.5 h-3.5 text-primary-500" />
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
               {/* Close Button - Outside neutral Card */}
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setCreatedEmail(null)}
                 className="w-5 h-5 flex items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
               >
                 <XMarkIcon className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </AdminContentCard>
         )}

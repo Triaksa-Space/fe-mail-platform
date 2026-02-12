@@ -13,6 +13,7 @@ import { searchFaqs, countFaqResults } from "@/lib/faqData";
 import { FaqSearch, FaqSection, FaqEmptyState } from "@/components/faq";
 import { Footer, ScrollToTopButton } from "@/components/layout";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/components/ui/button";
 
 const FaqPage: React.FC = () => {
   const router = useRouter();
@@ -72,19 +73,20 @@ const FaqPage: React.FC = () => {
               {/* Back Button */}
               <div className="self-stretch inline-flex justify-start items-center gap-2.5">
                 <div className="flex justify-start items-center gap-4">
-                  <button
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={() => router.push("/")}
                     className={cn(
                       "w-10 h-10 bg-white rounded-lg",
                       "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
-                      "outline outline-1 outline-offset-[-1px] outline-gray-200",
-                      "flex justify-center items-center",
-                      "text-gray-800 hover:bg-gray-50 transition-colors",
+                      "outline-gray-200",
+                      "text-gray-800 hover:bg-gray-50",
                     )}
                     aria-label="Go back"
                   >
                     <ChevronLeftIcon className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </div>
               </div>
 

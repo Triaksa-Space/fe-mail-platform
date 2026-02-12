@@ -17,6 +17,7 @@ import {
 import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
 import { UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Button } from "@/components/ui/button";
 
 const EditAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -201,32 +202,36 @@ const EditAdminPageContent: React.FC = () => {
                 {/* Breadcrumb Navigation */}
                 <div className="h-5 inline-flex justify-start items-center gap-1">
                     {/* Back Button */}
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => router.push(`/admin/roles/${adminId}`)}
-                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors"
+                        className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors h-auto"
                     >
                         <ArrowLeftIcon className="w-5 h-5 text-neutral-600" />
-                    </button>
+                    </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Roles & permissions link */}
-                    <button
+                    <Button
+                        variant="ghost"
                         onClick={() => router.push("/admin/roles")}
-                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors h-auto"
                     >
                         <Shield className="w-5 h-5 text-neutral-600" />
                         <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
-                    </button>
+                    </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Admin username link */}
-                    <button
+                    <Button
+                        variant="ghost"
                         onClick={() => router.push(`/admin/roles/${adminId}`)}
-                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+                        className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors h-auto"
                     >
                         <UserIcon className="w-5 h-5 text-neutral-600" />
                         <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">{admin?.username}</span>
-                    </button>
+                    </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
 
                     {/* Current page - Edit */}
@@ -314,21 +319,22 @@ const EditAdminPageContent: React.FC = () => {
 
                     {/* Action Buttons */}
                     <div className="self-stretch inline-flex justify-end items-start gap-2.5">
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={handleCancel}
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
                         >
                             <XMarkIcon className="w-5 h-5 text-neutral-800" />
                             <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Cancel</span>
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={handleSave}
                             disabled={!isFormValid}
                             className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-1.5 transition-colors"
                         >
                             <Check className="w-5 h-5 text-white" />
                             <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Save changes</span>
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

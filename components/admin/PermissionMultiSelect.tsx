@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Check, ChevronDown} from "lucide-react";
 import { AVAILABLE_PERMISSIONS, getPermissionLabel } from "@/lib/admin-types";
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
 
 interface PermissionMultiSelectProps {
   value: string[];
@@ -99,13 +100,15 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
             >
               {getPermissionLabel(permissionId)}
               {!disabled && (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={(e) => removePermission(permissionId, e)}
-                  className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                  className="h-auto w-auto p-0.5 hover:bg-blue-200 rounded-full"
                 >
                   <XMarkIcon className="h-3 w-3" />
-                </button>
+                </Button>
               )}
             </span>
           ))
@@ -131,13 +134,14 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
           {AVAILABLE_PERMISSIONS.map((permission) => {
             const isSelected = value.includes(permission.id);
             return (
-              <button
+              <Button
                 key={permission.id}
                 type="button"
+                variant="ghost"
                 onClick={() => togglePermission(permission.id)}
                 className={cn(
-                  "flex w-full items-center gap-3 px-3 py-2 text-sm",
-                  "hover:bg-neutral-50 transition-colors text-left",
+                  "w-full justify-start gap-3 px-3 py-2 h-auto rounded-none text-sm",
+                  "hover:bg-neutral-50 text-left",
                   isSelected && "bg-blue-50"
                 )}
               >
@@ -159,7 +163,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 >
                   {permission.label}
                 </span>
-              </button>
+              </Button>
             );
           })}
         </div>

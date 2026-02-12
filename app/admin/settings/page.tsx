@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import DOMPurify from 'dompurify';
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { AdminLayout } from "@/components/admin";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
@@ -123,17 +124,19 @@ const ChangePasswordSection: React.FC = () => {
                                         className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
-                                <button
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
                                     type="button"
                                     onClick={() => setShowOldPassword(!showOldPassword)}
-                                    className="flex justify-center items-center"
+                                    className="h-auto flex justify-center items-center"
                                 >
                                     {showOldPassword ? (
                                         <EyeOff className="w-5 h-5 text-neutral-800" />
                                     ) : (
                                         <Eye className="w-5 h-5 text-neutral-800" />
                                     )}
-                                </button>
+                                </Button>
                             </div>
                             <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                 <span className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
@@ -160,17 +163,19 @@ const ChangePasswordSection: React.FC = () => {
                                         className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
-                                <button
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
                                     type="button"
                                     onClick={() => setShowNewPassword(!showNewPassword)}
-                                    className="flex justify-center items-center"
+                                    className="h-auto flex justify-center items-center"
                                 >
                                     {showNewPassword ? (
                                         <EyeOff className="w-5 h-5 text-neutral-800" />
                                     ) : (
                                         <Eye className="w-5 h-5 text-neutral-800" />
                                     )}
-                                </button>
+                                </Button>
                             </div>
                             <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                 <span className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
@@ -197,17 +202,19 @@ const ChangePasswordSection: React.FC = () => {
                                         className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
-                                <button
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="flex justify-center items-center"
+                                    className="h-auto flex justify-center items-center"
                                 >
                                     {showConfirmPassword ? (
                                         <EyeOff className="w-5 h-5 text-neutral-800" />
                                     ) : (
                                         <Eye className="w-5 h-5 text-neutral-800" />
                                     )}
-                                </button>
+                                </Button>
                             </div>
                             <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                 <span className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
@@ -221,7 +228,7 @@ const ChangePasswordSection: React.FC = () => {
 
                 {/* Submit Button */}
                 <div className="self-stretch inline-flex justify-end items-start gap-2.5">
-                    <button
+                    <Button
                         onClick={handleChangePassword}
                         disabled={!isFormValid || isLoading}
                         className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-1.5 transition-colors"
@@ -236,7 +243,7 @@ const ChangePasswordSection: React.FC = () => {
                         )}>
                             {isLoading ? "Changing..." : "Change password"}
                         </span>
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>

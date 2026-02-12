@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuthStore, PermissionKey } from "@/stores/useAuthStore";
+import { Button } from "@/components/ui/button";
 import {
   UserGroupIcon as UserGroupOutlineIcon,
   FolderPlusIcon as FolderPlusOutlineIcon,
@@ -256,11 +257,12 @@ const AdminSidebar: React.FC = () => {
                 const active = isActive(item.href);
                 const Icon = active ? item.iconSolid : item.iconOutline;
                 return (
-                  <button
+                  <Button
                     key={item.id}
+                    variant="ghost"
                     onClick={() => handleNavigation(item)}
                     className={cn(
-                      "self-stretch px-3 py-1 inline-flex justify-between items-center",
+                      "self-stretch px-3 py-1 h-auto justify-between",
                       active && "bg-blue-100 rounded-xl"
                     )}
                   >
@@ -282,7 +284,7 @@ const AdminSidebar: React.FC = () => {
                         {item.label}
                       </div>
                     </div>
-                  </button>
+                  </Button>
                 );
               })}
             </React.Fragment>
@@ -292,10 +294,11 @@ const AdminSidebar: React.FC = () => {
         {/* Bottom Section */}
         <div className="self-stretch flex flex-col justify-start items-start gap-2">
           {/* Settings */}
-          <button
+          <Button
+            variant="ghost"
             onClick={() => router.push("/admin/settings")}
             className={cn(
-              "self-stretch px-3 py-1 inline-flex justify-between items-center",
+              "self-stretch px-3 py-1 h-auto justify-between",
               isSettingsActive && "bg-blue-100 rounded-xl"
             )}
           >
@@ -317,12 +320,13 @@ const AdminSidebar: React.FC = () => {
                 Settings
               </div>
             </div>
-          </button>
+          </Button>
 
           {/* Logout */}
-          <button
+          <Button
+            variant="ghost"
             onClick={handleLogout}
-            className="self-stretch px-3 py-1 inline-flex justify-between items-center"
+            className="self-stretch px-3 py-1 h-auto justify-between"
           >
             <div className="flex-1 flex justify-start items-center gap-5">
               <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-neutral-600" />
@@ -330,7 +334,7 @@ const AdminSidebar: React.FC = () => {
                 Log out
               </div>
             </div>
-          </button>
+          </Button>
 
           {/* Divider */}
           <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-neutral-300" />

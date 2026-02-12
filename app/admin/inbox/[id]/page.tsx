@@ -106,22 +106,25 @@ export default function AdminInboxDetailPage() {
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">
             {/* Back */}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => router.back()}
               className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
             >
               <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
-            </button>
+            </Button>
             <ChevronRightIcon className="h-4 w-4 text-neutral-300" />
             
             {/* User list */}
-            <button
+            <Button
+              variant="ghost"
               onClick={() => router.push("/admin")}
-              className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+              className="h-auto px-1 py-0 flex justify-center items-center gap-1 hover:bg-neutral-100 rounded transition-colors"
             >
               <UserGroupIcon className="w-5 h-5 text-neutral-600" />
               <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
-            </button>
+            </Button>
             <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
             
             <div className="flex justify-center items-center gap-1">

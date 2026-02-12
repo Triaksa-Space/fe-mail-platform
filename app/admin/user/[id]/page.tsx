@@ -12,6 +12,7 @@ import PaginationComponent from "@/components/PaginationComponent";
 import { ArrowPathIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import { Button } from "@/components/ui/button";
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -257,22 +258,25 @@ export default function UserDetailPage() {
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">
             {/* Back */}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => router.back()}
               className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
             >
               <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
-            </button>
+            </Button>
             <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
             {/* User list */}
-            <button
+            <Button
+              variant="ghost"
               onClick={() => router.push("/admin")}
-              className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+              className="h-auto px-1 py-0 flex justify-center items-center gap-1 hover:bg-neutral-100 rounded transition-colors"
             >
               <UserGroupIcon className="w-4 h-4 text-neutral-600" />
               <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">User list</div>
-            </button>
+            </Button>
             <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
             {/* Current user email */}
@@ -285,7 +289,9 @@ export default function UserDetailPage() {
           </div>
 
           {/* Refresh Button */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleRefresh}
             disabled={isRefreshingInbox || isRefreshingSent}
             className={cn(
@@ -294,7 +300,7 @@ export default function UserDetailPage() {
             )}
           >
             <ArrowPathIcon className={cn("w-4 h-4 text-neutral-800", (isRefreshingInbox || isRefreshingSent) && "animate-spin")} />
-          </button>
+          </Button>
         </div>
 
         {/* Email Lists - Side by Side */}
@@ -408,9 +414,10 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
   const isUnread = !email.IsRead;
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
-      className={cn(CARD_STYLES.interactive, "self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
+      className={cn(CARD_STYLES.interactive, "h-auto self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
         <div className="self-stretch inline-flex justify-start items-start gap-4">
@@ -444,7 +451,7 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
           {email.Preview || "No preview available"}
         </div>
       </div>
-    </button>
+    </Button>
   );
 };
 
@@ -456,9 +463,10 @@ interface SentEmailRowProps {
 
 const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
-      className={cn(CARD_STYLES.interactive, "self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
+      className={cn(CARD_STYLES.interactive, "h-auto self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
         <div className="self-stretch inline-flex justify-start items-start gap-4">
@@ -480,7 +488,7 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
           {email.body_preview || "No preview available"}
         </div>
       </div>
-    </button>
+    </Button>
   );
 };
 

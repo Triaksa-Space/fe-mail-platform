@@ -15,6 +15,7 @@ import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 // API response interfaces (snake_case from backend)
@@ -200,7 +201,9 @@ export default function AdminAllInboxPage() {
           <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
             All inbox
           </div>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={handleRefresh}
             disabled={isRefreshing}
             className={cn(
@@ -212,7 +215,7 @@ export default function AdminAllInboxPage() {
             <ArrowPathIcon
               className={cn("w-4 h-4 text-neutral-800", isRefreshing && "animate-spin")}
             />
-          </button>
+          </Button>
         </div>
 
         {/* Main Content - Full width single view */}
@@ -223,22 +226,25 @@ export default function AdminAllInboxPage() {
               {/* Breadcrumb Navigation */}
               <div className="self-stretch inline-flex justify-start items-center gap-1">
                 {/* Back */}
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleClosePreview}
                   className="w-8 h-8 rounded flex justify-center items-center hover:bg-neutral-100 transition-colors"
                 >
                   <ArrowLeftIcon className="w-4 h-4 text-neutral-600" />
-                </button>
+                </Button>
                 <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
                 {/* All inbox */}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={handleClosePreview}
-                  className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
+                  className="h-auto flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors"
                 >
                   <Inbox className="w-4 h-4 text-neutral-600" />
                   <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">All inbox</span>
-                </button>
+                </Button>
                 <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
 
                 {/* Current email subject */}
@@ -464,11 +470,12 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
   const isUnread = !email.is_read;
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
       className={cn(
         isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
-        "self-stretch w-full text-left px-4 py-2 inline-flex justify-start items-center gap-2"
+        "h-auto self-stretch w-full text-left px-4 py-2 inline-flex justify-start items-center gap-2"
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
@@ -511,7 +518,7 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
           </div>
         </div>
       </div>
-    </button>
+    </Button>
   );
 };
 

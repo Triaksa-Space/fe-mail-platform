@@ -185,13 +185,13 @@ const SentList: React.FC<SentListProps> = ({
 
       {/* Mobile Floating Compose Button - hidden when compose modal is open */}
       {onCompose && !isComposeOpen && (
-        <button
+        <Button
           onClick={onCompose}
-          className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
+          className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
         >
           <PenSquare className="w-5 h-5 text-white" />
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Compose</span>
-        </button>
+        </Button>
       )}
     </div>
   );
@@ -206,13 +206,13 @@ interface SentRowProps {
 
 const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelected, onClick }) {
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={onClick}
         className={cn(
-          "w-full lg:w-[358px] px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+          "w-full lg:w-[358px] h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2",
           "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
           "transition-all",
-        // Hover/focus states
         "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
         isSelected && "bg-blue-50",
       )}
@@ -245,7 +245,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
           {email.snippet || "No preview available"}
         </p>
       </div>
-    </button>
+    </Button>
   );
 });
 

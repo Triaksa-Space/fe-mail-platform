@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { FaqCategory, FaqItem } from "@/lib/faqData";
 
 interface FaqSectionProps {
@@ -30,9 +31,10 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
         !isLast && "border-b border-neutral-200"
       )}
     >
-      <button
+      <Button
+        variant="ghost"
         onClick={onToggle}
-        className="self-stretch inline-flex justify-start items-center gap-3 overflow-hidden w-full text-left"
+        className="self-stretch h-auto px-0 justify-start gap-3 overflow-hidden w-full text-left hover:bg-transparent"
         aria-expanded={isOpen}
       >
         <div className="flex-1 flex justify-start items-center gap-3">
@@ -48,7 +50,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
             )}
           />
         </div>
-      </button>
+      </Button>
 
       {/* Answer - Expanded State */}
       <div

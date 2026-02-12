@@ -13,6 +13,7 @@ import { apiClient } from "@/lib/api-client";
 import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
 
 interface PrivacyResponse {
   content: string;
@@ -174,7 +175,8 @@ const AdminPrivacyPageContent: React.FC = () => {
           </div>
           {isEditing ? (
             <div className="flex items-center gap-3">
-              <button
+              <Button
+                variant="outline"
                 onClick={handleCancel}
                 disabled={isSaving}
                 className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors disabled:opacity-50"
@@ -183,8 +185,8 @@ const AdminPrivacyPageContent: React.FC = () => {
                 <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">
                   Cancel
                 </span>
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleSave}
                 disabled={isSaving || isLoading}
                 className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-2 overflow-hidden transition-colors"
@@ -195,10 +197,11 @@ const AdminPrivacyPageContent: React.FC = () => {
                 <span className="text-center text-base font-medium font-['Roboto'] leading-4">
                   {isSaving ? "Saving..." : "Save Changes"}
                 </span>
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
+            <Button
+              variant="outline"
               onClick={handleEdit}
               className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
             >
@@ -206,7 +209,7 @@ const AdminPrivacyPageContent: React.FC = () => {
               <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">
                 Edit
               </span>
-            </button>
+            </Button>
           )}
         </div>
 

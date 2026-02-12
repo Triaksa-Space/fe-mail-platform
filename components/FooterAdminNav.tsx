@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Settings, Plus, Database, LayoutGrid } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { Button } from "@/components/ui/button";
 
 const buttonClass = (isActive: boolean) => `
   flex-1 flex flex-col items-center justify-center py-2 text-black transition-colors
@@ -37,34 +38,38 @@ const FooterAdminNav = () => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 border-t bg-background">
       <div className="flex">
-        <button
+        <Button
+          variant="ghost"
           className={buttonClass(isAdminActive)}
           onClick={() => handleNavigation('/admin')}
         >
           <LayoutGrid className="h-5 w-5" />
           <span className="text-xs mt-1">Dashboard</span>
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
           className={buttonClass(pathname === '/admin/create-single-email')}
           onClick={() => handleNavigation('/admin/create-single-email')}
         >
           <Plus className="h-5 w-5" />
           <span className="text-xs mt-1">Create Single</span>
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
           className={buttonClass(pathname === '/admin/create-bulk-email')}
           onClick={() => handleNavigation('/admin/create-bulk-email')}
         >
           <Database className="h-5 w-5" />
           <span className="text-xs mt-1">Create Bulk</span>
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
           className={buttonClass(pathname === '/admin/settings' || pathname === '/admin/settings/account')}
           onClick={() => handleNavigation('/admin/settings')}
         >
           <Settings className="h-5 w-5" />
           <span className="text-xs mt-1">Settings</span>
-        </button>
+        </Button>
       </div>
     </footer>
   );
