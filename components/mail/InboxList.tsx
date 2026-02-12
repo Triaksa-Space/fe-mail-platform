@@ -4,7 +4,7 @@ import React, { memo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { EnvelopeOpenIcon } from "@heroicons/react/24/solid"
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 import { Mail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
@@ -39,6 +39,17 @@ const InboxList: React.FC<InboxListProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   sentCount = 0,
 }) => {
+  const formatUserEmail = (email: string) => {
+    if (!email.includes("@")) return email;
+    if (email.length <= 24) return email;
+
+    const [localPart, domainPart] = email.split("@");
+    if (!domainPart) return email;
+
+    const truncatedDomain = `${domainPart.slice(0, 7)}..`;
+    return `${localPart}@${truncatedDomain}`;
+  };
+
   // Use minimum loading time to prevent skeleton flicker
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
@@ -63,7 +74,7 @@ const InboxList: React.FC<InboxListProps> = ({
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
-        className
+        className,
       )}
       aria-busy={isRefreshing}
     >
@@ -81,8 +92,30 @@ const InboxList: React.FC<InboxListProps> = ({
         <div className="flex items-center gap-3">
           {userEmail && (
             <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">
-              {userEmail}
+              {formatUserEmail(userEmail)}
             </span>
+          )}
+          {emails.length === 0 && (
+            <button
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              className={cn(
+                "w-8 h-8 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden",
+                isRefreshing
+                  ? "bg-neutral-100 cursor-not-allowed"
+                  : "bg-white hover:bg-neutral-50",
+              )}
+              aria-label="Refresh"
+            >
+              <ArrowPathIcon
+                className={cn(
+                  "h-4 w-4",
+                  isRefreshing
+                    ? "text-neutral-300 animate-spin"
+                    : "text-neutral-800",
+                )}
+              />
+            </button>
           )}
         </div>
       </div>
@@ -97,13 +130,15 @@ const InboxList: React.FC<InboxListProps> = ({
               "w-10 h-10 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden",
               isRefreshing
                 ? "bg-neutral-100 cursor-not-allowed"
-                : "bg-white hover:bg-neutral-50"
+                : "bg-white hover:bg-neutral-50",
             )}
           >
             <ArrowPathIcon
               className={cn(
                 "h-4 w-4",
-                isRefreshing ? "text-neutral-300 animate-spin" : "text-neutral-800"
+                isRefreshing
+                  ? "text-neutral-300 animate-spin"
+                  : "text-neutral-800",
               )}
             />
           </button>
@@ -118,7 +153,9 @@ const InboxList: React.FC<InboxListProps> = ({
       {/* Loading indicator when refreshing */}
       {isRefreshing && emails.length > 0 && (
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
-          <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
+          <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">
+            Loading
+          </span>
           <ArrowPathIcon className="w-4 h-4 text-primary-500 animate-spin" />
         </div>
       )}
@@ -126,9 +163,9 @@ const InboxList: React.FC<InboxListProps> = ({
       {/* Email List with fade-in transition */}
       <div
         className={cn(
-          "flex-1 flex flex-col overflow-y-auto relative pb-24 lg:pb-0",
+          "flex-1 flex flex-col overflow-y-auto relative lg:pb-0",
           // Fade-in animation when transitioning from loading
-          isTransitioning && "animate-fade-in"
+          isTransitioning && "animate-fade-in",
         )}
       >
         {error ? (
@@ -145,18 +182,20 @@ const InboxList: React.FC<InboxListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className={cn(
-            "flex-1 mx-4 lg:mx-0 px-3 py-12 flex flex-col justify-center items-center h-full px-4 gap-3",
-            // Frosted glass on mobile
-            "rounded-2xl bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
-            // Desktop styling
-            "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-neutral-200 lg:border-none"
-          )}>
+          <div
+            className={cn(
+              "flex-1 w-full px-3 py-12 flex flex-col justify-center items-center gap-3",
+              "rounded-[8px] border border-neutral-200 shadow-[0_1px_2px_0_rgba(16,24,40,0.04),0_1px_2px_0_rgba(16,24,40,0.04)]",
+              "bg-gradient-to-b from-white via-white/90 to-transparent lg:bg-white",
+            )}
+          >
             <div className="w-10 h-10 flex items-center justify-center">
               <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
             </div>
             <div className="flex flex-col justify-start items-center gap-1">
-              <p className="text-base font-medium text-neutral-800 font-['Roboto'] leading-6">No Email Yet</p>
+              <p className="text-base font-medium text-neutral-800 font-['Roboto'] leading-6">
+                No Email Yet
+              </p>
               <p className="text-center text-xs font-normal text-neutral-600 font-['Roboto'] leading-5">
                 There are no email in your inbox
                 <br />
@@ -191,7 +230,11 @@ interface InboxRowProps {
   onClick: () => void;
 }
 
-const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSelected, onClick }) {
+const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
+  email,
+  isSelected,
+  onClick,
+}) {
   const isUnread = email.unread;
 
   return (
@@ -207,7 +250,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
         isUnread ? "lg:bg-white" : "lg:bg-neutral-100",
         // Hover/focus states
         "hover:bg-white/90 lg:hover:bg-blue-100 focus:outline-none focus:bg-white/90 lg:focus:bg-blue-100",
-        isSelected && "bg-white/90 lg:bg-blue-100"
+        isSelected && "bg-white/90 lg:bg-blue-100",
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
@@ -215,17 +258,25 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
           <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
             {/* Top row: Sender + Time */}
             <div className="self-stretch inline-flex justify-between items-center">
-              <span className={cn(
-                "text-base font-['Roboto'] leading-6 truncate",
-                isUnread ? "font-semibold text-neutral-800" : "font-normal text-neutral-600"
-              )}>
+              <span
+                className={cn(
+                  "text-base font-['Roboto'] leading-6 truncate",
+                  isUnread
+                    ? "font-semibold text-neutral-800"
+                    : "font-normal text-neutral-600",
+                )}
+              >
                 {email.from || "Unknown Sender"}
               </span>
               <div className="flex justify-end items-center gap-0.5">
-                <span className={cn(
-                  "text-xs font-['Roboto'] leading-5 line-clamp-1",
-                  isUnread ? "font-semibold text-neutral-800" : "font-normal text-neutral-600"
-                )}>
+                <span
+                  className={cn(
+                    "text-xs font-['Roboto'] leading-5 line-clamp-1",
+                    isUnread
+                      ? "font-semibold text-neutral-800"
+                      : "font-normal text-neutral-600",
+                  )}
+                >
                   {email.date}
                 </span>
                 {isUnread && (
@@ -235,10 +286,14 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
             </div>
 
             {/* Subject line */}
-            <p className={cn(
-              "self-stretch text-sm font-['Roboto'] leading-5 truncate text-left",
-              isUnread ? "font-semibold text-neutral-800" : "font-normal text-neutral-600"
-            )}>
+            <p
+              className={cn(
+                "self-stretch text-sm font-['Roboto'] leading-5 truncate text-left",
+                isUnread
+                  ? "font-semibold text-neutral-800"
+                  : "font-normal text-neutral-600",
+              )}
+            >
               {email.subject || "(No subject)"}
             </p>
           </div>
@@ -254,6 +309,3 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({ email, isSele
 });
 
 export default InboxList;
-
-
-

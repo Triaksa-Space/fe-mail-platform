@@ -7,7 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
-import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
+import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/components/ui/button";
 
 interface EmailBindingFormProps {
   initialEmail?: string;
@@ -135,7 +136,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
 
       {/* Change Email Button (when linked and not editing) */}
       {isLinked && !isEditing ? (
-        <button
+        <Button
           type="button"
           onClick={handleChangeEmail}
           className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
@@ -144,10 +145,10 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">
             Change Email
           </span>
-        </button>
+        </Button>
       ) : (
         /* Save Email Button (when not linked or editing) */
-        <button
+        <Button
           type="submit"
           disabled={isLoading || !isFormValid}
           className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
@@ -156,7 +157,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           <span className="text-center text-base font-medium font-['Roboto'] leading-4 text-white">
             {isLoading ? "Saving..." : "Save email"}
           </span>
-        </button>
+        </Button>
       )}
     </form>
   );

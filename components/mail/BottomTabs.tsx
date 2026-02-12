@@ -2,9 +2,19 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Inbox, Settings, LogOut } from "lucide-react";
+import {
+  InboxIcon as InboxOutlineIcon,
+  PaperAirplaneIcon as PaperAirplaneOutlineIcon,
+  Cog6ToothIcon as SettingsOutlineIcon,
+  ArrowLeftEndOnRectangleIcon as LogoutOutlineIcon,
+} from "@heroicons/react/24/outline";
+import {
+  InboxIcon as InboxSolidIcon,
+  PaperAirplaneIcon as PaperAirplaneSolidIcon,
+  Cog6ToothIcon as SettingsSolidIcon,
+  ArrowLeftEndOnRectangleIcon as LogoutSolidIcon,
+} from "@heroicons/react/24/solid";
 import { ViewType } from "./types";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
 
 interface BottomTabsProps {
   currentView: ViewType;
@@ -28,7 +38,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
       )}
     >
       <nav
-        className="flex items-center justify-start px-4 py-2 gap-4 rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
+        className="flex items-center justify-start px-4 py-2 gap-4 rounded-xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
       >
         {/* Inbox tab */}
         <button
@@ -40,7 +50,11 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
               : "text-neutral-600 hover:text-neutral-700"
           )}
         >
-          <Inbox className="w-5 h-5" />
+          {currentView === "inbox" ? (
+            <InboxSolidIcon className="w-5 h-5" />
+          ) : (
+            <InboxOutlineIcon className="w-5 h-5" />
+          )}
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "inbox" ? "font-semibold" : "font-normal"
@@ -57,7 +71,11 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
               : "text-neutral-600 hover:text-neutral-700"
           )}
         >
-          <PaperAirplaneIcon className="w-5 h-5" />
+          {currentView === "sent" ? (
+            <PaperAirplaneSolidIcon className="w-5 h-5" />
+          ) : (
+            <PaperAirplaneOutlineIcon className="w-5 h-5" />
+          )}
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "sent" ? "font-semibold" : "font-normal"
@@ -74,7 +92,11 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
               : "text-neutral-600 hover:text-neutral-700"
           )}
         >
-          <Settings className="w-5 h-5" />
+          {currentView === "settings" ? (
+            <SettingsSolidIcon className="w-5 h-5" />
+          ) : (
+            <SettingsOutlineIcon className="w-5 h-5" />
+          )}
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "settings" ? "font-semibold" : "font-normal"
@@ -86,7 +108,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           onClick={onLogout}
           className="w-14 flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-700"
         >
-          <LogOut className="w-5 h-5" />
+          <LogoutSolidIcon className="w-5 h-5" />
           <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>
         </button>
       </nav>

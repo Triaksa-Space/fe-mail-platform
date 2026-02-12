@@ -42,6 +42,17 @@ const SentList: React.FC<SentListProps> = ({
   userEmail,
   isComposeOpen = false,
 }) => {
+  const formatUserEmail = (email: string) => {
+    if (!email.includes("@")) return email;
+    if (email.length <= 24) return email;
+
+    const [localPart, domainPart] = email.split("@");
+    if (!domainPart) return email;
+
+    const truncatedDomain = `${domainPart.slice(0, 12)}..`;
+    return `${localPart}@${truncatedDomain}`;
+  };
+
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
   });
@@ -82,7 +93,7 @@ const SentList: React.FC<SentListProps> = ({
         <div className="flex items-center gap-3">
           {userEmail && (
             <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">
-              {userEmail}
+              {formatUserEmail(userEmail)}
             </span>
           )}
         </div>

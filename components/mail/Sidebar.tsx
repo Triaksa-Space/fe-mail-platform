@@ -5,8 +5,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   PaperAirplaneIcon,
+  Cog6ToothIcon,
+  EnvelopeIcon
 } from "@heroicons/react/24/outline";
-import { EnvelopeIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 import {
   EnvelopeIcon as EnvelopeIconSolid,
   PaperAirplaneIcon as PaperAirplaneIconSolid,
@@ -72,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => onViewChange(item.id)}
                 className={cn(
                   "self-stretch px-3 py-1 inline-flex justify-between items-center transition-colors",
-                  isActive && "bg-blue-100 rounded-xl"
+                  isActive && "bg-primary-50 rounded-xl"
                 )}
               >
                 <div className="flex-1 flex justify-start items-center gap-5">
