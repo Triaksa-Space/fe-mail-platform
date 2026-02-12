@@ -325,11 +325,11 @@ export default function ForgotPasswordClient() {
   const isFormValid = email.trim() !== "" && bindingEmail.trim() !== "";
 
   useEffect(() => {
-    if (!requestBlockedUntil) return;
+    if (!requestBlockedUntil && !requestError) return;
     setRequestBlockedUntil(null);
     setRequestCountdown(0);
     if (requestError) setRequestError("");
-  }, [email, bindingEmail, requestBlockedUntil, requestError]);
+  }, [email, bindingEmail]);
 
   return (
     <>
