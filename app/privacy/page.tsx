@@ -200,8 +200,10 @@ const PrivacyPage: React.FC = () => {
           {/* Scroll to Top Button - Fixed position outside scroll container */}
           {showScrollTop && (
             <div>
-              <div className="fixed bottom-4 right-4 md:right-8 z-20">
-                <ScrollToTopButton onClick={scrollToTop} />
+              <div className="mb-4 lg:mb-8">
+                <div className="fixed bottom-4 right-4 md:right-8 z-20">
+                  <ScrollToTopButton onClick={scrollToTop} />
+                </div>
               </div>
             </div>
           )}
@@ -216,6 +218,3 @@ const PrivacyPage: React.FC = () => {
 };
 
 export default PrivacyPage;
-
-
-

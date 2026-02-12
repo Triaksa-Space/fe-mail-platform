@@ -199,9 +199,11 @@ const TermsPage: React.FC = () => {
           </div>
           {/* Scroll to Top Button - Fixed position outside scroll container */}
           {showScrollTop && (
+            <div className="mb-4 lg:mb-8">
               <div className="fixed bottom-4 right-4 md:right-8 z-20">
                 <ScrollToTopButton onClick={scrollToTop} />
               </div>
+            </div>
           )}
 
           <div className="pb-4 pt-4 md:p-8 pt-4 md:pt-8">
@@ -214,6 +216,3 @@ const TermsPage: React.FC = () => {
 };
 
 export default TermsPage;
-
-
-
