@@ -79,7 +79,7 @@ const InboxList: React.FC<InboxListProps> = ({
       aria-busy={isRefreshing}
     >
       {/* Mobile Header with Logo */}
-      <div className="lg:hidden px-4 py-3 flex items-center justify-between relative z-20">
+      <div className="lg:hidden flex items-center justify-between relative z-20">
         <div className="flex items-center gap-4">
           <Image
             src="/mailria.png"
@@ -95,28 +95,26 @@ const InboxList: React.FC<InboxListProps> = ({
               {formatUserEmail(userEmail)}
             </span>
           )}
-          {emails.length === 0 && (
-            <button
-              onClick={onRefresh}
-              disabled={isRefreshing}
+          <button
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            className={cn(
+              "w-8 h-8 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden",
+              isRefreshing
+                ? "bg-neutral-100 cursor-not-allowed"
+                : "bg-white hover:bg-neutral-50",
+            )}
+            aria-label="Refresh"
+          >
+            <ArrowPathIcon
               className={cn(
-                "w-8 h-8 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden",
+                "h-4 w-4",
                 isRefreshing
-                  ? "bg-neutral-100 cursor-not-allowed"
-                  : "bg-white hover:bg-neutral-50",
+                  ? "text-neutral-300 animate-spin"
+                  : "text-neutral-800",
               )}
-              aria-label="Refresh"
-            >
-              <ArrowPathIcon
-                className={cn(
-                  "h-4 w-4",
-                  isRefreshing
-                    ? "text-neutral-300 animate-spin"
-                    : "text-neutral-800",
-                )}
-              />
-            </button>
-          )}
+            />
+          </button>
         </div>
       </div>
 
@@ -163,7 +161,7 @@ const InboxList: React.FC<InboxListProps> = ({
       {/* Email List with fade-in transition */}
       <div
         className={cn(
-          "flex-1 flex flex-col overflow-y-auto relative lg:pb-0",
+          "flex-1 flex flex-col overflow-y-auto relative mb-10 lg:mb-0 lg:pb-0",
           // Fade-in animation when transitioning from loading
           isTransitioning && "animate-fade-in",
         )}
@@ -185,7 +183,7 @@ const InboxList: React.FC<InboxListProps> = ({
           <div
             className={cn(
               "flex-1 w-full px-3 py-12 flex flex-col justify-center items-center gap-3",
-              "rounded-[8px] border border-neutral-200 shadow-[0_1px_2px_0_rgba(16,24,40,0.04),0_1px_2px_0_rgba(16,24,40,0.04)]",
+              "rounded-xl border border-neutral-200 shadow-[0_1px_2px_0_rgba(16,24,40,0.04),0_1px_2px_0_rgba(16,24,40,0.04)]",
               "bg-gradient-to-b from-white via-white/90 to-transparent lg:bg-white",
             )}
           >
@@ -208,7 +206,7 @@ const InboxList: React.FC<InboxListProps> = ({
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.email_encode_id}
-            className="w-full flex flex-col gap-2 px-4 lg:px-0"
+            className="w-full flex flex-col gap-2 lg:px-0"
             renderItem={(email) => (
               <InboxRow
                 email={email}
@@ -241,16 +239,12 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
     <button
       onClick={onClick}
       className={cn(
-        "w-full px-4 py-2 rounded-2xl flex justify-start items-center gap-2 transition-all",
-        // Frosted glass effect on mobile
-        "bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
-        // Desktop styling
-        "lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-neutral-200 lg:border-none lg:rounded-xl",
-        // Unread state
-        isUnread ? "lg:bg-white" : "lg:bg-neutral-100",
+        "w-full lg:w-[358px] px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+        "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
+        "transition-all",
         // Hover/focus states
-        "hover:bg-white/90 lg:hover:bg-blue-100 focus:outline-none focus:bg-white/90 lg:focus:bg-blue-100",
-        isSelected && "bg-white/90 lg:bg-blue-100",
+        "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
+        isSelected && "bg-blue-50",
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">

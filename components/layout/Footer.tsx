@@ -40,11 +40,6 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
       )}
     >
       <div className="relative w-full text-center justify-center items-center">
-        {/* Background glow */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[250%] h-20 bg-gradient-to-t from-primary-200 via-primary-100 to-transparent rounded-full blur-2xl opacity-60 pointer-events-none"
-          aria-hidden="true"
-        />
         <nav className="relative w-full max-w-sm mx-auto flex justify-center items-start gap-6">
           {links.map((link) =>
             link.external ? (
@@ -53,7 +48,7 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors leading-5"
+                className="relative z-10 text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors leading-5"
               >
                 {link.label}
               </a>
@@ -61,12 +56,23 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors leading-5"
+                className="relative z-10 text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors leading-5"
               >
                 {link.label}
               </Link>
             ),
           )}
+          {/* Background glow */}
+          <div className="absolute left-1/2 -bottom-6 -translate-x-1/2 w-[600%] h-16 pointer-events-none z-0">
+            <div
+              className={cn(
+                "w-full h-full rounded-full",
+                "bg-[radial-gradient(ellipse_at_center,_theme(colors.primary.200/0.45)_0%,_theme(colors.primary.200/0.25)_35%,_theme(colors.primary.100/0.12)_55%,_transparent_75%)]",
+                "blur-2xl opacity-70",
+              )}
+              aria-hidden="true"
+            />
+          </div>
         </nav>
       </div>
     </footer>
@@ -74,4 +80,3 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
 };
 
 export default Footer;
-

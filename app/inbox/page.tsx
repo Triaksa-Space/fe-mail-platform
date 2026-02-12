@@ -1,6 +1,12 @@
 "use client";
 
-import React, { Suspense, useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  Suspense,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { apiClient } from "@/lib/api-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -105,8 +111,11 @@ const InboxPageContent: React.FC = () => {
   const [isSentRefreshing, setIsSentRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sentError, setSentError] = useState<string | null>(null);
-  const [selectedSentEmail, setSelectedSentEmail] = useState<SentMail | null>(null);
-  const [sentEmailDetail, setSentEmailDetail] = useState<ApiSentEmailDetail | null>(null);
+  const [selectedSentEmail, setSelectedSentEmail] = useState<SentMail | null>(
+    null,
+  );
+  const [sentEmailDetail, setSentEmailDetail] =
+    useState<ApiSentEmailDetail | null>(null);
   const [isSentDetailLoading, setIsSentDetailLoading] = useState(false);
 
   // Refs for managing requests
@@ -161,7 +170,8 @@ const InboxPageContent: React.FC = () => {
     if (!authLoaded || !emailParam || emails.length === 0) return;
 
     const emailToSelect = emails.find(
-      (email) => email.email_encode_id === emailParam || email.id === emailParam
+      (email) =>
+        email.email_encode_id === emailParam || email.id === emailParam,
     );
 
     if (emailToSelect) {
@@ -199,7 +209,14 @@ const InboxPageContent: React.FC = () => {
 
   // Activity listeners
   useEffect(() => {
-    const events = ["mousedown", "mousemove", "keypress", "scroll", "touchstart", "click"];
+    const events = [
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+      "click",
+    ];
 
     events.forEach((event) => {
       document.addEventListener(event, updateLastActivity, { passive: true });
@@ -232,59 +249,65 @@ const InboxPageContent: React.FC = () => {
   };
 
   // Fetch sent emails list
-  const fetchSentEmails = useCallback(async (isRefresh = false) => {
-    if (!token) return;
+  const fetchSentEmails = useCallback(
+    async (isRefresh = false) => {
+      if (!token) return;
 
-    try {
-      if (isRefresh) {
-        setIsSentRefreshing(true);
-      } else {
-        setIsSentLoading(true);
+      try {
+        if (isRefresh) {
+          setIsSentRefreshing(true);
+        } else {
+          setIsSentLoading(true);
+        }
+        setSentError(null);
+
+        // Try the sent emails list endpoint
+        const response = await apiClient.get("/email/sent/list");
+
+        if (response.data && Array.isArray(response.data.data)) {
+          const transformedEmails = response.data.data.map(
+            (email: ApiSentEmail) => transformSentEmail(email),
+          );
+          setSentEmails(transformedEmails);
+        } else if (response.data && Array.isArray(response.data)) {
+          const transformedEmails = response.data.map((email: ApiSentEmail) =>
+            transformSentEmail(email),
+          );
+          setSentEmails(transformedEmails);
+        } else {
+          setSentEmails([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch sent emails:", err);
+        setSentError("Failed to load sent emails");
+      } finally {
+        setIsSentLoading(false);
+        setIsSentRefreshing(false);
       }
-      setSentError(null);
-
-      // Try the sent emails list endpoint
-      const response = await apiClient.get("/email/sent/list");
-
-      if (response.data && Array.isArray(response.data.data)) {
-        const transformedEmails = response.data.data.map((email: ApiSentEmail) =>
-          transformSentEmail(email)
-        );
-        setSentEmails(transformedEmails);
-      } else if (response.data && Array.isArray(response.data)) {
-        const transformedEmails = response.data.map((email: ApiSentEmail) =>
-          transformSentEmail(email)
-        );
-        setSentEmails(transformedEmails);
-      } else {
-        setSentEmails([]);
-      }
-    } catch (err) {
-      console.error("Failed to fetch sent emails:", err);
-      setSentError("Failed to load sent emails");
-    } finally {
-      setIsSentLoading(false);
-      setIsSentRefreshing(false);
-    }
-  }, [token]);
+    },
+    [token],
+  );
 
   // Fetch sent email detail
-  const fetchSentEmailDetail = useCallback(async (emailId: string) => {
-    if (!token) return;
+  const fetchSentEmailDetail = useCallback(
+    async (emailId: string) => {
+      if (!token) return;
 
-    try {
-      setIsSentDetailLoading(true);
-      const response = await apiClient.get(`/email/sent/detail/${emailId}`);
+      try {
+        setIsSentDetailLoading(true);
+        const response = await apiClient.get(`/email/sent/detail/${emailId}`);
 
-      if (response.data) {
-        setSentEmailDetail(response.data);
+        if (response.data) {
+          setSentEmailDetail(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch sent email detail:", err);
+      } finally {
+        setIsSentDetailLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to fetch sent email detail:", err);
-    } finally {
-      setIsSentDetailLoading(false);
-    }
-  }, [token]);
+    },
+    [token],
+  );
 
   // Fetch emails
   const fetchEmails = useCallback(
@@ -298,7 +321,7 @@ const InboxPageContent: React.FC = () => {
         const response = await apiClient.get("/email/by_user", { signal });
 
         const transformedEmails = response.data.map((email: Email) =>
-          transformEmailToMail(email)
+          transformEmailToMail(email),
         );
         setEmails(transformedEmails);
         setError(null);
@@ -312,7 +335,7 @@ const InboxPageContent: React.FC = () => {
         setIsLoading(false);
       }
     },
-    [token, isUserIdle]
+    [token, isUserIdle],
   );
 
   // Manual refresh
@@ -363,7 +386,17 @@ const InboxPageContent: React.FC = () => {
       if (abortControllerRef.current) abortControllerRef.current.abort();
       isRequestInProgressRef.current = false;
     };
-  }, [authLoaded, storedToken, roleId, sentStatus, token, router, setEmail, fetchEmails, isUserIdle]);
+  }, [
+    authLoaded,
+    storedToken,
+    roleId,
+    sentStatus,
+    token,
+    router,
+    setEmail,
+    fetchEmails,
+    isUserIdle,
+  ]);
 
   // Fetch sent emails when view changes to "sent"
   useEffect(() => {
@@ -543,7 +576,7 @@ const InboxPageContent: React.FC = () => {
           onViewChange={handleViewChange}
           onLogout={handleLogout}
           sentCount={sentCount}
-          unreadCount={emails.filter(email => email.unread).length}
+          unreadCount={emails.filter((email) => email.unread).length}
           userEmail={userEmail}
           className="hidden lg:flex h-full"
         />
@@ -558,10 +591,16 @@ const InboxPageContent: React.FC = () => {
       </div>
 
       {/* Background glow */}
-      <div
-        className="lg:hidden fixed bottom-0 left-0 right-0 -translate-x-1/2 w-[250%] h-20 bg-gradient-to-t from-primary-200 via-primary-100 to-transparent rounded-full blur-2xl opacity-60 pointer-events-none z-40"
-        aria-hidden="true"
-      />
+      <div className="lg:hidden fixed -bottom-12 left-1/2 -translate-x-1/2 w-[160%] h-44 pointer-events-none z-40">
+        <div
+          className="
+      w-full h-full rounded-full
+      bg-[radial-gradient(ellipse_at_center,_theme(colors.primary.200/0.45)_0%,_theme(colors.primary.200/0.25)_35%,_theme(colors.primary.100/0.12)_55%,_transparent_75%)]
+      blur-3xl
+      opacity-70
+    "
+        />
+      </div>
 
       {/* Mobile Bottom Tabs */}
       <BottomTabs
@@ -579,7 +618,10 @@ const InboxPageContent: React.FC = () => {
         maxDailySend={3}
         replyTo={
           selectedEmail
-            ? { email: selectedEmail.fromEmail || selectedEmail.from, subject: selectedEmail.subject }
+            ? {
+                email: selectedEmail.fromEmail || selectedEmail.from,
+                subject: selectedEmail.subject,
+              }
             : undefined
         }
       />

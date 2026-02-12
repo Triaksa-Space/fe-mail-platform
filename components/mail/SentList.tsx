@@ -9,8 +9,8 @@ import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { LazyList } from "@/components/VirtualList";
-import { ArrowPathIcon } from "@heroicons/react/24/outline"
-import { EnvelopeOpenIcon } from "@heroicons/react/24/solid"
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
 interface SentListProps {
   emails: SentMail[];
@@ -75,12 +75,12 @@ const SentList: React.FC<SentListProps> = ({
         fullWidth
           ? "w-full"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
-        className
+        className,
       )}
       aria-busy={isRefreshing}
     >
       {/* Mobile Header with Logo */}
-      <div className="lg:hidden px-4 py-3 flex items-center justify-between relative z-20">
+      <div className="lg:hidden flex items-center justify-between relative z-20">
         <div className="flex items-center gap-4">
           <Image
             src="/mailria.png"
@@ -101,18 +101,19 @@ const SentList: React.FC<SentListProps> = ({
 
       {/* Desktop Header */}
       <div className="hidden lg:flex relative z-20">
-        <div className="h-10 flex items-center justify-between w-full">
-          {onCompose && (
-            <Button
-              onClick={onCompose}
-              className="h-10 px-4 py-2.5"
-            >
-              <PenSquare className="h-4 w-4 mr-1.5 text-white" />
-              <span className="text-base font-medium leading-4">Compose</span>
-            </Button>
-          )}
+        <div className="self-stretch h-10 inline-flex justify-between items-center w-full">
+          <div className="inline-flex items-center gap-2">
+            {onCompose && (
+              <Button onClick={onCompose} className="h-10 px-4 py-2.5">
+                <PenSquare className="h-4 w-4 mr-1.5 text-white" />
+                <span className="text-base font-medium leading-4">
+                  Compose
+                </span>
+              </Button>
+            )}
+          </div>
           {userEmail && (
-            <span className="text-base font-semibold text-neutral-800 truncate max-w-[220px]">
+            <span className="text-base font-semibold font-['Roboto'] leading-6 text-neutral-800 truncate max-w-[220px]">
               {userEmail}
             </span>
           )}
@@ -130,8 +131,8 @@ const SentList: React.FC<SentListProps> = ({
       {/* Email List */}
       <div
         className={cn(
-          "flex-1 flex flex-col overflow-y-auto relative lg:pb-0",
-          isTransitioning && "animate-fade-in"
+          "flex-1 flex flex-col overflow-y-auto relative mb-10 lg:mb-0 lg:pb-0",
+          isTransitioning && "animate-fade-in",
         )}
       >
         {error ? (
@@ -148,13 +149,13 @@ const SentList: React.FC<SentListProps> = ({
             </Button>
           </div>
         ) : emails.length === 0 ? (
-          <div className={cn(
-            "flex-1 mx-4 lg:mx-0 px-3 py-12 flex flex-col justify-center items-center gap-3",
-            // Frosted glass on mobile
-            "rounded-2xl bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
-            // Desktop styling
-            "lg:rounded-xl lg:bg-white lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-neutral-200 lg:border-none"
-          )}>
+          <div
+            className={cn(
+              "flex-1 w-full px-3 py-12 flex flex-col justify-center items-center gap-3",
+              "rounded-xl border border-neutral-200 shadow-[0_1px_2px_0_rgba(16,24,40,0.04),0_1px_2px_0_rgba(16,24,40,0.04)]",
+              "bg-gradient-to-b from-white via-white/90 to-transparent lg:bg-white",
+            )}
+          >
             <div className="w-10 h-10 flex items-center justify-center">
               <EnvelopeOpenIcon className="w-9 h-9 text-neutral-300" />
             </div>
@@ -170,7 +171,7 @@ const SentList: React.FC<SentListProps> = ({
             items={emails}
             batchSize={20}
             getItemKey={(email) => email.id}
-            className="w-full flex flex-col gap-2 px-4 lg:px-0"
+            className="w-full flex flex-col gap-2 lg:px-0"
             renderItem={(email) => (
               <SentRow
                 email={email}
@@ -207,15 +208,13 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
   return (
     <button
       onClick={onClick}
-      className={cn(
-        "w-full px-4 py-2 rounded-2xl inline-flex justify-start items-center gap-2 transition-all",
-        // Frosted glass effect on mobile
-        "bg-white/70 backdrop-blur-xl shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] border border-white/50",
-        // Desktop styling
-        "lg:bg-neutral-100 lg:backdrop-blur-none lg:shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] lg:outline lg:outline-1 lg:outline-offset-[-1px] lg:outline-neutral-200 lg:border-none lg:rounded-xl",
+        className={cn(
+          "w-full lg:w-[358px] px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+          "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
+          "transition-all",
         // Hover/focus states
-        "hover:bg-white/90 lg:hover:bg-blue-100 focus:outline-none focus:bg-white/90 lg:focus:bg-blue-100",
-        isSelected && "bg-white/90 lg:bg-blue-100"
+        "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
+        isSelected && "bg-blue-50",
       )}
     >
       <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
