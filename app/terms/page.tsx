@@ -131,7 +131,7 @@ const TermsPage: React.FC = () => {
             <div className="self-stretch inline-flex justify-start items-center gap-2.5">
               <div className="flex justify-start items-center gap-4">
                 <button
-                  onClick={() => router.back()}
+                  onClick={() => router.push("/")}
                   className={cn(
                     "w-10 h-10 bg-white rounded-lg",
                     "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
