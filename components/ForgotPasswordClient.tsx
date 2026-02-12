@@ -295,35 +295,36 @@ export default function ForgotPasswordClient() {
         {/* Main content */}
         <div className="flex-1 flex items-center justify-center w-full max-w-sm z-10">
           {/* Card */}
-          <div className="w-full p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-neutral-200 flex flex-col gap-4">
-            {/* Logo */}
-            <Image
-              src="/mailria.png"
-              alt="Mailria"
-              width={112}
-              height={40}
-              className="h-10 w-28"
-              priority
-            />
+          <div className="w-full bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] border border-neutral-200">
+            <div className="flex flex-col gap-4 p-4 lg:p-6">
+              {/* Logo */}
+              <Image
+                src="/mailria.png"
+                alt="Mailria"
+                width={112}
+                height={40}
+                className="h-10 w-28"
+                priority
+              />
 
-            {/* Success State */}
-            {step === "success" && (
-              <>
-                <div className="text-neutral-800 text-2xl font-medium">Password Reset</div>
-                <div className="flex flex-col items-center py-6">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
+              {/* Success State */}
+              {step === "success" && (
+                <>
+                  <div className="text-neutral-800 text-2xl font-medium">Password Reset</div>
+                  <div className="flex flex-col items-center py-6">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                      <CheckCircle className="w-8 h-8 text-green-600" />
+                    </div>
+                    <h2 className="text-xl font-semibold text-neutral-900 mb-2">Success!</h2>
+                    <p className="text-sm text-neutral-500 text-center mb-6">
+                      Your password has been reset successfully. You can now login with your new password.
+                    </p>
+                    <Button onClick={() => router.push("/")} className="w-full text-base font-medium">
+                      Back to Login
+                    </Button>
                   </div>
-                  <h2 className="text-xl font-semibold text-neutral-900 mb-2">Success!</h2>
-                  <p className="text-sm text-neutral-500 text-center mb-6">
-                    Your password has been reset successfully. You can now login with your new password.
-                  </p>
-                  <Button onClick={() => router.push("/")} className="w-full text-base font-medium">
-                    Back to Login
-                  </Button>
-                </div>
-              </>
-            )}
+                </>
+              )}
 
             {/* Email & Binding Email Step */}
             {step === "email" && (
@@ -521,10 +522,10 @@ export default function ForgotPasswordClient() {
             )}
 
             {/* Reset Password Step */}
-            {step === "reset" && (
-              <>
-                <div className="text-neutral-800 text-2xl font-medium">Set New Password</div>
-                <form onSubmit={handleResetPassword} className="flex flex-col gap-5">
+              {step === "reset" && (
+                <>
+                  <div className="text-neutral-800 text-2xl font-medium">Set New Password</div>
+                  <form onSubmit={handleResetPassword} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
                     <p className="text-sm text-neutral-500">
                       Create a strong password for your account
@@ -619,9 +620,10 @@ export default function ForgotPasswordClient() {
                       {isLoading ? "Resetting..." : "Reset Password"}
                     </Button>
                   </div>
-                </form>
-              </>
-            )}
+                  </form>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
