@@ -22,6 +22,8 @@ export default function LoginPageClient() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [blockedUntil, setBlockedUntil] = useState<Date | null>(null);
+  const [countdown, setCountdown] = useState(0);
 
   const passwordMaskLength = (() => {
     if (!password) return 0;
@@ -48,6 +50,40 @@ export default function LoginPageClient() {
       router.push("/inbox");
     }
   }, [token, roleId, router]);
+
+  useEffect(() => {
+    if (!blockedUntil) return;
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = Math.ceil((blockedUntil.getTime() - now.getTime()) / 1000);
+
+      if (diff <= 0) {
+        setBlockedUntil(null);
+        setCountdown(0);
+      } else {
+        setCountdown(diff);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [blockedUntil]);
+
+  const formatCountdown = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const parseLockoutSeconds = (message?: string) => {
+    if (!message) return null;
+    const minutesMatch = message.match(/(\d+)\s*minutes?/i);
+    const secondsMatch = message.match(/(\d+)\s*seconds?/i);
+    const minutes = minutesMatch ? Number(minutesMatch[1]) : 0;
+    const seconds = secondsMatch ? Number(secondsMatch[1]) : 0;
+    const total = minutes * 60 + seconds;
+    return total > 0 ? total : null;
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -112,8 +148,19 @@ export default function LoginPageClient() {
     } catch (error) {
       let errorMessage = "Invalid email or password";
       if (axios.isAxiosError(error) && error.response?.data) {
-        const data = error.response.data as { message?: string };
-        if (data.message) {
+        const data = error.response.data as { message?: string; blocked_until?: string; error?: string };
+        if (data.blocked_until) {
+          setBlockedUntil(new Date(data.blocked_until));
+          errorMessage = data.message || "Too many failed attempts. Try again in 5 minutes.";
+        } else if (data.error === "AUTH_ACCOUNT_LOCKED") {
+          const lockSeconds = parseLockoutSeconds(data.message);
+          if (lockSeconds) {
+            setBlockedUntil(new Date(Date.now() + lockSeconds * 1000));
+            errorMessage = data.message || "Account temporarily locked.";
+          } else if (data.message) {
+            errorMessage = data.message;
+          }
+        } else if (data.message) {
           errorMessage = data.message;
         }
       }
@@ -124,6 +171,12 @@ export default function LoginPageClient() {
   };
 
   const isFormValid = loginEmail && password;
+
+  useEffect(() => {
+    if (!blockedUntil) return;
+    setBlockedUntil(null);
+    setCountdown(0);
+  }, [loginEmail, password]);
 
   return (
     <>
@@ -175,6 +228,11 @@ export default function LoginPageClient() {
                               ""
                             );
                             setLoginEmail(sanitizedValue);
+                            if (loginError) setLoginError("");
+                            if (blockedUntil) {
+                              setBlockedUntil(null);
+                              setCountdown(0);
+                            }
                           }}
                           className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
                         />
@@ -206,14 +264,19 @@ export default function LoginPageClient() {
                             autoComplete="current-password"
                             required
                             value={password}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              const sanitizedValue = DOMPurify.sanitize(value).replace(
-                                /\s/g,
-                                ""
-                              );
-                              setPassword(sanitizedValue);
-                            }}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const sanitizedValue = DOMPurify.sanitize(value).replace(
+                              /\s/g,
+                              ""
+                            );
+                            setPassword(sanitizedValue);
+                            if (loginError) setLoginError("");
+                            if (blockedUntil) {
+                              setBlockedUntil(null);
+                              setCountdown(0);
+                            }
+                          }}
                             className={`w-full text-sm font-normal placeholder:text-neutral-200 bg-transparent outline-none ${
                               showPassword
                                 ? "text-neutral-800"
@@ -272,9 +335,14 @@ export default function LoginPageClient() {
                 <Button
                   className="w-full text-base font-medium"
                   type="submit"
-                  disabled={isLoading || !isFormValid}
+                  disabled={isLoading || !isFormValid || !!blockedUntil}
                 >
-                  {isLoading ? "Signing in..." : "Login"}
+                  {blockedUntil ? (
+                    <span className="inline-flex items-center gap-2">
+                      <LockClosedIcon className="h-4 w-4" />
+                      <span>Login ({formatCountdown(countdown)})</span>
+                    </span>
+                  ) : (isLoading ? "Signing in..." : "Login")}
                 </Button>
               </div>
 

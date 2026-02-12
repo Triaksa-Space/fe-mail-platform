@@ -18,7 +18,8 @@ import { cn } from "@/lib/utils";
 import { AdminLayout, UserRowActionMenu } from "@/components/admin";
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { XCircleIcon, LockClosedIcon } from '@heroicons/react/20/solid';
+import { XCircleIcon } from '@heroicons/react/20/solid';
+import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 interface EmailUser {

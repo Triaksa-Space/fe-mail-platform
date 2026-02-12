@@ -25,6 +25,8 @@ export default function ForgotPasswordClient() {
   // Step 1: Email & Binding Email
   const [email, setEmail] = useState("");
   const [bindingEmail, setBindingEmail] = useState("");
+  const [requestBlockedUntil, setRequestBlockedUntil] = useState<Date | null>(null);
+  const [requestCountdown, setRequestCountdown] = useState(0);
 
   // Step 2: OTP Verification
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -68,11 +70,38 @@ export default function ForgotPasswordClient() {
     return () => clearInterval(interval);
   }, [blockedUntil]);
 
+  // Countdown timer for request blocked state
+  useEffect(() => {
+    if (!requestBlockedUntil) return;
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = Math.ceil((requestBlockedUntil.getTime() - now.getTime()) / 1000);
+
+      if (diff <= 0) {
+        setRequestBlockedUntil(null);
+        setRequestCountdown(0);
+      } else {
+        setRequestCountdown(diff);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [requestBlockedUntil]);
+
   // Format countdown
   const formatCountdown = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const clearVerifyState = () => {
+    if (verifyError) setVerifyError("");
+    if (blockedUntil) {
+      setBlockedUntil(null);
+      setCountdown(0);
+    }
   };
 
   // Step 1: Request password reset
@@ -105,8 +134,13 @@ export default function ForgotPasswordClient() {
       }, 100);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        const data = error.response.data as { message?: string };
-        setRequestError(data.message || "Failed to send code.");
+        const data = error.response.data as { message?: string; blocked_until?: string };
+        if (data.blocked_until) {
+          setRequestBlockedUntil(new Date(data.blocked_until));
+          setRequestError(data.message || "Too many failed attempts. Try again in 5 minutes.");
+        } else {
+          setRequestError(data.message || "Failed to send code.");
+        }
       } else {
         // Don't reveal if user exists - show generic message
         setRequestError("If this email exists, a verification code has been sent.");
@@ -119,6 +153,7 @@ export default function ForgotPasswordClient() {
   // OTP input handling
   const handleOtpChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
+    clearVerifyState();
 
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
@@ -137,6 +172,7 @@ export default function ForgotPasswordClient() {
 
   const handleOtpPaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
+    clearVerifyState();
     const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 4);
     const newOtp = [...otp];
 
@@ -288,6 +324,13 @@ export default function ForgotPasswordClient() {
 
   const isFormValid = email.trim() !== "" && bindingEmail.trim() !== "";
 
+  useEffect(() => {
+    if (!requestBlockedUntil) return;
+    setRequestBlockedUntil(null);
+    setRequestCountdown(0);
+    if (requestError) setRequestError("");
+  }, [email, bindingEmail, requestBlockedUntil, requestError]);
+
   return (
     <>
       <div className="min-h-screen bg-neutral-50 flex flex-col justify-between items-center p-4 md:p-8 overflow-hidden relative">
@@ -402,10 +445,15 @@ export default function ForgotPasswordClient() {
                   <div className="flex flex-col gap-1">
                     <Button
                       type="submit"
-                      disabled={isLoading || !isFormValid}
+                      disabled={isLoading || !isFormValid || !!requestBlockedUntil}
                       className="w-full text-base font-medium"
                     >
-                      {isLoading ? "Sending..." : "Reset password"}
+                      {requestBlockedUntil ? (
+                        <span className="inline-flex items-center gap-2">
+                          <LockClosedIcon className="h-4 w-4" />
+                          <span>Reset password ({formatCountdown(requestCountdown)})</span>
+                        </span>
+                      ) : (isLoading ? "Sending..." : "Reset password")}
                     </Button>
 
                     <Link
@@ -440,7 +488,7 @@ export default function ForgotPasswordClient() {
                 <form onSubmit={handleVerifyCode} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
                     <p className="text-sm text-neutral-500">
-                      Enter the 4-digit code sent to{" "}
+                      An email with verification code just sent to{" "}
                       <span className="font-medium">{bindingEmail || email}</span>
                     </p>
 
@@ -455,7 +503,7 @@ export default function ForgotPasswordClient() {
                     )}
 
                     {/* OTP Input */}
-                    <div className="flex justify-center gap-3" onPaste={handleOtpPaste}>
+                    <div className="flex w-full gap-3" onPaste={handleOtpPaste}>
                       {otp.map((digit, index) => (
                         <Input
                           key={index}
@@ -468,9 +516,9 @@ export default function ForgotPasswordClient() {
                           onKeyDown={(e) => handleOtpKeyDown(index, e)}
                           disabled={!!blockedUntil}
                           className={cn(
-                            "w-12 h-12 text-center text-xl font-semibold border-neutral-200 rounded-lg",
+                            "flex-1 h-12 bg-white text-center text-xl font-semibold border-neutral-200 rounded-lg",
                             verifyError && "outline outline-1 outline-offset-[-1px] outline-red-500 border-transparent",
-                            blockedUntil && "bg-neutral-100 cursor-not-allowed"
+                            blockedUntil && "cursor-not-allowed"
                           )}
                         />
                       ))}
@@ -494,7 +542,14 @@ export default function ForgotPasswordClient() {
                       disabled={isLoading || otp.join("").length !== 4 || !!blockedUntil}
                       className="w-full text-base font-medium"
                     >
-                      {isLoading ? "Verifying..." : "Verify Code"}
+                      {blockedUntil ? (
+                        <span className="inline-flex items-center gap-2">
+                          <LockClosedIcon className="h-4 w-4" />
+                          <span>Next ({formatCountdown(countdown)})</span>
+                        </span>
+                      ) : (
+                        isLoading ? "Verifying..." : "Next"
+                      )}
                     </Button>
 
                     <button
