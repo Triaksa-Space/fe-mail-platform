@@ -239,11 +239,13 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
     <button
       onClick={onClick}
       className={cn(
-        "w-full lg:w-[358px] px-4 py-2 rounded-xl flex justify-start items-center gap-2",
-        "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
-        "transition-all",
+        "w-full px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+        "border border-neutral-200 shadow-[0_2px_6px_0_rgba(16,24,40,0.06)] transition-all",
+        isUnread ? "bg-white" : "bg-neutral-100",
         // Hover/focus states
         "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
+        !isUnread &&
+          "hover:shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]",
         isSelected && "bg-blue-50",
       )}
     >
