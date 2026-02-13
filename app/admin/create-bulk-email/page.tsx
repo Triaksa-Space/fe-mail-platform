@@ -37,7 +37,7 @@ const ToggleSwitch: React.FC<{
     >
       <div className={cn(
         "w-10 h-6 rounded-3xl transition-colors",
-        active ? "bg-blue-600" : "bg-neutral-200"
+        active ? "bg-primary-600" : "bg-neutral-200"
       )}></div>
       <div className={cn(
         "w-5 h-5 absolute top-[1.5px] bg-white rounded-full transition-all",

@@ -495,7 +495,7 @@ const AdminInboxRow: React.FC<AdminInboxRowProps> = ({
               {formatRelativeTime(email.received_at)}
             </div>
             {isUnread && (
-              <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+              <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
             )}
           </div>
         </div>

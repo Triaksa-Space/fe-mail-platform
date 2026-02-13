@@ -134,7 +134,7 @@ export const tw = {
   bg: {
     page: 'bg-[#F9FAFB]',
     card: 'bg-white',
-    primary: 'bg-blue-600',
+    primary: 'bg-primary-600',
     primaryHover: 'hover:bg-blue-700',
     muted: 'bg-neutral-100',
   },

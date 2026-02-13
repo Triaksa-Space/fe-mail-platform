@@ -149,7 +149,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                   className={cn(
                     "flex h-4 w-4 items-center justify-center rounded border shrink-0",
                     isSelected
-                      ? "bg-blue-600 border-blue-600"
+                      ? "bg-primary-600 border-blue-600"
                       : "border-neutral-300"
                   )}
                 >

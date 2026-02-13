@@ -145,7 +145,7 @@ function EmailRow({ email, type, onClick }: EmailRowProps) {
               {email.date}
             </div>
             {isUnread && (
-              <div className="w-2 h-2 bg-blue-600 rounded-full" />
+              <div className="w-2 h-2 bg-primary-600 rounded-full" />
             )}
           </div>
         </div>

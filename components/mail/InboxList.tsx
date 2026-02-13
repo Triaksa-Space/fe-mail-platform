@@ -280,7 +280,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
                   {email.date}
                 </span>
                 {isUnread && (
-                  <div className="w-2 h-2 bg-blue-600 rounded-full" />
+                  <div className="w-2 h-2 bg-primary-600 rounded-full" />
                 )}
               </div>
             </div>

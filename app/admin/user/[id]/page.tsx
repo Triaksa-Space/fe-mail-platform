@@ -436,7 +436,7 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
                 )}>
                   {email.RelativeTime}
                 </div>
-                {isUnread && <div className="w-2 h-2 bg-blue-600 rounded-full"></div>}
+                {isUnread && <div className="w-2 h-2 bg-primary-600 rounded-full"></div>}
               </div>
             </div>
             <div className={cn(
