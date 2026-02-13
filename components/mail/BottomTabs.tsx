@@ -38,7 +38,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
       )}
     >
       <nav
-        className="flex items-center justify-start px-4 py-2 gap-4 rounded-xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
+        className="flex items-center justify-start px-5 py-2 gap-5 rounded-xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
       >
         {/* Inbox tab */}
         <Button
