@@ -362,23 +362,6 @@ export default function LoginPageClient() {
                 </Button>
               </div>
 
-              {/* Toaster Test */}
-              <div className="flex flex-col gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full text-base font-medium"
-                  onClick={() =>
-                    toast({
-                      description: "Password changed successfully.",
-                      variant: "default",
-                    })
-                  }
-                >
-                  Show Toast (Test)
-                </Button>
-              </div>
-
               {/* Support By */}
               <p className="text-xs font-normal text-center">
                 <span className="text-neutral-800">Support by: </span>
