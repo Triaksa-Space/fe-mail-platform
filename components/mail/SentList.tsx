@@ -210,16 +210,16 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
       variant="ghost"
       onClick={onClick}
         className={cn(
-          "w-full lg:w-[358px] h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+          "w-full lg:w-[358px] h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0",
           "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
           "transition-all",
         "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
         isSelected && "bg-blue-50",
       )}
     >
-      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-        <div className="self-stretch inline-flex justify-start items-start gap-4">
-          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
+          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
             {/* Top row: To + Time */}
             <div className="self-stretch inline-flex justify-between items-center">
               <div className="flex items-center gap-0.5">
@@ -228,7 +228,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
                   {email.to || "Unknown"}
                 </span>
               </div>
-              <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+              <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
                 {email.date}
               </span>
             </div>
@@ -241,7 +241,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
         </div>
 
         {/* Snippet/Preview */}
-        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1 text-left">
+        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>

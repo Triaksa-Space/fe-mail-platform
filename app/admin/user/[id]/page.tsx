@@ -417,21 +417,21 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
     <Button
       variant="ghost"
       onClick={onClick}
-      className={cn(CARD_STYLES.interactive, "h-auto self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
+      className={cn(CARD_STYLES.interactive, "h-auto self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left min-w-0")}
     >
-      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-        <div className="self-stretch inline-flex justify-start items-start gap-4">
-          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
+          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
             <div className="self-stretch inline-flex justify-between items-center">
               <div className={cn(
-                "text-base font-['Roboto'] leading-6",
+                "text-base font-['Roboto'] leading-6 truncate",
                 isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
               )}>
                 {email.SenderName || email.SenderEmail || "Unknown"}
               </div>
               <div className="flex justify-end items-center gap-0.5">
                 <div className={cn(
-                  "text-xs font-['Roboto'] leading-5 line-clamp-1",
+                  "text-xs font-['Roboto'] leading-5 truncate",
                   isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
                 )}>
                   {email.RelativeTime}
@@ -440,14 +440,14 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
               </div>
             </div>
             <div className={cn(
-              "self-stretch text-sm font-['Roboto'] leading-5",
+              "self-stretch text-sm font-['Roboto'] leading-5 truncate",
               isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
             )}>
               {email.Subject || "(No subject)"}
             </div>
           </div>
         </div>
-        <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+        <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate">
           {email.Preview || "No preview available"}
         </div>
       </div>
@@ -466,25 +466,25 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
     <Button
       variant="ghost"
       onClick={onClick}
-      className={cn(CARD_STYLES.interactive, "h-auto self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left")}
+      className={cn(CARD_STYLES.interactive, "h-auto self-stretch px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left min-w-0")}
     >
-      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-        <div className="self-stretch inline-flex justify-start items-start gap-4">
-          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
+          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
             <div className="self-stretch inline-flex justify-between items-center">
-              <div className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6">
+              <div className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6 truncate">
                 To: {email.to || "Unknown"}
               </div>
-              <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
+              <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
                 {formatRelativeTime(email.sent_at)}
               </div>
             </div>
-            <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5">
+            <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate">
               {email.subject || "(No subject)"}
             </div>
           </div>
         </div>
-        <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
+        <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate">
           {email.body_preview || "No preview available"}
         </div>
       </div>

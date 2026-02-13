@@ -244,7 +244,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2",
+        "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0",
         "border border-neutral-200 shadow-[0_2px_6px_0_rgba(16,24,40,0.06)] transition-all",
         isUnread ? "bg-white" : "bg-neutral-100",
         "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",
@@ -253,9 +253,9 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         isSelected && "bg-blue-50",
       )}
     >
-      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-        <div className="self-stretch inline-flex justify-start items-start gap-4">
-          <div className="flex-1 inline-flex flex-col justify-start items-start gap-0.5">
+      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
+        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
+          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
             {/* Top row: Sender + Time */}
             <div className="self-stretch inline-flex justify-between items-center">
               <span
@@ -271,7 +271,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
               <div className="flex justify-end items-center gap-0.5">
                 <span
                   className={cn(
-                    "text-xs font-['Roboto'] leading-5 line-clamp-1",
+                    "text-xs font-['Roboto'] leading-5 truncate",
                     isUnread
                       ? "font-semibold text-neutral-800"
                       : "font-normal text-neutral-600",
@@ -280,7 +280,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
                   {email.date}
                 </span>
                 {isUnread && (
-                  <div className="w-2 h-2 bg-primary-600 rounded-full" />
+                  <div className="w-2 h-2 bg-primary-500 rounded-full" />
                 )}
               </div>
             </div>
@@ -300,7 +300,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         </div>
 
         {/* Snippet/Preview */}
-        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1 text-left">
+        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>
