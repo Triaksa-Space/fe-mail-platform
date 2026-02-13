@@ -13,6 +13,15 @@ import { XMarkIcon, PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24
 import { Button } from "@/components/ui/button";
 import AttachmentList from "./AttachmentList";
 
+export interface ForwardData {
+  from: string;
+  to: string;
+  date: string;
+  subject: string;
+  body: string;
+  attachments: { name: string; url: string }[];
+}
+
 interface ComposeModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,6 +30,7 @@ interface ComposeModalProps {
     email: string;
     subject: string;
   };
+  forwardData?: ForwardData;
   sentCount?: number;
   maxDailySend?: number;
 }
@@ -45,6 +55,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   onClose,
   onSent,
   replyTo,
+  forwardData,
   sentCount = 0,
   maxDailySend = 3,
 }) => {
@@ -93,28 +104,53 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
-      const initialTo = replyTo?.email || "";
-      const initialSubject = replyTo
-        ? replyTo.subject.startsWith("Re:")
+      let initialTo = "";
+      let initialSubject = "";
+      let initialMessage = "";
+      let initialAttachments: UploadedAttachment[] = [];
+
+      if (forwardData) {
+        // Forward mode
+        initialSubject = forwardData.subject.startsWith("Fwd:")
+          ? forwardData.subject
+          : `Fwd: ${forwardData.subject}`;
+
+        initialMessage = [
+          "",
+          "",
+          "---------- Forwarded message ---------",
+          `From: ${forwardData.from}`,
+          `Date: ${forwardData.date}`,
+          `Subject: ${forwardData.subject}`,
+          `To: ${forwardData.to}`,
+          "",
+          forwardData.body,
+        ].join("\n");
+
+        initialAttachments = forwardData.attachments;
+      } else if (replyTo) {
+        // Reply mode
+        initialTo = replyTo.email;
+        initialSubject = replyTo.subject.startsWith("Re:")
           ? replyTo.subject
-          : `Re: ${replyTo.subject}`
-        : "";
+          : `Re: ${replyTo.subject}`;
+      }
 
       setTo(initialTo);
       setSubject(initialSubject);
-      setMessage("");
-      setAttachments([]);
+      setMessage(initialMessage);
+      setAttachments(initialAttachments);
       setShowDiscardConfirm(false);
 
       // Capture initial state for dirty detection
       initialStateRef.current = {
         to: initialTo,
         subject: initialSubject,
-        message: "",
-        attachmentUrls: [],
+        message: initialMessage,
+        attachmentUrls: initialAttachments.map((a) => a.url),
       };
     }
-  }, [isOpen, replyTo]);
+  }, [isOpen, replyTo, forwardData]);
 
   // Handle ESC key to request close
   useEffect(() => {
@@ -129,12 +165,14 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, showDiscardConfirm]);
 
-  // Clean up attachments from server
+  // Clean up only newly uploaded attachments (not forwarded ones)
   const cleanupAttachments = useCallback(async () => {
-    if (attachments.length > 0) {
+    const forwardedUrls = new Set(initialStateRef.current.attachmentUrls);
+    const newAttachments = attachments.filter((att) => !forwardedUrls.has(att.url));
+    if (newAttachments.length > 0) {
       try {
         await apiClient.post("/email/delete-attachment", {
-          url: attachments.map((att) => att.url),
+          url: newAttachments.map((att) => att.url),
         });
       } catch (error) {
         console.error("Failed to clean up attachments:", error);

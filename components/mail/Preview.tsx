@@ -15,13 +15,14 @@ import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
 import EmailBodyCard from "./EmailBodyCard";
-import { Attachment } from "@/lib/attachmentUtils";
+import { Attachment, extractFilenameFromUrl } from "@/lib/attachmentUtils";
+import { ForwardData } from "./ComposeModal";
 
 interface PreviewProps {
   email: Mail | null;
   onBack?: () => void;
   onReply?: () => void;
-  onForward?: () => void;
+  onForward?: (data: ForwardData) => void;
   showBackButton?: boolean;
   className?: string;
   isSentView?: boolean;
@@ -172,12 +173,39 @@ const Preview: React.FC<PreviewProps> = ({
 
   const attachments = getAttachments();
 
+  // Build forward data and call onForward
+  const handleForwardClick = () => {
+    if (!onForward || !email) return;
+
+    // Extract plain text from HTML body for the forwarded message
+    const htmlBody = isSentView ? email.body : emailDetail?.Body;
+    let plainText = email.snippet || "";
+    if (htmlBody) {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = htmlBody;
+      plainText = tmp.textContent || tmp.innerText || plainText;
+    }
+
+    const fwdAttachments = attachments.map((att) => ({
+      name: extractFilenameFromUrl(att.URL) || att.Filename,
+      url: att.URL,
+    }));
+
+    onForward({
+      from: isSentView ? email.from : (emailDetail?.SenderEmail || email.fromEmail || email.from),
+      to: isSentView ? (email.to || "") : (userEmail || ""),
+      date: emailDetail?.RelativeTime || email.date,
+      subject: email.subject,
+      body: plainText,
+      attachments: fwdAttachments,
+    });
+  };
+
   return (
-    <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden", className)}>
+    <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden h-full", className)}>
       {/* Content */}
       <div className={cn(
-        "flex-1 overflow-y-auto py-4",
-        pinAttachments ? "pb-4" : "pb-24 lg:pb-4"
+        "flex-1 overflow-y-auto min-h-0"
       )}>
         {shouldShowLoading ? (
           <div className="flex flex-col gap-4" role="status" aria-busy="true">
@@ -245,7 +273,7 @@ const Preview: React.FC<PreviewProps> = ({
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={onForward}
+                    onClick={handleForwardClick}
                     className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 gap-2 hover:bg-neutral-50"
                   >
                     <span className="text-center text-neutral-700 text-base font-medium font-['Roboto'] leading-4">Forward</span>

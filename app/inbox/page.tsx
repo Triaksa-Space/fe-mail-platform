@@ -26,6 +26,7 @@ import {
   ApiSentEmail,
   ApiSentEmailDetail,
   ViewType,
+  ForwardData,
   transformEmailToMail,
   transformSentEmail,
   InboxListSkeleton,
@@ -99,6 +100,7 @@ const InboxPageContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewType>("inbox");
   const [selectedEmail, setSelectedEmail] = useState<Mail | null>(null);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
+  const [forwardData, setForwardData] = useState<ForwardData | undefined>(undefined);
 
   // Data state
   const [userEmail, setUserEmail] = useState("");
@@ -431,11 +433,18 @@ const InboxPageContent: React.FC = () => {
   }, [fetchSentEmails]);
 
   const handleCompose = () => {
+    setForwardData(undefined);
     setIsComposeOpen(true);
   };
 
   const handleReply = () => {
     if (!selectedEmail) return;
+    setForwardData(undefined);
+    setIsComposeOpen(true);
+  };
+
+  const handleForward = (data: ForwardData) => {
+    setForwardData(data);
     setIsComposeOpen(true);
   };
 
@@ -544,6 +553,7 @@ const InboxPageContent: React.FC = () => {
           email={selectedEmail}
           onBack={() => setSelectedEmail(null)}
           onReply={handleReply}
+          onForward={handleForward}
           showBackButton={true}
           className="flex-1"
           pinAttachments={true}
@@ -618,12 +628,16 @@ const InboxPageContent: React.FC = () => {
       {/* Compose Modal */}
       <ComposeModal
         isOpen={isComposeOpen}
-        onClose={() => setIsComposeOpen(false)}
+        onClose={() => {
+          setIsComposeOpen(false);
+          setForwardData(undefined);
+        }}
         onSent={handleEmailSent}
         sentCount={sentCount}
         maxDailySend={3}
+        forwardData={forwardData}
         replyTo={
-          selectedEmail
+          !forwardData && selectedEmail
             ? {
                 email: selectedEmail.fromEmail || selectedEmail.from,
                 subject: selectedEmail.subject,

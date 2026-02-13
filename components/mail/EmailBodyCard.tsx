@@ -26,7 +26,7 @@ const IFRAME_STYLES = `
     width: 100%;
     box-sizing: border-box;
     overflow-y: auto !important;
-    overflow-x: hidden !important;
+    overflow-x: auto !important;
     background: white;
   }
   img, table {
@@ -48,7 +48,6 @@ const IFRAME_STYLES = `
     word-break: break-word;
   }
   * {
-    max-width: 100% !important;
     box-sizing: border-box;
   }
   a {
@@ -112,7 +111,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200" />
 
       {/* Body */}
-      <div className="flex-1 min-h-[200px]">
+      <div className="flex-1 min-h-[200px] overflow-x-auto">
         {body ? (
           <iframe
             srcDoc={body}
