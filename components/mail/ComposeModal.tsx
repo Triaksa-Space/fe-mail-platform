@@ -2,15 +2,16 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Paperclip, Loader2, Mail } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import DOMPurify from "dompurify";
 import ConfirmDiscardModal from "./ConfirmDiscardModal";
-import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon, PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
+import AttachmentList from "./AttachmentList";
 
 interface ComposeModalProps {
   isOpen: boolean;
@@ -38,12 +39,6 @@ interface FormState {
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
-
-// Helper to get file extension
-const getFileExtension = (filename: string): string => {
-  const ext = filename.split('.').pop()?.toUpperCase() || 'FILE';
-  return ext.length > 4 ? ext.substring(0, 4) : ext;
-};
 
 const ComposeModal: React.FC<ComposeModalProps> = ({
   isOpen,
@@ -323,9 +318,9 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-modal="true"
           aria-labelledby="compose-title"
           className={cn(
-            "relative w-full bg-neutral-50 flex flex-col",
-            // Mobile: full screen with py-4 and gap-4
-            "h-full py-4 gap-4",
+            "relative w-full bg-neutral-50 flex flex-col overflow-hidden",
+            // Mobile: full screen with py-4 and gap-4, rounded top
+            "h-full py-4 gap-4 rounded-t-2xl",
             // Desktop: centered modal with max dimensions
             "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-2xl lg:max-w-3xl md:rounded-2xl md:shadow-xl md:bg-[#F9FAFB]"
           )}
@@ -356,13 +351,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 <span className="text-sm text-neutral-600 font-normal font-['Roboto'] leading-5">Daily send</span>
                 <span
                   className={cn(
-                    "inline-flex items-center justify-center w-11 h-5 px-1.5 py-0.5 rounded-3xl text-xs font-medium font-['Roboto'] leading-5",
+                    "inline-flex items-center justify-center w-11 h-5 px-1.5 py-0.5 rounded-3xl text-xs font-medium font-['Roboto'] leading-5 outline outline-1 outline-offset-[-1px]",
                     isLimitReached
-                      ? "text-red-600 outline outline-1 outline-offset-[-1px] outline-red-200"
-                      : "text-neutral-400 outline outline-1 outline-offset-[-1px] outline-neutral-200"
+                      ? "text-red-600 outline-red-200"
+                      : "text-primary-500 outline-primary-500"
                   )}
                 >
-                  {sentCount} of {maxDailySend}
+                  {sentCount + 1 > maxDailySend ? maxDailySend : sentCount + 1} of {maxDailySend}
                 </span>
               </div>
 
@@ -391,7 +386,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 {isUploading ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <Paperclip className="h-5 w-5" />
+                  <PaperClipIcon className="h-5 w-5 text-neutral-800" />
                 )}
               </label>
 
@@ -470,7 +465,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
             </div>
 
             {/* Card B: Subject & Body */}
-            <div className="self-stretch flex-1 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
+            <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
               {/* Subject Field */}
               <div className="self-stretch flex flex-col justify-start items-start gap-2">
                 <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
@@ -488,60 +483,24 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               </div>
 
               {/* Body Field */}
-              <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2">
-                <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
-                  <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-start gap-3">
-                    <div className="flex-1 flex justify-start items-start gap-2">
-                      <textarea
-                        id="compose-body"
-                        placeholder="Compose your email..."
-                        value={message}
-                        onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                        className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px] md:min-h-[280px]"
-                      />
-                    </div>
-                  </div>
+              <div className="self-stretch flex-1 flex flex-col min-h-0">
+                <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col">
+                  <textarea
+                    id="compose-body"
+                    placeholder="Compose your email..."
+                    value={message}
+                    onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                    className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                  />
                 </div>
               </div>
-            </div>
 
-            {/* Attachments List */}
-            {attachments.length > 0 && (
-              <div className="self-stretch overflow-x-auto">
-                <div className="inline-flex justify-start items-start gap-2">
-                  {attachments.map((file, index) => (
-                    <div
-                      key={index}
-                      className="w-32 h-[88px] p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex flex-col justify-start items-start gap-3 flex-shrink-0"
-                    >
-                      {/* Header: File type + Close button */}
-                      <div className="self-stretch inline-flex justify-between items-center">
-                        <div className="flex justify-start items-center gap-0.5">
-                          <XMarkIcon className="w-5 h-5 text-primary-500" />
-                          <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
-                            {getFileExtension(file.name)}
-                          </span>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRemoveAttachment(index)}
-                          className="w-5 h-5 text-neutral-800 hover:text-red-600 hover:bg-transparent"
-                          aria-label={`Remove ${file.name}`}
-                        >
-                          <XMarkIcon className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      {/* Filename - truncated to 2 lines */}
-                      <div className="self-stretch text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                        {file.name}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              {/* Attachments inside body card */}
+              <AttachmentList
+                attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
+                onRemove={handleRemoveAttachment}
+              />
+            </div>
 
             {/* Limit Reached Warning */}
             {isLimitReached && (

@@ -5,11 +5,12 @@ import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
-import { parseAttachments, getFileExtension } from "@/lib/attachmentUtils";
+import { parseAttachments } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { EmailBodyCard } from "@/components/mail";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
@@ -19,7 +20,6 @@ import {
   ArrowLeftIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 
@@ -76,7 +76,6 @@ export default function AdminAllSentPage() {
   const [selectedEmail, setSelectedEmail] = useState<ApiSentEmail | null>(null);
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
-  const [iframeHeight, setIframeHeight] = useState("400px");
 
   // Set page title
   useEffect(() => {
@@ -299,114 +298,15 @@ export default function AdminAllSentPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div
-                    className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-2")}
-                  >
-                    {/* Subject Title */}
-                    <div className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
-                      {selectedEmail.subject || "(No subject)"}
-                    </div>
-
-                    {/* Divider */}
-                    <div className="w-full h-0 outline outline-1 outline-offset-[-0.5px] outline-neutral-200"></div>
-
-                    {/* Email Body Content */}
-                    {emailDetail?.Body || emailDetail?.body ? (
-                      <iframe
-                        srcDoc={emailDetail.Body || emailDetail.body}
-                        className="w-full"
-                        style={{
-                          height: iframeHeight,
-                          border: "none",
-                          display: "block",
-                          minHeight: "300px",
-                        }}
-                        onLoad={(e) => {
-                          const iframe = e.target as HTMLIFrameElement;
-                          if (iframe.contentWindow) {
-                            const iframeDoc = iframe.contentWindow.document;
-                            const style = iframeDoc.createElement("style");
-                            style.textContent = `
-                              body {
-                                margin: 0;
-                                padding: 0;
-                                font-family: system-ui, -apple-system, sans-serif;
-                                font-size: 14px;
-                                line-height: 1.6;
-                                color: #1F2937;
-                                background: white;
-                              }
-                              img, table { max-width: 100%; height: auto; }
-                              a { color: #027AEA; }
-                              pre { white-space: pre-wrap; word-wrap: break-word; }
-                            `;
-                            iframeDoc.head.appendChild(style);
-
-                            const links = iframeDoc.querySelectorAll("a");
-                            links.forEach((link) => {
-                              link.setAttribute("target", "_blank");
-                              link.setAttribute("rel", "noopener noreferrer");
-                            });
-
-                            const height = Math.max(
-                              iframeDoc.body.scrollHeight + 48,
-                              300,
-                            );
-                            setIframeHeight(`${height}px`);
-                          }
-                        }}
-                        title="Email content"
-                        sandbox="allow-same-origin allow-scripts allow-popups"
-                      />
-                    ) : (
-                      <p className="text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap">
-                        {selectedEmail.body_preview || "No content"}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Attachments - Outside body card */}
-                  {(() => {
-                    const attachments = parseAttachments(
+                  <EmailBodyCard
+                    subject={selectedEmail.subject}
+                    body={emailDetail?.Body || emailDetail?.body}
+                    fallbackText={selectedEmail.body_preview || "No content"}
+                    attachments={parseAttachments(
                       emailDetail?.attachments,
                       emailDetail?.ListAttachments,
-                    );
-                    if (attachments.length === 0) return null;
-                    return (
-                      <div className="flex flex-col gap-2.5">
-                        <div className="inline-flex justify-start items-start gap-2">
-                          {attachments.map((attachment, index) => {
-                            const ext = getFileExtension(attachment.Filename);
-                            return (
-                              <a
-                                key={index}
-                                href={attachment.URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={cn(
-                                  CARD_STYLES.base,
-                                  "w-32 p-3 inline-flex flex-col justify-start items-start gap-3 hover:bg-neutral-50 transition-colors",
-                                )}
-                              >
-                                <div className="self-stretch inline-flex justify-between items-center">
-                                  <div className="flex justify-start items-center gap-0.5">
-                                    <XMarkIcon className="w-4 h-4 text-primary-500" />
-                                    <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
-                                      {ext}
-                                    </span>
-                                  </div>
-                                  <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                                </div>
-                                <span className="self-stretch text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                                  {attachment.Filename}
-                                </span>
-                              </a>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
+                    )}
+                  />
                 </>
               )}
             </div>

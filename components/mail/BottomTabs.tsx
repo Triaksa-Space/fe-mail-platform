@@ -48,8 +48,8 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 h-auto flex flex-col items-center justify-center gap-0.5 relative px-0",
             currentView === "inbox"
-              ? "text-primary-500"
-              : "text-neutral-600 hover:text-neutral-700"
+              ? "text-primary-500 hover:text-primary-500"
+              : "text-neutral-600 hover:text-neutral-600"
           )}
         >
           {currentView === "inbox" ? (
@@ -70,8 +70,8 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 h-auto flex flex-col items-center justify-center gap-0.5 px-0",
             currentView === "sent"
-              ? "text-primary-500"
-              : "text-neutral-600 hover:text-neutral-700"
+              ? "text-primary-500 hover:text-primary-500"
+              : "text-neutral-600 hover:text-neutral-600"
           )}
         >
           {currentView === "sent" ? (
@@ -92,8 +92,8 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           className={cn(
             "w-14 h-auto flex flex-col items-center justify-center gap-0.5 px-0",
             currentView === "settings"
-              ? "text-primary-500"
-              : "text-neutral-600 hover:text-neutral-700"
+              ? "text-primary-500 hover:text-primary-500"
+              : "text-neutral-600 hover:text-neutral-600"
           )}
         >
           {currentView === "settings" ? (
@@ -111,7 +111,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
         <Button
           variant="ghost"
           onClick={onLogout}
-          className="w-14 h-auto flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-700 px-0"
+          className="w-14 h-auto flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-600 px-0"
         >
           <LogoutSolidIcon className="w-5 h-5" />
           <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>

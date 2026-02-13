@@ -9,12 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { CARD_STYLES } from "@/lib/styles";
-import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
+import { parseAttachments } from "@/lib/attachmentUtils";
+import { EmailBodyCard } from "@/components/mail";
 import {
   Inbox,
   Mail,
 } from "lucide-react";
-import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 // API Response type
 interface InboxEmailDetail {
@@ -68,7 +69,6 @@ export default function AdminInboxDetailPage() {
   const [email, setEmail] = useState<InboxEmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [iframeHeight, setIframeHeight] = useState("400px");
 
   const fetchEmailDetail = useCallback(async () => {
     if (!emailId) return;
@@ -199,102 +199,12 @@ export default function AdminInboxDetailPage() {
               </div>
             </div>
 
-            <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-4")}>
-              <div className="text-neutral-800 text-lg font-medium leading-7">
-                {subject}
-              </div>
-              <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
-              <div className="self-stretch text-neutral-900 text-sm font-normal leading-5">
-                {email.body ? (
-                  <iframe
-                    srcDoc={email.body}
-                    className="w-full"
-                    style={{
-                      height: iframeHeight,
-                      border: "none",
-                      display: "block",
-                      minHeight: "300px",
-                    }}
-                    onLoad={(e) => {
-                      const iframe = e.target as HTMLIFrameElement;
-                      if (iframe.contentWindow) {
-                        const iframeDoc = iframe.contentWindow.document;
-                        const style = iframeDoc.createElement("style");
-                        style.textContent = `
-                          body {
-                            margin: 0;
-                            padding: 0;
-                            font-family: system-ui, -apple-system, sans-serif;
-                            font-size: 14px;
-                            line-height: 1.6;
-                            color: #1F2937;
-                            background: white;
-                          }
-                          img, table { max-width: 100%; height: auto; }
-                          a { color: #027AEA; }
-                          pre { white-space: pre-wrap; word-wrap: break-word; }
-                        `;
-                        iframeDoc.head.appendChild(style);
-
-                        const links = iframeDoc.querySelectorAll("a");
-                        links.forEach((link) => {
-                          link.setAttribute("target", "_blank");
-                          link.setAttribute("rel", "noopener noreferrer");
-                        });
-
-                        const height = Math.max(
-                          iframeDoc.body.scrollHeight + 48,
-                          300,
-                        );
-                        setIframeHeight(`${height}px`);
-                      }
-                    }}
-                    title="Email content"
-                    sandbox="allow-same-origin allow-scripts allow-popups"
-                  />
-                ) : (
-                  <p className="whitespace-pre-wrap">
-                    {email.preview || "No content available"}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {attachments.length > 0 && (
-              <div className="flex flex-col justify-start items-start gap-2.5">
-                <div className="inline-flex justify-start items-start gap-2 flex-wrap">
-                  {attachments.map((attachment, index) => {
-                    const filename = extractFilenameFromUrl(attachment.URL);
-                    const fileType = getFileExtension(filename);
-
-                    return (
-                      <a
-                        key={index}
-                        href={attachment.URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(CARD_STYLES.interactive, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3")}
-                      >
-                        <div className="self-stretch inline-flex justify-between items-center">
-                          <div className="flex justify-start items-center gap-0.5">
-                            <XMarkIcon className="w-5 h-5 text-primary-500" />
-                            <div className="text-neutral-800 text-xs font-normal leading-5">
-                              {fileType}
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          className="self-stretch text-neutral-800 text-sm font-normal leading-5 line-clamp-2"
-                          title={filename}
-                        >
-                          {filename}
-                        </div>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            <EmailBodyCard
+              subject={subject}
+              body={email.body}
+              fallbackText={email.preview || "No content available"}
+              attachments={attachments}
+            />
           </div>
         ) : null}
       </div>

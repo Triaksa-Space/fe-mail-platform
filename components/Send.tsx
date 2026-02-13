@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +14,7 @@ import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
 import DOMPurify from 'dompurify';
-import { PaperAirplaneIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { PaperAirplaneIcon, XMarkIcon, PaperClipIcon } from "@heroicons/react/24/outline"
 
 // Interfaces
 interface UploadedAttachment {
@@ -291,7 +290,7 @@ const Send: React.FC = () => {
               accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .mp3, .wav, .aac, .ogg, .mp4, .mov, .avi, .mkv, .zip, .rar, .7z, .tar, .gz, .webp"
             />
             <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-[#F5E193] p-2 rounded">
-              <Paperclip className="h-5 w-5" />
+              <PaperClipIcon className="h-5 w-5 text-neutral-800" />
             </label>
           </div>
         </div>

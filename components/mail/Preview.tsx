@@ -12,8 +12,10 @@ import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
-import { ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
+import EmailBodyCard from "./EmailBodyCard";
+import { Attachment } from "@/lib/attachmentUtils";
 
 interface PreviewProps {
   email: Mail | null;
@@ -24,6 +26,7 @@ interface PreviewProps {
   className?: string;
   isSentView?: boolean;
   isSentDetailLoading?: boolean;
+  pinAttachments?: boolean;
 }
 
 const Preview: React.FC<PreviewProps> = ({
@@ -35,11 +38,11 @@ const Preview: React.FC<PreviewProps> = ({
   className,
   isSentView = false,
   isSentDetailLoading = false,
+  pinAttachments = false,
 }) => {
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [iframeHeight, setIframeHeight] = useState("400px");
   const token = useAuthStore((state) => state.token);
   const userEmail = useAuthStore((state) => state.email);
 
@@ -142,47 +145,40 @@ const Preview: React.FC<PreviewProps> = ({
     );
   }
 
-  // Helper function to get file extension
-  const getFileExtension = (filename: string): string => {
-    const ext = filename.split(".").pop()?.toUpperCase() || "FILE";
-    return ext;
-  };
-
-  // Helper function to get filename from URL
-  const getFilenameFromUrl = (url: string): string => {
-    const parts = url.split("/");
-    const fullFilename = parts[parts.length - 1] || "file";
-    // Remove UUID prefix if present (format: uuid_filename.ext)
-    const underscoreIndex = fullFilename.indexOf("_");
-    if (underscoreIndex !== -1) {
-      return fullFilename.substring(underscoreIndex + 1);
-    }
-    return fullFilename;
-  };
-
-  // Parse sent email attachments (comes as JSON string or MailAttachment[])
-  const getSentAttachments = (): string[] => {
-    if (!isSentView || !email?.attachments) return [];
-    try {
-      if (typeof email.attachments === "string") {
-        return JSON.parse(email.attachments);
+  // Build attachments list for EmailBodyCard
+  const getAttachments = (): Attachment[] => {
+    if (isSentView) {
+      if (!email?.attachments) return [];
+      try {
+        let urls: string[] = [];
+        if (typeof email.attachments === "string") {
+          urls = JSON.parse(email.attachments);
+        } else if (Array.isArray(email.attachments)) {
+          urls = email.attachments.map((att) => att.URL);
+        }
+        return urls.map((url) => {
+          const parts = url.split("/");
+          const fullFilename = parts[parts.length - 1] || "file";
+          const underscoreIndex = fullFilename.indexOf("_");
+          const filename = underscoreIndex !== -1 ? fullFilename.substring(underscoreIndex + 1) : fullFilename;
+          return { Filename: filename, URL: url };
+        });
+      } catch {
+        return [];
       }
-      if (Array.isArray(email.attachments)) {
-        // Handle MailAttachment[] - extract URLs
-        return email.attachments.map((att) => att.URL);
-      }
-    } catch {
-      return [];
     }
-    return [];
+    return emailDetail?.ListAttachments || [];
   };
 
-  const sentAttachments = getSentAttachments();
+  const attachments = getAttachments();
 
   return (
     <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden", className)}>
       {/* Content */}
-      <div className="flex-1 overflow-y-auto py-4 pb-24 lg:pb-4">
+      <div className={cn(
+        "flex-1 overflow-y-auto py-4",
+        pinAttachments ? "pb-4" : "pb-24 lg:pb-4"
+      )}>
         {shouldShowLoading ? (
           <div className="flex flex-col gap-4" role="status" aria-busy="true">
             {/* Skeleton for header */}
@@ -220,6 +216,7 @@ const Preview: React.FC<PreviewProps> = ({
         ) : (
           <div className={cn(
             "flex flex-col gap-4",
+            pinAttachments && "min-h-full",
             isTransitioning && "animate-fade-in"
           )}>
             {/* Header with Back and Action Buttons */}
@@ -290,170 +287,17 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Body Card */}
-            <div className="px-4">
-              <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2">
-                {/* Subject */}
-                <h2 className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
-                  {email.subject || "(No subject)"}
-                </h2>
-                {/* Divider */}
-                <div className="h-px bg-neutral-200" />
-                {/* Body */}
-                {(emailDetail?.Body || (isSentView && email.body)) ? (
-                  <iframe
-                    srcDoc={isSentView ? email.body : emailDetail?.Body}
-                    className="w-full"
-                    style={{
-                      height: iframeHeight,
-                      border: "none",
-                      display: "block",
-                    }}
-                    onLoad={(e) => {
-                      const iframe = e.target as HTMLIFrameElement;
-                      if (iframe.contentWindow) {
-                        const iframeDoc = iframe.contentWindow.document;
-
-                        // Add meta viewport tag
-                        const meta = iframeDoc.createElement("meta");
-                        meta.name = "viewport";
-                        meta.content = "width=device-width, initial-scale=1";
-                        iframeDoc.head.appendChild(meta);
-
-                        // Apply styles to iframe content
-                        const style = iframeDoc.createElement("style");
-                        style.textContent = `
-                          body {
-                            margin: 0;
-                            padding: 0;
-                            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
-                            font-size: 14px;
-                            line-height: 1.5;
-                            color: #111827;
-                            width: 100%;
-                            box-sizing: border-box;
-                            overflow-y: auto !important;
-                            background: white;
-                          }
-                          img, table {
-                            max-width: 100%;
-                            height: auto;
-                          }
-                          pre {
-                            white-space: pre-wrap;
-                            word-wrap: break-word;
-                            overflow: hidden !important;
-                          }
-                          table, tr, td, th, div, p, img {
-                            max-width: 100% !important;
-                            box-sizing: border-box;
-                          }
-                          a {
-                            color: #027AEA;
-                          }
-                        `;
-                        iframeDoc.head.appendChild(style);
-
-                        // Ensure links open in a new tab
-                        const links = iframeDoc.querySelectorAll("a");
-                        links.forEach((link) => {
-                          link.setAttribute("target", "_blank");
-                          link.setAttribute("rel", "noopener noreferrer");
-                        });
-
-                        // Adjust iframe height
-                        const height = Math.max(
-                          iframeDoc.body.scrollHeight + 20,
-                          100
-                        );
-                        setIframeHeight(`${height}px`);
-                      }
-                    }}
-                    title="Email content"
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation-by-user-activation"
-                  />
-                ) : (
-                  <p className="text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap">
-                    {email.snippet || "No content"}
-                  </p>
-                )}
-              </div>
+            <div className={cn("px-4", pinAttachments && "flex-1 flex flex-col")}>
+              <EmailBodyCard
+                subject={email.subject}
+                body={isSentView ? email.body : emailDetail?.Body}
+                fallbackText={email.snippet}
+                attachments={attachments}
+                onDownloadAttachment={!isSentView ? handleDownload : undefined}
+                isDownloading={isDownloading}
+                className={cn(pinAttachments && "flex-1")}
+              />
             </div>
-
-            {/* Attachments for Inbox */}
-            {!isSentView && emailDetail?.ListAttachments &&
-              emailDetail.ListAttachments.length > 0 && (
-                <div className="px-4">
-                  <div className="flex gap-2 overflow-x-auto pb-2">
-                    {emailDetail.ListAttachments.map((attachment, index) => {
-                      const filename =
-                        attachment.Filename.split("_").pop() || attachment.Filename;
-                      const fileExt = getFileExtension(filename);
-                      return (
-                        <div
-                          key={index}
-                          className="w-32 flex-shrink-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3"
-                        >
-                          <div className="flex justify-between items-center">
-                            <div className="flex justify-start items-center gap-0.5">
-                              <XMarkIcon className="w-5 h-5 text-primary-500" />
-                              <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDownload(attachment.URL, filename)}
-                              disabled={isDownloading}
-                              className="w-5 h-5 hover:bg-neutral-100 rounded"
-                            >
-                              <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                            </Button>
-                          </div>
-                          <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                            {filename}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-            {/* Attachments for Sent */}
-            {isSentView && sentAttachments.length > 0 && (
-              <div className="px-4">
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {sentAttachments.map((url, index) => {
-                    const filename = getFilenameFromUrl(url);
-                    const fileExt = getFileExtension(filename);
-                    return (
-                      <div
-                        key={index}
-                        className="w-32 flex-shrink-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3"
-                      >
-                        <div className="flex justify-between items-center">
-                          <div className="flex justify-start items-center gap-0.5">
-                            <XMarkIcon className="w-5 h-5 text-primary-500" />
-                            <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">{fileExt}</span>
-                          </div>
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download={filename}
-                            className="w-5 h-5 flex items-center justify-center hover:bg-neutral-100 rounded transition-colors"
-                          >
-                            <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                          </a>
-                        </div>
-                        <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                          {filename}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>

@@ -210,7 +210,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
       variant="ghost"
       onClick={onClick}
         className={cn(
-          "w-full lg:w-[358px] h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0",
+          "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0",
           "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
           "transition-all",
         "hover:bg-blue-50 focus:outline-none focus:bg-blue-50",

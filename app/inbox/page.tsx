@@ -510,6 +510,7 @@ const InboxPageContent: React.FC = () => {
             className="flex-1"
             isSentView={true}
             isSentDetailLoading={isSentDetailLoading}
+            pinAttachments={true}
           />
         );
       }
@@ -545,6 +546,7 @@ const InboxPageContent: React.FC = () => {
           onReply={handleReply}
           showBackButton={true}
           className="flex-1"
+          pinAttachments={true}
         />
       );
     }
@@ -591,23 +593,27 @@ const InboxPageContent: React.FC = () => {
       </div>
 
       {/* Background glow */}
-      <div className="lg:hidden fixed -bottom-12 left-1/2 -translate-x-1/2 w-[160%] h-44 pointer-events-none z-40">
-        <div
-          className="
-      w-full h-full rounded-full
-      bg-[radial-gradient(ellipse_at_center,_theme(colors.primary.200/0.45)_0%,_theme(colors.primary.200/0.25)_35%,_theme(colors.primary.100/0.12)_55%,_transparent_75%)]
-      blur-3xl
-      opacity-70
-    "
-        />
-      </div>
+      {!selectedEmail && !selectedSentEmail && (
+        <div className="lg:hidden fixed -bottom-12 left-1/2 -translate-x-1/2 w-[160%] h-44 pointer-events-none z-40">
+          <div
+            className="
+        w-full h-full rounded-full
+        bg-[radial-gradient(ellipse_at_center,_theme(colors.primary.200/0.45)_0%,_theme(colors.primary.200/0.25)_35%,_theme(colors.primary.100/0.12)_55%,_transparent_75%)]
+        blur-3xl
+        opacity-70
+      "
+          />
+        </div>
+      )}
 
       {/* Mobile Bottom Tabs */}
-      <BottomTabs
-        currentView={currentView}
-        onViewChange={handleViewChange}
-        onLogout={handleLogout}
-      />
+      {!selectedEmail && !selectedSentEmail && (
+        <BottomTabs
+          currentView={currentView}
+          onViewChange={handleViewChange}
+          onLogout={handleLogout}
+        />
+      )}
 
       {/* Compose Modal */}
       <ComposeModal
