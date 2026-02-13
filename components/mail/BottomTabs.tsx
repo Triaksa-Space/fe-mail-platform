@@ -13,7 +13,6 @@ import {
   InboxIcon as InboxSolidIcon,
   PaperAirplaneIcon as PaperAirplaneSolidIcon,
   Cog6ToothIcon as SettingsSolidIcon,
-  ArrowLeftEndOnRectangleIcon as LogoutSolidIcon,
 } from "@heroicons/react/24/solid";
 import { ViewType } from "./types";
 
@@ -113,7 +112,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           onClick={onLogout}
           className="w-14 h-auto flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-600 px-0"
         >
-          <LogoutSolidIcon className="w-5 h-5" />
+          <LogoutOutlineIcon className="w-5 h-5" />
           <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>
         </Button>
       </nav>
