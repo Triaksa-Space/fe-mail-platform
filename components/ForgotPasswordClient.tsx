@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, CheckCircle, AlertTriangle, Eye, EyeOff } from "lucide-react";
+import { Mail, AlertTriangle, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import Footer from "@/components/layout/Footer";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
 
-type Step = "email" | "verify" | "reset" | "success";
+type Step = "email" | "verify" | "reset";
 
 export default function ForgotPasswordClient() {
   const [step, setStep] = useState<Step>("email");
@@ -302,12 +302,7 @@ export default function ForgotPasswordClient() {
         new_password: newPassword,
       });
 
-      setStep("success");
-
-      toast({
-        description: "Password reset successfully!",
-        variant: "default",
-      });
+      router.push("/?reset=success");
     } catch (error) {
       let errorMessage = "Failed to reset password. Please try again.";
       if (axios.isAxiosError(error) && error.response?.data?.message) {
@@ -349,25 +344,6 @@ export default function ForgotPasswordClient() {
                 className="h-10 w-28"
                 priority
               />
-
-              {/* Success State */}
-              {step === "success" && (
-                <>
-                  <div className="text-neutral-800 text-2xl font-medium">Password Reset</div>
-                  <div className="flex flex-col items-center py-6">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                      <CheckCircle className="w-8 h-8 text-green-600" />
-                    </div>
-                    <h2 className="text-xl font-semibold text-neutral-900 mb-2">Success!</h2>
-                    <p className="text-sm text-neutral-500 text-center mb-6">
-                      Your password has been reset successfully. You can now login with your new password.
-                    </p>
-                    <Button onClick={() => router.push("/")} className="w-full text-base font-medium">
-                      Back to Login
-                    </Button>
-                  </div>
-                </>
-              )}
 
             {/* Email & Binding Email Step */}
             {step === "email" && (

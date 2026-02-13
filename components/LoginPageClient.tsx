@@ -7,13 +7,15 @@ import { Mail, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import FeatureList from "@/components/FeatureList";
 import { PageLayout, AuthCard, Footer } from "@/components/layout";
 import DOMPurify from "dompurify";
 import { LoginResponse } from "@/lib/api-types";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +41,8 @@ export default function LoginPageClient() {
   const roleId = useAuthStore((state) => state.roleId);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
   // Redirect if already logged in
   useEffect(() => {
     if (!token || roleId === null) return;
@@ -50,6 +54,16 @@ export default function LoginPageClient() {
       router.push("/inbox");
     }
   }, [token, roleId, router]);
+
+  const resetStatus = searchParams.get("reset");
+  useEffect(() => {
+    if (resetStatus !== "success") return;
+    toast({
+      description: "Password changed successfully.",
+      variant: "default",
+    });
+    router.replace("/");
+  }, [resetStatus, toast, router]);
 
   useEffect(() => {
     if (!blockedUntil) return;
@@ -348,6 +362,23 @@ export default function LoginPageClient() {
                 </Button>
               </div>
 
+              {/* Toaster Test */}
+              <div className="flex flex-col gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full text-base font-medium"
+                  onClick={() =>
+                    toast({
+                      description: "Password changed successfully.",
+                      variant: "default",
+                    })
+                  }
+                >
+                  Show Toast (Test)
+                </Button>
+              </div>
+
               {/* Support By */}
               <p className="text-xs font-normal text-center">
                 <span className="text-neutral-800">Support by: </span>
@@ -369,9 +400,10 @@ export default function LoginPageClient() {
         </div>
 
         {/* Footer */}
-        <Footer />
+      <Footer />
       </PageLayout>
 
+      <Toaster />
     </>
   );
 }

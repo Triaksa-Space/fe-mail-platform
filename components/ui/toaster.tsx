@@ -26,44 +26,43 @@ export function Toaster() {
           <Toast
             key={id}
             {...props}
-            className={`px-4 py-3 inline-flex justify-start items-center gap-4 shadow-lg pointer-events-auto ${
-              isSuccess ? "bg-green-600" : ""
-            } ${isDestructive ? "bg-red-600" : ""}`}
+            className={`w-full sm:w-auto px-4 py-3 inline-flex justify-start items-center gap-4 shadow-lg pointer-events-auto ${
+              isSuccess ? "bg-success-600" : ""
+            } ${isDestructive ? "bg-destructive-600" : ""}`}
           >
-            <div className="flex justify-start items-center gap-2">
-              {/* Leading Icon */}
-              <div className="w-5 h-5 relative overflow-hidden flex items-center justify-center">
-                {isSuccess && (
-                  <CheckCircleIcon className="w-5 h-5 text-green-50" />
-                )}
-                {isDestructive && (
-                  <XCircleIcon className="w-5 h-5 text-red-50" />
-                )}
-              </div>
+            <div className="flex-1 flex justify-start items-center gap-2 text-left">
+              {/* Leading Icon (Success only) */}
+              {isSuccess && (
+                <div className="w-5 h-5 relative overflow-hidden flex items-center justify-center">
+                  <CheckCircleIcon className="w-5 h-5 text-success-50" />
+                </div>
+              )}
               {/* Content */}
               <ToastDescription
-                className={`text-sm font-medium leading-5 ${
-                  isSuccess ? "text-green-50" : ""
-                } ${isDestructive ? "text-red-50" : ""}`}
+                className={`text-sm font-medium leading-5 text-left ${
+                  isSuccess ? "text-success-50" : ""
+                } ${isDestructive ? "text-destructive-50" : ""}`}
               >
                 {description || title}
               </ToastDescription>
             </div>
+            {isDestructive && (
+              <div className="w-5 h-5 relative overflow-hidden flex items-center justify-center">
+                <XCircleIcon className="w-5 h-5 text-destructive-50" />
+              </div>
+            )}
             {action}
             <ToastClose
               className={`relative w-5 h-5 opacity-100 ${
-                isSuccess
-                  ? "text-green-50 hover:text-green-100"
-                  : "text-red-50 hover:text-red-100"
+                isDestructive
+                  ? "hidden"
+                  : "text-success-50 hover:text-success-100"
               }`}
             />
           </Toast>
         );
       })}
-      <ToastViewport className="fixed bottom-0 right-0 flex flex-col gap-2 w-auto max-w-[100vw] m-0 list-none p-4 outline-none z-[100]" />
+      <ToastViewport className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col gap-2 w-full max-w-sm sm:bottom-8 sm:left-auto sm:right-0 sm:translate-x-0 sm:w-auto sm:max-w-[100vw] m-0 list-none outline-none z-[100]" />
     </ToastProvider>
   );
 }
-
-
-
