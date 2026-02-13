@@ -243,7 +243,7 @@ const Preview: React.FC<PreviewProps> = ({
           </div>
         ) : (
           <div className={cn(
-            "flex flex-col gap-4",
+            "flex flex-col gap-4 pb-6 lg:pb-0",
             pinAttachments && "min-h-full",
             isTransitioning && "animate-fade-in"
           )}>

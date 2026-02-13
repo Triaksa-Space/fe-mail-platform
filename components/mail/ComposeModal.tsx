@@ -357,8 +357,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-labelledby="compose-title"
           className={cn(
             "relative w-full bg-neutral-50 flex flex-col overflow-hidden",
-            // Mobile: full screen with py-4 and gap-4, rounded top
-            "h-full py-4 gap-4 rounded-t-2xl",
+            // Mobile: full screen with py-4 and gap-4
+            "h-full py-4 gap-4",
             // Desktop: centered modal with max dimensions
             "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-2xl lg:max-w-3xl md:rounded-2xl md:shadow-xl md:bg-[#F9FAFB]"
           )}
