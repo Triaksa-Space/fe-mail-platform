@@ -27,7 +27,6 @@ interface PreviewProps {
   className?: string;
   isSentView?: boolean;
   isSentDetailLoading?: boolean;
-  pinAttachments?: boolean;
 }
 
 const Preview: React.FC<PreviewProps> = ({
@@ -39,7 +38,6 @@ const Preview: React.FC<PreviewProps> = ({
   className,
   isSentView = false,
   isSentDetailLoading = false,
-  pinAttachments = false,
 }) => {
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -205,7 +203,7 @@ const Preview: React.FC<PreviewProps> = ({
     <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden h-full", className)}>
       {/* Content */}
       <div className={cn(
-        "flex-1 overflow-y-auto min-h-0"
+        "flex-1 flex flex-col min-h-0"
       )}>
         {shouldShowLoading ? (
           <div className="flex flex-col gap-4" role="status" aria-busy="true">
@@ -243,8 +241,7 @@ const Preview: React.FC<PreviewProps> = ({
           </div>
         ) : (
           <div className={cn(
-            "flex flex-col gap-4 pb-6 lg:pb-0",
-            pinAttachments && "min-h-full",
+            "flex flex-col gap-4 pb-6 lg:pb-0 flex-1 min-h-0",
             isTransitioning && "animate-fade-in"
           )}>
             {/* Header with Back and Action Buttons */}
@@ -315,7 +312,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Body Card */}
-            <div className={cn("px-4", pinAttachments && "flex-1 flex flex-col")}>
+            <div className="px-4 flex-1 flex flex-col min-h-0">
               <EmailBodyCard
                 subject={email.subject}
                 body={isSentView ? email.body : emailDetail?.Body}
@@ -323,7 +320,7 @@ const Preview: React.FC<PreviewProps> = ({
                 attachments={attachments}
                 onDownloadAttachment={!isSentView ? handleDownload : undefined}
                 isDownloading={isDownloading}
-                className={cn(pinAttachments && "flex-1")}
+                className="flex-1"
               />
             </div>
           </div>

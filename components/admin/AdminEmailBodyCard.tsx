@@ -72,19 +72,19 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-4 overflow-hidden",
+      "p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-4 min-h-0",
       className
     )}>
       {/* Subject */}
-      <h2 className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
+      <h2 className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7 shrink-0">
         {subject || "(No subject)"}
       </h2>
 
       {/* Divider */}
-      <div className="h-px bg-neutral-200" />
+      <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div className="h-full overflow-auto">
+      <div className="flex-1 min-h-0 overflow-auto">
         {body ? (
           <iframe
             srcDoc={body}
@@ -107,7 +107,9 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
       </div>
 
       {/* Attachments */}
-      <AttachmentList attachments={attachmentItems} />
+      <div className="shrink-0">
+        <AttachmentList attachments={attachmentItems} showCloseIcon />
+      </div>
     </div>
   );
 };

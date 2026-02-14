@@ -16,6 +16,7 @@ interface AttachmentListProps {
   onRemove?: (index: number) => void;
   onDownload?: (url: string, filename: string) => void;
   isDownloading?: boolean;
+  showCloseIcon?: boolean;
 }
 
 const AttachmentList: React.FC<AttachmentListProps> = ({
@@ -23,6 +24,7 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
   onRemove,
   onDownload,
   isDownloading = false,
+  showCloseIcon = false,
 }) => {
   if (attachments.length === 0) return null;
 
@@ -74,11 +76,16 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
                 disabled={isDownloading}
                 className="w-32 flex-shrink-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3 hover:bg-neutral-50 transition-colors text-left disabled:opacity-50"
               >
-                <div className="flex justify-start items-center gap-0.5">
-                  <DocumentTextIcon className="w-5 h-5 text-primary-500" />
-                  <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
-                    {fileExt}
-                  </span>
+                <div className="flex justify-between items-center">
+                  <div className="flex justify-start items-center gap-0.5">
+                    <DocumentTextIcon className="w-5 h-5 text-primary-500" />
+                    <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
+                      {fileExt}
+                    </span>
+                  </div>
+                  {showCloseIcon && (
+                    <XMarkIcon className="w-4 h-4 text-neutral-800" />
+                  )}
                 </div>
                 <div className="w-full text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2 break-all overflow-hidden">
                   {filename}
@@ -96,11 +103,16 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
               rel="noopener noreferrer"
               className="w-32 flex-shrink-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3 hover:bg-neutral-50 transition-colors"
             >
-              <div className="flex justify-start items-center gap-0.5">
-                <DocumentTextIcon className="w-5 h-5 text-primary-500" />
-                <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
-                  {fileExt}
-                </span>
+              <div className="flex justify-between items-center">
+                <div className="flex justify-start items-center gap-0.5">
+                  <DocumentTextIcon className="w-5 h-5 text-primary-500" />
+                  <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">
+                    {fileExt}
+                  </span>
+                </div>
+                {showCloseIcon && (
+                  <XMarkIcon className="w-4 h-4 text-neutral-800" />
+                )}
               </div>
               <div className="w-full text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2 break-all overflow-hidden">
                 {filename}

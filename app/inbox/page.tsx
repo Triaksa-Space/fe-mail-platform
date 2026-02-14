@@ -532,7 +532,6 @@ const InboxPageContent: React.FC = () => {
             className="flex-1"
             isSentView={true}
             isSentDetailLoading={isSentDetailLoading}
-            pinAttachments={true}
           />
         );
       }
@@ -569,7 +568,6 @@ const InboxPageContent: React.FC = () => {
           onForward={handleForward}
           showBackButton={true}
           className="flex-1"
-          pinAttachments={true}
         />
       );
     }

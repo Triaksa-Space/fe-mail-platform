@@ -77,19 +77,19 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2",
+      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2 min-h-0",
       className
     )}>
       {/* Subject */}
-      <h2 className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
+      <h2 className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7 shrink-0">
         {subject || "(No subject)"}
       </h2>
 
       {/* Divider */}
-      <div className="h-px bg-neutral-200" />
+      <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div className="h-full overflow-auto">
+      <div className="flex-1 min-h-0 overflow-auto">
         {body ? (
           <iframe
             srcDoc={body}
@@ -112,11 +112,14 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
       </div>
 
       {/* Attachments */}
-      <AttachmentList
-        attachments={attachmentItems}
-        onDownload={onDownloadAttachment}
-        isDownloading={isDownloading}
-      />
+      <div className="shrink-0">
+        <AttachmentList
+          attachments={attachmentItems}
+          onDownload={onDownloadAttachment}
+          isDownloading={isDownloading}
+          showCloseIcon
+        />
+      </div>
     </div>
   );
 };
