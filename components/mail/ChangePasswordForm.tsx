@@ -88,7 +88,9 @@ const ChangePasswordForm: React.FC = () => {
         {/* Old Password */}
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
-          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+          <div className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3 ${
+            error === "Current password is incorrect" ? "outline-red-500" : "outline-neutral-200"
+          }`}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
@@ -136,7 +138,9 @@ const ChangePasswordForm: React.FC = () => {
         {/* New Password */}
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
-          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+          <div className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3 ${
+            error === "Password must be at least 6 characters" ? "outline-red-500" : "outline-neutral-200"
+          }`}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
@@ -184,7 +188,9 @@ const ChangePasswordForm: React.FC = () => {
         {/* Confirm Password */}
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
-          <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+          <div className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3 ${
+            confirmPassword && newPassword !== confirmPassword ? "outline-red-500" : "outline-neutral-200"
+          }`}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
@@ -227,11 +233,14 @@ const ChangePasswordForm: React.FC = () => {
           <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
           </div>
+          {confirmPassword && newPassword !== confirmPassword && (
+            <p className="text-xs text-red-500 mt-1">Your confirmation password doesn&apos;t match</p>
+          )}
         </div>
       </div>
 
       {/* Error Message */}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && error !== "Passwords do not match" && <p className="text-sm text-red-600">{error}</p>}
 
       {/* Submit Button */}
       <Button

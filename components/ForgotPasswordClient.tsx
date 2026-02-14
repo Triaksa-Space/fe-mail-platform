@@ -567,7 +567,7 @@ export default function ForgotPasswordClient() {
                     {/* New Password Field */}
                     <div className="relative flex flex-col">
                       <div className="h-3.5" />
-                      <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 flex items-center gap-3">
+                      <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex items-center gap-3">
                         <div className="flex-1 flex items-center gap-2">
                           <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                           <input
@@ -603,10 +603,10 @@ export default function ForgotPasswordClient() {
                     <div className="relative flex flex-col">
                       <div className="h-3.5" />
                       <div className={cn(
-                        "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border flex items-center gap-3",
+                        "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3",
                         confirmPassword && newPassword !== confirmPassword
-                          ? "border-red-300"
-                          : "border-neutral-200"
+                          ? "outline-red-500"
+                          : "outline-neutral-200"
                       )}>
                         <div className="flex-1 flex items-center gap-2">
                           <LockClosedIcon className="w-5 h-5 text-neutral-400" />
@@ -638,7 +638,7 @@ export default function ForgotPasswordClient() {
                         <span className="text-[10px] font-normal text-neutral-800 leading-4">Confirm Password</span>
                       </div>
                       {confirmPassword && newPassword !== confirmPassword && (
-                        <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
+                        <p className="text-xs text-red-500 mt-1">Your confirmation password doesn&apos;t match</p>
                       )}
                     </div>
                   </div>
