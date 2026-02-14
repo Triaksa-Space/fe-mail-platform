@@ -65,7 +65,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
       await saveBindingEmail(email);
 
       toast({
-        description: "Email saved successfully.",
+        description: "Email binding changed successfully.",
         variant: "default",
       });
 
