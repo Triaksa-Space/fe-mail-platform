@@ -5,7 +5,8 @@ import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
-import { parseAttachments, extractFilenameFromUrl, getFileExtension } from "@/lib/attachmentUtils";
+import { parseAttachments } from "@/lib/attachmentUtils";
+import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import {
   Inbox,
   Mail,
@@ -14,7 +15,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
@@ -80,7 +81,6 @@ export default function AdminAllInboxPage() {
   const [selectedEmail, setSelectedEmail] = useState<ApiEmail | null>(null);
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
-  const [iframeHeight, setIframeHeight] = useState("400px");
 
   // Set page title
   useEffect(() => {
@@ -195,7 +195,7 @@ export default function AdminAllInboxPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full h-[calc(100vh-80px)]">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
@@ -284,105 +284,13 @@ export default function AdminAllInboxPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div className={cn(CARD_STYLES.base, "p-4 flex flex-col gap-4")}>
-                    {/* Subject Title */}
-                    <div className="text-neutral-800 text-lg font-medium font-['Roboto'] leading-7">
-                      {selectedEmail.subject || "(No subject)"}
-                    </div>
-
-                    {/* Divider */}
-                    <div className="w-full h-0 outline outline-1 outline-offset-[-0.5px] outline-neutral-200"></div>
-
-                    {/* Email Body Content */}
-                    <div className="flex flex-col">
-                      {emailDetail?.Body ? (
-                        <iframe
-                          srcDoc={emailDetail.Body}
-                          className="w-full"
-                          style={{
-                            height: iframeHeight,
-                            border: "none",
-                            display: "block",
-                            minHeight: "300px",
-                          }}
-                          onLoad={(e) => {
-                            const iframe = e.target as HTMLIFrameElement;
-                            if (iframe.contentWindow) {
-                              const iframeDoc = iframe.contentWindow.document;
-                              const style = iframeDoc.createElement("style");
-                              style.textContent = `
-                                body {
-                                  margin: 0;
-                                  padding: 0;
-                                  font-family: system-ui, -apple-system, sans-serif;
-                                  font-size: 14px;
-                                  line-height: 1.6;
-                                  color: #1F2937;
-                                  background: white;
-                                }
-                                img, table { max-width: 100%; height: auto; }
-                                a { color: #027AEA; }
-                                pre { white-space: pre-wrap; word-wrap: break-word; }
-                              `;
-                              iframeDoc.head.appendChild(style);
-
-                              const links = iframeDoc.querySelectorAll("a");
-                              links.forEach((link) => {
-                                link.setAttribute("target", "_blank");
-                                link.setAttribute("rel", "noopener noreferrer");
-                              });
-
-                              const height = Math.max(
-                                iframeDoc.body.scrollHeight + 48,
-                                300
-                              );
-                              setIframeHeight(`${height}px`);
-                            }
-                          }}
-                          title="Email content"
-                          sandbox="allow-same-origin allow-scripts allow-popups"
-                        />
-                      ) : (
-                        <p className="text-sm text-neutral-600 whitespace-pre-wrap">
-                          {selectedEmail.preview || "No content"}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Attachments - Outside email body card */}
-                  {(() => {
-                    const attachments = parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments);
-                    if (attachments.length === 0) return null;
-                    return (
-                      <div className="inline-flex justify-start items-start gap-2 overflow-x-auto">
-                        {attachments.map((attachment, index) => {
-                          const filename = extractFilenameFromUrl(attachment.URL);
-                          const ext = getFileExtension(filename);
-                          return (
-                            <a
-                              key={index}
-                              href={attachment.URL}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={cn(CARD_STYLES.interactive, "w-32 p-3 inline-flex flex-col justify-start items-start gap-3")}
-                            >
-                              <div className="self-stretch inline-flex justify-between items-center">
-                                <div className="flex justify-start items-center gap-0.5">
-                                  <XMarkIcon className="w-4 h-4 text-primary-500" />
-                                  <span className="text-neutral-800 text-xs font-normal font-['Roboto'] leading-5">{ext}</span>
-                                </div>
-                                <XMarkIcon className="w-4 h-4 text-neutral-800" />
-                              </div>
-                              <span className="self-stretch text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2">
-                                {filename}
-                              </span>
-                            </a>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
+                  <AdminEmailBodyCard
+                    subject={selectedEmail.subject}
+                    body={emailDetail?.Body}
+                    fallbackText={selectedEmail.preview || "No content"}
+                    attachments={parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments)}
+                    className="self-stretch"
+                  />
                 </>
               )}
             </div>
@@ -436,7 +344,7 @@ export default function AdminAllInboxPage() {
 
               {/* Pagination */}
               {totalPages > 0 && (
-                <div className="border-t border-neutral-100 pt-4 px-4 pb-4">
+                <div className="border-t border-neutral-100 pt-4">
                   <PaginationComponent
                     totalPages={totalPages}
                     currentPage={page}

@@ -10,7 +10,7 @@ import { ApiSentEmail } from "@/lib/transformers";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { EmailBodyCard } from "@/components/mail";
+import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
@@ -190,7 +190,7 @@ export default function AdminAllSentPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full h-[calc(100vh-80px)]">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
@@ -298,7 +298,7 @@ export default function AdminAllSentPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <EmailBodyCard
+                  <AdminEmailBodyCard
                     subject={selectedEmail.subject}
                     body={emailDetail?.Body || emailDetail?.body}
                     fallbackText={selectedEmail.body_preview || "No content"}
@@ -306,6 +306,7 @@ export default function AdminAllSentPage() {
                       emailDetail?.attachments,
                       emailDetail?.ListAttachments,
                     )}
+                    className="self-stretch"
                   />
                 </>
               )}
@@ -367,7 +368,7 @@ export default function AdminAllSentPage() {
 
               {/* Pagination */}
               {totalPages > 0 && (
-                <div className="border-t border-neutral-100 pt-4 px-4 pb-4">
+                <div className="border-t border-neutral-100">
                   <PaginationComponent
                     totalPages={totalPages}
                     currentPage={page}

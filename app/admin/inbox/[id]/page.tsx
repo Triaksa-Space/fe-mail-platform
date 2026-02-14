@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { CARD_STYLES } from "@/lib/styles";
 import { parseAttachments } from "@/lib/attachmentUtils";
-import { EmailBodyCard } from "@/components/mail";
+import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import {
   Inbox,
   Mail,
@@ -199,11 +199,12 @@ export default function AdminInboxDetailPage() {
               </div>
             </div>
 
-            <EmailBodyCard
+            <AdminEmailBodyCard
               subject={subject}
               body={email.body}
               fallbackText={email.preview || "No content available"}
               attachments={attachments}
+              className="self-stretch"
             />
           </div>
         ) : null}
