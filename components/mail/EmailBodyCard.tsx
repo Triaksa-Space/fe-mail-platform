@@ -22,7 +22,7 @@ const IFRAME_STYLES = `
   }
   body {
     margin: 0;
-    padding: 16px;
+    padding: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
     line-height: 1.6;
@@ -76,7 +76,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
         link.setAttribute("rel", "noopener noreferrer");
       });
 
-      const height = Math.max(iframeDoc.body.scrollHeight + 24, 140);
+      const height = Math.max(iframeDoc.body.scrollHeight + 8, 140);
       setIframeHeight(`${height}px`);
     }
   };

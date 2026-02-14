@@ -141,7 +141,7 @@ const EmailDetailPage: React.FC = () => {
       style.textContent = `
         body {
           margin: 0;
-          padding: 16px;
+          padding: 0;
           font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           font-size: 14px;
           line-height: 1.6;
@@ -170,7 +170,7 @@ const EmailDetailPage: React.FC = () => {
       });
 
       // Adjust height
-      const height = Math.max(iframeDoc.body.scrollHeight + 32, 200);
+      const height = Math.max(iframeDoc.body.scrollHeight + 8, 200);
       setIframeHeight(`${height}px`);
     }
   };
