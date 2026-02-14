@@ -107,6 +107,8 @@ const InboxPageContent: React.FC = () => {
   const [emails, setEmails] = useState<Mail[]>([]);
   const [sentEmails, setSentEmails] = useState<SentMail[]>([]);
   const [sentCount, setSentCount] = useState(0);
+  const [maxDailySend, setMaxDailySend] = useState(3);
+  const [resetsAt, setResetsAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSentLoading, setIsSentLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -233,20 +235,31 @@ const InboxPageContent: React.FC = () => {
     };
   }, [updateLastActivity, handleVisibilityChange]);
 
-  // Fetch sent count
+  // Fetch email quota (sent count, limit, reset time)
   const fetchSentCount = async () => {
     if (!token) return;
 
     try {
-      const response = await apiClient.get("/email/sent/by_user");
+      const response = await apiClient.get("/email/quota");
 
       if (response.data) {
-        setSentCount(response.data.SentEmails);
+        setSentCount(response.data.sent);
+        setMaxDailySend(response.data.limit);
+        setResetsAt(response.data.resets_at);
+      }
+    } catch (err) {
+      console.error("Failed to fetch email quota:", err);
+    }
+
+    // Also fetch user email (still needed for display)
+    try {
+      const response = await apiClient.get("/email/sent/by_user");
+      if (response.data) {
         setEmail(response.data.Email);
         setUserEmail(response.data.Email);
       }
     } catch (err) {
-      console.error("Failed to fetch sent count:", err);
+      console.error("Failed to fetch user email:", err);
     }
   };
 
@@ -634,7 +647,8 @@ const InboxPageContent: React.FC = () => {
         }}
         onSent={handleEmailSent}
         sentCount={sentCount}
-        maxDailySend={3}
+        maxDailySend={maxDailySend}
+        resetsAt={resetsAt}
         forwardData={forwardData}
         replyTo={
           !forwardData && selectedEmail

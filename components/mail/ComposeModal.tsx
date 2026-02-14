@@ -34,6 +34,7 @@ interface ComposeModalProps {
   forwardData?: ForwardData;
   sentCount?: number;
   maxDailySend?: number;
+  resetsAt?: string | null;
 }
 
 interface UploadedAttachment {
@@ -59,6 +60,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   forwardData,
   sentCount = 0,
   maxDailySend = 3,
+  resetsAt,
 }) => {
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
@@ -82,6 +84,23 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const token = useAuthStore.getState().getStoredToken();
 
   const isLimitReached = sentCount >= maxDailySend;
+
+  const getLimitMessage = () => {
+    if (resetsAt) {
+      const resetTime = new Date(resetsAt);
+      const now = new Date();
+      const diffMs = resetTime.getTime() - now.getTime();
+      if (diffMs > 0) {
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.ceil((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        if (hours > 0) {
+          return `Daily send limit reached. Try again in ${hours}h ${minutes}m.`;
+        }
+        return `Daily send limit reached. Try again in ${minutes}m.`;
+      }
+    }
+    return "Daily send limit reached. Try again tomorrow.";
+  };
 
   // Check if form is dirty (has unsaved changes)
   const isDirty = useCallback((): boolean => {
@@ -171,11 +190,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   useEffect(() => {
     if (isOpen && isLimitReached && !hasShownLimitToast) {
       toast({
-        description: "Daily send limit reached. Try again tomorrow.",
+        description: getLimitMessage(),
         variant: "destructive",
       });
       setHasShownLimitToast(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasShownLimitToast, isLimitReached, isOpen, toast]);
 
   // Clean up only newly uploaded attachments (not forwarded ones)
@@ -235,7 +255,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 
     if (isLimitReached) {
       toast({
-        description: "Daily send limit reached. Try again tomorrow.",
+        description: getLimitMessage(),
         variant: "destructive",
       });
       return;
@@ -262,8 +282,22 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       onClose();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 429) {
+        const data = error.response?.data;
+        let msg = getLimitMessage();
+        if (data?.resets_at) {
+          const resetTime = new Date(data.resets_at);
+          const now = new Date();
+          const diffMs = resetTime.getTime() - now.getTime();
+          if (diffMs > 0) {
+            const hours = Math.floor(diffMs / (1000 * 60 * 60));
+            const minutes = Math.ceil((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            msg = hours > 0
+              ? `Daily send limit reached. Try again in ${hours}h ${minutes}m.`
+              : `Daily send limit reached. Try again in ${minutes}m.`;
+          }
+        }
         toast({
-          description: "Daily send email limit reached. Try again tomorrow.",
+          description: msg,
           variant: "destructive",
         });
       } else {
