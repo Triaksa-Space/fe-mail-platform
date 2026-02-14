@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
+import CenterTruncate from "@/components/ui/center-truncate";
 import {
   Inbox,
   Mail,
@@ -140,9 +141,9 @@ export default function AdminInboxDetailPage() {
             <ChevronRightIcon className="h-4 w-4 text-neutral-300" />
             <div className="flex items-center gap-1 text-sm text-primary-500">
               <Mail className="h-4 w-4" />
-              <span className="line-clamp-1">
+              <CenterTruncate className="text-primary-500 text-sm font-normal font-['Roboto'] leading-4">
                 {isLoading ? "Loading..." : subject}
-              </span>
+              </CenterTruncate>
             </div>
           </div>
         </div>

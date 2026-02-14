@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
+import CenterTruncate from "@/components/ui/center-truncate";
 import { Mail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
@@ -37,19 +38,7 @@ const InboxList: React.FC<InboxListProps> = ({
   fullWidth = false,
   userEmail,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  sentCount = 0,
 }) => {
-  const formatUserEmail = (email: string) => {
-    if (!email.includes("@")) return email;
-    if (email.length <= 24) return email;
-
-    const [localPart, domainPart] = email.split("@");
-    if (!domainPart) return email;
-
-    const truncatedDomain = `${domainPart.slice(0, 7)}..`;
-    return `${localPart}@${truncatedDomain}`;
-  };
-
   // Use minimum loading time to prevent skeleton flicker
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
@@ -91,9 +80,12 @@ const InboxList: React.FC<InboxListProps> = ({
         </div>
         <div className="flex items-center gap-3">
           {userEmail && (
-            <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">
-              {formatUserEmail(userEmail)}
-            </span>
+            <CenterTruncate
+              side="right"
+              className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5"
+            >
+              {userEmail}
+            </CenterTruncate>
           )}
           <Button
             variant="outline"
@@ -145,9 +137,12 @@ const InboxList: React.FC<InboxListProps> = ({
             />
           </Button>
           {userEmail && (
-            <span className="text-base font-semibold font-['Roboto'] leading-6 text-neutral-800 truncate max-w-[220px]">
+            <CenterTruncate
+              side="right"
+              className="text-base font-semibold font-['Roboto'] leading-6 text-neutral-800"
+            >
               {userEmail}
-            </span>
+            </CenterTruncate>
           )}
         </div>
       </div>

@@ -16,6 +16,7 @@ import AdminEmailListRow, { formatEmailListDate } from "@/components/admin/Admin
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import CenterTruncate from "@/components/ui/center-truncate";
 import {
   ArrowPathIcon,
   ArrowLeftIcon,
@@ -251,9 +252,9 @@ export default function AdminAllSentPage() {
                 {/* Current email subject */}
                 <div className="flex justify-center items-center gap-1">
                   <Mail className="w-4 h-4 text-primary-500" />
-                  <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-4 line-clamp-1">
+                  <CenterTruncate className="text-primary-500 text-sm font-normal font-['Roboto'] leading-4">
                     {selectedEmail.subject || "(No subject)"}
-                  </span>
+                  </CenterTruncate>
                 </div>
               </div>
 

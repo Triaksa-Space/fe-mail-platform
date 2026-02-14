@@ -5,6 +5,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CenterTruncate from "@/components/ui/center-truncate";
 import { SentMail } from "./types";
 import { InboxListSkeleton } from "./InboxListSkeleton";
 import { useMinimumLoading } from "@/hooks/use-minimum-loading";
@@ -42,17 +43,6 @@ const SentList: React.FC<SentListProps> = ({
   userEmail,
   isComposeOpen = false,
 }) => {
-  const formatUserEmail = (email: string) => {
-    if (!email.includes("@")) return email;
-    if (email.length <= 24) return email;
-
-    const [localPart, domainPart] = email.split("@");
-    if (!domainPart) return email;
-
-    const truncatedDomain = `${domainPart.slice(0, 12)}..`;
-    return `${localPart}@${truncatedDomain}`;
-  };
-
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
   });
@@ -92,9 +82,12 @@ const SentList: React.FC<SentListProps> = ({
         </div>
         <div className="flex items-center gap-3">
           {userEmail && (
-            <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">
-              {formatUserEmail(userEmail)}
-            </span>
+            <CenterTruncate
+              side="right"
+              className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5"
+            >
+              {userEmail}
+            </CenterTruncate>
           )}
         </div>
       </div>
@@ -113,9 +106,12 @@ const SentList: React.FC<SentListProps> = ({
             )}
           </div>
           {userEmail && (
-            <span className="text-base font-semibold font-['Roboto'] leading-6 text-neutral-800 truncate max-w-[220px]">
+            <CenterTruncate
+              side="right"
+              className="text-base font-semibold font-['Roboto'] leading-6 text-neutral-800"
+            >
               {userEmail}
-            </span>
+            </CenterTruncate>
           )}
         </div>
       </div>

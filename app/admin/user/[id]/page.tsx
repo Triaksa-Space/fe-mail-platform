@@ -13,6 +13,7 @@ import { ArrowPathIcon, UserGroupIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon
 import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import { Button } from "@/components/ui/button";
+import CenterTruncate from "@/components/ui/center-truncate";
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -282,9 +283,9 @@ export default function UserDetailPage() {
             {/* Current user email */}
             <div className="flex justify-center items-center gap-1">
               <UserIcon className="w-4 h-4 text-primary-500" />
-              <div className="justify-center text-primary-500 text-sm font-normal font-['Roboto'] leading-4">
+              <CenterTruncate className="text-primary-500 text-sm font-normal font-['Roboto'] leading-4">
                 {isLoadingUser ? "Loading..." : userDetails?.Email || "Unknown"}
-              </div>
+              </CenterTruncate>
             </div>
           </div>
 

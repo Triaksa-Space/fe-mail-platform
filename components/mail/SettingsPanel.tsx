@@ -7,6 +7,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { apiClient } from "@/lib/api-client";
 import ChangePasswordForm from "./ChangePasswordForm";
 import EmailBindingForm from "./EmailBindingForm";
+import CenterTruncate from "@/components/ui/center-truncate";
 
 interface SettingsPanelProps {
   onBack?: () => void;
@@ -49,7 +50,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             className="h-10 w-28"
           />
         </div>
-        <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{email}</span>
+        <CenterTruncate
+          side="right"
+          className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5"
+        >
+          {email}
+        </CenterTruncate>
       </div>
 
       {/* Content */}
@@ -59,7 +65,12 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
           {/* Desktop Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-neutral-800 text-lg font-semibold font-['Roboto'] leading-7">Settings</h2>
-            <span className="text-neutral-800 text-base font-semibold font-['Roboto'] leading-6">{email}</span>
+            <CenterTruncate
+              side="right"
+              className="text-neutral-800 text-base font-semibold font-['Roboto'] leading-6"
+            >
+              {email}
+            </CenterTruncate>
           </div>
 
           {/* Web View: Horizontal card with both sections */}
