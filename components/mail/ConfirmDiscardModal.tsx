@@ -44,7 +44,7 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
         aria-modal="true"
         aria-labelledby="discard-title"
         aria-describedby="discard-description"
-        className="relative w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden"
+        className="relative w-96 p-4 bg-white rounded-sm shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden"
       >
         <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
           {/* Icon and Text */}

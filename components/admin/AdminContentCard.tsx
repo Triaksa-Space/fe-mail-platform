@@ -19,7 +19,7 @@ const AdminContentCard: React.FC<AdminContentCardProps> = ({
   return (
     <div
       className={cn(
-        "rounded-xl bg-white p-4 md:p-4 border border-neutral-100",
+        "rounded-lg bg-white p-4 md:p-4 border border-neutral-100",
         "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]",
         className
       )}
