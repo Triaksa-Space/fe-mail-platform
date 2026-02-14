@@ -43,7 +43,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
   attachments = [],
   className,
 }) => {
-  const [iframeHeight, setIframeHeight] = useState("400px");
+  const [iframeHeight, setIframeHeight] = useState("160px");
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
@@ -60,7 +60,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
         link.setAttribute("rel", "noopener noreferrer");
       });
 
-      const height = Math.max(iframeDoc.body.scrollHeight + 32, 200);
+      const height = Math.max(iframeDoc.body.scrollHeight + 24, 140);
       setIframeHeight(`${height}px`);
     }
   };
@@ -72,7 +72,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-4 min-h-0",
+      "p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-4 min-h-0 max-h-full overflow-hidden",
       className
     )}>
       {/* Subject */}
@@ -93,7 +93,6 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
               height: iframeHeight,
               border: "none",
               display: "block",
-              minHeight: "300px",
             }}
             onLoad={handleIframeLoad}
             title="Email content"

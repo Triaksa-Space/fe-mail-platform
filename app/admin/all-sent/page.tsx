@@ -312,7 +312,7 @@ export default function AdminAllSentPage() {
                       emailDetail?.attachments,
                       emailDetail?.ListAttachments,
                     )}
-                    className="self-stretch flex-1"
+                    className="self-stretch min-h-0"
                   />
                 </>
               )}

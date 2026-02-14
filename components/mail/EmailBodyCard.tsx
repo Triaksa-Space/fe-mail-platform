@@ -47,7 +47,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
   isDownloading = false,
   className,
 }) => {
-  const [iframeHeight, setIframeHeight] = useState("400px");
+  const [iframeHeight, setIframeHeight] = useState("160px");
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
@@ -64,7 +64,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
         link.setAttribute("rel", "noopener noreferrer");
       });
 
-      const height = Math.max(iframeDoc.body.scrollHeight + 32, 200);
+      const height = Math.max(iframeDoc.body.scrollHeight + 24, 140);
       setIframeHeight(`${height}px`);
     }
   };
@@ -77,7 +77,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2 min-h-0",
+      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2 min-h-0 max-h-full overflow-hidden",
       className
     )}>
       {/* Subject */}
@@ -98,7 +98,6 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
               height: iframeHeight,
               border: "none",
               display: "block",
-              minHeight: "300px",
             }}
             onLoad={handleIframeLoad}
             title="Email content"

@@ -294,7 +294,7 @@ export default function AdminAllInboxPage() {
                     body={emailDetail?.Body}
                     fallbackText={selectedEmail.preview || "No content"}
                     attachments={parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments)}
-                    className="self-stretch flex-1"
+                    className="self-stretch min-h-0"
                   />
                 </>
               )}

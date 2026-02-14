@@ -312,7 +312,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Body Card */}
-            <div className="px-4 flex-1 flex flex-col min-h-0">
+            <div className="px-4 min-h-0">
               <EmailBodyCard
                 subject={email.subject}
                 body={isSentView ? email.body : emailDetail?.Body}
@@ -320,7 +320,7 @@ const Preview: React.FC<PreviewProps> = ({
                 attachments={attachments}
                 onDownloadAttachment={!isSentView ? handleDownload : undefined}
                 isDownloading={isDownloading}
-                className="flex-1"
+                className="min-h-0"
               />
             </div>
           </div>

@@ -164,8 +164,8 @@ export default function AdminSentDetailPage() {
             </Button>
           </div>
         ) : email ? (
-          <div className="self-stretch flex-1 min-h-0 inline-flex flex-col justify-start items-start gap-5">
-            <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col justify-start items-start gap-2">
+          <div className="self-stretch flex-1 min-h-0 flex flex-col justify-start items-start gap-5 overflow-hidden">
+            <div className="self-stretch shrink-0 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col justify-start items-start gap-2">
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">
                   <div className="flex justify-start items-center gap-1">
@@ -206,7 +206,7 @@ export default function AdminSentDetailPage() {
               body={email.body}
               fallbackText={email.body_preview || "No content available"}
               attachments={attachments}
-              className="self-stretch flex-1"
+              className="self-stretch min-h-0"
             />
           </div>
         ) : null}
