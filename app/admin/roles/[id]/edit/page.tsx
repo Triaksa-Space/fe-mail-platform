@@ -155,7 +155,7 @@ const EditAdminPageContent: React.FC = () => {
             await apiClient.put(`/admin/admins/${admin?.id}`, payload);
 
             toast({
-                description: "Admin updated successfully.",
+                description: "Data changed successfully.",
                 variant: "default",
             });
 
