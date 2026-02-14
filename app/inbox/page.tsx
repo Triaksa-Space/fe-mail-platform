@@ -636,6 +636,7 @@ const InboxPageContent: React.FC = () => {
           currentView={currentView}
           onViewChange={handleViewChange}
           onLogout={handleLogout}
+          unreadCount={emails.filter((email) => email.unread).length}
         />
       )}
 

@@ -20,6 +20,7 @@ interface BottomTabsProps {
   currentView: ViewType;
   onViewChange: (view: ViewType) => void;
   onLogout: () => void;
+  unreadCount?: number;
   className?: string;
 }
 
@@ -27,6 +28,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
   currentView,
   onViewChange,
   onLogout,
+  unreadCount = 0,
   className,
 }) => {
   return (
@@ -51,11 +53,18 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
               : "text-neutral-600 hover:text-neutral-600"
           )}
         >
-          {currentView === "inbox" ? (
-            <InboxSolidIcon className="w-5 h-5" />
-          ) : (
-            <InboxOutlineIcon className="w-5 h-5" />
-          )}
+          <div className="relative">
+            {currentView === "inbox" ? (
+              <InboxSolidIcon className="w-5 h-5" />
+            ) : (
+              <InboxOutlineIcon className="w-5 h-5" />
+            )}
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-2.5 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none px-1">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </div>
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
             currentView === "inbox" ? "font-semibold" : "font-normal"
