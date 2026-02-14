@@ -32,6 +32,7 @@ import {
   InboxListSkeleton,
 } from "@/components/mail";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSessionTimeout } from "@/hooks/use-session-timeout";
 
 // Loading fallback with proper skeleton layout
 const LoadingFallback: React.FC = () => (
@@ -94,6 +95,8 @@ const InboxPageContent: React.FC = () => {
   const logout = useAuthStore((state) => state.logout);
   const { setEmail } = useAuthStore();
   const storedToken = useAuthStore.getState().getStoredToken();
+
+  useSessionTimeout();
 
   // UI state
   const [authLoaded, setAuthLoaded] = useState(false);

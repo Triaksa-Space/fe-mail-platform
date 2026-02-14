@@ -15,6 +15,7 @@ import { AdminLayout, AdminContentCard } from "@/components/admin"
 import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -49,6 +50,7 @@ const ToggleSwitch: React.FC<{
 );
 
 const CreateBulkEmailPageContent: React.FC = () => {
+  const { allowed } = useRequirePermission("create_bulk");
   const [selectedDomain, setSelectedDomain] = useState("mailria.com")
   const [count, setCount] = useState(2)
   const [password, setPassword] = useState("")
@@ -183,6 +185,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
   }
 
   const isFormValid = receiveEmail && (baseName || isRandomNameActive) && (password || isRandomPasswordActive);
+
+  if (!allowed) return null;
 
   return (
     <AdminLayout>
@@ -462,7 +466,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
       </div>
 
       {/* Loading Indicator */}
-      {isLoading && <LoadingProcessingPage />}
+      {isLoading && <LoadingProcessingPage message={`Creating ${count} accounts...`} />}
     </AdminLayout>
   )
 }

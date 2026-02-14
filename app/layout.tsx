@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import SyncLogoutProvider from "@/components/SyncLogoutProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -49,6 +50,7 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
+        <SyncLogoutProvider />
         <ErrorBoundary>{children}</ErrorBoundary>
       </body>
     </html>

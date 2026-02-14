@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useSessionTimeout } from "@/hooks/use-session-timeout";
 import AdminSidebar from "./AdminSidebar";
 import AdminMobileNav from "./AdminMobileNav";
 
@@ -14,6 +15,20 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);
   const _hasHydrated = useAuthStore((state) => state._hasHydrated);
+
+  useSessionTimeout();
+
+  // Check auth on popstate (back button) to prevent cached page access
+  useEffect(() => {
+    const handlePopState = () => {
+      const storedToken = useAuthStore.getState().getStoredToken();
+      if (!storedToken) {
+        window.location.replace("/");
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   useEffect(() => {
     if (!_hasHydrated) return;

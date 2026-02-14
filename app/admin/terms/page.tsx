@@ -14,6 +14,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import type { Editor as TinyMCEEditor } from "tinymce";
 import { PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 interface TermsResponse {
   content: string;
@@ -40,6 +41,7 @@ const LoadingFallback: React.FC = () => (
 );
 
 const AdminTermsPageContent: React.FC = () => {
+  const { allowed } = useRequirePermission("terms_of_services");
   const router = useRouter();
   const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
@@ -165,6 +167,8 @@ const AdminTermsPageContent: React.FC = () => {
   if (!authLoaded || roleId === 1) {
     return <LoadingFallback />;
   }
+
+  if (!allowed) return null;
 
   return (
     <AdminLayout>

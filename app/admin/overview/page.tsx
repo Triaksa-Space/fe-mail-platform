@@ -19,6 +19,7 @@ import {
 } from "@/lib/transformers";
 import { EnvelopeIcon, UserGroupIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 // API Response Types
 interface ApiOverviewResponse {
@@ -200,6 +201,7 @@ function LatestListCard({
 
 // Main Page Component
 export default function OverviewPage() {
+  const { allowed } = useRequirePermission("overview");
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);
   const [isLoading, setIsLoading] = useState(true);
@@ -280,6 +282,8 @@ export default function OverviewPage() {
       router.push(`/inbox`);
     }
   };
+
+  if (!allowed) return null;
 
   return (
     <AdminLayout>

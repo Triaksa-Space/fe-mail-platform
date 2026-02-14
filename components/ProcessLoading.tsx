@@ -1,4 +1,8 @@
-const LoadingProcessingPage: React.FC = () => {
+interface LoadingProcessingPageProps {
+  message?: string;
+}
+
+const LoadingProcessingPage: React.FC<LoadingProcessingPageProps> = ({ message = "Processing..." }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg flex items-center space-x-4">
@@ -22,7 +26,7 @@ const LoadingProcessingPage: React.FC = () => {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <p className="text-neutral-700">Processing...</p>
+        <p className="text-neutral-700">{message}</p>
       </div>
     </div>
   );

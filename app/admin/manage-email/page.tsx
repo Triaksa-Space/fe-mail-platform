@@ -19,6 +19,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 // API response interfaces (snake_case from backend)
 interface ApiEmail {
@@ -61,6 +62,7 @@ interface EmailDetail {
 }
 
 export default function AdminAllInboxPage() {
+  const { allowed } = useRequirePermission("all_inbox");
   const token = useAuthStore((state) => state.token);
 
   // Data state
@@ -192,6 +194,8 @@ export default function AdminAllInboxPage() {
     setSelectedEmail(null);
     setEmailDetail(null);
   };
+
+  if (!allowed) return null;
 
   return (
     <AdminLayout>

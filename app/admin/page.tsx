@@ -22,6 +22,7 @@ import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outl
 import { XCircleIcon } from '@heroicons/react/20/solid';
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 interface EmailUser {
     user_encode_id: string;
@@ -118,6 +119,7 @@ const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw })
 };
 
 const EmailManagementPageContent: React.FC = () => {
+    const { allowed } = useRequirePermission("user_list");
     const [searchTerm, setSearchTerm] = useState("");
     const [users, setUsers] = useState<EmailUser[]>([]);
     const [sortField, setSortField] = useState<SortField | null>(null);
@@ -350,6 +352,8 @@ const EmailManagementPageContent: React.FC = () => {
         }
         return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-neutral-400" />;
     };
+
+    if (!allowed) return null;
 
     return (
         <AdminLayout>

@@ -24,6 +24,7 @@ import {
   PaperAirplaneIcon,
 } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -57,6 +58,7 @@ interface EmailDetail {
 }
 
 export default function AdminAllSentPage() {
+  const { allowed } = useRequirePermission("all_sent");
   const token = useAuthStore((state) => state.token);
 
   // Data state
@@ -188,6 +190,8 @@ export default function AdminAllSentPage() {
     setSelectedEmail(null);
     setEmailDetail(null);
   };
+
+  if (!allowed) return null;
 
   return (
     <AdminLayout>

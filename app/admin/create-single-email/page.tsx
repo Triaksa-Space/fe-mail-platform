@@ -15,6 +15,7 @@ import { AdminLayout, AdminContentCard } from "@/components/admin";
 import { CheckCircleIcon, DocumentDuplicateIcon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -27,6 +28,7 @@ interface CreatedEmail {
 }
 
 const CreateSingleEmailPageContent: React.FC = () => {
+  const { allowed } = useRequirePermission("create_single");
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);
   const storedToken = useAuthStore.getState().getStoredToken();
@@ -183,6 +185,8 @@ const CreateSingleEmailPageContent: React.FC = () => {
   };
 
   const isFormValid = username && password;
+
+  if (!allowed) return null;
 
   return (
     <AdminLayout>
@@ -358,7 +362,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
       </div>
 
       {/* Loading Indicator */}
-      {isLoading && <LoadingProcessingPage />}
+      {isLoading && <LoadingProcessingPage message="Creating account..." />}
     </AdminLayout>
   );
 };
