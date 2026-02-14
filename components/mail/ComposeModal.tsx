@@ -360,11 +360,11 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
             // Mobile: full screen with py-4 and gap-4
             "h-full py-4 gap-4",
             // Desktop: centered modal with max dimensions
-            "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-2xl lg:max-w-3xl md:rounded-2xl md:shadow-xl md:bg-[#F9FAFB]"
+            "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-sm lg:max-w-3xl md:rounded-sm md:shadow-xl md:bg-[#F9FAFB]"
           )}
         >
           {/* Header Action Row */}
-          <div className="flex items-center justify-between px-4 md:py-3 md:bg-white md:rounded-t-2xl">
+          <div className="flex items-center justify-between px-4 md:py-3 md:bg-white md:rounded-t-sm">
             {/* Left: Close Button */}
             <Button
               type="button"

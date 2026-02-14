@@ -49,7 +49,7 @@ export default function LoginPageClient() {
 
     // Redirect based on stored role
     if (roleId === 0 || roleId === 2) {
-      router.push("/admin");
+      router.push("/admin/overview");
     } else if (roleId === 1) {
       router.push("/inbox");
     }
@@ -155,7 +155,7 @@ export default function LoginPageClient() {
 
       // Redirect based on role
       if (user.role_id === 0 || user.role_id === 2) {
-        router.push("/admin");
+        router.push("/admin/overview");
       } else if (user.role_id === 1) {
         router.push("/inbox");
       }

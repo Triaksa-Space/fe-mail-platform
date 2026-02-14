@@ -6,3 +6,4 @@ export { default as UserRowActionMenu } from "./UserRowActionMenu";
 export { default as AdminRowActionMenu } from "./AdminRowActionMenu";
 export { default as PermissionChips } from "./PermissionChips";
 export { default as PermissionMultiSelect } from "./PermissionMultiSelect";
+export { default as AdminEmailListRow } from "./AdminEmailListRow";

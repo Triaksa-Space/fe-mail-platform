@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
+import { BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
 import { Mail } from "lucide-react";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import AdminContentCard from "@/components/admin/AdminContentCard";
+import AdminEmailListRow, { formatEmailListDate } from "@/components/admin/AdminEmailListRow";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
@@ -355,9 +356,13 @@ export default function AdminAllSentPage() {
                 ) : (
                   <div className="flex flex-col gap-2 p-1">
                     {emails.map((email) => (
-                      <AdminSentRow
+                      <AdminEmailListRow
                         key={email.id}
-                        email={email}
+                        primaryText={`To: ${email.to || "Unknown"}`}
+                        subject={email.subject || "(No subject)"}
+                        snippet={email.body_preview || "No preview available"}
+                        sideText={email.from || email.user_email || "Unknown"}
+                        dateText={formatEmailListDate(email.sent_at)}
                         isSelected={false}
                         onClick={() => handleSelectEmail(email)}
                       />
@@ -386,59 +391,6 @@ export default function AdminAllSentPage() {
     </AdminLayout>
   );
 }
-
-// Admin sent row component
-interface AdminSentRowProps {
-  email: ApiSentEmail;
-  isSelected: boolean;
-  onClick: () => void;
-}
-
-const AdminSentRow: React.FC<AdminSentRowProps> = ({
-  email,
-  isSelected,
-  onClick,
-}) => {
-  return (
-    <Button
-      variant="ghost"
-      onClick={onClick}
-      className={cn(
-        isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
-        "h-auto self-stretch w-full text-left px-4 py-2",
-        "inline-flex justify-start items-center gap-2 min-w-0",
-        !isSelected && "hover:bg-neutral-100",
-      )}
-    >
-      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
-        {/* Row 1: Recipient + Time */}
-        <div className="self-stretch min-w-0 inline-flex justify-between items-center">
-          <div className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6 truncate">
-            To: {email.to || "Unknown"}
-          </div>
-          <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
-            {formatRelativeTime(email.sent_at)}
-          </div>
-        </div>
-
-        {/* Row 2: Subject + Sender email */}
-        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-2">
-          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
-            <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate">
-              {email.subject || "(No subject)"}
-            </div>
-            <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate">
-              {email.body_preview || "No preview available"}
-            </div>
-          </div>
-          <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
-            {email.from || email.user_email || "Unknown"}
-          </div>
-        </div>
-      </div>
-    </Button>
-  );
-};
 
 
 

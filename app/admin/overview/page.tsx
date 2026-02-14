@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import AdminLayout from "@/components/admin/AdminLayout";
+import AdminEmailListRow from "@/components/admin/AdminEmailListRow";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
@@ -101,84 +102,6 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
   );
 }
 
-// Email Row Component (matching Figma design)
-interface EmailRowProps {
-  email: EmailItem;
-  type: "inbox" | "sent";
-  onClick?: () => void;
-}
-
-function EmailRow({ email, type, onClick }: EmailRowProps) {
-  const isUnread = type === "inbox" && email.isUnread;
-
-  return (
-    <Button
-      variant="ghost"
-      onClick={onClick}
-      className={cn(
-        CARD_STYLES.interactive,
-        "h-auto px-4 py-2 inline-flex justify-start items-center gap-2 w-full text-left"
-      )}
-    >
-      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-        {/* Top row: Sender/Recipient + Time + Unread badge */}
-        <div className="self-stretch inline-flex justify-between items-center">
-          <div
-            className={cn(
-              "justify-center text-base font-['Roboto'] leading-6",
-              isUnread
-                ? "text-neutral-800 font-semibold"
-                : "text-neutral-600 font-normal"
-            )}
-          >
-            {type === "sent" ? `To: ${email.name}` : email.name}
-          </div>
-          <div className="flex justify-end items-center gap-0.5">
-            <div
-              className={cn(
-                "justify-center text-xs font-['Roboto'] leading-5 line-clamp-1",
-                isUnread
-                  ? "text-neutral-800 font-semibold"
-                  : "text-neutral-600 font-normal"
-              )}
-            >
-              {email.date}
-            </div>
-            {isUnread && (
-              <div className="w-2 h-2 bg-primary-600 rounded-full" />
-            )}
-          </div>
-        </div>
-
-        {/* Content row: Subject + Preview + User email */}
-        <div className="self-stretch inline-flex justify-start items-start gap-2">
-          <div className="flex-1 inline-flex flex-col justify-start items-start gap-1">
-            {/* Subject */}
-            <div
-              className={cn(
-                "self-stretch justify-center text-sm font-['Roboto'] leading-5 line-clamp-1",
-                isUnread
-                  ? "text-neutral-800 font-semibold"
-                  : "text-neutral-600 font-normal"
-              )}
-            >
-              {email.subject}
-            </div>
-            {/* Preview/Snippet */}
-            <div className="self-stretch justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 line-clamp-1">
-              {email.snippet}
-            </div>
-          </div>
-          {/* User email badge */}
-          <div className="justify-center text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-            {email.email}
-          </div>
-        </div>
-      </div>
-    </Button>
-  );
-}
-
 // Email Row Skeleton
 function EmailRowSkeleton() {
   return (
@@ -257,10 +180,14 @@ function LatestListCard({
         ) : (
           <>
             {emails.map((email) => (
-              <EmailRow
+              <AdminEmailListRow
                 key={email.id}
-                email={email}
-                type={type}
+                primaryText={type === "sent" ? `To: ${email.name}` : email.name}
+                subject={email.subject || "(No subject)"}
+                snippet={email.snippet || "No preview available"}
+                sideText={email.email || "Unknown"}
+                dateText={email.date}
+                isUnread={type === "inbox" && !!email.isUnread}
                 onClick={() => onItemClick?.(email.id)}
               />
             ))}

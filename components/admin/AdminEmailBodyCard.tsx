@@ -16,40 +16,23 @@ interface AdminEmailBodyCardProps {
 const IFRAME_STYLES = `
   body {
     margin: 0;
-    padding: 0;
-    font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+    padding: 16px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
-    line-height: 1.5;
-    color: #111827;
-    width: 100%;
-    box-sizing: border-box;
-    overflow-y: auto !important;
-    overflow-x: auto !important;
+    line-height: 1.6;
+    color: #1F2937;
     background: white;
   }
   img, table {
     max-width: 100%;
     height: auto;
   }
-  table {
-    width: 100% !important;
-    table-layout: fixed;
+  a {
+    color: #027AEA;
   }
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;
-    overflow: hidden !important;
-  }
-  table, tr, td, th, div, p, img {
-    max-width: 100% !important;
-    box-sizing: border-box;
-    word-break: break-word;
-  }
-  * {
-    box-sizing: border-box;
-  }
-  a {
-    color: #027AEA;
   }
 `;
 
@@ -67,11 +50,6 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
     if (iframe.contentWindow) {
       const iframeDoc = iframe.contentWindow.document;
 
-      const meta = iframeDoc.createElement("meta");
-      meta.name = "viewport";
-      meta.content = "width=device-width, initial-scale=1";
-      iframeDoc.head.appendChild(meta);
-
       const style = iframeDoc.createElement("style");
       style.textContent = IFRAME_STYLES;
       iframeDoc.head.appendChild(style);
@@ -82,7 +60,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
         link.setAttribute("rel", "noopener noreferrer");
       });
 
-      const height = Math.max(iframeDoc.body.scrollHeight + 20, 100);
+      const height = Math.max(iframeDoc.body.scrollHeight + 32, 200);
       setIframeHeight(`${height}px`);
     }
   };
@@ -106,7 +84,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200" />
 
       {/* Body */}
-      <div className="flex-1 min-h-[200px] overflow-x-auto">
+      <div className="h-full overflow-auto">
         {body ? (
           <iframe
             srcDoc={body}
@@ -115,13 +93,14 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
               height: iframeHeight,
               border: "none",
               display: "block",
+              minHeight: "300px",
             }}
             onLoad={handleIframeLoad}
             title="Email content"
-            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation-by-user-activation"
+            sandbox="allow-same-origin allow-scripts allow-popups"
           />
         ) : (
-          <p className="text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap">
+          <p className="text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap break-words">
             {fallbackText || "No content"}
           </p>
         )}
