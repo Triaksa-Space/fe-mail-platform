@@ -233,7 +233,7 @@ const ViewAdminPageContent: React.FC = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                     <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@ const ViewAdminPageContent: React.FC = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                     <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                                 </div>
                             </div>
@@ -277,7 +277,7 @@ const ViewAdminPageContent: React.FC = () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => setIsDeleteModalOpen(false)}
-                            className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity h-auto p-0"
+                            className="w-5 h-5 absolute right-0 top-1.5 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity h-auto p-0"
                         >
                             <XMarkIcon className="w-4 h-4 text-neutral-800" />
                         </Button>

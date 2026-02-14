@@ -138,7 +138,7 @@ const ChangePasswordSection: React.FC = () => {
                                     )}
                                 </Button>
                             </div>
-                            <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                            <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                 <span className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ const ChangePasswordSection: React.FC = () => {
                                     )}
                                 </Button>
                             </div>
-                            <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                            <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                 <span className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">New password</span>
                             </div>
                         </div>
@@ -216,7 +216,7 @@ const ChangePasswordSection: React.FC = () => {
                                     )}
                                 </Button>
                             </div>
-                            <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                            <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                 <span className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
                             </div>
                         </div>

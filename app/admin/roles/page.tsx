@@ -560,7 +560,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                 className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                             />
                                         </div>
-                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                             <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</div>
                                         </div>
                                     </div>
@@ -599,7 +599,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                                 )}
                                             </Button>
                                         </div>
-                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                             <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</div>
                                         </div>
                                     </div>
@@ -614,7 +614,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                             value={newPermissions}
                                             onChange={(values) => setNewPermissions(values as PermissionKey[])}
                                         />
-                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
+                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
                                             <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Permissions</div>
                                         </div>
                                     </div>
@@ -643,7 +643,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setIsDeleteModalOpen(false)}
-                                className="w-5 h-5 absolute right-0 top-0 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity h-auto p-0"
+                                className="w-5 h-5 absolute right-0 top-1.5 overflow-hidden flex items-center justify-center hover:opacity-70 transition-opacity h-auto p-0"
                             >
                                 <XMarkIcon className="w-4 h-4 text-neutral-800" />
                             </Button>

@@ -398,7 +398,7 @@ const EmailManagementPageContent: React.FC = () => {
                         <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-visible">
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-neutral-200">
-                                <div className="w-80 px-4 py-3 flex items-center gap-1">
+                                <div className="w-[32%] px-4 py-3 flex items-center gap-1">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
                                     <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
@@ -426,7 +426,7 @@ const EmailManagementPageContent: React.FC = () => {
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
                                     <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
-                                <div className="w-20 px-4 py-3 flex justify-center items-center">
+                                <div className="w-[73px] px-4 py-3 flex justify-center items-center">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
                                 </div>
                             </div>
@@ -459,7 +459,7 @@ const EmailManagementPageContent: React.FC = () => {
                                         onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}
                                     >
                                         {/* Name */}
-                                        <div className="w-80 h-11 px-4 py-3 flex items-center">
+                                        <div className="w-[32%] h-11 px-4 py-3 flex items-center">
                                             <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.email}
                                             </div>
@@ -482,7 +482,7 @@ const EmailManagementPageContent: React.FC = () => {
                                         </div>
                                         {/* Action */}
                                         <div
-                                            className="w-20 h-11 px-4 py-3 flex justify-center items-center"
+                                            className="w-[73px] h-11 px-4 py-3 flex justify-center items-center"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <UserRowActionMenu
@@ -579,7 +579,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                 )}
                                             </Button>
                                         </div>
-                                        <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                             <div className={cn(
                                                 "justify-center text-[10px] font-normal font-['Roboto'] leading-4",
                                                 confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
@@ -629,7 +629,7 @@ const EmailManagementPageContent: React.FC = () => {
                                             </Button>
                                         </div>
                                         <div className={cn(
-                                            "px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5",
+                                            "px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5",
                                         )}>
                                             <div className={cn(
                                                 "justify-center text-[10px] font-normal font-['Roboto'] leading-4",

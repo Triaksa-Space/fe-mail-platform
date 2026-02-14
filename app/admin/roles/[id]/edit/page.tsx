@@ -269,7 +269,7 @@ const EditAdminPageContent: React.FC = () => {
                                         className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
-                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</span>
                                 </div>
                             </div>
@@ -292,7 +292,7 @@ const EditAdminPageContent: React.FC = () => {
                                         className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
                                 </div>
-                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                                <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                                 </div>
                             </div>
@@ -307,7 +307,7 @@ const EditAdminPageContent: React.FC = () => {
                                     onChange={(values) => setPermissions(values as PermissionKey[])}
                                     displayMode="text"
                                 />
-                                <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
+                                <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
                                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
                                 </div>
                             </div>
