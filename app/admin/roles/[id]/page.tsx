@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Shield, AlertTriangle } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -19,8 +18,9 @@ import {
     PermissionChips
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse } from "@/lib/admin-types";
-import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, XMarkIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 const ViewAdminPageContent: React.FC = () => {
     const router = useRouter();
@@ -179,7 +179,7 @@ const ViewAdminPageContent: React.FC = () => {
                         onClick={() => router.push("/admin/roles")}
                         className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors h-auto"
                     >
-                        <Shield className="w-5 h-5 text-neutral-600" />
+                        <KeyIcon className="w-5 h-5 text-neutral-600" />
                         <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
@@ -287,7 +287,7 @@ const ViewAdminPageContent: React.FC = () => {
                         <div className="self-stretch flex flex-col justify-start items-center gap-5">
                             {/* Icon */}
                             <div className="w-12 h-12 p-2 bg-red-50 rounded-3xl inline-flex justify-center items-center gap-2.5">
-                                <AlertTriangle className="w-6 h-6 text-red-500" />
+                                <ExclamationCircleIcon className="w-6 h-6 text-red-500" />
                             </div>
 
                             {/* Title & Description */}

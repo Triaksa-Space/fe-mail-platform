@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
-import { Shield, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useRouter, useParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +15,7 @@ import {
     PermissionMultiSelect
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
-import { UserIcon, ArrowLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { UserIcon, ArrowLeftIcon, ChevronRightIcon, EyeIcon, EyeSlashIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 
@@ -33,6 +33,7 @@ const EditAdminPageContent: React.FC = () => {
     const [admin, setAdmin] = useState<AdminUser | null>(null);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [permissions, setPermissions] = useState<PermissionKey[]>([]);
 
     const { toast } = useToast();
@@ -218,7 +219,7 @@ const EditAdminPageContent: React.FC = () => {
                         onClick={() => router.push("/admin/roles")}
                         className="flex justify-center items-center gap-1 hover:bg-neutral-100 rounded px-1 transition-colors h-auto"
                     >
-                        <Shield className="w-5 h-5 text-neutral-600" />
+                        <KeyIcon className="w-5 h-5 text-neutral-600" />
                         <span className="text-neutral-600 text-sm font-normal font-['Roboto'] leading-4">Roles & permissions</span>
                     </Button>
                     <ChevronRightIcon className="w-5 h-5 text-neutral-300" />
@@ -281,7 +282,7 @@ const EditAdminPageContent: React.FC = () => {
                                 <div className="self-stretch h-3.5"></div>
                                 <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
                                     <input
-                                        type="text"
+                                        type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={(e) => {
                                             const value = e.target.value;
@@ -291,6 +292,17 @@ const EditAdminPageContent: React.FC = () => {
                                         placeholder="Enter new password"
                                         className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
                                     />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="flex items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
+                                    >
+                                        {showPassword ? (
+                                            <EyeSlashIcon className="w-5 h-5" />
+                                        ) : (
+                                            <EyeIcon className="w-5 h-5" />
+                                        )}
+                                    </button>
                                 </div>
                                 <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
                                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
