@@ -12,6 +12,7 @@ import ConfirmDiscardModal from "./ConfirmDiscardModal";
 import { XMarkIcon, PaperAirplaneIcon, PaperClipIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
 import AttachmentList from "./AttachmentList";
+import { Toaster } from "@/components/ui/toaster";
 
 export interface ForwardData {
   from: string;
@@ -66,6 +67,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
+  const [hasShownLimitToast, setHasShownLimitToast] = useState(false);
 
   // Track initial form state for dirty detection
   const initialStateRef = useRef<FormState>({
@@ -141,6 +143,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       setMessage(initialMessage);
       setAttachments(initialAttachments);
       setShowDiscardConfirm(false);
+      setHasShownLimitToast(false);
 
       // Capture initial state for dirty detection
       initialStateRef.current = {
@@ -164,6 +167,16 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     return () => document.removeEventListener("keydown", handleEsc);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, showDiscardConfirm]);
+
+  useEffect(() => {
+    if (isOpen && isLimitReached && !hasShownLimitToast) {
+      toast({
+        description: "Daily send limit reached. Try again tomorrow.",
+        variant: "destructive",
+      });
+      setHasShownLimitToast(true);
+    }
+  }, [hasShownLimitToast, isLimitReached, isOpen, toast]);
 
   // Clean up only newly uploaded attachments (not forwarded ones)
   const cleanupAttachments = useCallback(async () => {
@@ -540,17 +553,10 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
               />
             </div>
 
-            {/* Limit Reached Warning */}
-            {isLimitReached && (
-              <div className="self-stretch px-4 py-3 bg-red-50 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-red-200">
-                <p className="text-sm text-red-600 font-medium font-['Roboto']">
-                  You have reached your daily send limit. Please try again tomorrow.
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>
+      <Toaster />
 
       {/* Confirm Discard Modal */}
       <ConfirmDiscardModal

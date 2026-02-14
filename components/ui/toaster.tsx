@@ -31,10 +31,15 @@ export function Toaster() {
             } ${isDestructive ? "bg-destructive-600" : ""}`}
           >
             <div className="flex-1 flex justify-start items-center gap-2 text-left">
-              {/* Leading Icon (Success only) */}
+              {/* Leading Icon */}
               {isSuccess && (
                 <div className="w-5 h-5 relative overflow-hidden flex items-center justify-center">
                   <CheckCircleIcon className="w-5 h-5 text-success-50" />
+                </div>
+              )}
+              {isDestructive && (
+                <div className="w-5 h-5 relative overflow-hidden flex items-center justify-center">
+                  <XCircleIcon className="w-5 h-5 text-destructive-foreground" />
                 </div>
               )}
               {/* Content */}
@@ -46,16 +51,11 @@ export function Toaster() {
                 {description || title}
               </ToastDescription>
             </div>
-            {isDestructive && (
-              <div className="w-5 h-5 relative overflow-hidden flex items-center justify-center">
-                <XCircleIcon className="w-5 h-5 text-destructive-50" />
-              </div>
-            )}
             {action}
             <ToastClose
               className={`relative w-5 h-5 opacity-100 ${
                 isDestructive
-                  ? "hidden"
+                  ? "text-destructive-foreground hover:text-destructive-foreground/80"
                   : "text-success-50 hover:text-success-100"
               }`}
             />

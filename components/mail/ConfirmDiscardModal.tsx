@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { AlertTriangle } from "lucide-react";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
 
 interface ConfirmDiscardModalProps {
@@ -51,7 +51,7 @@ const ConfirmDiscardModal: React.FC<ConfirmDiscardModalProps> = ({
           <div className="self-stretch flex flex-col justify-start items-center gap-5">
             {/* Warning Icon */}
             <div className="w-12 h-12 p-2 bg-amber-50 rounded-3xl inline-flex justify-center items-center gap-2.5">
-              <AlertTriangle className="w-6 h-6 text-amber-500" />
+              <ExclamationCircleIcon className="w-6 h-6 text-amber-500" />
             </div>
 
             {/* Title and Description */}
