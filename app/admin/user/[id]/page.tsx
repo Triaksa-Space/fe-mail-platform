@@ -253,7 +253,7 @@ export default function UserDetailPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full h-[calc(100vh-80px)]">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
         {/* Breadcrumb Header */}
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">

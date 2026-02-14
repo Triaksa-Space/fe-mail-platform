@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { formatRelativeTime } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
-import { CARD_STYLES } from "@/lib/styles";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import {
@@ -100,7 +99,7 @@ export default function AdminSentDetailPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
         {/* Breadcrumb Header */}
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">
@@ -153,7 +152,7 @@ export default function AdminSentDetailPage() {
         {isLoading ? (
           <DetailSkeleton />
         ) : error ? (
-          <div className={cn(CARD_STYLES.base, "flex flex-col items-center justify-center h-64")}>
+          <div className="p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col items-center justify-center h-64">
             <p className="text-sm text-red-600 mb-4">{error}</p>
             <Button
               variant="outline"
@@ -165,8 +164,8 @@ export default function AdminSentDetailPage() {
             </Button>
           </div>
         ) : email ? (
-          <div className="self-stretch inline-flex flex-col justify-start items-start gap-5">
-            <div className={cn(CARD_STYLES.base, "self-stretch p-4 flex flex-col justify-start items-start gap-2")}>
+          <div className="self-stretch flex-1 min-h-0 inline-flex flex-col justify-start items-start gap-5 overflow-y-auto">
+            <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col justify-start items-start gap-2">
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">
                   <div className="flex justify-start items-center gap-1">
@@ -207,7 +206,7 @@ export default function AdminSentDetailPage() {
               body={email.body}
               fallbackText={email.body_preview || "No content available"}
               attachments={attachments}
-              className="self-stretch"
+              className="self-stretch flex-1"
             />
           </div>
         ) : null}
