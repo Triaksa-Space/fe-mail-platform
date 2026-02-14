@@ -16,6 +16,10 @@ interface EmailBodyCardProps {
 }
 
 const IFRAME_STYLES = `
+  html, body {
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
   body {
     margin: 0;
     padding: 16px;
@@ -24,6 +28,12 @@ const IFRAME_STYLES = `
     line-height: 1.6;
     color: #1F2937;
     background: white;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  div, p, span, a, td, th, li, blockquote {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   img, table {
     max-width: 100%;
@@ -32,6 +42,8 @@ const IFRAME_STYLES = `
   pre {
     white-space: pre-wrap;
     word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   a {
     color: #027AEA;
@@ -77,7 +89,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2 min-h-0 max-h-full overflow-hidden",
+      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2 min-h-0 overflow-hidden",
       className
     )}>
       {/* Subject */}
@@ -89,19 +101,21 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div className="flex-1 min-h-0 overflow-auto">
+      <div className="min-h-0 overflow-x-auto overflow-y-hidden">
         {body ? (
           <iframe
             srcDoc={body}
             className="w-full"
             style={{
               height: iframeHeight,
+              width: "100%",
               border: "none",
               display: "block",
             }}
             onLoad={handleIframeLoad}
             title="Email content"
             sandbox="allow-same-origin allow-scripts allow-popups"
+            scrolling="no"
           />
         ) : (
           <p className="text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap">
