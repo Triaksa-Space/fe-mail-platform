@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
+import AttachmentList from "@/components/mail/AttachmentList";
 import {
   Mail,
 } from "lucide-react";
@@ -91,6 +92,10 @@ export default function AdminSentDetailPage() {
   }, [fetchEmailDetail]);
 
   const attachments = parseAttachments(email?.attachments);
+  const attachmentItems = attachments.map((att) => ({
+    name: att.Filename,
+    url: att.URL,
+  }));
   const subject = email?.subject || "(No subject)";
   const userEmail = email?.user_email || "Unknown";
   const fromEmail = email?.from || userEmail;
@@ -164,7 +169,7 @@ export default function AdminSentDetailPage() {
             </Button>
           </div>
         ) : email ? (
-          <div className="self-stretch flex-1 min-h-0 flex flex-col justify-start items-start gap-5 overflow-hidden">
+          <div className="self-stretch flex-1 min-h-0 flex flex-col justify-start items-start gap-5 overflow-y-auto">
             <div className="self-stretch shrink-0 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col justify-start items-start gap-2">
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">
@@ -205,9 +210,15 @@ export default function AdminSentDetailPage() {
               subject={subject}
               body={email.body}
               fallbackText={email.body_preview || "No content available"}
-              attachments={attachments}
+              attachments={[]}
               className="self-stretch min-h-0"
             />
+
+            {attachmentItems.length > 0 && (
+              <div className="self-stretch">
+                <AttachmentList attachments={attachmentItems} showCloseIcon wrapContainer={false} />
+              </div>
+            )}
           </div>
         ) : null}
       </div>

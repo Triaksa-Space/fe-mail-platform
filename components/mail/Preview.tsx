@@ -15,6 +15,7 @@ import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
 import EmailBodyCard from "./EmailBodyCard";
+import AttachmentList from "./AttachmentList";
 import { Attachment, extractFilenameFromUrl } from "@/lib/attachmentUtils";
 import { ForwardData } from "./ComposeModal";
 
@@ -170,6 +171,10 @@ const Preview: React.FC<PreviewProps> = ({
   };
 
   const attachments = getAttachments();
+  const attachmentItems = attachments.map((att) => ({
+    name: att.Filename,
+    url: att.URL,
+  }));
 
   // Build forward data and call onForward
   const handleForwardClick = () => {
@@ -317,12 +322,18 @@ const Preview: React.FC<PreviewProps> = ({
                 subject={email.subject}
                 body={isSentView ? email.body : emailDetail?.Body}
                 fallbackText={email.snippet}
-                attachments={attachments}
+                attachments={isSentView ? [] : attachments}
                 onDownloadAttachment={!isSentView ? handleDownload : undefined}
                 isDownloading={isDownloading}
                 className="min-h-0"
               />
             </div>
+
+            {isSentView && attachmentItems.length > 0 && (
+              <div className="px-4">
+                <AttachmentList attachments={attachmentItems} showCloseIcon wrapContainer={false} />
+              </div>
+            )}
           </div>
         )}
       </div>

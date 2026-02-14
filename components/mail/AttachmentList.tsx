@@ -5,6 +5,7 @@ import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { getFileExtension, extractFilenameFromUrl } from "@/lib/attachmentUtils";
+import { cn } from "@/lib/utils";
 
 interface AttachmentItem {
   name: string;
@@ -17,6 +18,9 @@ interface AttachmentListProps {
   onDownload?: (url: string, filename: string) => void;
   isDownloading?: boolean;
   showCloseIcon?: boolean;
+  wrapContainer?: boolean;
+  containerClassName?: string;
+  listClassName?: string;
 }
 
 const AttachmentList: React.FC<AttachmentListProps> = ({
@@ -25,12 +29,14 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
   onDownload,
   isDownloading = false,
   showCloseIcon = false,
+  wrapContainer = true,
+  containerClassName,
+  listClassName,
 }) => {
   if (attachments.length === 0) return null;
 
-  return (
-    <div className="mt-3 min-w-0 w-full">
-      <div className="flex gap-2 overflow-x-auto">
+  const listContent = (
+    <div className={cn("flex gap-2 overflow-x-auto", listClassName)}>
         {attachments.map((file, index) => {
           const filename = extractFilenameFromUrl(file.url) || file.name;
           const fileExt = getFileExtension(filename);
@@ -120,9 +126,14 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
             </a>
           );
         })}
-      </div>
     </div>
   );
+
+  if (!wrapContainer) {
+    return listContent;
+  }
+
+  return <div className={cn("mt-3 min-w-0 w-full", containerClassName)}>{listContent}</div>;
 };
 
 export default AttachmentList;

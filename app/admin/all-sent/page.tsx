@@ -11,6 +11,7 @@ import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
+import AttachmentList from "@/components/mail/AttachmentList";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import AdminEmailListRow, { formatEmailListDate } from "@/components/admin/AdminEmailListRow";
 import PaginationComponent from "@/components/PaginationComponent";
@@ -191,6 +192,15 @@ export default function AdminAllSentPage() {
     setEmailDetail(null);
   };
 
+  const detailAttachments = parseAttachments(
+    emailDetail?.attachments,
+    emailDetail?.ListAttachments,
+  );
+  const detailAttachmentItems = detailAttachments.map((att) => ({
+    name: att.Filename,
+    url: att.URL,
+  }));
+
   if (!allowed) return null;
 
   return (
@@ -308,12 +318,19 @@ export default function AdminAllSentPage() {
                     subject={selectedEmail.subject}
                     body={emailDetail?.Body || emailDetail?.body}
                     fallbackText={selectedEmail.body_preview || "No content"}
-                    attachments={parseAttachments(
-                      emailDetail?.attachments,
-                      emailDetail?.ListAttachments,
-                    )}
+                    attachments={[]}
                     className="self-stretch min-h-0"
                   />
+
+                  {detailAttachmentItems.length > 0 && (
+                    <div className="self-stretch">
+                      <AttachmentList
+                        attachments={detailAttachmentItems}
+                        showCloseIcon
+                        wrapContainer={false}
+                      />
+                    </div>
+                  )}
                 </>
               )}
             </div>
