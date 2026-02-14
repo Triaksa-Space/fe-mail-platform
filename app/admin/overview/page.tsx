@@ -187,7 +187,7 @@ function LatestListCard({
                 snippet={email.snippet || "No preview available"}
                 sideText={email.email || "Unknown"}
                 dateText={email.date}
-                isUnread={type === "inbox" && !!email.isUnread}
+                isUnread={!!email.isUnread}
                 onClick={() => onItemClick?.(email.id)}
               />
             ))}

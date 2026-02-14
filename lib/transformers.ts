@@ -47,6 +47,7 @@ export interface ApiSentEmail {
   preview?: string;
   body?: string;
   body_preview?: string;
+  is_read?: boolean;
   status?: string;
   provider?: string;
   has_attachments?: boolean;
@@ -83,7 +84,7 @@ export function transformSentEmail(email: ApiSentEmail): EmailItem {
     subject: email.subject || '(No subject)',
     snippet: email.preview || email.body_preview || '',
     date: formatRelativeTime(email.sent_at),
-    isUnread: false, // Sent emails are never "unread"
+    isUnread: email.is_read === false,
     hasAttachments: email.has_attachments,
   };
 }

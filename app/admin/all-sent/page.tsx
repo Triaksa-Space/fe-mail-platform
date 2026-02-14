@@ -363,6 +363,7 @@ export default function AdminAllSentPage() {
                         snippet={email.body_preview || "No preview available"}
                         sideText={email.from || email.user_email || "Unknown"}
                         dateText={formatEmailListDate(email.sent_at)}
+                        isUnread={email.is_read === false}
                         isSelected={false}
                         onClick={() => handleSelectEmail(email)}
                       />
