@@ -10,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
-import CenterTruncate from "@/components/ui/center-truncate";
 import {
   Mail,
 } from "lucide-react";
@@ -140,11 +139,11 @@ export default function AdminSentDetailPage() {
               <span>Sent</span>
             </div>
             <ChevronRightIcon className="w-4 h-4 text-neutral-300" />
-            <div className="flex items-center gap-1 text-sm text-primary-500">
-              <Mail className="w-4 h-4" />
-              <CenterTruncate className="text-primary-500 text-sm font-normal font-['Roboto'] leading-4">
+            <div className="flex items-center gap-1 text-sm text-primary-500 min-w-0">
+              <Mail className="w-4 h-4 shrink-0" />
+              <span className="truncate max-w-[300px] text-primary-500 text-sm font-normal font-['Roboto'] leading-4" title={isLoading ? "Loading..." : subject}>
                 {isLoading ? "Loading..." : subject}
-              </CenterTruncate>
+              </span>
             </div>
           </div>
         </div>
