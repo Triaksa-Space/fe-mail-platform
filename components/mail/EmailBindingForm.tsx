@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
@@ -113,14 +112,8 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
                 )}
               />
             </div>
-            {isLinked && !isEditing && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-700">
-                <CheckCircle2 className="h-2.5 w-2.5" />
-                Linked
-              </span>
-            )}
           </div>
-          <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+          <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
           </div>
         </div>
