@@ -22,6 +22,10 @@ export const apiClient = axios.create({
       delete headers["Content-Type"];
       return data;
     }
+    // Avoid double-serializing when payload is already a JSON string.
+    if (typeof data === "string") {
+      return data;
+    }
     return JSON.stringify(data);
   }],
 });

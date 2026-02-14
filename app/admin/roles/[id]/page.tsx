@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/toaster";
 import {
     Dialog,
     DialogContent,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import LoadingProcessingPage from '@/components/ProcessLoading';
 import {
@@ -271,6 +272,7 @@ const ViewAdminPageContent: React.FC = () => {
             {/* Delete Confirmation Modal */}
             <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
                 <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
+                    <DialogTitle className="sr-only">Delete admin confirmation</DialogTitle>
                     <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
                         {/* Close Button */}
                         <Button

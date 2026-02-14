@@ -10,6 +10,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import {
     Dialog,
     DialogContent,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -519,6 +520,7 @@ const EmailManagementPageContent: React.FC = () => {
                 {/* Change Password Dialog */}
                 <Dialog open={isChangePasswordDialogOpen} onOpenChange={setIsChangePasswordDialogOpen}>
                     <DialogContent className="p-4 w-auto max-w-none border-0 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
+                        <DialogTitle className="sr-only">Change password</DialogTitle>
                         {/* Header */}
                         <div className="w-[518px] inline-flex justify-between items-center">
                             <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Change Password</div>
@@ -667,6 +669,7 @@ const EmailManagementPageContent: React.FC = () => {
                 {/* Delete Confirmation Dialog */}
                 <Dialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                     <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
+                        <DialogTitle className="sr-only">Delete user confirmation</DialogTitle>
                         <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
                             {/* Close Button */}
                             <Button

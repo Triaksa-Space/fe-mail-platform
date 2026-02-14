@@ -4,31 +4,29 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, UserPlus, AlertTriangle, Eye, EyeOff } from 'lucide-react';
-import { useRouter } from "next/navigation";
+import { ArrowUp, ArrowDown, UserPlus } from 'lucide-react';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
     Dialog,
     DialogContent,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
-import DOMPurify from 'dompurify';
 import {
     AdminLayout,
     AdminRowActionMenu,
-    PermissionChips,
-    PermissionMultiSelect
+    PermissionChips
 } from "@/components/admin";
 import {
     AdminUser,
     AdminListApiResponse,
-    PermissionKey,
     formatDate,
 } from "@/lib/admin-types";
 import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import { Button } from "@/components/ui/button";
 
 type SortField = 'username' | 'last_active_at' | 'created_at';
@@ -114,9 +112,12 @@ const RolesPermissionsPageContent: React.FC = () => {
     const pageSize = 10;
     const [totalPages, setTotalPages] = useState(1);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const createdUsername = searchParams.get("created");
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
     const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
 
     // Auth loading state
     const [authLoaded, setAuthLoaded] = useState(false);
@@ -126,18 +127,9 @@ const RolesPermissionsPageContent: React.FC = () => {
         document.title = "Roles & Permissions - Admin Mailria";
     }, []);
 
-    // Create admin modal state
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [newUsername, setNewUsername] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [newPermissions, setNewPermissions] = useState<PermissionKey[]>([]);
-    const [showNewPassword, setShowNewPassword] = useState(false);
-
     // Delete confirmation modal state
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState<AdminUser | null>(null);
-
-    const { toast } = useToast();
 
     useEffect(() => {
         setAuthLoaded(true);
@@ -158,6 +150,16 @@ const RolesPermissionsPageContent: React.FC = () => {
             router.replace("/admin");
         }
     }, [authLoaded, roleId, router]);
+
+    useEffect(() => {
+        if (!createdUsername) return;
+
+        toast({
+            description: `${createdUsername} created successfully.`,
+            variant: "default",
+        });
+        router.replace("/admin/roles");
+    }, [createdUsername, router, toast]);
 
     // Fetch admins using the new API contract: GET /admin/admins
     const fetchAdmins = useCallback(async () => {
@@ -204,10 +206,6 @@ const RolesPermissionsPageContent: React.FC = () => {
 
             // Handle 403 Forbidden
             if (axios.isAxiosError(err) && err.response?.status === 403) {
-                toast({
-                    description: "You don't have permission to access this page.",
-                    variant: "destructive",
-                });
                 router.replace("/admin");
                 return;
             }
@@ -219,7 +217,7 @@ const RolesPermissionsPageContent: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [currentPage, pageSize, sortField, sortOrder, searchQuery, router, toast]);
+    }, [currentPage, pageSize, sortField, sortOrder, searchQuery, router]);
 
     useEffect(() => {
         if (!authLoaded || roleId !== 0) return;
@@ -281,92 +279,14 @@ const RolesPermissionsPageContent: React.FC = () => {
             fetchAdmins();
         } catch (error) {
             console.error('Failed to delete admin:', error);
-            let errorMessage = "Failed to delete admin. Please try again.";
-            if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-                errorMessage = error.response.data.message;
-            }
-            toast({
-                description: errorMessage,
-                variant: "destructive",
-            });
         } finally {
             setIsLoading(false);
         }
     };
-
-    // POST /admin/admins
-    const handleCreateAdmin = async () => {
-        // Validation
-        if (!newUsername.trim()) {
-            toast({
-                description: "Username is required.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (!newPassword || newPassword.length < 6) {
-            toast({
-                description: "Password must be at least 6 characters long.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (newPermissions.length === 0) {
-            toast({
-                description: "At least one permission is required.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        try {
-            setIsLoading(true);
-            await apiClient.post("/admin/admins", {
-                username: newUsername.trim(),
-                password: newPassword,
-                permissions: newPermissions,
-            });
-
-            toast({
-                description: "Admin created successfully.",
-                variant: "default",
-            });
-
-            // Reset form and close modal
-            setIsCreateModalOpen(false);
-            setNewUsername('');
-            setNewPassword('');
-            setNewPermissions([]);
-            fetchAdmins();
-        } catch (error) {
-            console.error('Failed to create admin:', error);
-            let errorMessage = "Failed to create admin. Please try again.";
-            if (axios.isAxiosError(error) && error.response?.data?.error?.message) {
-                errorMessage = error.response.data.message;
-            }
-            toast({
-                description: errorMessage,
-                variant: "destructive",
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const resetCreateForm = () => {
-        setNewUsername('');
-        setNewPassword('');
-        setNewPermissions([]);
-        setShowNewPassword(false);
-    };
-
-    // Check if user can create (button state)
-    const canCreate = newUsername.trim() && newPassword.length >= 6 && newPermissions.length > 0;
 
     return (
         <AdminLayout>
+            <Toaster />
             <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
                 {/* Page Header */}
                 <div className="self-stretch inline-flex justify-start items-center gap-5">
@@ -374,8 +294,6 @@ const RolesPermissionsPageContent: React.FC = () => {
                         Roles & permissions
                     </div>
                 </div>
-
-                <Toaster />
 
                 {/* Table Card */}
                 <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-visible relative">
@@ -389,7 +307,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                         </div>
                         <div className="flex justify-end items-center gap-3">
                             <Button
-                                onClick={() => setIsCreateModalOpen(true)}
+                                onClick={() => router.push("/admin/roles/create")}
                                 className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-1.5 transition-colors"
                             >
                                 <UserPlus className="h-5 w-5 text-white" />
@@ -515,128 +433,10 @@ const RolesPermissionsPageContent: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Create Admin Modal */}
-                <Dialog
-                    open={isCreateModalOpen}
-                    onOpenChange={(open) => {
-                        setIsCreateModalOpen(open);
-                        if (!open) resetCreateForm();
-                    }}
-                >
-                    <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
-                        {/* Header */}
-                        <div className="self-stretch inline-flex justify-between items-center">
-                            <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Create admin</div>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={() => {
-                                    setIsCreateModalOpen(false);
-                                    resetCreateForm();
-                                }}
-                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
-                            >
-                                <XMarkIcon className="w-5 h-5 text-neutral-800" />
-                            </Button>
-                        </div>
-
-                        {/* Form */}
-                        <div className="w-full flex flex-col justify-start items-start gap-4">
-                            <div className="self-stretch flex flex-col justify-start items-center gap-3">
-                                {/* Username Input */}
-                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                                    <div className="self-stretch relative flex flex-col justify-start items-start">
-                                        <div className="self-stretch h-3.5"></div>
-                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
-                                            <input
-                                                type="text"
-                                                placeholder="Enter username"
-                                                value={newUsername}
-                                                onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    const sanitizedValue = DOMPurify.sanitize(value).replace(/[^a-zA-Z0-9_]/g, '');
-                                                    setNewUsername(sanitizedValue);
-                                                }}
-                                                className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
-                                            />
-                                        </div>
-                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                            <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Username</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Password Input */}
-                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                                    <div className="self-stretch relative flex flex-col justify-start items-start">
-                                        <div className="self-stretch h-3.5"></div>
-                                        <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
-                                            <div className="flex-1 flex justify-start items-center gap-2">
-                                                <LockClosedIcon className="w-5 h-5 text-neutral-400" />
-                                                <input
-                                                    type={showNewPassword ? "text" : "password"}
-                                                    value={newPassword}
-                                                    onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
-                                                        setNewPassword(sanitizedValue);
-                                                    }}
-                                                    placeholder="***********"
-                                                    className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
-                                                />
-                                            </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                type="button"
-                                                onClick={() => setShowNewPassword(!showNewPassword)}
-                                                className="flex justify-center items-center h-auto w-auto p-0"
-                                            >
-                                                {showNewPassword ? (
-                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
-                                                ) : (
-                                                    <Eye className="w-5 h-5 text-neutral-800" />
-                                                )}
-                                            </Button>
-                                        </div>
-                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                                            <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</div>
-                                        </div>
-                                    </div>
-                                    <p className="text-xs text-neutral-500">Minimum 6 characters</p>
-                                </div>
-
-                                {/* Permissions */}
-                                <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                                    <div className="self-stretch relative flex flex-col justify-start items-start">
-                                        <div className="self-stretch h-3.5"></div>
-                                        <PermissionMultiSelect
-                                            value={newPermissions}
-                                            onChange={(values) => setNewPermissions(values as PermissionKey[])}
-                                        />
-                                        <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
-                                            <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Permissions</div>
-                                        </div>
-                                    </div>
-                                    <p className="text-xs text-neutral-500">Select at least one permission</p>
-                                </div>
-                            </div>
-
-                            {/* Submit Button */}
-                            <Button
-                                onClick={handleCreateAdmin}
-                                disabled={!canCreate}
-                                className="self-stretch h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
-                            >
-                                <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Create admin</div>
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-
                 {/* Delete Confirmation Modal */}
                 <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
                     <DialogContent className="w-96 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center overflow-hidden gap-0 [&>button]:hidden">
+                        <DialogTitle className="sr-only">Delete admin confirmation</DialogTitle>
                         <div className="self-stretch relative flex flex-col justify-start items-center gap-8">
                             {/* Close Button */}
                             <Button
@@ -651,7 +451,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                             <div className="self-stretch flex flex-col justify-start items-center gap-5">
                                 {/* Icon */}
                                 <div className="w-12 h-12 p-2 bg-red-50 rounded-3xl inline-flex justify-center items-center gap-2.5">
-                                    <AlertTriangle className="w-6 h-6 text-red-500" />
+                                    <ExclamationTriangleIcon className="w-6 h-6 text-red-500" />
                                 </div>
 
                                 {/* Title & Description */}

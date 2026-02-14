@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
 
@@ -113,6 +113,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="w-80 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
+          <DialogTitle className="sr-only">Go to page</DialogTitle>
           {/* Header */}
           <div className="self-stretch inline-flex justify-between items-center">
             <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Go to Page</div>
