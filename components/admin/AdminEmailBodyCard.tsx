@@ -96,7 +96,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div className="min-h-0 overflow-x-auto overflow-y-hidden">
+      <div className="min-h-0 overflow-auto">
         {body ? (
           <iframe
             srcDoc={body}

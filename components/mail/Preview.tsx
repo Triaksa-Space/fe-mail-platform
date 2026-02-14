@@ -205,7 +205,7 @@ const Preview: React.FC<PreviewProps> = ({
   };
 
   return (
-    <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden h-full", className)}>
+    <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-auto h-full", className)}>
       {/* Content */}
       <div className={cn(
         "flex-1 flex flex-col min-h-0"

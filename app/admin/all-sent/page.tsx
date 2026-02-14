@@ -236,7 +236,7 @@ export default function AdminAllSentPage() {
         <div className="flex-1 min-h-0 w-full">
           {selectedEmail ? (
             /* Email Detail View - Full Width */
-            <div className="h-full flex flex-col gap-5 overflow-y-auto">
+            <div className="h-full flex flex-col gap-5 overflow-auto">
               {/* Breadcrumb Navigation */}
               <div className="self-stretch inline-flex justify-start items-center gap-1">
                 {/* Back */}
