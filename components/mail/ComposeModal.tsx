@@ -51,6 +51,12 @@ interface FormState {
 
 const MAX_FILES = 10;
 const MAX_FILE_SIZE_MB = 10;
+const ALLOWED_EXTENSIONS = new Set([
+  ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
+  ".txt", ".rtf", ".csv",
+  ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg",
+  ".zip", ".rar", ".7z",
+]);
 
 const ComposeModal: React.FC<ComposeModalProps> = ({
   isOpen,
@@ -331,6 +337,17 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     setIsUploading(true);
 
     for (const file of selectedFiles) {
+      const ext = file.name.includes(".")
+        ? "." + file.name.split(".").pop()!.toLowerCase()
+        : "";
+      if (!ALLOWED_EXTENSIONS.has(ext)) {
+        toast({
+          description: `File type "${ext || "unknown"}" is not allowed.`,
+          variant: "destructive",
+        });
+        continue;
+      }
+
       if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
         toast({
           description: `The file "${file.name}" exceeds 10 MB.`,
@@ -453,7 +470,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 multiple
                 onChange={handleFileChange}
                 className="hidden"
-                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.rtf,.jpg,.jpeg,.png,.gif,.zip,.rar"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.rtf,.csv,.jpg,.jpeg,.png,.gif,.webp,.svg,.zip,.rar,.7z"
                 disabled={isUploading}
               />
               <label
