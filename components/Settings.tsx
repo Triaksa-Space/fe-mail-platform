@@ -61,10 +61,18 @@ const Settings: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await apiClient.put("/user/change_password", {
+      const response = await apiClient.put("/user/change_password", {
         old_password: currentPassword,
         new_password: newPassword,
       });
+
+      // Update tokens to keep current session alive
+      if (response.data?.access_token) {
+        useAuthStore.getState().setToken(response.data.access_token);
+      }
+      if (response.data?.refresh_token) {
+        useAuthStore.getState().setRefreshToken(response.data.refresh_token);
+      }
 
       // Reset form
       setCurrentPassword('');

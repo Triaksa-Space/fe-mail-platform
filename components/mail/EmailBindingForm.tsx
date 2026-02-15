@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/useAuthStore";
 import DOMPurify from "dompurify";
 import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,15 @@ interface EmailBindingFormProps {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 async function saveBindingEmail(email: string): Promise<void> {
-  await apiClient.put("/user/binding-email", { binding_email: email });
+  const response = await apiClient.put("/user/binding-email", { binding_email: email });
+
+  // Update tokens to keep current session alive
+  if (response.data?.access_token) {
+    useAuthStore.getState().setToken(response.data.access_token);
+  }
+  if (response.data?.refresh_token) {
+    useAuthStore.getState().setRefreshToken(response.data.refresh_token);
+  }
 }
 
 const EmailBindingForm: React.FC<EmailBindingFormProps> = ({

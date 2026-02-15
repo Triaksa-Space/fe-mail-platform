@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/useAuthStore";
 import DOMPurify from "dompurify";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import { Button } from "@/components/ui/button";
@@ -51,10 +52,18 @@ const ChangePasswordForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await apiClient.put("/user/change_password", {
+      const response = await apiClient.put("/user/change_password", {
         old_password: currentPassword,
         new_password: newPassword,
       });
+
+      // Update tokens to keep current session alive
+      if (response.data?.access_token) {
+        useAuthStore.getState().setToken(response.data.access_token);
+      }
+      if (response.data?.refresh_token) {
+        useAuthStore.getState().setRefreshToken(response.data.refresh_token);
+      }
 
       toast({
         description: "Password changed successfully.",
