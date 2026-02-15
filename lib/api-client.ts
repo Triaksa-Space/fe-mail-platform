@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { safeStorage } from "@/lib/safe-storage";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -51,7 +52,7 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 // Get tokens from storage
 const getAccessToken = (): string | null => {
   if (typeof window === "undefined") return null;
-  const stored = localStorage.getItem("auth-storage");
+  const stored = safeStorage.getItem("auth-storage");
   if (!stored) return null;
   try {
     const parsed = JSON.parse(stored);
@@ -63,7 +64,7 @@ const getAccessToken = (): string | null => {
 
 const getRefreshToken = (): string | null => {
   if (typeof window === "undefined") return null;
-  const stored = localStorage.getItem("auth-storage");
+  const stored = safeStorage.getItem("auth-storage");
   if (!stored) return null;
   try {
     const parsed = JSON.parse(stored);
@@ -77,7 +78,7 @@ const setTokens = (accessToken: string, refreshToken: string) => {
   if (typeof window === "undefined") return;
 
   // Update localStorage directly for persistence
-  const stored = localStorage.getItem("auth-storage");
+  const stored = safeStorage.getItem("auth-storage");
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
@@ -86,7 +87,7 @@ const setTokens = (accessToken: string, refreshToken: string) => {
         token: accessToken,
         refreshToken: refreshToken,
       };
-      localStorage.setItem("auth-storage", JSON.stringify(parsed));
+      safeStorage.setItem("auth-storage", JSON.stringify(parsed));
 
       // Also update Zustand store state to keep it in sync
       useAuthStore.getState().setToken(accessToken);

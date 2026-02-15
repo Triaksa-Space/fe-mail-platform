@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { safeStorage } from "@/lib/safe-storage";
 
 // Permission keys that match backend
 export type PermissionKey =
@@ -85,15 +86,15 @@ export const useAuthStore = create<AuthState>()(
         // Clear storage
         if (typeof window !== "undefined") {
           window.sessionStorage.removeItem("auth-storage");
-          window.localStorage.removeItem("auth-storage");
+          safeStorage.removeItem("auth-storage");
           window.location.replace("/");
         }
       },
       getStoredToken: () => {
         if (typeof window === "undefined") return null;
 
-        // Check localStorage
-        const stored = window.localStorage.getItem("auth-storage");
+        // Check storage
+        const stored = safeStorage.getItem("auth-storage");
         if (!stored) return null;
 
         try {
@@ -106,7 +107,7 @@ export const useAuthStore = create<AuthState>()(
       getStoredRefreshToken: () => {
         if (typeof window === "undefined") return null;
 
-        const stored = window.localStorage.getItem("auth-storage");
+        const stored = safeStorage.getItem("auth-storage");
         if (!stored) return null;
 
         try {
@@ -119,7 +120,7 @@ export const useAuthStore = create<AuthState>()(
       getStoredEmail: () => {
         if (typeof window === "undefined") return null;
 
-        const stored = window.localStorage.getItem("auth-storage");
+        const stored = safeStorage.getItem("auth-storage");
         if (!stored) return null;
 
         try {
@@ -132,7 +133,7 @@ export const useAuthStore = create<AuthState>()(
       getStoredRoleID: () => {
         if (typeof window === "undefined") return null;
 
-        const stored = window.localStorage.getItem("auth-storage");
+        const stored = safeStorage.getItem("auth-storage");
         if (!stored) return null;
 
         try {
@@ -145,7 +146,7 @@ export const useAuthStore = create<AuthState>()(
       getStoredPermissions: () => {
         if (typeof window === "undefined") return [];
 
-        const stored = window.localStorage.getItem("auth-storage");
+        const stored = safeStorage.getItem("auth-storage");
         if (!stored) return [];
 
         try {
@@ -167,16 +168,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => {
-        if (typeof window !== "undefined") {
-          return localStorage;
-        }
-        return {
-          getItem: () => null,
-          setItem: () => {},
-          removeItem: () => {},
-        };
-      }),
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         token: state.token,
         refreshToken: state.refreshToken,
