@@ -132,9 +132,9 @@ const ChangePasswordSection: React.FC = () => {
                                     className="h-auto flex justify-center items-center"
                                 >
                                     {showOldPassword ? (
-                                        <EyeOff className="w-5 h-5 text-neutral-800" />
-                                    ) : (
                                         <Eye className="w-5 h-5 text-neutral-800" />
+                                    ) : (
+                                        <EyeOff className="w-5 h-5 text-neutral-800" />
                                     )}
                                 </Button>
                             </div>
@@ -171,9 +171,9 @@ const ChangePasswordSection: React.FC = () => {
                                     className="h-auto flex justify-center items-center"
                                 >
                                     {showNewPassword ? (
-                                        <EyeOff className="w-5 h-5 text-neutral-800" />
-                                    ) : (
                                         <Eye className="w-5 h-5 text-neutral-800" />
+                                    ) : (
+                                        <EyeOff className="w-5 h-5 text-neutral-800" />
                                     )}
                                 </Button>
                             </div>
@@ -210,9 +210,9 @@ const ChangePasswordSection: React.FC = () => {
                                     className="h-auto flex justify-center items-center"
                                 >
                                     {showConfirmPassword ? (
-                                        <EyeOff className="w-5 h-5 text-neutral-800" />
-                                    ) : (
                                         <Eye className="w-5 h-5 text-neutral-800" />
+                                    ) : (
+                                        <EyeOff className="w-5 h-5 text-neutral-800" />
                                     )}
                                 </Button>
                             </div>

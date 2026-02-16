@@ -699,9 +699,9 @@ export default function ForgotPasswordClient() {
                             className="h-auto w-auto p-0 hover:bg-transparent"
                           >
                             {showNewPassword ? (
-                              <EyeOff className="w-5 h-5 text-neutral-800" />
-                            ) : (
                               <Eye className="w-5 h-5 text-neutral-800" />
+                            ) : (
+                              <EyeOff className="w-5 h-5 text-neutral-800" />
                             )}
                           </Button>
                         </div>
@@ -747,9 +747,9 @@ export default function ForgotPasswordClient() {
                             className="h-auto w-auto p-0 hover:bg-transparent"
                           >
                             {showConfirmPassword ? (
-                              <EyeOff className="w-5 h-5 text-neutral-800" />
-                            ) : (
                               <Eye className="w-5 h-5 text-neutral-800" />
+                            ) : (
+                              <EyeOff className="w-5 h-5 text-neutral-800" />
                             )}
                           </Button>
                         </div>

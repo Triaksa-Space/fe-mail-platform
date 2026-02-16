@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -244,12 +244,12 @@ const RolesPermissionsPageContent: React.FC = () => {
     };
 
     const renderSortIcon = (field: SortField) => {
-        if (sortField === field && sortOrder === 'asc') {
-            return <ArrowUp className="ml-1 h-4 w-4" />;
-        } else if (sortField === field && sortOrder === 'desc') {
-            return <ArrowDown className="ml-1 h-4 w-4" />;
-        }
-        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-neutral-400" />;
+        const isActiveSortField = sortField === field;
+        return (
+            <ChevronUpDownIcon
+                className={`ml-1 h-4 w-4 ${isActiveSortField ? 'text-neutral-700' : 'text-neutral-400'}`}
+            />
+        );
     };
 
     const handleEditClick = (admin: AdminUser) => {

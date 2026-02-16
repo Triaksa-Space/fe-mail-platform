@@ -579,9 +579,9 @@ const EmailManagementPageContent: React.FC = () => {
                                                 className="h-auto flex justify-center items-center"
                                             >
                                                 {showPassword ? (
-                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
-                                                ) : (
                                                     <Eye className="w-5 h-5 text-neutral-800" />
+                                                ) : (
+                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
                                                 )}
                                             </Button>
                                         </div>
@@ -628,9 +628,9 @@ const EmailManagementPageContent: React.FC = () => {
                                                 className="h-auto flex justify-center items-center"
                                             >
                                                 {showCPassword ? (
-                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
-                                                ) : (
                                                     <Eye className="w-5 h-5 text-neutral-800" />
+                                                ) : (
+                                                    <EyeOff className="w-5 h-5 text-neutral-800" />
                                                 )}
                                             </Button>
                                         </div>
