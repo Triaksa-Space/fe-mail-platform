@@ -209,7 +209,7 @@ export default function LoginPageClient() {
                 className="h-10 w-28"
                 priority
               />
-              <p className="text-sm font-normal text-neutral-400">
+              <p className="text-sm font-normal italic text-neutral-400">
                 Nothing Extra. Just What Matters.
               </p>
             </div>
