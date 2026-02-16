@@ -563,7 +563,7 @@ export default function ForgotPasswordClient() {
                             onKeyDown={(e) => handleOtpKeyDown(index, e)}
                             disabled={!!blockedUntil}
                             className={cn(
-                              "flex-1 h-12 bg-white text-center text-xl font-semibold border-neutral-200 rounded-lg",
+                              "flex-1 h-12 bg-white text-center text-xl font-normal border-neutral-200 rounded-lg",
                               verifyError &&
                                 "outline outline-1 outline-offset-[-1px] outline-red-500 border-transparent",
                               blockedUntil && "cursor-not-allowed",
