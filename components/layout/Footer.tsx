@@ -62,17 +62,11 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
               </Link>
             ),
           )}
-          {/* Background glow */}
-          <div className="absolute left-1/2 -bottom-6 -translate-x-1/2 w-[600%] h-16 pointer-events-none z-0">
-            <div
-              className={cn(
-                "w-full h-full rounded-full",
-                "bg-[radial-gradient(ellipse_at_center,_theme(colors.primary.200/0.45)_0%,_theme(colors.primary.200/0.25)_35%,_theme(colors.primary.100/0.12)_55%,_transparent_75%)]",
-                "blur-2xl opacity-70",
-              )}
-              aria-hidden="true"
-            />
-          </div>
+          {/* Background glow (Figma-like large blurred primary-50 circle) */}
+          <div
+            className="absolute left-[calc(50%-2500px)] bottom-[-4916px] w-[5000px] h-[5000px] rounded-[5000px] bg-[var(--primary-50)] blur-[32px] pointer-events-none z-0"
+            aria-hidden="true"
+          />
         </nav>
       </div>
     </footer>

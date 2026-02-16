@@ -618,16 +618,10 @@ const InboxPageContent: React.FC = () => {
 
       {/* Background glow */}
       {!selectedEmail && !selectedSentEmail && (
-        <div className="lg:hidden fixed -bottom-12 left-1/2 -translate-x-1/2 w-[160%] h-44 pointer-events-none z-40">
-          <div
-            className="
-        w-full h-full rounded-full
-        bg-[radial-gradient(ellipse_at_center,_theme(colors.primary.200/0.45)_0%,_theme(colors.primary.200/0.25)_35%,_theme(colors.primary.100/0.12)_55%,_transparent_75%)]
-        blur-3xl
-        opacity-70
-      "
-          />
-        </div>
+        <div
+          className="lg:hidden fixed left-[calc(50%-2500px)] bottom-[-4916px] w-[5000px] h-[5000px] rounded-[5000px] bg-[var(--primary-50)] blur-[32px] pointer-events-none z-40"
+          aria-hidden="true"
+        />
       )}
 
       {/* Mobile Bottom Tabs */}
