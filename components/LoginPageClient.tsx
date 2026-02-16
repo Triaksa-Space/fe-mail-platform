@@ -215,9 +215,9 @@ export default function LoginPageClient() {
             </div>
 
             {/* Login Form */}
-            <form onSubmit={onSubmit} className="flex flex-col gap-3 md:gap-4">
-              <div className="flex flex-col gap-4 md:gap-5">
-                <div className="flex flex-col gap-2.5 md:gap-3">
+            <form onSubmit={onSubmit} className="flex flex-col gap-4 md:gap-4">
+              <div className="flex flex-col gap-5 md:gap-5">
+                <div className="flex flex-col gap-3 md:gap-3">
                   {/* Email Field with Floating Label */}
                   <div className="relative flex flex-col">
                     <div className="h-3.5" />
@@ -332,7 +332,7 @@ export default function LoginPageClient() {
                 )}
 
                 {/* Remember me + Forgot Password */}
-                <div className="flex items-center justify-between">
+                <div className="my-0 flex items-center justify-between">
                   <Checkbox
                     id="remember-me"
                     label="Remember me"

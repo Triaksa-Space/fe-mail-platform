@@ -46,11 +46,11 @@ const FeatureList: React.FC<FeatureListProps> = ({
   className,
 }) => {
   return (
-    <div className={cn("w-full max-w-sm flex flex-col items-center gap-2 md:gap-3", className)}>
+    <div className={cn("w-full max-w-sm flex flex-col items-center gap-3", className)}>
       {title && (
         <p className="text-sm font-normal text-neutral-600 text-center w-full">{title}</p>
       )}
-      <div className="grid grid-cols-2 gap-2 md:gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {features.map((feature, index) => {
           const isRightColumn = index % 2 === 0;
           return (
