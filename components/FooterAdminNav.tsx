@@ -52,7 +52,7 @@ const FooterAdminNav = () => {
           onClick={() => handleNavigation('/admin/create-single-email')}
         >
           <Plus className="h-5 w-5" />
-          <span className="text-xs mt-1">Create Single</span>
+          <span className="text-xs mt-1">Create single</span>
         </Button>
         <Button
           variant="ghost"
@@ -60,7 +60,7 @@ const FooterAdminNav = () => {
           onClick={() => handleNavigation('/admin/create-bulk-email')}
         >
           <Database className="h-5 w-5" />
-          <span className="text-xs mt-1">Create Bulk</span>
+          <span className="text-xs mt-1">Create bulk</span>
         </Button>
         <Button
           variant="ghost"

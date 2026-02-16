@@ -19,16 +19,16 @@ const DropdownMenuComponent: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/admin/create-single-email')}>
-          Create Single Email
+          Create single email
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/admin/create-bulk-email')}>
-          Create Bulk Email
+          Create bulk email
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/admin/manage-email')}>
-          Manage Email
+          Manage email
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer text-red-600" onClick={handleLogout}>
-          Log Out
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

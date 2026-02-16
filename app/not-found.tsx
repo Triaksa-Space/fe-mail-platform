@@ -19,7 +19,7 @@ export default function NotFound() {
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <Button asChild className="mt-6">
-          <Link href="/">Go Back Home</Link>
+          <Link href="/">Go back home</Link>
         </Button>
       </main>
 
