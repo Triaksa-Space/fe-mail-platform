@@ -348,7 +348,7 @@ export default function ForgotPasswordClient() {
             {/* Email & Binding Email Step */}
             {step === "email" && (
               <>
-                <div className="text-neutral-800 text-2xl font-medium">Forgot Password</div>
+                <div className="my-2 text-neutral-800 text-2xl font-medium">Forgot Password</div>
                 <form onSubmit={handleRequestReset} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
                     {/* Email Field */}
@@ -414,7 +414,7 @@ export default function ForgotPasswordClient() {
                     )}
                     {/* Helper text */}
                     <p className="text-neutral-500 text-xs leading-5">
-                      Binding email is required to reset your password. You can set up a binding email in your account settings.
+                      Binding email is an alternative email used to recover your password via the settings menu.
                     </p>
                   </div>
 
