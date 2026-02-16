@@ -18,6 +18,38 @@ interface FaqAccordionItemProps {
   isLast: boolean;
 }
 
+const renderAnswerWithLinks = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+
+  return parts.map((part, index) => {
+    if (!/^https?:\/\//.test(part)) {
+      return <React.Fragment key={`text-${index}`}>{part}</React.Fragment>;
+    }
+
+    let url = part;
+    let trailing = "";
+    while (/[),.!?;:]$/.test(url)) {
+      trailing = url.slice(-1) + trailing;
+      url = url.slice(0, -1);
+    }
+
+    return (
+      <React.Fragment key={`link-${index}`}>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary-500 underline underline-offset-2"
+        >
+          {url}
+        </a>
+        {trailing}
+      </React.Fragment>
+    );
+  });
+};
+
 const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
   item,
   isOpen,
@@ -27,18 +59,21 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
   return (
     <div
       className={cn(
-        "self-stretch p-4 flex flex-col justify-start items-start gap-3",
+        "self-stretch flex flex-col justify-start items-start",
         !isLast && "border-b border-neutral-200"
       )}
     >
       <Button
         variant="ghost"
         onClick={onToggle}
-        className="self-stretch h-auto px-0 justify-start gap-3 overflow-hidden w-full text-left hover:bg-transparent"
+        className={cn(
+          "self-stretch h-auto min-h-0 pt-4 px-4 justify-start gap-3 w-full text-left hover:bg-transparent",
+          isOpen ? "pb-3" : "pb-4"
+        )}
         aria-expanded={isOpen}
       >
-        <div className="flex-1 flex justify-start items-center gap-3">
-          <span className="flex-1 text-neutral-900 text-base font-medium leading-6">
+        <div className="min-w-0 flex-1 flex justify-start items-center gap-3">
+          <span className="min-w-0 flex-1 break-words whitespace-pre-line text-neutral-900 text-base font-medium leading-6">
             {item.question}
           </span>
         </div>
@@ -59,9 +94,9 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="self-stretch pl-6 inline-flex justify-center items-start gap-2.5">
-          <p className="flex-1 text-neutral-500 text-sm font-normal leading-5">
-            {item.answer}
+        <div className="self-stretch pl-10 pr-4 pb-4 flex items-start">
+          <p className="flex-1 whitespace-pre-line text-neutral-500 text-sm font-normal leading-5">
+            {renderAnswerWithLinks(item.answer)}
           </p>
         </div>
       </div>
@@ -87,19 +122,19 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
   return (
     <div
       className={cn(
-        "self-stretch bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start",
+        "self-stretch p-0 md:p-8 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden flex flex-col justify-start items-start",
         className
       )}
     >
       {/* Category Header */}
-      <div className="self-stretch px-4 pt-4 inline-flex justify-start items-center gap-2.5">
-        <h3 className="text-neutral-800 text-lg font-semibold leading-6">
+      <div className="self-stretch px-4 pt-4 md:px-0 md:pt-0 flex justify-start items-center gap-2.5">
+        <h3 className="min-w-0 break-words whitespace-pre-line text-neutral-800 text-lg font-semibold leading-6">
           {category.title}
         </h3>
       </div>
 
       {/* FAQ Items */}
-      <div className="self-stretch flex flex-col justify-start items-start">
+      <div className="self-stretch md:mt-6 flex flex-col justify-start items-start">
         {category.items.map((item, idx) => (
           <FaqAccordionItem
             key={item.id}
@@ -115,5 +150,3 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
 };
 
 export default FaqSection;
-
-

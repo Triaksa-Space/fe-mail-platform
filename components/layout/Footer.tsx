@@ -13,6 +13,7 @@ interface FooterLink {
 interface FooterProps {
   links?: FooterLink[];
   className?: string;
+  showGlow?: boolean;
 }
 
 const defaultLinks: FooterLink[] = [
@@ -31,7 +32,11 @@ const defaultLinks: FooterLink[] = [
  * - Responsive layout with justify-between
  * - Subtle sky gradient background glow
  */
-const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
+const Footer: React.FC<FooterProps> = ({
+  links = defaultLinks,
+  className,
+  showGlow = true,
+}) => {
   return (
     <footer
       className={cn(
@@ -62,11 +67,12 @@ const Footer: React.FC<FooterProps> = ({ links = defaultLinks, className }) => {
               </Link>
             ),
           )}
-          {/* Background glow (Figma-like large blurred primary-50 circle) */}
-          <div
-            className="absolute left-[calc(50%-2500px)] bottom-[-4916px] w-[5000px] h-[5000px] rounded-[5000px] bg-[var(--primary-50)] blur-[32px] pointer-events-none z-0"
-            aria-hidden="true"
-          />
+          {showGlow && (
+            <div
+              className="absolute left-[calc(50%-2500px)] bottom-[-4916px] w-[5000px] h-[5000px] rounded-[5000px] bg-[var(--primary-50)] blur-[32px] pointer-events-none z-0"
+              aria-hidden="true"
+            />
+          )}
         </nav>
       </div>
     </footer>

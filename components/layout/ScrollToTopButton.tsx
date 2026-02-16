@@ -20,10 +20,9 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
       size="icon"
       onClick={onClick}
       className={cn(
-        "w-10 h-10 bg-blue-100 rounded-lg",
-        "shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)]",
-        "outline outline-1 outline-offset-[-1px] outline-blue-100",
-        "hover:bg-blue-200 transition-colors",
+        "w-10 h-10 rounded-lg border border-[var(--primary-100)] bg-[var(--primary-50)]",
+        "shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08),0_6px_15px_-2px_rgba(16,24,40,0.08)]",
+        "hover:bg-[var(--primary-100)] transition-colors",
         className
       )}
       aria-label="Scroll to top"

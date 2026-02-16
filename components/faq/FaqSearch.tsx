@@ -59,7 +59,7 @@ const FaqSearch: React.FC<FaqSearchProps> = ({
       {/* Result Count */}
       {value.trim() && (
         <p className="text-xs text-neutral-500 leading-4">
-          {resultCount} result{resultCount !== 1 ? "s" : ""} &quot;{value}&quot;
+          {resultCount} result{resultCount > 1 ? "s" : ""} &quot;{value}&quot;
         </p>
       )}
     </div>

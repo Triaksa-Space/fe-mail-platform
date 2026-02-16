@@ -211,8 +211,12 @@ const PrivacyPage: React.FC = () => {
             </div>
           )}
 
-          <div className="pb-4 pt-4 md:p-8 pt-4 md:pt-8">
-            <Footer />
+          <div className="relative pb-4 pt-4 md:p-8 pt-4 md:pt-8">
+            <div
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 w-[140%] h-16 rounded-full bg-[var(--primary-50)] blur-[32px] pointer-events-none z-0"
+              aria-hidden="true"
+            />
+            <Footer showGlow={false} className="relative z-10" />
           </div>
         </div>
       </div>

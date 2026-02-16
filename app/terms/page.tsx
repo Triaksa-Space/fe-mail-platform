@@ -126,7 +126,7 @@ const TermsPage: React.FC = () => {
         className="flex-1 overflow-y-auto relative z-10"
       >
         {/* Main Content with padding */}
-        <div className="p-4 lg:p-6 md:p-8 pb-0 md:pb-0">
+        <div className="p-4 md:p-8 pb-0 md:pb-0">
           <div className="flex flex-col justify-start items-start gap-4 md:gap-8">
             {/* Back Button */}
             <div className="self-stretch inline-flex justify-start items-center gap-2.5">
@@ -209,8 +209,12 @@ const TermsPage: React.FC = () => {
             </div>
           )}
 
-          <div className="pb-4 pt-4 md:p-8 pt-4 md:pt-8">
-            <Footer />
+          <div className="relative pb-4 pt-4 md:p-8 pt-4 md:pt-8">
+            <div
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 w-[140%] h-16 rounded-full bg-[var(--primary-50)] blur-[32px] pointer-events-none z-0"
+              aria-hidden="true"
+            />
+            <Footer showGlow={false} className="relative z-10" />
           </div>
         </div>
       </div>
