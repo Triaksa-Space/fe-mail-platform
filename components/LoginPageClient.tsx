@@ -200,7 +200,7 @@ export default function LoginPageClient() {
           {/* Auth Card */}
           <AuthCard>
             {/* Logo + Tagline */}
-            <div className="flex flex-col items-center gap-0.5 mb-4 md:mb-4">
+            <div className="flex flex-col items-center gap-0.5 mb-6 md:mb-6">
               <Image
                 src="/mailria.png"
                 alt="Mailria"
@@ -248,7 +248,7 @@ export default function LoginPageClient() {
                               setCountdown(0);
                             }
                           }}
-                          className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-neutral-200 bg-transparent outline-none"
+                          className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-[#9CA3AF] bg-transparent outline-none"
                         />
                       </div>
                     </div>
@@ -291,7 +291,7 @@ export default function LoginPageClient() {
                               setCountdown(0);
                             }
                           }}
-                            className={`w-full text-sm font-normal placeholder:text-neutral-200 bg-transparent outline-none ${
+                            className={`w-full text-sm font-normal placeholder:text-[#9CA3AF] bg-transparent outline-none ${
                               showPassword
                                 ? "text-neutral-800"
                                 : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
