@@ -40,7 +40,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
       )}
     >
       <nav
-        className="flex items-center justify-start px-5 py-2 gap-5 rounded-xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
+        className="flex items-center justify-start px-4 py-2 gap-5 rounded-xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-[0px_4px_24px_0px_rgba(0,0,0,0.12)]"
       >
         {/* Inbox tab */}
         <Button
@@ -53,14 +53,17 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
               : "text-neutral-600 hover:text-neutral-600"
           )}
         >
-          <div className="relative">
+          <div className="relative w-[20px] h-[20px]">
             {currentView === "inbox" ? (
-              <InboxSolidIcon className="w-5 h-5" />
+              <InboxSolidIcon className="!w-[20px] !h-[20px]" />
             ) : (
-              <InboxOutlineIcon className="w-5 h-5" />
+              <InboxOutlineIcon className="!w-[20px] !h-[20px]" />
             )}
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-2.5 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none px-1">
+              <span
+                className="absolute -top-0.5 -right-2 flex w-4 h-4 p-[2px] justify-center items-center aspect-square rounded-[40px] text-white text-[10px] font-semibold leading-none"
+                style={{ background: "var(--destructive-500-main, #EF4444)" }}
+              >
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
@@ -83,9 +86,9 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           )}
         >
           {currentView === "sent" ? (
-            <PaperAirplaneSolidIcon className="w-5 h-5" />
+            <PaperAirplaneSolidIcon className="!w-[20px] !h-[20px]" />
           ) : (
-            <PaperAirplaneOutlineIcon className="w-5 h-5" />
+            <PaperAirplaneOutlineIcon className="!w-[20px] !h-[20px]" />
           )}
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
@@ -105,9 +108,9 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           )}
         >
           {currentView === "settings" ? (
-            <SettingsSolidIcon className="w-5 h-5" />
+            <SettingsSolidIcon className="!w-[20px] !h-[20px]" />
           ) : (
-            <SettingsOutlineIcon className="w-5 h-5" />
+            <SettingsOutlineIcon className="!w-[20px] !h-[20px]" />
           )}
           <span className={cn(
             "w-14 text-center text-sm font-['Roboto'] leading-5",
@@ -121,7 +124,7 @@ const BottomTabs: React.FC<BottomTabsProps> = ({
           onClick={onLogout}
           className="w-14 h-auto flex flex-col items-center justify-center gap-0.5 text-neutral-600 hover:text-neutral-600 px-0 py-0"
         >
-          <LogoutOutlineIcon className="w-5 h-5" />
+          <LogoutOutlineIcon className="!w-[20px] !h-[20px]" />
           <span className="w-14 text-center text-sm font-normal font-['Roboto'] leading-5">Logout</span>
         </Button>
       </nav>

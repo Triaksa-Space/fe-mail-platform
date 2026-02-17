@@ -595,7 +595,7 @@ const InboxPageContent: React.FC = () => {
 
   return (
     <div className="h-screen min-h-dvh relative flex flex-col overflow-hidden w-full">
-      <div className="self-stretch flex-1 pt-5 lg:py-5 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
+      <div className="self-stretch flex-1 pt-4 lg:py-5 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
         {/* Desktop Sidebar - LEFT side */}
         <Sidebar
           currentView={currentView}
