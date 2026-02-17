@@ -116,8 +116,6 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
               <span>Edit</span>
             </Button>
 
-            <div className="my-1 border-t border-neutral-100" />
-
             <Button
               variant="ghost"
               onClick={() => handleAction(onDelete)}
