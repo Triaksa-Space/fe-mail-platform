@@ -74,16 +74,17 @@ const Sidebar: React.FC<SidebarProps> = ({
                 variant="ghost"
                 onClick={() => onViewChange(item.id)}
                 className={cn(
-                  "self-stretch px-3 py-1 h-auto justify-between transition-colors",
+                  "self-stretch px-3 py-1 h-auto justify-between transition-colors [&_svg]:!w-[20px] [&_svg]:!h-[20px]",
                   isActive && "bg-primary-50 rounded-xl"
                 )}
               >
                 <div className="flex-1 flex justify-start items-center gap-5">
                   <IconComponent
                     className={cn(
-                      "w-5 h-5",
+                      "!w-[20px] !h-[20px]",
                       isActive ? "text-primary-500" : "text-neutral-600"
                     )}
+                    style={{ width: 20, height: 20 }}
                   />
                   <span
                     className={cn(

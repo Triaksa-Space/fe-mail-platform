@@ -269,9 +269,10 @@ const AdminSidebar: React.FC = () => {
                     <div className="flex-1 flex justify-start items-center gap-5">
                       <Icon
                         className={cn(
-                          "w-5 h-5",
+                          "!w-[20px] !h-[20px]",
                           active ? "text-primary-500" : "text-neutral-600"
                         )}
+                        style={{ width: 20, height: 20 }}
                       />
                       <div
                         className={cn(
@@ -305,9 +306,10 @@ const AdminSidebar: React.FC = () => {
             <div className="flex-1 flex justify-start items-center gap-5">
               <SettingsIcon
                 className={cn(
-                  "w-5 h-5",
+                  "!w-[20px] !h-[20px]",
                   isSettingsActive ? "text-primary-500" : "text-neutral-600"
                 )}
+                style={{ width: 20, height: 20 }}
               />
               <div
                 className={cn(
