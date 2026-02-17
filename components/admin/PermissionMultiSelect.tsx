@@ -66,7 +66,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
   };
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className={cn("relative", isOpen && "z-[70]")} ref={containerRef}>
       {/* Selected permissions display */}
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -125,7 +125,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
       {isOpen && !disabled && (
         <div
           className={cn(
-            "absolute z-50 w-full max-h-60 overflow-auto",
+            "absolute z-[70] w-full max-h-60 overflow-auto",
             "rounded-lg border border-neutral-200 bg-white shadow-lg",
             "py-1",
             dropdownPosition === "top" ? "bottom-full mb-1" : "mt-1"

@@ -57,7 +57,7 @@ const RolePermissionDropdown: React.FC<RolePermissionDropdownProps> = ({
       : "";
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={containerRef} className={cn("relative w-full", isOpen && "z-[70]")}>
       <button
         type="button"
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
@@ -74,7 +74,7 @@ const RolePermissionDropdown: React.FC<RolePermissionDropdownProps> = ({
       </button>
 
       {isOpen && !disabled && (
-        <div className="w-full p-2 left-0 top-11 absolute z-50 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-1">
+        <div className="w-full p-2 left-0 top-11 absolute z-[70] bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08),0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-1">
           {AVAILABLE_PERMISSIONS.map((permission) => {
             const isSelected = value.includes(permission.id);
             return (
@@ -105,4 +105,3 @@ const RolePermissionDropdown: React.FC<RolePermissionDropdownProps> = ({
 };
 
 export default RolePermissionDropdown;
-

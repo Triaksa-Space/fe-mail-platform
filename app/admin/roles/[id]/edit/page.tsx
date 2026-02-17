@@ -12,7 +12,7 @@ import LoadingProcessingPage from '@/components/ProcessLoading';
 import DOMPurify from 'dompurify';
 import {
     AdminLayout,
-    PermissionMultiSelect
+    RolePermissionDropdown
 } from "@/components/admin";
 import { AdminUser, AdminApiResponse, PermissionKey } from "@/lib/admin-types";
 import { UserIcon, ArrowLeftIcon, ChevronRightIcon, EyeIcon, EyeSlashIcon, KeyIcon } from '@heroicons/react/24/outline';
@@ -250,7 +250,7 @@ const EditAdminPageContent: React.FC = () => {
                 </div>
 
                 {/* Form Card */}
-                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-hidden">
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-visible">
                     {/* Form Fields Row */}
                     <div className="self-stretch inline-flex justify-start items-start gap-4">
                         {/* Username Input */}
@@ -314,10 +314,9 @@ const EditAdminPageContent: React.FC = () => {
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
-                                <PermissionMultiSelect
+                                <RolePermissionDropdown
                                     value={permissions}
                                     onChange={(values) => setPermissions(values as PermissionKey[])}
-                                    displayMode="text"
                                 />
                                 <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5 z-10">
                                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>

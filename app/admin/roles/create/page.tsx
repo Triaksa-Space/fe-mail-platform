@@ -178,7 +178,6 @@ const CreateAdminPageContent: React.FC = () => {
                                     <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                                 </div>
                             </div>
-                            <p className="text-xs text-neutral-500">Minimum 6 characters</p>
                         </div>
 
                         <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">

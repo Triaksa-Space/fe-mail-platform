@@ -296,7 +296,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                 </div>
 
                 {/* Table Card */}
-                <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden relative">
+                <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-visible relative">
 
                     {/* Loading Overlay removed: loading is shown in card body only */}
 
@@ -320,8 +320,8 @@ const RolesPermissionsPageContent: React.FC = () => {
 
                     {/* Table Container */}
                     <div className="self-stretch flex flex-col justify-start items-start gap-4">
-                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden">
-                            <div className="self-stretch overflow-x-auto">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-visible">
+                            <div className="self-stretch overflow-x-auto overflow-y-visible">
                                 <div className="min-w-[980px]">
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-neutral-200">

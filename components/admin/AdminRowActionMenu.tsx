@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { PencilSquareIcon, TrashIcon, EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
@@ -15,12 +16,26 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
   onDelete,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+
+  const updateMenuPosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setMenuPosition({
+      top: rect.bottom + 8,
+      left: rect.right - 144,
+    });
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const clickedMenu = dropdownRef.current?.contains(target);
+      const clickedTrigger = triggerRef.current?.contains(target);
+      if (!clickedMenu && !clickedTrigger) {
         setIsOpen(false);
       }
     };
@@ -39,17 +54,32 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    updateMenuPosition();
+
+    const handleReposition = () => updateMenuPosition();
+    window.addEventListener("resize", handleReposition);
+    window.addEventListener("scroll", handleReposition, true);
+
+    return () => {
+      window.removeEventListener("resize", handleReposition);
+      window.removeEventListener("scroll", handleReposition, true);
+    };
+  }, [isOpen]);
+
   const handleAction = (action: () => void) => {
     setIsOpen(false);
     action();
   };
 
   return (
-    <div className="relative inline-block" ref={menuRef}>
+    <div className="relative inline-block">
       {/* Trigger Button */}
       <Button
         variant="outline"
         size="icon"
+        ref={triggerRef}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "h-9 w-9",
@@ -63,16 +93,17 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
       </Button>
 
       {/* Dropdown Menu */}
-      {isOpen && (
+      {isOpen && typeof document !== "undefined" && createPortal(
         <div
+          ref={dropdownRef}
+          style={{ top: menuPosition.top, left: menuPosition.left }}
           className={cn(
-            "absolute right-0 mt-2 w-36 z-50",
+            "fixed w-36 z-[200]",
             "rounded-xl border border-neutral-200 bg-white shadow-lg",
             "overflow-hidden"
           )}
         >
           <div className="py-1">
-            {/* Edit */}
             <Button
               variant="ghost"
               onClick={() => handleAction(onEdit)}
@@ -85,10 +116,8 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
               <span>Edit</span>
             </Button>
 
-            {/* Divider */}
             <div className="my-1 border-t border-neutral-100" />
 
-            {/* Delete */}
             <Button
               variant="ghost"
               onClick={() => handleAction(onDelete)}
@@ -101,7 +130,8 @@ const AdminRowActionMenu: React.FC<AdminRowActionMenuProps> = ({
               <span>Delete</span>
             </Button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

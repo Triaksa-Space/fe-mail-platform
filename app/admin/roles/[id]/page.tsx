@@ -219,7 +219,7 @@ const ViewAdminPageContent: React.FC = () => {
                 </div>
 
                 {/* Admin Details Card */}
-                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-hidden">
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] flex flex-col justify-start items-start gap-4 overflow-visible">
                     {/* Username & Password Row */}
                     <div className="self-stretch inline-flex justify-start items-start gap-4">
                         {/* Username - Disabled Input */}
