@@ -30,6 +30,9 @@ interface ComposeModalProps {
   replyTo?: {
     email: string;
     subject: string;
+    from: string;
+    date: string;
+    body: string;
   };
   forwardData?: ForwardData;
   sentCount?: number;
@@ -161,6 +164,36 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
         initialSubject = replyTo.subject.startsWith("Re:")
           ? replyTo.subject
           : `Re: ${replyTo.subject}`;
+
+        // Build quoted original email content (plain text, editable like forward)
+        let plainText = "";
+        if (replyTo.body) {
+          const tmp = document.createElement("div");
+          tmp.innerHTML = replyTo.body;
+          plainText = tmp.textContent || tmp.innerText || "";
+        }
+
+        const replyDate = new Date(replyTo.date);
+        const dateStr = replyDate.toLocaleDateString("en-US", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+        const timeStr = replyDate.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+
+        initialMessage = [
+          "",
+          "",
+          `On ${dateStr} at ${timeStr} ${replyTo.from}`,
+          `<${replyTo.email}> wrote:`,
+          "",
+          plainText,
+        ].join("\n");
       }
 
       setTo(initialTo);
@@ -399,6 +432,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     }
   };
 
+  const isReplyMode = !!replyTo && !forwardData;
+  const isForwardMode = !!forwardData;
   const isFormValid = to && subject && message && !isLimitReached;
   const isDisabled = isSending || isUploading || !isFormValid;
 
@@ -421,14 +456,14 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-labelledby="compose-title"
           className={cn(
             "relative w-full bg-neutral-50 flex flex-col overflow-hidden",
-            // Mobile: full screen with py-4 and gap-4
-            "h-full py-4 gap-4",
+            // Mobile: full screen with py-4 and gap-8
+            "h-full py-4 gap-8",
             // Desktop: centered modal with max dimensions
-            "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-sm lg:max-w-3xl md:rounded-sm md:shadow-xl md:bg-[#F9FAFB]"
+            "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-sm lg:max-w-[900px] md:rounded-lg md:shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] md:bg-white"
           )}
         >
           {/* Header Action Row */}
-          <div className="flex items-center justify-between px-4 md:py-3 md:bg-white md:rounded-t-sm">
+          <div className="flex items-center justify-between px-4 md:py-4 md:bg-white md:rounded-t-lg">
             {/* Left: Close Button */}
             <Button
               type="button"
@@ -519,91 +554,241 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           </div>
 
           {/* Form Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto px-4 flex flex-col justify-start items-start gap-4 md:p-4 md:bg-white">
-            {/* Card A: From / To */}
-            <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
-              {/* From Field */}
-              <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                <div className="self-stretch relative flex flex-col justify-start items-start">
-                  <div className="self-stretch h-3.5"></div>
-                  <div className="self-stretch h-10 px-3 py-2 bg-neutral-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
-                    <div className="flex-1 flex justify-start items-center gap-2">
-                      <Mail className="w-5 h-5 text-neutral-400" />
-                      <div className="flex justify-start items-center gap-0.5">
-                        <span className="text-neutral-400 text-sm font-normal font-['Roboto'] leading-4">{email || ""}</span>
+          <div className="flex-1 overflow-y-auto px-4 flex flex-col justify-start items-start gap-4 md:p-4">
+            {isReplyMode ? (
+              <>
+                {/* Reply Mode - Card 1: Reply to + Subject */}
+                <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
+                  {/* Reply to Field */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                      <div className="self-stretch h-3.5"></div>
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                        <div className="flex-1 flex justify-start items-center gap-2">
+                          <Mail className="w-5 h-5 text-neutral-400" />
+                          <div className="flex justify-start items-center gap-0.5">
+                            <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-4">{to}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                        <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Reply to</span>
                       </div>
                     </div>
                   </div>
-                  <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                    <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">From</span>
+
+                  {/* Subject Field with floating label */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                      <div className="self-stretch h-3.5"></div>
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                        <div className="flex-1 flex justify-start items-center gap-2">
+                          <div className="flex-1 flex justify-start items-center gap-0.5">
+                            <input
+                              id="compose-subject"
+                              type="text"
+                              placeholder="Enter subject"
+                              value={subject}
+                              onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
+                              className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 line-clamp-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                        <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Subject</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* To Field */}
-              <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                <div className="self-stretch relative flex flex-col justify-start items-start">
-                  <div className="self-stretch h-3.5"></div>
-                  <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
-                    <div className="flex-1 flex justify-start items-center gap-2">
-                      <Mail className="w-5 h-5 text-neutral-400" />
-                      <input
-                        id="compose-to"
-                        type="email"
-                        placeholder="recipient@example.com"
-                        value={to}
-                        onChange={(e) =>
-                          setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
-                        }
-                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                {/* Reply Mode - Card 2: Body */}
+                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
+                  <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-hidden">
+                    <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
+                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3">
+                        <textarea
+                          id="compose-body"
+                          placeholder="Compose email"
+                          value={message}
+                          onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Attachments */}
+                  <AttachmentList
+                    attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
+                    onRemove={handleRemoveAttachment}
+                  />
+                </div>
+              </>
+            ) : isForwardMode ? (
+              <>
+                {/* Forward Mode - Card 1: Forward to + Subject */}
+                <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
+                  {/* Forward to Field */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                      <div className="self-stretch h-3.5"></div>
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                        <div className="flex-1 flex justify-start items-center gap-2">
+                          <Mail className="w-5 h-5 text-neutral-400" />
+                          <input
+                            id="compose-to"
+                            type="email"
+                            placeholder="recipient's email"
+                            value={to}
+                            onChange={(e) =>
+                              setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
+                            }
+                            className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
+                          />
+                        </div>
+                      </div>
+                      <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                        <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Forward to</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Subject Field with floating label */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                      <div className="self-stretch h-3.5"></div>
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                        <div className="flex-1 flex justify-start items-center gap-2">
+                          <div className="flex-1 flex justify-start items-center gap-0.5">
+                            <input
+                              id="compose-subject"
+                              type="text"
+                              placeholder="Enter subject"
+                              value={subject}
+                              onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
+                              className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 line-clamp-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                        <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Subject</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Forward Mode - Card 2: Body */}
+                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
+                  <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-hidden">
+                    <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
+                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3">
+                        <textarea
+                          id="compose-body"
+                          placeholder="Compose email"
+                          value={message}
+                          onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Attachments */}
+                  <AttachmentList
+                    attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
+                    onRemove={handleRemoveAttachment}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Compose Mode - Card A: From / To */}
+                <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
+                  {/* From Field */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                      <div className="self-stretch h-3.5"></div>
+                      <div className="self-stretch h-10 px-3 py-2 bg-neutral-100 rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                        <div className="flex-1 flex justify-start items-center gap-2">
+                          <Mail className="w-5 h-5 text-neutral-400" />
+                          <div className="flex justify-start items-center gap-0.5">
+                            <span className="text-neutral-400 text-sm font-normal font-['Roboto'] leading-4">{email || ""}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                        <span className="text-neutral-400 text-[10px] font-normal font-['Roboto'] leading-4">From</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* To Field */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch relative flex flex-col justify-start items-start">
+                      <div className="self-stretch h-3.5"></div>
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                        <div className="flex-1 flex justify-start items-center gap-2">
+                          <Mail className="w-5 h-5 text-neutral-400" />
+                          <input
+                            id="compose-to"
+                            type="email"
+                            placeholder="recipient@example.com"
+                            value={to}
+                            onChange={(e) =>
+                              setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
+                            }
+                            className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                          />
+                        </div>
+                      </div>
+                      <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                        <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">To</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Compose Mode - Card B: Subject & Body */}
+                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
+                  {/* Subject Field */}
+                  <div className="self-stretch flex flex-col justify-start items-start gap-2">
+                    <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                      <div className="flex-1 flex justify-start items-center gap-2">
+                        <input
+                          id="compose-subject"
+                          type="text"
+                          placeholder="Enter subject"
+                          value={subject}
+                          onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
+                          className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Body Field */}
+                  <div className="self-stretch flex-1 flex flex-col min-h-0">
+                    <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col">
+                      <textarea
+                        id="compose-body"
+                        placeholder="Compose email"
+                        value={message}
+                        onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                        className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
                       />
                     </div>
                   </div>
-                  <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
-                    <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">To</span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Card B: Subject & Body */}
-            <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
-              {/* Subject Field */}
-              <div className="self-stretch flex flex-col justify-start items-start gap-2">
-                <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
-                  <div className="flex-1 flex justify-start items-center gap-2">
-                    <input
-                      id="compose-subject"
-                      type="text"
-                      placeholder="Enter subject"
-                      value={subject}
-                      onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                      className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Body Field */}
-              <div className="self-stretch flex-1 flex flex-col min-h-0">
-                <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col">
-                  <textarea
-                    id="compose-body"
-                    placeholder="Compose your email..."
-                    value={message}
-                    onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                    className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                  {/* Attachments inside body card */}
+                  <AttachmentList
+                    attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
+                    onRemove={handleRemoveAttachment}
                   />
                 </div>
-              </div>
-
-              {/* Attachments inside body card */}
-              <AttachmentList
-                attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
-                onRemove={handleRemoveAttachment}
-              />
-            </div>
-
+              </>
+            )}
           </div>
         </div>
       </div>
