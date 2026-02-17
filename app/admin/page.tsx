@@ -385,7 +385,7 @@ const EmailManagementPageContent: React.FC = () => {
                 </div>
 
                 {/* Table Card */}
-                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-visible relative">
+                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start overflow-hidden relative">
                     <Toaster />
 
                     {/* Loading Overlay - only covers table card */}
@@ -400,38 +400,40 @@ const EmailManagementPageContent: React.FC = () => {
 
                     {/* Table Container */}
                     <div className="self-stretch flex flex-col justify-start items-start gap-4">
-                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-visible">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden">
+                            <div className="self-stretch overflow-x-auto">
+                                <div className="min-w-[980px]">
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-neutral-200">
-                                <div className="w-[32%] px-4 py-3 flex items-center gap-1">
+                                <div className="w-80 h-11 px-4 py-3 flex items-center gap-1">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
                                     <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
-                                <div className="flex-1 px-4 py-3">
+                                <div className="flex-1 h-11 px-4 py-3 flex items-center">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('last_login')}
-                                        className="h-auto inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
+                                        className="h-auto p-0 inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Last active</div>
                                         {renderSortIcon('last_login')}
                                     </Button>
                                 </div>
-                                <div className="flex-1 px-4 py-3">
+                                <div className="flex-1 h-11 px-4 py-3 flex items-center">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('created_at')}
-                                        className="h-auto inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
+                                        className="h-auto p-0 inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created</div>
                                         {renderSortIcon('created_at')}
                                     </Button>
                                 </div>
-                                <div className="flex-1 px-4 py-3 flex items-center gap-1">
+                                <div className="flex-1 h-11 px-4 py-3 flex items-center gap-1">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
                                     <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
                                 </div>
-                                <div className="w-[73px] px-4 py-3 flex justify-center items-center">
+                                <div className="w-[72px] h-11 px-4 py-3 flex justify-center items-center">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
                                 </div>
                             </div>
@@ -460,11 +462,11 @@ const EmailManagementPageContent: React.FC = () => {
                                 users.map((user) => (
                                     <div
                                         key={user.email}
-                                        className="flex w-full border-b border-neutral-200 cursor-pointer bg-white hover:bg-neutral-100"
+                                        className="group flex w-full border-b border-neutral-200 cursor-pointer bg-white hover:bg-neutral-100"
                                         onClick={() => router.push(`/admin/user/${user.user_encode_id}`)}
                                     >
                                         {/* Name */}
-                                        <div className="w-[32%] h-11 px-4 py-3 flex items-center">
+                                        <div className="w-80 h-11 px-4 py-3 flex items-center">
                                             <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.email}
                                             </div>
@@ -487,7 +489,7 @@ const EmailManagementPageContent: React.FC = () => {
                                         </div>
                                         {/* Action */}
                                         <div
-                                            className="w-[73px] h-11 px-4 py-3 flex justify-center items-center"
+                                            className="w-[72px] h-11 px-4 py-3 flex justify-center items-center"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <UserRowActionMenu
@@ -499,6 +501,8 @@ const EmailManagementPageContent: React.FC = () => {
                                     </div>
                                 ))
                             )}
+                                </div>
+                            </div>
                         </div>
 
                         {/* Pagination */}
