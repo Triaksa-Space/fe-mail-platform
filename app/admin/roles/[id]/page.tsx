@@ -214,7 +214,6 @@ const ViewAdminPageContent: React.FC = () => {
                             className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-red-50 transition-colors"
                         >
                             <TrashIcon className="w-5 h-5 text-red-500" />
-                            <span className="text-center text-red-500 text-base font-medium font-['Roboto'] leading-4">Delete</span>
                         </Button>
                     </div>
                 </div>
