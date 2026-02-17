@@ -265,38 +265,38 @@ export default function ForgotPasswordClient() {
   };
 
   // Resend code
-  const handleResendCode = async () => {
-    setIsLoading(true);
+  // const handleResendCode = async () => {
+  //   setIsLoading(true);
 
-    try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/password/forgot`,
-        {
-          email,
-          binding_email: bindingEmail || undefined,
-        },
-      );
+  //   try {
+  //     await axios.post(
+  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/password/forgot`,
+  //       {
+  //         email,
+  //         binding_email: bindingEmail || undefined,
+  //       },
+  //     );
 
-      toast({
-        description: bindingEmail
-          ? `Verification code resent to ${bindingEmail}`
-          : "Verification code resent to your email.",
-        variant: "default",
-      });
+  //     toast({
+  //       description: bindingEmail
+  //         ? `Verification code resent to ${bindingEmail}`
+  //         : "Verification code resent to your email.",
+  //       variant: "default",
+  //     });
 
-      setOtp(["", "", "", ""]);
-      setAttemptsRemaining(5);
-      setBlockedUntil(null);
-      otpRefs[0].current?.focus();
-    } catch {
-      toast({
-        description: "Failed to resend code. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     setOtp(["", "", "", ""]);
+  //     setAttemptsRemaining(5);
+  //     setBlockedUntil(null);
+  //     otpRefs[0].current?.focus();
+  //   } catch {
+  //     toast({
+  //       description: "Failed to resend code. Please try again.",
+  //       variant: "destructive",
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   // Step 3: Reset password
   const handleResetPassword = async (e: React.FormEvent) => {
