@@ -247,7 +247,7 @@ const RolesPermissionsPageContent: React.FC = () => {
         const isActiveSortField = sortField === field;
         return (
             <ChevronUpDownIcon
-                className={`ml-1 h-4 w-4 ${isActiveSortField ? 'text-neutral-700' : 'text-neutral-400'}`}
+                className={`w-2 h-[14px] shrink-0 ${isActiveSortField ? 'text-neutral-700' : 'text-neutral-500'}`}
             />
         );
     };
@@ -296,7 +296,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                 </div>
 
                 {/* Table Card */}
-                <div className="self-stretch p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-visible relative">
+                <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-start gap-4 overflow-hidden relative">
 
                     {/* Loading Overlay removed: loading is shown in card body only */}
 
@@ -320,10 +320,12 @@ const RolesPermissionsPageContent: React.FC = () => {
 
                     {/* Table Container */}
                     <div className="self-stretch flex flex-col justify-start items-start gap-4">
-        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-visible">
+                        <div className="self-stretch rounded-xl outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden">
+                            <div className="self-stretch overflow-x-auto">
+                                <div className="min-w-[980px]">
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-neutral-200">
-                                <div className="w-56 px-4 py-3 flex items-center gap-1">
+                                <div className="w-56 h-11 px-4 py-3 flex items-center gap-1">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('username')}
@@ -333,7 +335,7 @@ const RolesPermissionsPageContent: React.FC = () => {
                                         {renderSortIcon('username')}
                                     </Button>
                                 </div>
-                                <div className="w-40 px-4 py-3">
+                                <div className="w-32 h-11 px-4 py-3 flex items-center">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('last_active_at')}
@@ -343,21 +345,27 @@ const RolesPermissionsPageContent: React.FC = () => {
                                         {renderSortIcon('last_active_at')}
                                     </Button>
                                 </div>
-                                <div className="flex-1 px-4 py-3 flex items-center gap-1">
-                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
-                                    <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
+                                <div className="flex-1 h-11 px-4 py-3 flex items-center gap-1">
+                                    <Button
+                                        variant="ghost"
+                                        type="button"
+                                        className="h-auto p-0 inline-flex items-center gap-1 cursor-default hover:bg-transparent"
+                                    >
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Role</div>
+                                        <ChevronUpDownIcon className="w-2 h-[14px] shrink-0 text-neutral-500" />
+                                    </Button>
                                 </div>
-                                <div className="w-40 px-4 py-3">
+                                <div className="w-32 h-11 px-4 py-3 flex items-center justify-center">
                                     <Button
                                         variant="ghost"
                                         onClick={() => toggleSort('created_at')}
                                         className="inline-flex items-center gap-1 hover:text-neutral-900 transition-colors h-auto p-0"
                                     >
-                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created date</div>
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created</div>
                                         {renderSortIcon('created_at')}
                                     </Button>
                                 </div>
-                                <div className="w-24 px-4 py-3 flex justify-center items-center">
+                                <div className="w-[72px] h-11 px-4 py-3 flex justify-center items-center">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
                                 </div>
                             </div>
@@ -375,48 +383,50 @@ const RolesPermissionsPageContent: React.FC = () => {
                                 admins.map((admin) => (
                                     <div
                                         key={admin.id}
-                                        className="flex w-full bg-white border-b border-neutral-200 hover:bg-neutral-50 transition-colors cursor-pointer"
+                                        className="flex w-full bg-white border-b border-neutral-200 hover:bg-neutral-100 transition-colors cursor-pointer"
                                         onClick={() => router.push(`/admin/roles/${admin.id}`)}
                                     >
                                         {/* Username */}
-                                        <div className="w-56 px-4 py-3 flex items-center">
+                                        <div className="w-56 min-h-11 px-4 py-3 flex items-center">
                                             <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {admin.username}
                                             </div>
                                         </div>
                                         {/* Last Active */}
-                                        <div className="w-40 px-4 py-3 flex items-center">
+                                        <div className="w-32 min-h-11 px-4 py-3 flex items-center justify-center">
                                             <LastActiveBadge
                                                 lastActiveAt={admin.last_active_at}
                                                 isOnline={admin.is_online}
                                             />
                                         </div>
                                         {/* Role/Permissions */}
-                                        <div className="flex-1 px-4 py-3 flex items-center">
+                                        <div className="flex-1 min-h-11 px-4 py-3 flex items-center">
                                             <PermissionChips
                                                 permissions={admin.permissions}
-                                                className="max-w-[300px]"
+                                                className="w-full"
                                             />
                                         </div>
                                         {/* Created Date */}
-                                        <div className="w-40 px-4 py-3 flex items-center">
+                                        <div className="w-32 min-h-11 px-4 py-3 flex items-center justify-center">
                                             <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {formatDate(admin.created_at)}
                                             </div>
                                         </div>
-                {/* Action */}
-                <div
-                  className="w-24 px-4 py-3 flex justify-center items-center"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <AdminRowActionMenu
-                    onEdit={() => handleEditClick(admin)}
-                    onDelete={() => handleDeleteClick(admin)}
-                  />
-                </div>
-              </div>
-            ))
-          )}
+                                        {/* Action */}
+                                        <div
+                                            className="w-[72px] min-h-11 px-4 py-3 flex justify-center items-center"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <AdminRowActionMenu
+                                                onEdit={() => handleEditClick(admin)}
+                                                onDelete={() => handleDeleteClick(admin)}
+                                            />
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                                </div>
+                            </div>
                         </div>
 
                         {/* Pagination */}

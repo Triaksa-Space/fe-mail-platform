@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import PaginationComponent from "@/components/PaginationComponent";
-import { ArrowUp, ArrowDown, AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import { AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import {
@@ -345,13 +345,14 @@ const EmailManagementPageContent: React.FC = () => {
     };
 
     // Render sort icon based on field and current sort state
+    // Keep icon style consistent with design reference.
     const renderSortIcon = (field: SortField) => {
-        if (sortField === field && sortOrder === 'asc') {
-            return <ArrowUp className="ml-1 h-4 w-4" />;
-        } else if (sortField === field && sortOrder === 'desc') {
-            return <ArrowDown className="ml-1 h-4 w-4" />;
-        }
-        return <ChevronUpDownIcon className="ml-1 h-4 w-4 text-neutral-400" />;
+        const isActiveSortField = sortField === field;
+        return (
+            <ChevronUpDownIcon
+                className={`w-2 h-[14px] shrink-0 ${isActiveSortField ? "text-neutral-700" : "text-neutral-500"}`}
+            />
+        );
     };
 
     if (!allowed) return null;
@@ -406,8 +407,14 @@ const EmailManagementPageContent: React.FC = () => {
                             {/* Table Header */}
                             <div className="flex w-full bg-white border-b border-neutral-200">
                                 <div className="w-80 h-11 px-4 py-3 flex items-center gap-1">
-                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
-                                    <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
+                                    <Button
+                                        variant="ghost"
+                                        type="button"
+                                        className="h-auto p-0 inline-flex items-center gap-1 cursor-default hover:bg-transparent"
+                                    >
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
+                                        <ChevronUpDownIcon className="w-2 h-[14px] shrink-0 text-neutral-500" />
+                                    </Button>
                                 </div>
                                 <div className="flex-1 h-11 px-4 py-3 flex items-center">
                                     <Button
@@ -430,8 +437,14 @@ const EmailManagementPageContent: React.FC = () => {
                                     </Button>
                                 </div>
                                 <div className="flex-1 h-11 px-4 py-3 flex items-center gap-1">
-                                    <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
-                                    <ChevronUpDownIcon className="w-5 h-5 text-neutral-500" />
+                                    <Button
+                                        variant="ghost"
+                                        type="button"
+                                        className="h-auto p-0 inline-flex items-center gap-1 cursor-default hover:bg-transparent"
+                                    >
+                                        <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
+                                        <ChevronUpDownIcon className="w-2 h-[14px] shrink-0 text-neutral-500" />
+                                    </Button>
                                 </div>
                                 <div className="w-[72px] h-11 px-4 py-3 flex justify-center items-center">
                                     <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Action</div>
