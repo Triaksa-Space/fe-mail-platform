@@ -119,7 +119,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="self-stretch pl-8 pr-4 pb-4 flex items-start">
+        <div className="self-stretch pl-10 pr-4 pb-4 flex items-start">
           <p className="flex-1 whitespace-pre-line text-neutral-500 text-sm font-normal leading-5">
             {renderAnswerWithLinks(item.answer)}
           </p>
@@ -147,7 +147,7 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
   return (
     <div
       className={cn(
-        "self-stretch p-0 md:p-8 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden flex flex-col justify-start items-start",
+        "self-stretch p-0 md:p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden flex flex-col justify-start items-start",
         className
       )}
     >
