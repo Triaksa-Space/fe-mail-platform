@@ -119,7 +119,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="self-stretch pl-10 pr-4 pb-4 flex items-start">
+        <div className="self-stretch pl-8 pr-4 pb-4 flex items-start">
           <p className="flex-1 whitespace-pre-line text-neutral-500 text-sm font-normal leading-5">
             {renderAnswerWithLinks(item.answer)}
           </p>
