@@ -18,6 +18,27 @@ interface FaqAccordionItemProps {
   isLast: boolean;
 }
 
+const renderQuestionWithHangingIndent = (question: string) => {
+  const match = question.match(/^(\d+\.\s+)(.*)$/);
+  if (!match) {
+    return (
+      <span className="block w-full min-w-0 break-words whitespace-pre-line text-left text-neutral-900 text-base font-medium leading-6">
+        {question}
+      </span>
+    );
+  }
+
+  const [, prefix, content] = match;
+  return (
+    <span className="flex w-full min-w-0 items-start text-neutral-900 text-base font-medium leading-6">
+      <span className="shrink-0">{prefix}</span>
+      <span className="min-w-0 flex-1 break-words whitespace-pre-line text-left">
+        {content}
+      </span>
+    </span>
+  );
+};
+
 const renderAnswerWithLinks = (text: string) => {
   const linkRegex = /(https?:\/\/[^\s]+|(?:www\.)?gamemarket\.gg(?:\/[^\s]*)?)/gi;
   const parts = text.split(linkRegex);
@@ -73,15 +94,13 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
         variant="ghost"
         onClick={onToggle}
         className={cn(
-          "self-stretch h-auto min-h-0 pt-4 px-4 justify-start gap-3 w-full text-left hover:bg-transparent",
+          "self-stretch h-auto min-h-0 pt-4 px-4 justify-start items-start gap-3 w-full text-left hover:bg-transparent",
           isOpen ? "pb-3" : "pb-4"
         )}
         aria-expanded={isOpen}
       >
-        <div className="min-w-0 flex-1 flex justify-start items-center gap-3">
-          <span className="min-w-0 flex-1 break-words whitespace-pre-line text-neutral-900 text-base font-medium leading-6">
-            {item.question}
-          </span>
+        <div className="min-w-0 flex-1 flex justify-start items-start">
+          {renderQuestionWithHangingIndent(item.question)}
         </div>
         <div className="flex justify-end items-center gap-2">
           <ChevronDownIcon
@@ -100,7 +119,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="self-stretch pl-10 pr-4 pb-4 flex items-start">
+        <div className="self-stretch pl-8 pr-4 pb-4 flex items-start">
           <p className="flex-1 whitespace-pre-line text-neutral-500 text-sm font-normal leading-5">
             {renderAnswerWithLinks(item.answer)}
           </p>
@@ -133,8 +152,8 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
       )}
     >
       {/* Category Header */}
-      <div className="self-stretch px-4 pt-4 md:px-0 md:pt-0 flex justify-start items-center gap-2.5">
-        <h3 className="min-w-0 break-words whitespace-pre-line text-neutral-800 text-lg font-semibold leading-6">
+      <div className="self-stretch px-4 pt-4 md:px-0 md:pt-0 flex justify-start items-start gap-2.5">
+        <h3 className="block w-full min-w-0 break-words whitespace-pre-line text-left text-neutral-800 text-lg font-semibold leading-6">
           {category.title}
         </h3>
       </div>
