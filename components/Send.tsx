@@ -133,9 +133,8 @@ const Send: React.FC = () => {
       router.push("/inbox?sent=success");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 429) {
-        let msg = "Daily send email limit reached. Try again tomorrow.";
         toast({
-          description: msg,
+          description: "Daily send email limit reached. Try again tomorrow.",
           variant: "destructive",
         });
       } else {
