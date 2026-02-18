@@ -129,9 +129,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 
       if (forwardData) {
         // Forward mode
-        initialSubject = forwardData.subject.startsWith("Fwd:")
-          ? forwardData.subject
-          : `Fwd: ${forwardData.subject}`;
+        initialSubject = forwardData.subject;
 
         initialMessage = [
           "",
@@ -232,7 +230,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 
     const timeoutId = window.setTimeout(() => {
       if (isReplyMode) {
-        replyBodyRef.current?.focus();
+        const textarea = replyBodyRef.current;
+        if (textarea) {
+          textarea.focus();
+          textarea.setSelectionRange(0, 0);
+          textarea.scrollTop = 0;
+        }
         return;
       }
       if (isForwardMode) {
@@ -446,14 +449,14 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-labelledby="compose-title"
           className={cn(
             "relative w-full bg-neutral-50 flex flex-col overflow-hidden",
-            // Mobile: full screen with py-4 and 16px gap
-            "h-full py-4 gap-4",
+            // Mobile: full screen with 16px vertical padding
+            "h-full py-4",
             // Desktop: centered modal with max dimensions
-            "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-sm lg:max-w-[900px] md:rounded-lg md:shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] md:bg-white"
+            "md:h-auto md:py-0 md:max-h-[min(800px,90vh)] md:max-w-sm lg:max-w-[900px] md:rounded-lg md:shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] md:bg-white"
           )}
         >
           {/* Header Action Row */}
-          <div className="flex items-center justify-between px-4 md:py-4 md:bg-white md:rounded-t-lg">
+          <div className="flex items-center justify-between px-4 md:pt-4 md:bg-white md:rounded-t-lg">
             {/* Left: Close Button */}
             <Button
               type="button"
@@ -544,16 +547,16 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           </div>
 
           {/* Form Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto px-4 flex flex-col justify-start items-start gap-4 md:p-4">
+          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 flex flex-col justify-start items-start gap-4 md:px-4 md:pb-4 md:pt-4">
             {isReplyMode ? (
               <>
                 {/* Reply Mode - Card 1: Reply to + Subject */}
-                <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
+                <div className="self-stretch p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col justify-start items-start gap-3">
                   {/* Reply to Field */}
                   <div className="self-stretch flex flex-col justify-start items-start gap-2">
                     <div className="self-stretch relative flex flex-col justify-start items-start">
                       <div className="self-stretch h-3.5"></div>
-                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] inline-flex justify-start items-center gap-3">
                         <div className="flex-1 flex justify-start items-center gap-2">
                           <Mail className="w-5 h-5 text-neutral-400" />
                           <div className="flex justify-start items-center gap-0.5">
@@ -571,7 +574,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   <div className="self-stretch flex flex-col justify-start items-start gap-2">
                     <div className="self-stretch relative flex flex-col justify-start items-start">
                       <div className="self-stretch h-3.5"></div>
-                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] inline-flex justify-start items-center gap-3">
                         <div className="flex-1 flex justify-start items-center gap-2">
                           <div className="flex-1 flex justify-start items-center gap-0.5">
                             <input
@@ -593,43 +596,38 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 </div>
 
                 {/* Reply Mode - Card 2: Body */}
-                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
+                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col justify-start items-start gap-3 overflow-hidden">
                   <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
-                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3">
+                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex flex-col gap-3">
                         <textarea
                           ref={replyBodyRef}
+                          autoFocus={isOpen && isReplyMode}
                           id="compose-body"
                           placeholder="Compose email"
                           value={message}
-                          onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                          onChange={(e) => setMessage(e.target.value)}
                           className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
                         />
                       </div>
                     </div>
                   </div>
-
-                  {/* Attachments */}
-                  <AttachmentList
-                    attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
-                    onRemove={handleRemoveAttachment}
-                    wrapContainer={false}
-                  />
                 </div>
               </>
             ) : isForwardMode ? (
               <>
                 {/* Forward Mode - Card 1: Forward to + Subject */}
-                <div className="self-stretch p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3">
+                <div className="self-stretch p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col justify-start items-start gap-3">
                   {/* Forward to Field */}
                   <div className="self-stretch flex flex-col justify-start items-start gap-2">
                     <div className="self-stretch relative flex flex-col justify-start items-start">
                       <div className="self-stretch h-3.5"></div>
-                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] inline-flex justify-start items-center gap-3 overflow-hidden">
                         <div className="flex-1 flex justify-start items-center gap-2">
                           <Mail className="w-5 h-5 text-neutral-400" />
                           <input
                             ref={forwardToRef}
+                            autoFocus={isOpen && isForwardMode}
                             id="compose-to"
                             type="email"
                             placeholder="recipient's email"
@@ -651,7 +649,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   <div className="self-stretch flex flex-col justify-start items-start gap-2">
                     <div className="self-stretch relative flex flex-col justify-start items-start">
                       <div className="self-stretch h-3.5"></div>
-                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                      <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] inline-flex justify-start items-center gap-3">
                         <div className="flex-1 flex justify-start items-center gap-2">
                           <div className="flex-1 flex justify-start items-center gap-0.5">
                             <input
@@ -673,27 +671,20 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 </div>
 
                 {/* Forward Mode - Card 2: Body */}
-                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col justify-start items-start gap-3 overflow-hidden">
+                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col justify-start items-start gap-2 overflow-hidden">
                   <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-hidden">
                     <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
-                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3">
+                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex flex-col gap-3">
                         <textarea
                           id="compose-body"
                           placeholder="Compose email"
                           value={message}
-                          onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                          onChange={(e) => setMessage(e.target.value)}
                           className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
                         />
                       </div>
                     </div>
                   </div>
-
-                  {/* Attachments */}
-                  <AttachmentList
-                    attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
-                    onRemove={handleRemoveAttachment}
-                    wrapContainer={false}
-                  />
                 </div>
               </>
             ) : (
@@ -769,21 +760,21 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         id="compose-body"
                         placeholder="Compose email"
                         value={message}
-                        onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
+                        onChange={(e) => setMessage(e.target.value)}
                         className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
                       />
                     </div>
                   </div>
-
-                  {/* Attachments inside body card */}
-                  <AttachmentList
-                    attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
-                    onRemove={handleRemoveAttachment}
-                    wrapContainer={false}
-                  />
                 </div>
               </>
             )}
+
+            {/* Attachments (outside subject/body cards) */}
+            <AttachmentList
+              attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
+              onRemove={handleRemoveAttachment}
+              wrapContainer={false}
+            />
           </div>
         </div>
       </div>

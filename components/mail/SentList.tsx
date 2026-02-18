@@ -97,8 +97,8 @@ const SentList: React.FC<SentListProps> = ({
         <div className="self-stretch h-10 inline-flex justify-between items-center w-full">
           <div className="inline-flex items-center gap-2">
             {onCompose && (
-              <Button onClick={onCompose} className="h-10 px-4 py-2.5">
-                <PenSquare className="h-4 w-4 mr-1.5 text-white" />
+              <Button onClick={onCompose} className="h-10 px-4 py-2.5 rounded-lg btn-primary-skin gap-1.5">
+                <PenSquare className="h-4 w-4 text-white" />
                 <span className="text-base font-medium leading-4">
                   Compose
                 </span>
@@ -183,7 +183,7 @@ const SentList: React.FC<SentListProps> = ({
       {onCompose && !isComposeOpen && (
         <Button
           onClick={onCompose}
-          className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
+          className="lg:hidden fixed right-4 bottom-24 z-[60] h-10 px-4 py-2.5 rounded-lg btn-primary-skin gap-1.5 transition-colors"
         >
           <PenSquare className="w-5 h-5 text-white" />
           <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Compose</span>
@@ -199,6 +199,12 @@ interface SentRowProps {
   isSelected: boolean;
   onClick: () => void;
 }
+
+const cleanSentSubject = (subject?: string) => {
+  if (!subject) return "(No subject)";
+  const cleaned = subject.replace(/^(?:\s*fwd:\s*)+/i, "").trim();
+  return cleaned || "(No subject)";
+};
 
 const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelected, onClick }) {
   return (
@@ -234,7 +240,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
 
             {/* Subject line */}
             <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
-              {email.subject || "(No subject)"}
+              {cleanSentSubject(email.subject)}
             </p>
           </div>
         </div>
