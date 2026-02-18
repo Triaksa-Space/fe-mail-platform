@@ -38,9 +38,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   }, []);
 
   return (
-    <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-hidden", className)}>
+    <div
+      className={cn(
+        "flex flex-col h-full relative overflow-hidden gap-4 bg-neutral-50",
+        className,
+      )}
+    >
       {/* Mobile Header */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 relative z-10">
+      <div className="lg:hidden flex items-center justify-between relative z-20">
         <div className="flex items-center gap-4">
           <Image
             src="/mailria.png"
@@ -58,21 +63,25 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </CenterTruncate>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 lg:px-0 pb-24 lg:pb-0 relative z-10">
-        {/* Desktop View */}
-        <div className="hidden lg:flex flex-col gap-5">
-          {/* Desktop Header */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-neutral-800 text-lg font-semibold font-['Roboto'] leading-7">Settings</h2>
-            <CenterTruncate
-              side="right"
-              className="text-neutral-800 text-base font-semibold font-['Roboto'] leading-6"
-            >
-              {email}
-            </CenterTruncate>
-          </div>
+      {/* Desktop Header */}
+      <div className="hidden lg:flex relative z-20">
+        <div className="self-stretch h-10 inline-flex justify-between items-center w-full">
+          <h2 className="text-neutral-800 text-lg font-semibold font-['Roboto'] leading-7">
+            Settings
+          </h2>
+          <CenterTruncate
+            side="right"
+            className="text-neutral-800 text-base font-semibold font-['Roboto'] leading-6"
+          >
+            {email}
+          </CenterTruncate>
+        </div>
+      </div>
 
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto pb-24 lg:pb-0 relative z-10">
+        {/* Desktop View */}
+        <div className="hidden lg:flex flex-col">
           {/* Web View: Horizontal card with both sections */}
           <div
             className={cn(
