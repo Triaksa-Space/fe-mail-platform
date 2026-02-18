@@ -146,7 +146,7 @@ const CreateAdminPageContent: React.FC = () => {
                                             }
                                         }}
                                         placeholder="Insert username"
-                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                                     />
                                 </div>
                                 <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
@@ -171,7 +171,7 @@ const CreateAdminPageContent: React.FC = () => {
                                             setPassword(sanitizedValue);
                                         }}
                                         placeholder="Insert password"
-                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                                     />
                                 </div>
                                 <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">

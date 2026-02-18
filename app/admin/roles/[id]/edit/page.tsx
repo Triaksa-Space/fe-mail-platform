@@ -267,7 +267,7 @@ const EditAdminPageContent: React.FC = () => {
                                             setUsername(sanitizedValue);
                                         }}
                                         placeholder="Enter username"
-                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                                     />
                                 </div>
                                 <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
@@ -290,7 +290,7 @@ const EditAdminPageContent: React.FC = () => {
                                             setPassword(sanitizedValue);
                                         }}
                                         placeholder="Enter new password"
-                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                                        className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                                     />
                                     <button
                                         type="button"

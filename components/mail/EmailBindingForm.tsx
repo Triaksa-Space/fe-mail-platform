@@ -116,7 +116,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
                 }
                 disabled={isInputDisabled}
                 className={cn(
-                  "flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200",
+                  "flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400",
                   isInputDisabled && "text-neutral-500 cursor-not-allowed"
                 )}
               />

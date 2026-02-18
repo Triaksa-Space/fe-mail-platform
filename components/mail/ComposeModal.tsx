@@ -590,7 +590,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                               placeholder="Enter subject"
                               value={subject}
                               onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                              className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 line-clamp-1"
+                              className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 line-clamp-1"
                             />
                           </div>
                         </div>
@@ -612,7 +612,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                           placeholder="Compose email"
                           value={message}
                           onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
                         />
                       </div>
                     </div>
@@ -667,7 +667,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                               placeholder="Enter subject"
                               value={subject}
                               onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                              className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 line-clamp-1"
+                              className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 line-clamp-1"
                             />
                           </div>
                         </div>
@@ -689,7 +689,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                           placeholder="Compose email"
                           value={message}
                           onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
                         />
                       </div>
                     </div>
@@ -739,7 +739,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                             onChange={(e) =>
                               setTo(DOMPurify.sanitize(e.target.value).replace(/\s/g, ""))
                             }
-                            className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                            className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                           />
                         </div>
                       </div>
@@ -762,7 +762,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                           placeholder="Enter subject"
                           value={subject}
                           onChange={(e) => setSubject(DOMPurify.sanitize(e.target.value))}
-                          className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                          className="flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                         />
                       </div>
                     </div>
@@ -776,7 +776,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         placeholder="Compose email"
                         value={message}
                         onChange={(e) => setMessage(DOMPurify.sanitize(e.target.value))}
-                        className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-200 resize-none min-h-[200px]"
+                        className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
                       />
                     </div>
                   </div>

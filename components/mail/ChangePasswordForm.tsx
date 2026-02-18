@@ -112,7 +112,7 @@ const ChangePasswordForm: React.FC = () => {
                       DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
                     )
                   }
-                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 ${
+                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 ${
                     showCurrentPassword
                       ? "text-neutral-800"
                       : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
@@ -162,7 +162,7 @@ const ChangePasswordForm: React.FC = () => {
                       DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
                     )
                   }
-                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 ${
+                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 ${
                     showNewPassword
                       ? "text-neutral-800"
                       : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
@@ -212,7 +212,7 @@ const ChangePasswordForm: React.FC = () => {
                       DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
                     )
                   }
-                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200 ${
+                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 ${
                     showConfirmPassword
                       ? "text-neutral-800"
                       : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"

@@ -229,7 +229,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     placeholder="Insert email"
                     disabled={isRandomNameActive}
                     className={cn(
-                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-400",
                       isRandomNameActive ? "text-neutral-400" : "text-neutral-800"
                     )}
                   />
@@ -338,7 +338,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                     placeholder="Insert password"
                     disabled={isRandomPasswordActive}
                     className={cn(
-                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200",
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-400",
                       isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
                     )}
                   />
@@ -400,7 +400,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updatePasswordLength(passwordLength - 1)}
                 disabled={!isRandomPasswordActive || passwordLength <= 6}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
                   !isRandomPasswordActive || passwordLength <= 6
                     ? "text-neutral-300 cursor-not-allowed"
                     : "text-neutral-600 hover:bg-neutral-200"
@@ -416,7 +416,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updatePasswordLength(passwordLength + 1)}
                 disabled={!isRandomPasswordActive || passwordLength >= 32}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
                   !isRandomPasswordActive || passwordLength >= 32
                     ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
                     : "text-primary-500 hover:bg-primary-100"
@@ -437,7 +437,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                       setReceiveEmail(sanitizedValue);
                     }}
                     placeholder="Insert email"
-                    className="flex-1 bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-200"
+                    className="flex-1 bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-400"
                   />
                 </div>
                 <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">

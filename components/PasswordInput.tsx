@@ -53,7 +53,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
           "h-10 text-sm pl-10 pr-10",
           "border-neutral-200 rounded-lg",
           "focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
-          "placeholder:text-neutral-200",
+          "placeholder:text-neutral-400",
           "transition-colors duration-200",
           error && "border-red-500 focus:border-red-500 focus:ring-red-100",
           disabled && "bg-neutral-100 cursor-not-allowed"

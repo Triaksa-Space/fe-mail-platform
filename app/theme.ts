@@ -159,7 +159,7 @@ export const tw = {
   },
   // Input classes
   input: {
-    base: 'h-10 text-sm border-neutral-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-neutral-200',
+    base: 'h-10 text-sm border-neutral-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-neutral-400',
   },
 };
 

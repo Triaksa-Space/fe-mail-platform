@@ -21,8 +21,8 @@ export const BUTTON_STYLES = {
 
 // Input styles
 export const INPUT_STYLES = {
-  base: "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200",
-  withIcon: "h-10 pl-10 pr-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200",
+  base: "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400",
+  withIcon: "h-10 pl-10 pr-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400",
   disabled: "h-10 px-3 py-2 bg-neutral-50 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 text-neutral-500 text-sm font-normal font-['Roboto'] leading-4 cursor-not-allowed",
 } as const;
 

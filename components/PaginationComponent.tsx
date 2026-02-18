@@ -139,7 +139,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
                   value={pageInput}
                   onChange={(e) => setPageInput(e.target.value)}
                   placeholder={`1 - ${totalPages}`}
-                  className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-200"
+                  className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                 />
               </div>
               <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
