@@ -62,7 +62,7 @@ const InboxList: React.FC<InboxListProps> = ({
         "flex flex-col h-full relative overflow-hidden gap-4",
         fullWidth
           ? "w-full"
-          : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
+          : "w-full lg:w-[clamp(360px,34vw,760px)] lg:border-r lg:border-neutral-200",
         className,
       )}
       aria-busy={isRefreshing}
@@ -104,7 +104,7 @@ const InboxList: React.FC<InboxListProps> = ({
               className={cn(
                 "w-[16.25px] h-[14.874px]",
                 isRefreshing
-                  ? "text-neutral-300 animate-spin"
+                  ? "text-primary-500 animate-spin"
                   : "text-neutral-800",
               )}
             />
@@ -131,7 +131,7 @@ const InboxList: React.FC<InboxListProps> = ({
               className={cn(
                 "w-[16.25px] h-[14.874px]",
                 isRefreshing
-                  ? "text-neutral-300 animate-spin"
+                  ? "text-primary-500 animate-spin"
                   : "text-neutral-800",
               )}
             />
@@ -233,16 +233,23 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
   onClick,
 }) {
   const isUnread = email.unread;
+  const displayDate = email.date
+    .replace(/\bMinutes?\b/g, (match) => match.toLowerCase())
+    .replace(/\bMins?\b/gi, (match) => match.toLowerCase())
+    .replace(/(\d+)\s*M\b/g, "$1m");
 
   return (
     <Button
       variant="ghost"
       onClick={onClick}
       className={cn(
-        "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0",
+        "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0 whitespace-normal",
         "border border-neutral-200 shadow-[0_2px_6px_0_rgba(16,24,40,0.06)] transition-all",
         isUnread ? "bg-white" : "bg-neutral-100",
-        "hover:bg-primary-50 focus:outline-none focus:bg-primary-50",
+        "hover:bg-primary-50 focus:bg-primary-50",
+        "ring-0 ring-offset-0 outline-none",
+        "focus:ring-0 focus:ring-offset-0",
+        "focus-visible:ring-0 focus-visible:ring-offset-0",
         !isUnread &&
           "hover:shadow-[0_6px_15px_-2px_rgba(16,24,40,0.08)]",
         isSelected && "bg-primary-50",
@@ -252,10 +259,10 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
           <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
             {/* Top row: Sender + Time */}
-            <div className="self-stretch inline-flex justify-between items-center">
+            <div className="w-full min-w-0 flex items-center">
               <span
                 className={cn(
-                  "text-base font-['Roboto'] leading-6 truncate",
+                  "min-w-0 text-left text-base font-['Roboto'] leading-6 truncate",
                   isUnread
                     ? "font-semibold text-neutral-800"
                     : "font-normal text-neutral-600",
@@ -263,7 +270,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
               >
                 {email.from || "Unknown Sender"}
               </span>
-              <div className="flex justify-end items-center gap-0.5">
+              <div className="ml-auto shrink-0 flex items-center justify-end gap-0.5 text-right">
                 <span
                   className={cn(
                     "text-xs font-['Roboto'] leading-5 truncate",
@@ -272,7 +279,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
                       : "font-normal text-neutral-600",
                   )}
                 >
-                  {email.date}
+                  {displayDate}
                 </span>
                 {isUnread && (
                   <div className="w-2 h-2 bg-primary-500 rounded-full" />
@@ -283,7 +290,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
             {/* Subject line */}
             <p
               className={cn(
-                "self-stretch text-sm font-['Roboto'] leading-5 truncate text-left",
+                "w-full min-w-0 text-sm font-['Roboto'] leading-5 text-left whitespace-normal break-words",
                 isUnread
                   ? "font-semibold text-neutral-800"
                   : "font-normal text-neutral-600",
@@ -295,7 +302,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         </div>
 
         {/* Snippet/Preview */}
-        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 text-left whitespace-normal break-words">
           {email.snippet || "No preview available"}
         </p>
       </div>

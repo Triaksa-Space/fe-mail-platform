@@ -23,7 +23,7 @@ const IFRAME_STYLES = `
   body {
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
     line-height: 1.6;
     color: #1F2937;
@@ -59,7 +59,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
   isDownloading = false,
   className,
 }) => {
-  const [iframeHeight, setIframeHeight] = useState("160px");
+  const [iframeHeight, setIframeHeight] = useState("auto");
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
@@ -76,7 +76,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
         link.setAttribute("rel", "noopener noreferrer");
       });
 
-      const height = Math.max(iframeDoc.body.scrollHeight + 8, 140);
+      const height = iframeDoc.body.scrollHeight;
       setIframeHeight(`${height}px`);
     }
   };
@@ -89,7 +89,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2 min-h-0 overflow-hidden",
+      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-[16px] min-h-0 overflow-hidden",
       className
     )}>
       {/* Subject */}
@@ -111,6 +111,8 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
               width: "100%",
               border: "none",
               display: "block",
+              margin: 0,
+              padding: 0,
             }}
             onLoad={handleIframeLoad}
             title="Email content"
@@ -131,6 +133,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
           onDownload={onDownloadAttachment}
           isDownloading={isDownloading}
           showCloseIcon
+          wrapContainer={false}
         />
       </div>
     </div>

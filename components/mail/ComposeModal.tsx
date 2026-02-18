@@ -69,7 +69,6 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   forwardData,
   sentCount = 0,
   maxDailySend = 3,
-  resetsAt,
 }) => {
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
@@ -79,6 +78,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const [isSending, setIsSending] = useState(false);
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
   const [hasShownLimitToast, setHasShownLimitToast] = useState(false);
+  const replyBodyRef = useRef<HTMLTextAreaElement | null>(null);
+  const forwardToRef = useRef<HTMLInputElement | null>(null);
 
   // Track initial form state for dirty detection
   const initialStateRef = useRef<FormState>({
@@ -91,20 +92,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const { toast } = useToast();
   const email = useAuthStore((state) => state.email);
   const token = useAuthStore.getState().getStoredToken();
+  const isReplyMode = !!replyTo && !forwardData;
+  const isForwardMode = !!forwardData;
 
   const isLimitReached = sentCount >= maxDailySend;
 
-  const getLimitMessage = () => {
-    if (resetsAt) {
-      const resetTime = new Date(resetsAt);
-      const now = new Date();
-      const diffMs = resetTime.getTime() - now.getTime();
-      if (diffMs > 0) {
-        return "Daily send limit reached. Try again tomorrow.";
-      }
-    }
-    return "Daily send limit reached. Try again tomorrow.";
-  };
+  const getLimitMessage = () => "Daily send limit reached. Try again tomorrow.";
 
   // Check if form is dirty (has unsaved changes)
   const isDirty = useCallback((): boolean => {
@@ -169,22 +162,24 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
         }
 
         const replyDate = new Date(replyTo.date);
-        const dateStr = replyDate.toLocaleDateString("en-US", {
-          weekday: "short",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-        const timeStr = replyDate.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-        });
+        const hasValidReplyDate = !Number.isNaN(replyDate.getTime());
+        const dateTimeText = hasValidReplyDate
+          ? `${replyDate.toLocaleDateString("en-US", {
+              weekday: "short",
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })} at ${replyDate.toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}`
+          : replyTo.date;
 
         initialMessage = [
           "",
           "",
-          `On ${dateStr} at ${timeStr} ${replyTo.from}`,
+          `On ${dateTimeText} ${replyTo.from}`,
           `<${replyTo.email}> wrote:`,
           "",
           plainText,
@@ -231,6 +226,22 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasShownLimitToast, isLimitReached, isOpen, toast]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const timeoutId = window.setTimeout(() => {
+      if (isReplyMode) {
+        replyBodyRef.current?.focus();
+        return;
+      }
+      if (isForwardMode) {
+        forwardToRef.current?.focus();
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isOpen, isReplyMode, isForwardMode]);
 
   // Clean up only newly uploaded attachments (not forwarded ones)
   const cleanupAttachments = useCallback(async () => {
@@ -413,8 +424,6 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     }
   };
 
-  const isReplyMode = !!replyTo && !forwardData;
-  const isForwardMode = !!forwardData;
   const isFormValid = to && subject && message && !isLimitReached;
   const isDisabled = isSending || isUploading || !isFormValid;
 
@@ -437,8 +446,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           aria-labelledby="compose-title"
           className={cn(
             "relative w-full bg-neutral-50 flex flex-col overflow-hidden",
-            // Mobile: full screen with py-4 and gap-8
-            "h-full py-4 gap-8",
+            // Mobile: full screen with py-4 and 16px gap
+            "h-full py-4 gap-4",
             // Desktop: centered modal with max dimensions
             "md:h-auto md:py-0 md:gap-0 md:max-h-[90vh] md:max-w-sm lg:max-w-[900px] md:rounded-lg md:shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] md:bg-white"
           )}
@@ -589,6 +598,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                     <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
                       <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-3">
                         <textarea
+                          ref={replyBodyRef}
                           id="compose-body"
                           placeholder="Compose email"
                           value={message}
@@ -603,6 +613,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   <AttachmentList
                     attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
                     onRemove={handleRemoveAttachment}
+                    wrapContainer={false}
                   />
                 </div>
               </>
@@ -618,6 +629,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                         <div className="flex-1 flex justify-start items-center gap-2">
                           <Mail className="w-5 h-5 text-neutral-400" />
                           <input
+                            ref={forwardToRef}
                             id="compose-to"
                             type="email"
                             placeholder="recipient's email"
@@ -680,6 +692,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   <AttachmentList
                     attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
                     onRemove={handleRemoveAttachment}
+                    wrapContainer={false}
                   />
                 </div>
               </>
@@ -766,6 +779,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   <AttachmentList
                     attachments={attachments.map((file) => ({ name: file.name, url: file.url }))}
                     onRemove={handleRemoveAttachment}
+                    wrapContainer={false}
                   />
                 </div>
               </>

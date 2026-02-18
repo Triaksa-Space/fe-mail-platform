@@ -208,12 +208,12 @@ const Preview: React.FC<PreviewProps> = ({
     <div className={cn("flex-1 flex flex-col bg-neutral-50 relative overflow-auto h-full", className)}>
       {/* Content */}
       <div className={cn(
-        "flex-1 flex flex-col min-h-0"
+        "flex-1 flex flex-col"
       )}>
         {shouldShowLoading ? (
-          <div className="flex flex-col gap-4" role="status" aria-busy="true">
+          <div className="flex flex-col gap-5" role="status" aria-busy="true">
             {/* Skeleton for header */}
-            <div className="px-4 flex justify-between items-center">
+            <div className="pr-4 flex justify-between items-center">
               <div className="w-10 h-10 bg-neutral-200 rounded-lg animate-pulse" />
               <div className="flex gap-3">
                 <div className="w-20 h-10 bg-neutral-200 rounded-lg animate-pulse" />
@@ -221,7 +221,7 @@ const Preview: React.FC<PreviewProps> = ({
               </div>
             </div>
             {/* Skeleton for email info card */}
-            <div className="px-4">
+            <div className="pr-4">
               <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 animate-pulse">
                 <div className="space-y-2">
                   <div className="h-4 w-3/4 bg-neutral-200 rounded" />
@@ -234,7 +234,7 @@ const Preview: React.FC<PreviewProps> = ({
               <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 animate-pulse">
                 <div className="h-6 w-1/3 bg-neutral-200 rounded mb-4" />
                 <div className="h-px bg-neutral-200 mb-4" />
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="h-4 w-full bg-neutral-200 rounded" />
                   <div className="h-4 w-11/12 bg-neutral-200 rounded" />
                   <div className="h-4 w-4/5 bg-neutral-200 rounded" />
@@ -246,11 +246,11 @@ const Preview: React.FC<PreviewProps> = ({
           </div>
         ) : (
           <div className={cn(
-            "flex flex-col gap-4 pb-6 lg:pb-0 flex-1 min-h-0",
+            "flex flex-col gap-5 pb-6 lg:pb-0 flex-1",
             isTransitioning && "animate-fade-in"
           )}>
             {/* Header with Back and Action Buttons */}
-            <div className="px-4 flex justify-between items-center">
+            <div className="pr-4 flex justify-between items-center">
               {showBackButton && (
                 <Button
                   variant="outline"
@@ -286,7 +286,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Info Card */}
-            <div className="px-4">
+            <div className="pr-4">
               <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2">
                 <div className="flex flex-col gap-0.5">
                   {/* From row */}
@@ -317,7 +317,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Body Card */}
-            <div className="px-4 min-h-0">
+            <div className="pr-4">
               <EmailBodyCard
                 subject={email.subject}
                 body={isSentView ? email.body : emailDetail?.Body}
@@ -325,7 +325,6 @@ const Preview: React.FC<PreviewProps> = ({
                 attachments={isSentView ? [] : attachments}
                 onDownloadAttachment={!isSentView ? handleDownload : undefined}
                 isDownloading={isDownloading}
-                className="min-h-0"
               />
             </div>
 
