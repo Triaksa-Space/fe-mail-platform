@@ -161,7 +161,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
         domain: selectedDomain
       })
       toast({
-        description: `Successfully created ${count} accounts.`,
+        title: `${count} email created successfully.`,
+        description: `Email list has been send to ${receiveEmail}`,
         variant: "default",
       })
       // Reset the form
@@ -191,7 +192,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full self-stretch">
         {/* Page Header */}
         <div className="self-stretch inline-flex justify-start items-center gap-5">
           <div className="text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
@@ -200,10 +201,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
         </div>
 
         {/* Form Card */}
-        <AdminContentCard className="w-full">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <AdminContentCard className="w-full p-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Row 1: Email + Random toggle | Domain | Quantity + buttons */}
-            <div className="grid grid-cols-1 gap-4 lg:gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] xl:gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_minmax(0,1.45fr)_44px_44px_minmax(0,1.2fr)_44px_44px] lg:items-end">
+            <div className="grid grid-cols-1 gap-4 lg:gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
               <div className="relative min-w-0 flex flex-col">
                 <div className="h-3.5"></div>
                 <div className={cn(
@@ -286,10 +287,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updateCount(count - 1)}
                 disabled={count <= 2}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg outline outline-1 outline-neutral-200 flex justify-center items-center shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0",
                   count <= 2
-                    ? "bg-neutral-100 text-neutral-300 cursor-not-allowed"
-                    : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                    ? "text-neutral-300 cursor-not-allowed"
+                    : "text-neutral-600 hover:bg-neutral-200"
                 )}
               >
                 <MinusIcon className="w-4 h-4" />
@@ -302,18 +303,18 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updateCount(count + 1)}
                 disabled={count >= 100}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg outline outline-1 flex justify-center items-center shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0",
                   count >= 100
-                    ? "bg-neutral-100 outline-neutral-200 text-neutral-300 cursor-not-allowed"
-                    : "bg-blue-100 outline-blue-100 text-primary-500 hover:bg-blue-200"
+                    ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
+                    : "text-primary-500 hover:bg-primary-100"
                 )}
               >
-                <PlusIcon className="w-4 h-4" />
+                <PlusIcon className="w-5 h-5" />
               </Button>
             </div>
 
             {/* Row 2: Same password + Random toggle | Password length + buttons | Email for receiving */}
-            <div className="grid grid-cols-1 gap-4 lg:gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] xl:gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_minmax(0,1.45fr)_44px_44px_minmax(0,1.2fr)_44px_44px] lg:items-end">
+            <div className="grid grid-cols-1 gap-4 lg:gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
               <div className="relative min-w-0 flex flex-col">
                 <div className="h-3.5"></div>
                 <div className={cn(
@@ -393,10 +394,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updatePasswordLength(passwordLength - 1)}
                 disabled={!isRandomPasswordActive || passwordLength <= 6}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg outline outline-1 outline-neutral-200 flex justify-center items-center shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0",
                   !isRandomPasswordActive || passwordLength <= 6
-                    ? "bg-neutral-100 text-neutral-300 cursor-not-allowed"
-                    : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                    ? "text-neutral-300 cursor-not-allowed"
+                    : "text-neutral-600 hover:bg-neutral-200"
                 )}
               >
                 <MinusIcon className="w-4 h-4" />
@@ -409,13 +410,13 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updatePasswordLength(passwordLength + 1)}
                 disabled={!isRandomPasswordActive || passwordLength >= 32}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg outline outline-1 outline-neutral-200 flex justify-center items-center shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0",
                   !isRandomPasswordActive || passwordLength >= 32
-                    ? "bg-neutral-100 text-neutral-300 cursor-not-allowed"
-                    : "bg-blue-100 outline-blue-100 text-primary-500 hover:bg-blue-200"
+                    ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
+                    : "text-primary-500 hover:bg-primary-100"
                 )}
               >
-                <PlusIcon className="w-4 h-4" />
+                <PlusIcon className="w-5 h-5" />
               </Button>
 
               <div className="relative min-w-0 flex flex-col lg:col-span-3">
@@ -471,6 +472,4 @@ const CreateBulkEmailPage: React.FC = () => (
 );
 
 export default CreateBulkEmailPage
-
-
 
