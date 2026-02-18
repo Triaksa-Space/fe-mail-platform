@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         "w-[240px] h-full p-4 bg-white rounded-xl",
         "shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)]",
         "outline outline-1 outline-offset-[-1px] outline-neutral-200",
-        "flex flex-col justify-start items-start gap-5 shrink-0",
+        "flex flex-col justify-start items-start gap-4 shrink-0",
         className
       )}
     >
