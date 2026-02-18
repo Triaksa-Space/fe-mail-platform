@@ -334,7 +334,7 @@ export default function ForgotPasswordClient() {
 
       router.push("/?reset=success");
     } catch (error) {
-      let errorMessage = "Failed to reset password. Please try again.";
+      let errorMessage = "Failed to change password. Please try again.";
       if (axios.isAxiosError(error) && error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
@@ -473,14 +473,14 @@ export default function ForgotPasswordClient() {
                           <span className="inline-flex items-center gap-2">
                             <LockClosedIcon className="h-4 w-4" />
                             <span>
-                              Reset password (
+                              Change password (
                               {formatCountdown(requestCountdown)})
                             </span>
                           </span>
                         ) : isLoading ? (
                           "Sending..."
                         ) : (
-                          "Reset password"
+                          "Change password"
                         )}
                       </Button>
 
@@ -520,7 +520,7 @@ export default function ForgotPasswordClient() {
                     </div>
                     <p className="text-sm text-neutral-800">
                       An email with verification code just sent to{" "}
-                      <span className="font-medium">
+                      <span className="font-normal">
                         {bindingEmail || email}
                       </span>
                     </p>
@@ -662,13 +662,15 @@ export default function ForgotPasswordClient() {
               {/* Reset Password Step */}
               {step === "reset" && (
                 <div className="self-stretch flex flex-[1_0_0] flex-col items-start gap-4">
-                  <div className="text-neutral-800 text-2xl font-medium">
-                    Change password
+                  <div className="flex flex-col gap-1">
+                    <div className="text-neutral-800 text-2xl font-medium">
+                      Change password
+                    </div>
+                    <p className="text-sm text-neutral-800">
+                      Create a new password with at least 6 characters for{" "}
+                      <span className="font-normal">{email}</span>.
+                    </p>
                   </div>
-                  <p className="text-sm text-neutral-800">
-                    Create a new password with at least 6 characters for{" "}
-                    <span className="font-normal">{email}</span>.
-                  </p>
                   <form
                     onSubmit={handleResetPassword}
                     className="w-full flex flex-col gap-5"
@@ -777,7 +779,7 @@ export default function ForgotPasswordClient() {
                         }
                         className="w-full text-base font-medium"
                       >
-                        {isLoading ? "Resetting..." : "Reset password"}
+                        {isLoading ? "Changing..." : "Change password"}
                       </Button>
 
                       <Link
