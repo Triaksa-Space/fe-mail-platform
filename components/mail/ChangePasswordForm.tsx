@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
@@ -34,6 +34,26 @@ const ChangePasswordForm: React.FC = () => {
   const currentPasswordMaskLength = getMaskLength(currentPassword);
   const newPasswordMaskLength = getMaskLength(newPassword);
   const confirmPasswordMaskLength = getMaskLength(confirmPassword);
+  const passwordsDoNotMatch =
+    confirmPassword.length > 0 && newPassword !== confirmPassword;
+
+  useEffect(() => {
+    if (!currentPassword) {
+      setShowCurrentPassword(false);
+    }
+  }, [currentPassword]);
+
+  useEffect(() => {
+    if (!newPassword) {
+      setShowNewPassword(false);
+    }
+  }, [newPassword]);
+
+  useEffect(() => {
+    if (!confirmPassword) {
+      setShowConfirmPassword(false);
+    }
+  }, [confirmPassword]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +109,11 @@ const ChangePasswordForm: React.FC = () => {
     }
   };
 
-  const isFormValid = currentPassword && newPassword && confirmPassword && newPassword.length >= 6 && newPassword === confirmPassword;
+  const isFormFilled =
+    currentPassword.length > 0 &&
+    newPassword.length > 0 &&
+    confirmPassword.length > 0;
+  const isFormValid = isFormFilled && newPassword === confirmPassword;
 
   return (
     <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
@@ -129,8 +153,9 @@ const ChangePasswordForm: React.FC = () => {
               type="button"
               variant="ghost"
               size="icon"
+              disabled={!currentPassword}
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              className="h-auto w-auto p-0 hover:bg-transparent"
+              className="h-5 w-5 p-0 shrink-0 hover:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {showCurrentPassword ? (
                 <Eye className="w-5 h-5 text-neutral-800" />
@@ -148,7 +173,9 @@ const ChangePasswordForm: React.FC = () => {
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
           <div className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3 ${
-            error === "Password must be at least 6 characters" ? "outline-red-500" : "outline-neutral-200"
+            error === "Password must be at least 6 characters" || passwordsDoNotMatch
+              ? "outline-red-500"
+              : "outline-neutral-200"
           }`}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
@@ -179,8 +206,9 @@ const ChangePasswordForm: React.FC = () => {
               type="button"
               variant="ghost"
               size="icon"
+              disabled={!newPassword}
               onClick={() => setShowNewPassword(!showNewPassword)}
-              className="h-auto w-auto p-0 hover:bg-transparent"
+              className="h-5 w-5 p-0 shrink-0 hover:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {showNewPassword ? (
                 <Eye className="w-5 h-5 text-neutral-800" />
@@ -198,7 +226,7 @@ const ChangePasswordForm: React.FC = () => {
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
           <div className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3 ${
-            confirmPassword && newPassword !== confirmPassword ? "outline-red-500" : "outline-neutral-200"
+            passwordsDoNotMatch ? "outline-red-500" : "outline-neutral-200"
           }`}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
@@ -229,8 +257,9 @@ const ChangePasswordForm: React.FC = () => {
               type="button"
               variant="ghost"
               size="icon"
+              disabled={!confirmPassword}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="h-auto w-auto p-0 hover:bg-transparent"
+              className="h-5 w-5 p-0 shrink-0 hover:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {showConfirmPassword ? (
                 <Eye className="w-5 h-5 text-neutral-800" />
@@ -242,7 +271,7 @@ const ChangePasswordForm: React.FC = () => {
           <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Confirm password</span>
           </div>
-          {confirmPassword && newPassword !== confirmPassword && (
+          {passwordsDoNotMatch && (
             <p className="text-xs text-red-500 mt-1">Your confirmation password doesn&apos;t match</p>
           )}
         </div>
