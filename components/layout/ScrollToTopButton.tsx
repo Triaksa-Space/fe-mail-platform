@@ -27,7 +27,13 @@ const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
       )}
       aria-label="Scroll to top"
     >
-      <ArrowUpIcon className="h-5 w-5 text-primary-500" />
+      <ArrowUpIcon
+        className="h-5 w-5"
+        style={{
+          strokeWidth: 1.5,
+          stroke: "var(--primary-500-main, #027AEA)",
+        }}
+      />
     </Button>
   );
 };

@@ -19,13 +19,15 @@ interface FaqAccordionItemProps {
 }
 
 const renderAnswerWithLinks = (text: string) => {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const parts = text.split(urlRegex);
+  const linkRegex = /(https?:\/\/[^\s]+|(?:www\.)?gamemarket\.gg(?:\/[^\s]*)?)/gi;
+  const parts = text.split(linkRegex);
 
   return parts.map((part, index) => {
-    if (!/^https?:\/\//.test(part)) {
+    if (!part || !linkRegex.test(part)) {
+      linkRegex.lastIndex = 0;
       return <React.Fragment key={`text-${index}`}>{part}</React.Fragment>;
     }
+    linkRegex.lastIndex = 0;
 
     let url = part;
     let trailing = "";
@@ -34,10 +36,14 @@ const renderAnswerWithLinks = (text: string) => {
       url = url.slice(0, -1);
     }
 
+    const href = /^https?:\/\//i.test(url)
+      ? url
+      : `https://${url.replace(/^www\./i, "")}`;
+
     return (
       <React.Fragment key={`link-${index}`}>
         <a
-          href={url}
+          href={href}
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary-500 underline underline-offset-2"
