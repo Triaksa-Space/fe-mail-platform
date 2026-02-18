@@ -103,8 +103,8 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
           <div className={cn(
-            "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3",
-            isInputDisabled && "bg-neutral-50"
+            "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 inline-flex justify-start items-center gap-3",
+            isInputDisabled && "bg-neutral-100 border-neutral-200"
           )}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <input
@@ -117,7 +117,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
                 disabled={isInputDisabled}
                 className={cn(
                   "flex-1 bg-transparent border-none outline-none text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400",
-                  isInputDisabled && "text-neutral-500 cursor-not-allowed"
+                  isInputDisabled && "text-neutral-500 placeholder:text-neutral-400 cursor-not-allowed"
                 )}
               />
             </div>
@@ -127,7 +127,12 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           </div>
         </div>
 
-        <p className="text-neutral-500 text-xs font-normal font-['Roboto'] leading-4">
+        <p
+          className={cn(
+            "text-xs font-normal font-['Roboto'] leading-4",
+            isInputDisabled ? "text-neutral-400" : "text-neutral-500",
+          )}
+        >
           Link an email to your account. This email will be used to reset your
           password and recover your account if needed.
         </p>
@@ -156,7 +161,7 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
         >
           <CheckCircleIcon className="w-5 h-5 text-white" />
-          <span className="text-center text-base font-medium font-['Roboto'] leading-4 text-white">
+          <span className="text-center text-base font-medium font-['Roboto'] leading-4">
             {isLoading ? "Saving..." : "Save email"}
           </span>
         </Button>

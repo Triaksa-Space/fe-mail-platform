@@ -3,6 +3,7 @@
 import React from "react";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { DownloadIcon as DownloadSolidIcon } from "@heroicons/react-v1/solid";
 import { Button } from "@/components/ui/button";
 import { getFileExtension, extractFilenameFromUrl } from "@/lib/attachmentUtils";
 import { cn } from "@/lib/utils";
@@ -90,7 +91,7 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
                     </span>
                   </div>
                   {showCloseIcon && (
-                    <XMarkIcon className="w-4 h-4 text-neutral-800" />
+                    <DownloadSolidIcon className="w-4 h-4 text-neutral-800" />
                   )}
                 </div>
                 <div className="w-full text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2 break-all overflow-hidden">
@@ -117,7 +118,7 @@ const AttachmentList: React.FC<AttachmentListProps> = ({
                   </span>
                 </div>
                 {showCloseIcon && (
-                  <XMarkIcon className="w-4 h-4 text-neutral-800" />
+                  <DownloadSolidIcon className="w-4 h-4 text-neutral-800" />
                 )}
               </div>
               <div className="w-full text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 line-clamp-2 break-all overflow-hidden">

@@ -104,7 +104,7 @@ export default function AdminSentDetailPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0 pb-0">
         {/* Breadcrumb Header */}
         <div className="self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">
@@ -169,7 +169,7 @@ export default function AdminSentDetailPage() {
             </Button>
           </div>
         ) : email ? (
-          <div className="self-stretch flex-1 min-h-0 flex flex-col justify-start items-start gap-5 overflow-auto">
+          <div className="self-stretch flex-1 min-h-0 flex flex-col justify-start items-start gap-5 overflow-auto pb-0">
             <div className="self-stretch shrink-0 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col justify-start items-start gap-2">
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">

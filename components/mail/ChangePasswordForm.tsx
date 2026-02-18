@@ -92,7 +92,7 @@ const ChangePasswordForm: React.FC = () => {
   const isFormValid = currentPassword && newPassword && confirmPassword && newPassword.length >= 6 && newPassword === confirmPassword;
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between gap-5">
+    <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
       <div className="flex flex-col gap-3">
         {/* Old Password */}
         <div className="relative flex flex-col">
@@ -257,7 +257,7 @@ const ChangePasswordForm: React.FC = () => {
         disabled={isLoading || !isFormValid}
         className="h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
       >
-        <span className="text-center text-base font-medium font-['Roboto'] leading-4 text-white">
+        <span className="text-center text-base font-medium font-['Roboto'] leading-4">
           {isLoading ? "Changing..." : "Change password"}
         </span>
       </Button>

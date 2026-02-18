@@ -40,7 +40,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full relative overflow-hidden gap-4 bg-neutral-50",
+        "flex flex-col h-full relative overflow-hidden gap-5 bg-neutral-50",
         className,
       )}
     >
