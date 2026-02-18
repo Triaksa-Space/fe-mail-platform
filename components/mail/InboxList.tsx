@@ -93,7 +93,7 @@ const InboxList: React.FC<InboxListProps> = ({
             onClick={onRefresh}
             disabled={isRefreshing}
             className={cn(
-              "w-8 h-8 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden",
+              "w-10 h-10 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden",
               isRefreshing
                 ? "bg-neutral-100 cursor-not-allowed"
                 : "bg-white hover:bg-neutral-50",
@@ -102,7 +102,7 @@ const InboxList: React.FC<InboxListProps> = ({
           >
             <ArrowPathIcon
               className={cn(
-                "h-4 w-4",
+                "w-[16.25px] h-[14.874px]",
                 isRefreshing
                   ? "text-neutral-300 animate-spin"
                   : "text-neutral-800",
@@ -129,7 +129,7 @@ const InboxList: React.FC<InboxListProps> = ({
           >
             <ArrowPathIcon
               className={cn(
-                "h-4 w-4",
+                "w-[16.25px] h-[14.874px]",
                 isRefreshing
                   ? "text-neutral-300 animate-spin"
                   : "text-neutral-800",
@@ -153,7 +153,7 @@ const InboxList: React.FC<InboxListProps> = ({
           <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">
             Loading
           </span>
-          <ArrowPathIcon className="w-4 h-4 text-primary-500 animate-spin" />
+          <ArrowPathIcon className="w-[16.25px] h-[14.874px] text-primary-500 animate-spin" />
         </div>
       )}
 
@@ -174,7 +174,7 @@ const InboxList: React.FC<InboxListProps> = ({
               onClick={onRefresh}
               className="text-sm"
             >
-              <ArrowPathIcon className="h-3 w-3 mr-1.5" />
+              <ArrowPathIcon className="w-[16.25px] h-[14.874px] mr-1.5" />
               Try again
             </Button>
           </div>

@@ -120,7 +120,7 @@ const SentList: React.FC<SentListProps> = ({
       {isRefreshing && emails.length > 0 && (
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
           <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
-          <ArrowPathIcon className="w-4 h-4 text-primary-500 animate-spin" />
+          <ArrowPathIcon className="w-[16.25px] h-[14.874px] text-primary-500 animate-spin" />
         </div>
       )}
 
@@ -140,7 +140,7 @@ const SentList: React.FC<SentListProps> = ({
               onClick={onRefresh}
               className="text-sm"
             >
-              <ArrowPathIcon className="h-3 w-3 mr-1.5" />
+              <ArrowPathIcon className="w-[16.25px] h-[14.874px] mr-1.5" />
               Try again
             </Button>
           </div>
