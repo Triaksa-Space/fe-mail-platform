@@ -510,7 +510,7 @@ export default function ForgotPasswordClient() {
                   </form>
 
                   {/* Support */}
-                  <p className="mt-4 text-xs font-normal text-center">
+                  <p className="text-xs font-normal text-center">
                     <span className="text-neutral-800">Support by: </span>
                     <a
                       className="text-primary-500 font-medium underline"
@@ -656,7 +656,7 @@ export default function ForgotPasswordClient() {
                       </Link>
 
                       {/* Support */}
-                      <p className="mt-4 text-xs font-normal text-center">
+                      <p className="text-xs font-normal text-center">
                         <span className="text-neutral-800">Support by: </span>
                         <a
                           className="text-primary-500 font-medium underline"
@@ -830,7 +830,7 @@ export default function ForgotPasswordClient() {
                     </div>
                   </form>
 
-                  <p className="mt-4 w-full text-xs font-normal text-center">
+                  <p className="w-full text-xs font-normal text-center">
                     <span className="text-neutral-800">Support by: </span>
                     <a
                       className="text-primary-500 font-medium underline"
