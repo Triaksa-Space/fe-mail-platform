@@ -595,7 +595,7 @@ const InboxPageContent: React.FC = () => {
 
   return (
     <div className="h-screen min-h-dvh relative flex flex-col overflow-hidden w-full">
-      <div className="self-stretch flex-1 pt-5 lg:py-5 px-4 lg:px-5 inline-flex justify-start items-start gap-5 overflow-hidden">
+      <div className="self-stretch flex-1 pt-5 lg:py-5 px-4 lg:px-5 inline-flex justify-start items-start overflow-hidden">
         {/* Desktop Sidebar - LEFT side */}
         <Sidebar
           currentView={currentView}
@@ -610,7 +610,7 @@ const InboxPageContent: React.FC = () => {
         {/* Main Content */}
         <main className="flex-1 min-w-0 h-full lg:pb-0 ">
           {/* Content Area - Card only on desktop */}
-          <div className="h-full flex flex-col overflow-hidden lg:p-4 lg:rounded-xl">
+          <div className="h-full flex flex-col overflow-hidden lg:p-5 lg:rounded-xl">
             {renderContent()}
           </div>
         </main>
