@@ -204,7 +204,7 @@ const EmailDetailPage: React.FC = () => {
               <ChevronLeftIcon className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50">
                 <Mail className="h-6 w-6 text-primary-500" />
               </div>
               <div>
@@ -238,7 +238,7 @@ const EmailDetailPage: React.FC = () => {
               <div className="space-y-4">
                 {/* From */}
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 flex-shrink-0">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 flex-shrink-0">
                     <span className="text-sm font-semibold text-primary-500">
                       {email.SenderName?.charAt(0)?.toUpperCase() || "?"}
                     </span>

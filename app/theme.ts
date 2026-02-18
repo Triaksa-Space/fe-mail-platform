@@ -135,7 +135,7 @@ export const tw = {
     page: 'bg-[#F9FAFB]',
     card: 'bg-white',
     primary: 'bg-primary-600',
-    primaryHover: 'hover:bg-blue-700',
+    primaryHover: 'hover:bg-primary-700',
     muted: 'bg-neutral-100',
   },
   // Text classes

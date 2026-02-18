@@ -14,7 +14,7 @@ const ModalSkeleton = () => (
       </div>
       <div className="flex gap-3 mt-6">
         <div className="h-10 flex-1 bg-neutral-200 rounded-xl" />
-        <div className="h-10 flex-1 bg-blue-200 rounded-xl" />
+        <div className="h-10 flex-1 bg-primary-200 rounded-xl" />
       </div>
     </div>
   </div>

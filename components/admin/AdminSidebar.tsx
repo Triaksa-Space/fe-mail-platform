@@ -263,7 +263,7 @@ const AdminSidebar: React.FC = () => {
                     onClick={() => handleNavigation(item)}
                     className={cn(
                       "self-stretch px-3 py-1 h-auto justify-between",
-                      active && "bg-blue-100 rounded-xl"
+                      active && "bg-primary-50 rounded-xl"
                     )}
                   >
                     <div className="flex-1 flex justify-start items-center gap-5">
@@ -300,7 +300,7 @@ const AdminSidebar: React.FC = () => {
             onClick={() => router.push("/admin/settings")}
             className={cn(
               "self-stretch px-3 py-1 h-auto justify-between",
-              isSettingsActive && "bg-blue-100 rounded-xl"
+              isSettingsActive && "bg-primary-50 rounded-xl"
             )}
           >
             <div className="flex-1 flex justify-start items-center gap-5">

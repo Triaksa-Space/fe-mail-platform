@@ -91,7 +91,7 @@ function KPICard({ icon: Icon, label, value, isLoading }: KPICardProps) {
       </div>
       <div className="self-stretch inline-flex justify-start items-center gap-1">
         <div className="flex justify-start items-center gap-1">
-          <div className="p-1 bg-blue-100 rounded-lg flex justify-start items-center gap-2.5">
+          <div className="p-1 bg-primary-50 rounded-lg flex justify-start items-center gap-2.5">
             <Icon className="w-5 h-5 text-primary-500" />
           </div>
           <div className="justify-center text-neutral-800 text-xl font-semibold font-['Roboto'] leading-7">

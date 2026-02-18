@@ -5,8 +5,8 @@
 // Card styles
 export const CARD_STYLES = {
   base: "bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200",
-  interactive: "bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 hover:bg-blue-100 transition-colors",
-  selected: "bg-blue-100 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200",
+  interactive: "bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 hover:bg-primary-100 transition-colors",
+  selected: "bg-primary-50 rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200",
 } as const;
 
 // Button styles
@@ -42,7 +42,7 @@ export const BADGE_STYLES = {
   success: "bg-green-100 text-green-700",
   warning: "bg-yellow-100 text-yellow-700",
   error: "bg-red-100 text-red-700",
-  info: "bg-blue-100 text-primary-700",
+  info: "bg-primary-50 text-primary-700",
   neutral: "bg-neutral-100 text-neutral-700",
 } as const;
 

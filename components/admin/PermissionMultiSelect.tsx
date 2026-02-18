@@ -95,7 +95,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
               className={cn(
                 "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5",
                 "text-xs font-medium",
-                "bg-blue-100 text-primary-500"
+                "bg-primary-50 text-primary-500"
               )}
             >
               {getPermissionLabel(permissionId)}
@@ -105,7 +105,7 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                   variant="ghost"
                   size="icon"
                   onClick={(e) => removePermission(permissionId, e)}
-                  className="h-auto w-auto p-0.5 hover:bg-blue-200 rounded-full"
+                  className="h-auto w-auto p-0.5 hover:bg-primary-100 rounded-full"
                 >
                   <XMarkIcon className="h-3 w-3" />
                 </Button>
@@ -142,14 +142,14 @@ const PermissionMultiSelect: React.FC<PermissionMultiSelectProps> = ({
                 className={cn(
                   "w-full justify-start gap-3 px-3 py-2 h-auto rounded-none text-sm",
                   "hover:bg-neutral-50 text-left",
-                  isSelected && "bg-blue-50"
+                  isSelected && "bg-primary-50"
                 )}
               >
                 <div
                   className={cn(
                     "flex h-4 w-4 items-center justify-center rounded border shrink-0",
                     isSelected
-                      ? "bg-primary-600 border-blue-600"
+                      ? "bg-primary-600 border-primary-600"
                       : "border-neutral-300"
                   )}
                 >

@@ -77,11 +77,13 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
     let displayText = "";
 
     if (diffMins < 5) {
-        badgeClass += " bg-green-50";
-        textClass += " text-green-500";
+        // Online
+        badgeClass += " bg-primary-50";
+        textClass += " text-success-500";
         displayText = "Online";
     } else if (diffMins < 60) {
-        badgeClass += " bg-blue-100";
+        // Recent (sky/blue)
+        badgeClass += " bg-primary-50";
         textClass += " text-neutral-700";
         displayText = `${diffMins} minutes ago`;
     } else if (diffHours < 24) {
