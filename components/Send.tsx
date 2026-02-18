@@ -135,18 +135,18 @@ const Send: React.FC = () => {
       if (axios.isAxiosError(error) && error.response?.status === 429) {
         const data = error.response?.data;
         let msg = "Daily send email limit reached. Try again tomorrow.";
-        if (data?.resets_at) {
-          const resetTime = new Date(data.resets_at);
-          const now = new Date();
-          const diffMs = resetTime.getTime() - now.getTime();
-          if (diffMs > 0) {
-            const hours = Math.floor(diffMs / (1000 * 60 * 60));
-            const minutes = Math.ceil((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            msg = hours > 0
-              ? `Daily send limit reached. Try again in ${hours}h ${minutes}m.`
-              : `Daily send limit reached. Try again in ${minutes}m.`;
-          }
-        }
+        // if (data?.resets_at) {
+        //   const resetTime = new Date(data.resets_at);
+        //   const now = new Date();
+        //   const diffMs = resetTime.getTime() - now.getTime();
+        //   if (diffMs > 0) {
+        //     const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        //     const minutes = Math.ceil((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        //     msg = hours > 0
+        //       ? `Daily send limit reached. Try again in ${hours}h ${minutes}m.`
+        //       : `Daily send limit reached. Try again in ${minutes}m.`;
+        //   }
+        // }
         toast({
           description: msg,
           variant: "destructive",

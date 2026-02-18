@@ -100,12 +100,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       const now = new Date();
       const diffMs = resetTime.getTime() - now.getTime();
       if (diffMs > 0) {
-        const hours = Math.floor(diffMs / (1000 * 60 * 60));
-        const minutes = Math.ceil((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        if (hours > 0) {
-          return `Daily send limit reached. Try again in ${hours}h ${minutes}m.`;
-        }
-        return `Daily send limit reached. Try again in ${minutes}m.`;
+        return "Daily send limit reached. Try again tomorrow.";
       }
     }
     return "Daily send limit reached. Try again tomorrow.";
@@ -321,22 +316,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       onClose();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 429) {
-        const data = error.response?.data;
-        let msg = getLimitMessage();
-        if (data?.resets_at) {
-          const resetTime = new Date(data.resets_at);
-          const now = new Date();
-          const diffMs = resetTime.getTime() - now.getTime();
-          if (diffMs > 0) {
-            const hours = Math.floor(diffMs / (1000 * 60 * 60));
-            const minutes = Math.ceil((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-            msg = hours > 0
-              ? `Daily send limit reached. Try again in ${hours}h ${minutes}m.`
-              : `Daily send limit reached. Try again in ${minutes}m.`;
-          }
-        }
         toast({
-          description: msg,
+          description: getLimitMessage(),
           variant: "destructive",
         });
       } else {
@@ -488,13 +469,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 <span className="text-sm text-neutral-600 font-normal font-['Roboto'] leading-5">Daily send</span>
                 <span
                   className={cn(
-                    "inline-flex items-center justify-center w-11 h-5 px-1.5 py-0.5 rounded-3xl text-xs font-medium font-['Roboto'] leading-5 outline outline-1 outline-offset-[-1px]",
+                    "inline-flex items-center justify-center h-5 px-1.5 py-0.5 rounded-[24px] border text-center text-xs font-medium font-['Roboto'] leading-5",
                     isLimitReached
-                      ? "text-red-600 outline-red-200"
-                      : "text-primary-500 outline-primary-500"
+                      ? "text-neutral-400 border-neutral-200"
+                      : "text-primary-500 border-primary-500"
                   )}
                 >
-                  {sentCount + 1 > maxDailySend ? maxDailySend : sentCount + 1} of {maxDailySend}
+                  {isLimitReached ? 0 : (sentCount + 1 > maxDailySend ? maxDailySend : sentCount + 1)} of {maxDailySend}
                 </span>
               </div>
 
