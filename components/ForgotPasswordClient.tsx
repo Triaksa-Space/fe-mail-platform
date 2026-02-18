@@ -377,7 +377,7 @@ export default function ForgotPasswordClient() {
               {/* Email & Binding Email Step */}
               {step === "email" && (
                 <>
-                  <div className="my-2 text-neutral-800 text-2xl font-medium">
+                  <div className="text-neutral-800 text-2xl font-medium">
                     Forgot Password
                   </div>
                   <form
