@@ -162,7 +162,13 @@ const CreateBulkEmailPageContent: React.FC = () => {
       })
       toast({
         title: `${count} email created successfully.`,
-        description: `Email list has been send to ${receiveEmail}`,
+        description: (
+          <>
+            {count} email created successfully.
+            <br />
+            Email list has been send to {receiveEmail}
+          </>
+        ),
         variant: "default",
       })
       // Reset the form
@@ -472,4 +478,3 @@ const CreateBulkEmailPage: React.FC = () => (
 );
 
 export default CreateBulkEmailPage
-
