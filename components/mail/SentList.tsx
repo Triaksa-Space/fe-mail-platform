@@ -226,27 +226,27 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
         <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
           <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
             {/* Top row: To + Time */}
-            <div className="self-stretch inline-flex justify-between items-center">
-              <div className="flex items-center gap-0.5">
+            <div className="self-stretch min-w-0 inline-flex justify-between items-center gap-2">
+              <div className="min-w-0 flex items-center gap-0.5">
                 <span className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6">To:</span>
-                <span className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6 truncate">
+                <span className="min-w-0 truncate text-neutral-600 text-base font-normal font-['Roboto'] leading-6">
                   {email.to || "Unknown"}
                 </span>
               </div>
-              <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
+              <span className="shrink-0 text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
                 {email.date}
               </span>
             </div>
 
             {/* Subject line */}
-            <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+            <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
               {cleanSentSubject(email.subject)}
             </p>
           </div>
         </div>
 
         {/* Snippet/Preview */}
-        <p className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>
