@@ -246,7 +246,7 @@ const Preview: React.FC<PreviewProps> = ({
           </div>
         ) : (
           <div className={cn(
-            "flex flex-col gap-5 pb-0 flex-1",
+            "flex flex-col gap-4 pb-0 flex-1",
             isTransitioning && "animate-fade-in"
           )}>
             {/* Header with Back and Action Buttons */}
