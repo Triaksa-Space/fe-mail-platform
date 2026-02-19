@@ -250,7 +250,7 @@ const Preview: React.FC<PreviewProps> = ({
             isTransitioning && "animate-fade-in"
           )}>
             {/* Header with Back and Action Buttons */}
-            <div className="pr-5 flex justify-between items-center">
+            <div className=" flex justify-between items-center">
               {showBackButton && (
                 <Button
                   variant="outline"
@@ -286,7 +286,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Info Card */}
-            <div className="pr-5">
+            <div className="">
               <div className="p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-2">
                 <div className="flex flex-col gap-0.5">
                   {/* From row */}
@@ -317,7 +317,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {/* Email Body Card */}
-            <div className="pr-5">
+            <div className="">
               <EmailBodyCard
                 subject={email.subject}
                 body={isSentView ? email.body : emailDetail?.Body}
@@ -329,7 +329,7 @@ const Preview: React.FC<PreviewProps> = ({
             </div>
 
             {isSentView && attachmentItems.length > 0 && (
-              <div className="pr-5">
+              <div className="">
                 <AttachmentList attachments={attachmentItems} showCloseIcon wrapContainer={false} />
               </div>
             )}
