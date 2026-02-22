@@ -94,7 +94,7 @@ const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw })
 
     if (diffMins < 5) {
         // Online
-        badgeClass += " bg-primary-50";
+        badgeClass += " bg-success-50";
         textClass += " text-success-500";
         displayText = "Online";
     } else if (diffMins < 60) {
