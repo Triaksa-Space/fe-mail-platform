@@ -292,10 +292,10 @@ const EmailManagementPageContent: React.FC = () => {
             }
 
             const data = response.data.users.map((user: User) => {
-                // Use LastLogin if available and not zero time, otherwise fallback to CreatedAt
+                // New users without login activity should not be shown as online.
                 const lastLoginDate = user.LastLogin && user.LastLogin !== "0001-01-01T00:00:00Z"
                     ? user.LastLogin
-                    : user.CreatedAt;
+                    : "";
 
                 return {
                     id: user.ID,
