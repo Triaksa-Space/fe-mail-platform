@@ -61,7 +61,7 @@ const InboxList: React.FC<InboxListProps> = ({
       className={cn(
         "flex flex-col h-full relative overflow-hidden gap-4",
         fullWidth
-          ? "w-full"
+          ? "w-full max-w-none"
           : "w-full lg:w-[clamp(360px,34vw,760px)] lg:border-r lg:border-neutral-200",
         className,
       )}
@@ -148,14 +148,14 @@ const InboxList: React.FC<InboxListProps> = ({
       </div>
 
       {/* Loading indicator when refreshing */}
-      {isRefreshing && emails.length > 0 && (
+      {/* {isRefreshing && emails.length > 0 && ( */}
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
           <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">
             Loading
           </span>
-          <ArrowPathIcon className="w-[16.25px] h-[14.874px] text-primary-500 animate-spin" />
+          <ArrowPathIcon className="w-[16.25px] h-[14.874px] text-primary-500 animate-spin" strokeWidth={2} />
         </div>
-      )}
+      {/* )} */}
 
       {/* Email List with fade-in transition */}
       <div
@@ -255,14 +255,14 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         isSelected && "bg-primary-50",
       )}
     >
-      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
-        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
-          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
+      <div className="flex-1 min-w-0 flex w-full flex-col justify-start items-start gap-1">
+        <div className="self-stretch min-w-0 flex w-full justify-start items-start gap-4">
+          <div className="flex-1 min-w-0 flex w-full flex-col justify-start items-start gap-0.5">
             {/* Top row: Sender + Time */}
             <div className="w-full min-w-0 flex items-center">
               <span
                 className={cn(
-                  "min-w-0 text-left text-base font-['Roboto'] leading-6 truncate",
+                  "flex-1 min-w-0 text-left text-base font-['Roboto'] leading-6 truncate",
                   isUnread
                     ? "font-semibold text-neutral-800"
                     : "font-normal text-neutral-600",
@@ -290,7 +290,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
             {/* Subject line */}
             <p
               className={cn(
-                "w-full min-w-0 text-sm font-['Roboto'] leading-5 text-left truncate",
+                "w-full min-w-0 text-sm font-['Roboto'] leading-5 text-left break-words",
                 isUnread
                   ? "font-semibold text-neutral-800"
                   : "font-normal text-neutral-600",
@@ -302,7 +302,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         </div>
 
         {/* Snippet/Preview */}
-        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 text-left truncate">
+        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 text-left break-words">
           {email.snippet || "No preview available"}
         </p>
       </div>

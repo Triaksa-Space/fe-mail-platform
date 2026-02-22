@@ -63,7 +63,7 @@ const SentList: React.FC<SentListProps> = ({
       className={cn(
         "flex flex-col h-full relative overflow-hidden gap-5",
         fullWidth
-          ? "w-full"
+          ? "w-full max-w-none"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
         className,
       )}
@@ -115,14 +115,6 @@ const SentList: React.FC<SentListProps> = ({
           )}
         </div>
       </div>
-
-      {/* Loading indicator when refreshing */}
-      {isRefreshing && emails.length > 0 && (
-        <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
-          <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">Loading</span>
-          <ArrowPathIcon className="w-[16.25px] h-[14.874px] text-primary-500 animate-spin" />
-        </div>
-      )}
 
       {/* Email List */}
       <div
@@ -212,7 +204,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
       variant="ghost"
       onClick={onClick}
         className={cn(
-          "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0",
+          "w-full h-auto px-4 py-2 rounded-xl flex justify-start items-center gap-2 min-w-0 whitespace-normal",
           "border border-neutral-200 bg-white shadow-[0_2px_6px_0_rgba(16,24,40,0.06)]",
           "transition-all",
           "hover:bg-primary-50 focus:bg-primary-50",
@@ -222,12 +214,12 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
           isSelected && "bg-primary-50",
         )}
     >
-      <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
-        <div className="self-stretch min-w-0 inline-flex justify-start items-start gap-4">
-          <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-0.5">
+      <div className="flex-1 min-w-0 flex w-full flex-col justify-start items-start gap-1">
+        <div className="self-stretch min-w-0 flex w-full justify-start items-start gap-4">
+          <div className="flex-1 min-w-0 flex w-full flex-col justify-start items-start gap-0.5">
             {/* Top row: To + Time */}
-            <div className="self-stretch min-w-0 inline-flex justify-between items-center gap-2">
-              <div className="min-w-0 flex items-center gap-0.5">
+            <div className="self-stretch min-w-0 flex w-full justify-between items-center gap-2">
+              <div className="flex-1 min-w-0 flex items-center gap-0.5">
                 <span className="text-neutral-600 text-base font-normal font-['Roboto'] leading-6">To:</span>
                 <span className="min-w-0 truncate text-neutral-600 text-base font-normal font-['Roboto'] leading-6">
                   {email.to || "Unknown"}
@@ -239,14 +231,14 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
             </div>
 
             {/* Subject line */}
-            <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+            <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 break-words text-left">
               {cleanSentSubject(email.subject)}
             </p>
           </div>
         </div>
 
         {/* Snippet/Preview */}
-        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
+        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap break-all text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>

@@ -44,6 +44,7 @@ export interface ApiSentEmail {
   to_email?: string;
   to?: string; // API may return 'to' instead of 'to_email'
   subject: string;
+  body?: string;
   body_preview?: string;
   status?: string;
   sent_at: string;
@@ -65,6 +66,15 @@ export interface ApiSentEmailDetail {
   attachments?: string | string[]; // Can be JSON string or array
 }
 
+function cleanPreviewText(text?: string): string {
+  return (text || "")
+    .replace(/\\r\\n|\\n|\\r/g, " ")
+    .replace(/\r\n|\n|\r/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/(?:\.{3,}|\u2026+)\s*$/, "")
+    .trim();
+}
+
 // Transform API sent email to SentMail type
 export function transformSentEmail(email: ApiSentEmail): SentMail {
   return {
@@ -73,7 +83,7 @@ export function transformSentEmail(email: ApiSentEmail): SentMail {
     from: email.from_email,
     to: email.to_email || email.to || "",
     subject: email.subject,
-    snippet: email.body_preview || "",
+    snippet: cleanPreviewText(email.body || email.body_preview),
     date: formatRelativeTime(email.sent_at),
     status: email.status,
     has_attachments: email.has_attachments,
