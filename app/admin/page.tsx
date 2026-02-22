@@ -550,9 +550,12 @@ const EmailManagementPageContent: React.FC = () => {
                                     setConfirmPasswordForAdmin("");
                                     setSelectedAdmin(null);
                                 }}
-                                className="w-10 h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-neutral-50 transition-colors"
+                                className="w-10 h-10 p-0 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex justify-center items-center overflow-hidden hover:bg-neutral-50 transition-colors"
                             >
-                                <XMarkIcon className="w-5 h-5 text-neutral-800" />
+                                <XMarkIcon
+                                    className="w-[20px] h-[20px] text-neutral-800"
+                                    style={{ width: 20, height: 20 }}
+                                />
                             </Button>
                         </div>
 

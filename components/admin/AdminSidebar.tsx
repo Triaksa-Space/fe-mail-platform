@@ -331,7 +331,10 @@ const AdminSidebar: React.FC = () => {
             className="self-stretch px-3 py-1 h-auto justify-between"
           >
             <div className="flex-1 flex justify-start items-center gap-5">
-              <ArrowRightStartOnRectangleIcon className="w-5 h-5 text-neutral-600" />
+              <ArrowRightStartOnRectangleIcon
+                className={cn("!w-[20px] !h-[20px]", "text-neutral-600")}
+                style={{ width: 20, height: 20 }}
+              />
               <div className="justify-center text-neutral-600 text-sm font-normal font-['Roboto'] leading-5">
                 Log out
               </div>

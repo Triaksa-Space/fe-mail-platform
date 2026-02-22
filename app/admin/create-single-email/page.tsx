@@ -222,7 +222,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     required
                   />
                 </div>
-                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                <div className="px-1 absolute left-2 top-1.5 bg-white inline-flex justify-center items-center">
                   <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Email</span>
                 </div>
               </div>
@@ -235,7 +235,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                   onChange={(value) => setSelectedDomain(value)}
                   className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
                 />
-                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
+                <div className="px-1 absolute left-2 top-1.5 bg-white inline-flex justify-center items-center z-10">
                   <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
                 </div>
               </div>
@@ -275,7 +275,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                   >
                   </Button>
                 </div>
-                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                <div className="px-1 absolute left-2 top-1.5 bg-white inline-flex justify-center items-center">
                   <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                 </div>
               </div>
