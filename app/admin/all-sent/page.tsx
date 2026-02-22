@@ -208,35 +208,37 @@ export default function AdminAllSentPage() {
       <Toaster />
       <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
         {/* Page Header */}
-        <div className="self-stretch inline-flex justify-between items-center">
-          <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
-            All sent
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className={cn(
-              BUTTON_STYLES.icon,
-              "disabled:opacity-50 disabled:cursor-not-allowed",
-            )}
-            aria-label="Refresh"
-          >
-            <ArrowPathIcon
+        {!selectedEmail && (
+          <div className="self-stretch inline-flex justify-between items-center">
+            <div className="justify-center text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
+              All sent
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
               className={cn(
-                "w-4 h-4 text-neutral-800",
-                isRefreshing && "animate-spin",
+                BUTTON_STYLES.icon,
+                "disabled:opacity-50 disabled:cursor-not-allowed",
               )}
-            />
-          </Button>
-        </div>
+              aria-label="Refresh"
+            >
+              <ArrowPathIcon
+                className={cn(
+                  "w-4 h-4 text-neutral-800",
+                  isRefreshing && "animate-spin",
+                )}
+              />
+            </Button>
+          </div>
+        )}
 
         {/* Main Content - Full width single view */}
         <div className="flex-1 min-h-0 w-full">
           {selectedEmail ? (
             /* Email Detail View - Full Width */
-            <div className="h-full flex flex-col gap-5 overflow-auto">
+            <div className="h-full min-h-0 flex flex-col gap-5">
               {/* Breadcrumb Navigation */}
               <div className="self-stretch inline-flex justify-start items-center gap-1">
                 {/* Back */}
@@ -319,7 +321,7 @@ export default function AdminAllSentPage() {
                     body={emailDetail?.Body || emailDetail?.body}
                     fallbackText={selectedEmail.body_preview || "No content"}
                     attachments={[]}
-                    className="self-stretch min-h-0"
+                    className="self-stretch flex-1 min-h-0"
                   />
 
                   {detailAttachmentItems.length > 0 && (
@@ -395,7 +397,7 @@ export default function AdminAllSentPage() {
               </div>
 
               {/* Pagination */}
-              {totalPages > 0 && (
+              {total > pageSize && (
                 <div className="border-t border-neutral-100">
                   <PaginationComponent
                     totalPages={totalPages}

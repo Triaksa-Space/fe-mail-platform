@@ -570,12 +570,7 @@ const EmailManagementPageContent: React.FC = () => {
                                                 : "outline-neutral-200"
                                         )}>
                                             <div className="flex-1 flex justify-start items-center gap-2">
-                                                <LockClosedIcon className={cn(
-                                                    "w-5 h-5",
-                                                    confirmPasswordForAdmin && passwordForAdmin && confirmPasswordForAdmin !== passwordForAdmin
-                                                        ? "text-red-400"
-                                                        : "text-neutral-400"
-                                                )} />
+                                                <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                                                 <input
                                                     type={showPassword ? "text" : "password"}
                                                     value={passwordForAdmin}
@@ -674,10 +669,10 @@ const EmailManagementPageContent: React.FC = () => {
                             {/* Submit Button */}
                             <Button
                                 onClick={handleChangePasswordSubmit}
-                                disabled={!passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin}
+                                disabled={isLoading || !passwordForAdmin || !confirmPasswordForAdmin || passwordForAdmin !== confirmPasswordForAdmin}
                                 className="self-stretch h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
                             >
-                                <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Change password</div>
+                                <div className="text-center justify-center text-base font-medium font-['Roboto'] leading-4">Change password</div>
                             </Button>
                         </div>
                     </DialogContent>

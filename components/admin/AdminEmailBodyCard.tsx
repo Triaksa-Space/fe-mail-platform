@@ -21,7 +21,7 @@ const IFRAME_STYLES = `
   body {
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
     line-height: 1.6;
     color: #1F2937;
@@ -55,7 +55,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
   attachments = [],
   className,
 }) => {
-  const [iframeHeight, setIframeHeight] = useState("160px");
+  const [iframeHeight, setIframeHeight] = useState("auto");
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
@@ -72,7 +72,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
         link.setAttribute("rel", "noopener noreferrer");
       });
 
-      const height = Math.max(iframeDoc.body.scrollHeight + 8, 140);
+      const height = iframeDoc.body.scrollHeight;
       setIframeHeight(`${height}px`);
     }
   };
@@ -84,7 +84,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-4 min-h-0 overflow-hidden",
+      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-[16px] min-h-0 overflow-hidden",
       className
     )}>
       {/* Subject */}
@@ -106,6 +106,8 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
               width: "100%",
               border: "none",
               display: "block",
+              margin: 0,
+              padding: 0,
             }}
             onLoad={handleIframeLoad}
             title="Email content"
@@ -121,7 +123,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
 
       {/* Attachments */}
       <div className="shrink-0">
-        <AttachmentList attachments={attachmentItems} showCloseIcon />
+        <AttachmentList attachments={attachmentItems} showCloseIcon wrapContainer={false} />
       </div>
     </div>
   );

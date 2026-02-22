@@ -58,7 +58,7 @@ const AdminEmailListRow: React.FC<AdminEmailListRowProps> = ({
             >
               {dateText}
             </div>
-            {isUnread && <div className="w-2 h-2 bg-primary-600 rounded-full" />}
+            {isUnread && <div className="w-2 h-2 bg-primary-500 rounded-full" />}
           </div>
         </div>
 
