@@ -57,6 +57,7 @@ const ChangePasswordForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
     setError(null);
 
     if (newPassword !== confirmPassword) {
@@ -97,7 +98,7 @@ const ChangePasswordForm: React.FC = () => {
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
-          setError("Current password is incorrect");
+          setError("The password you entered is incorrect.");
         } else if (err.response?.data?.message) {
           setError(err.response.data.message);
         } else {
@@ -122,7 +123,7 @@ const ChangePasswordForm: React.FC = () => {
         <div className="relative flex flex-col">
           <div className="h-3.5"></div>
           <div className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center gap-3 ${
-            error === "Current password is incorrect" ? "outline-red-500" : "outline-neutral-200"
+            error === "The password you entered is incorrect." ? "outline-red-500" : "outline-neutral-200"
           }`}>
             <div className="flex-1 flex justify-start items-center gap-2">
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
@@ -167,6 +168,9 @@ const ChangePasswordForm: React.FC = () => {
           <div className="px-1 left-[8px] top-1.5 absolute bg-white inline-flex justify-center items-center gap-2.5">
             <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Old password</span>
           </div>
+          {error === "The password you entered is incorrect." && (
+            <p className="text-xs text-red-500 mt-1">The password you entered is incorrect.</p>
+          )}
         </div>
 
         {/* New Password */}
@@ -278,7 +282,11 @@ const ChangePasswordForm: React.FC = () => {
       </div>
 
       {/* Error Message */}
-      {error && error !== "Passwords do not match" && <p className="text-sm text-red-600">{error}</p>}
+      {error &&
+        error !== "Passwords do not match" &&
+        error !== "The password you entered is incorrect." && (
+          <p className="text-sm text-red-600">{error}</p>
+        )}
 
       {/* Submit Button */}
       <Button

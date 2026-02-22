@@ -128,10 +128,11 @@ apiClient.interceptors.response.use(
 
     // If error is 401 and we haven't retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Don't retry for login or refresh endpoints
+      // Don't retry for endpoints where 401 can be a user-input/auth validation result.
       if (
         originalRequest.url?.includes("/login") ||
-        originalRequest.url?.includes("/token/refresh")
+        originalRequest.url?.includes("/token/refresh") ||
+        originalRequest.url?.includes("/user/change_password")
       ) {
         return Promise.reject(error);
       }
