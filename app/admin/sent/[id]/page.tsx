@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
+import axios from "axios";
+import { saveAs } from "file-saver";
 import { formatRelativeTime } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import AttachmentList from "@/components/mail/AttachmentList";
@@ -64,9 +67,11 @@ export default function AdminSentDetailPage() {
   const router = useRouter();
   const params = useParams();
   const emailId = params.id as string;
+  const { toast } = useToast();
 
   const [email, setEmail] = useState<SentEmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchEmailDetail = useCallback(async () => {
@@ -90,6 +95,39 @@ export default function AdminSentDetailPage() {
   useEffect(() => {
     fetchEmailDetail();
   }, [fetchEmailDetail]);
+
+  const handleDownloadAttachment = async (url: string, filename: string) => {
+    if (!emailId) return;
+
+    setIsDownloading(true);
+    try {
+      const response = await apiClient.post(
+        "/email/by_user/download/file",
+        {
+          file_url: url,
+        },
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      saveAs(blob, filename);
+    } catch (err) {
+      let errorMessage = "Failed to download file. Please try again.";
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      toast({
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const attachments = parseAttachments(email?.attachments);
   const attachmentItems = attachments.map((att) => ({
@@ -216,7 +254,13 @@ export default function AdminSentDetailPage() {
 
             {attachmentItems.length > 0 && (
               <div className="self-stretch">
-                <AttachmentList attachments={attachmentItems} showCloseIcon wrapContainer={false} />
+                <AttachmentList
+                  attachments={attachmentItems}
+                  showCloseIcon
+                  wrapContainer={false}
+                  onDownload={handleDownloadAttachment}
+                  isDownloading={isDownloading}
+                />
               </div>
             )}
           </div>

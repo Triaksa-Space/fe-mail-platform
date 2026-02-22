@@ -10,6 +10,8 @@ interface AdminEmailBodyCardProps {
   body?: string;
   fallbackText?: string;
   attachments?: Attachment[];
+  onDownloadAttachment?: (url: string, filename: string) => void;
+  isDownloading?: boolean;
   className?: string;
 }
 
@@ -53,6 +55,8 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
   body,
   fallbackText,
   attachments = [],
+  onDownloadAttachment,
+  isDownloading = false,
   className,
 }) => {
   const [iframeHeight, setIframeHeight] = useState("auto");
@@ -123,7 +127,13 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
 
       {/* Attachments */}
       <div className="shrink-0">
-        <AttachmentList attachments={attachmentItems} showCloseIcon wrapContainer={false} />
+        <AttachmentList
+          attachments={attachmentItems}
+          showCloseIcon
+          wrapContainer={false}
+          onDownload={onDownloadAttachment}
+          isDownloading={isDownloading}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import axios from "axios";
+import { saveAs } from "file-saver";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -16,6 +18,7 @@ import AdminContentCard from "@/components/admin/AdminContentCard";
 import AdminEmailListRow, { formatEmailListDate } from "@/components/admin/AdminEmailListRow";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import CenterTruncate from "@/components/ui/center-truncate";
 import {
@@ -61,6 +64,7 @@ interface EmailDetail {
 export default function AdminAllSentPage() {
   const { allowed } = useRequirePermission("all_sent");
   const token = useAuthStore((state) => state.token);
+  const { toast } = useToast();
 
   // Data state
   const [emails, setEmails] = useState<ApiSentEmail[]>([]);
@@ -81,6 +85,7 @@ export default function AdminAllSentPage() {
   const [selectedEmail, setSelectedEmail] = useState<ApiSentEmail | null>(null);
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [isDownloadingAttachment, setIsDownloadingAttachment] = useState(false);
 
   // Set page title
   useEffect(() => {
@@ -190,6 +195,39 @@ export default function AdminAllSentPage() {
   const handleClosePreview = () => {
     setSelectedEmail(null);
     setEmailDetail(null);
+  };
+
+  const handleDownloadAttachment = async (url: string, filename: string) => {
+    if (!selectedEmail?.id) return;
+
+    setIsDownloadingAttachment(true);
+    try {
+      const response = await apiClient.post(
+        "/email/by_user/download/file",
+        {
+          file_url: url,
+        },
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      saveAs(blob, filename);
+    } catch (err) {
+      let errorMessage = "Failed to download file. Please try again.";
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      toast({
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloadingAttachment(false);
+    }
   };
 
   const detailAttachments = parseAttachments(
@@ -330,6 +368,8 @@ export default function AdminAllSentPage() {
                         attachments={detailAttachmentItems}
                         showCloseIcon
                         wrapContainer={false}
+                        onDownload={handleDownloadAttachment}
+                        isDownloading={isDownloadingAttachment}
                       />
                     </div>
                   )}

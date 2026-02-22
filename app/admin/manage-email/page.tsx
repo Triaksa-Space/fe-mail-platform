@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import axios from "axios";
+import { saveAs } from "file-saver";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -20,6 +22,7 @@ import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react
 import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import { useRequirePermission } from "@/hooks/use-require-permission";
+import { useToast } from "@/hooks/use-toast";
 
 // API response interfaces (snake_case from backend)
 interface ApiEmail {
@@ -64,6 +67,7 @@ interface EmailDetail {
 export default function AdminAllInboxPage() {
   const { allowed } = useRequirePermission("all_inbox");
   const token = useAuthStore((state) => state.token);
+  const { toast } = useToast();
 
   // Data state
   const [emails, setEmails] = useState<ApiEmail[]>([]);
@@ -84,6 +88,7 @@ export default function AdminAllInboxPage() {
   const [selectedEmail, setSelectedEmail] = useState<ApiEmail | null>(null);
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [isDownloadingAttachment, setIsDownloadingAttachment] = useState(false);
 
   // Set page title
   useEffect(() => {
@@ -195,6 +200,40 @@ export default function AdminAllInboxPage() {
     setEmailDetail(null);
   };
 
+  const handleDownloadAttachment = async (url: string, filename: string) => {
+    if (!selectedEmail?.id) return;
+
+    setIsDownloadingAttachment(true);
+    try {
+      const response = await apiClient.post(
+        "/email/by_user/download/file",
+        {
+          email_id: selectedEmail.id,
+          file_url: url,
+        },
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      saveAs(blob, filename);
+    } catch (err) {
+      let errorMessage = "Failed to download file. Please try again.";
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      toast({
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloadingAttachment(false);
+    }
+  };
+
   if (!allowed) return null;
 
   return (
@@ -296,6 +335,8 @@ export default function AdminAllInboxPage() {
                     body={emailDetail?.Body}
                     fallbackText={selectedEmail.preview || "No content"}
                     attachments={parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments)}
+                    onDownloadAttachment={handleDownloadAttachment}
+                    isDownloading={isDownloadingAttachment}
                     className="self-stretch flex-1 min-h-0"
                   />
                 </>
