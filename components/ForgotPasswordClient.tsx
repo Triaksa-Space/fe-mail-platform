@@ -736,7 +736,7 @@ export default function ForgotPasswordClient() {
                         </div>
                         <div className="px-1 absolute left-2 top-0 bg-white">
                           <span className="text-[10px] font-normal text-neutral-800 leading-4">
-                            New Password
+                            New password
                           </span>
                         </div>
                       </div>
@@ -796,7 +796,7 @@ export default function ForgotPasswordClient() {
                         </div>
                         <div className="px-1 absolute left-2 top-0 bg-white">
                           <span className="text-[10px] font-normal text-neutral-800 leading-4">
-                            Confirm Password
+                            Repeat password
                           </span>
                         </div>
                         {confirmPassword && newPassword !== confirmPassword && (
