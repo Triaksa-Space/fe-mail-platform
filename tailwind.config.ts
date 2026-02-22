@@ -8,10 +8,11 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		fontFamily: {
-  			sans: ["var(--font-roboto)", "var(--font-geist-sans)", "sans-serif"],
-  		},
+  		extend: {
+  			fontFamily: {
+  				sans: ["var(--font-roboto)", "Roboto", "sans-serif"],
+  				mono: ["var(--font-roboto)", "Roboto", "sans-serif"],
+  			},
   		colors: {
   			blue: {
   				50: "var(--primary-50)",

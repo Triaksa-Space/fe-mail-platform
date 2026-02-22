@@ -181,9 +181,11 @@
 @layer base {
   * {
     @apply border-border;
+    font-family: var(--font-roboto), Roboto, sans-serif;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-roboto), Roboto, sans-serif;
   }
 }
 

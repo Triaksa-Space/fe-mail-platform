@@ -100,7 +100,7 @@ export const theme = {
   typography: {
     fontFamily: {
       sans: 'Roboto, system-ui, -apple-system, sans-serif',
-      mono: 'Geist Mono, monospace',
+      mono: 'Roboto, system-ui, -apple-system, sans-serif',
     },
     fontSize: {
       xs: '12px',

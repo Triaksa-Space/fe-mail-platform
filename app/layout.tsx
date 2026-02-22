@@ -1,24 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SyncLogoutProvider from "@/components/SyncLogoutProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-  display: "swap", // Optimize font loading
-  preload: true,
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-  display: "swap",
-  preload: true,
-});
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -47,9 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
-      >
+      <body className={`${roboto.variable} font-sans antialiased`}>
         <SyncLogoutProvider />
         <ErrorBoundary>{children}</ErrorBoundary>
       </body>
