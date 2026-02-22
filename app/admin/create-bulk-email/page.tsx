@@ -38,7 +38,7 @@ const ToggleSwitch: React.FC<{
     >
       <div className={cn(
         "w-10 h-6 rounded-3xl transition-colors",
-        active ? "bg-primary-600" : "bg-neutral-200"
+        active ? "bg-primary-500" : "bg-neutral-200"
       )}></div>
       <div className={cn(
         "w-5 h-5 absolute top-[1.5px] bg-white rounded-full transition-all",
@@ -51,7 +51,7 @@ const ToggleSwitch: React.FC<{
 
 const CreateBulkEmailPageContent: React.FC = () => {
   const { allowed } = useRequirePermission("create_bulk");
-  const [selectedDomain, setSelectedDomain] = useState("mailria.com")
+  const [selectedDomain, setSelectedDomain] = useState("")
   const [count, setCount] = useState(2)
   const [password, setPassword] = useState("")
   const [baseName, setBaseName] = useState("")
@@ -210,7 +210,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
         <AdminContentCard className="w-full p-4">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Row 1: Email + Random toggle | Domain | Quantity + buttons */}
-            <div className="grid grid-cols-1 gap-4 lg:gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_max-content_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
               <div className="relative min-w-0 flex flex-col">
                 <div className="h-3.5"></div>
                 <div className={cn(
@@ -246,7 +246,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 active={isRandomNameActive}
                 onChange={toggleRandomName}
                 label="Random email"
-                className="w-full"
+                className="whitespace-nowrap"
               />
 
               <div className="relative min-w-0 flex flex-col lg:col-span-3">
@@ -320,7 +320,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
             </div>
 
             {/* Row 2: Same password + Random toggle | Password length + buttons | Email for receiving */}
-            <div className="grid grid-cols-1 gap-4 lg:gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_max-content_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
               <div className="relative min-w-0 flex flex-col">
                 <div className="h-3.5"></div>
                 <div className={cn(
@@ -355,7 +355,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 active={isRandomPasswordActive}
                 onChange={toggleRandomPassword}
                 label="Random pass"
-                className="w-full"
+                className="whitespace-nowrap"
               />
 
               <div className="relative min-w-0 flex flex-col">

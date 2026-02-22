@@ -321,7 +321,7 @@ export default function AdminAllInboxPage() {
               </div> */}
 
               {/* Email List */}
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto scrollbar-auto-hide">
                 {isLoading ? (
                   <AdminLoadingPlaceholder heightClassName="h-32" />
                 ) : error ? (
