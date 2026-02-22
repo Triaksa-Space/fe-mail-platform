@@ -148,14 +148,14 @@ const InboxList: React.FC<InboxListProps> = ({
       </div>
 
       {/* Loading indicator when refreshing */}
-      {/* {isRefreshing && emails.length > 0 && ( */}
+      {isRefreshing && emails.length > 0 && (
         <div className="self-stretch inline-flex justify-center items-center gap-1 py-2">
           <span className="text-primary-500 text-sm font-normal font-['Roboto'] leading-5">
             Loading
           </span>
           <ArrowPathIcon className="w-[16.25px] h-[14.874px] text-primary-500 animate-spin" strokeWidth={2} />
         </div>
-      {/* )} */}
+      )}
 
       {/* Email List with fade-in transition */}
       <div
