@@ -63,7 +63,7 @@ const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    title: "User Management",
+    title: "User management",
     items: [
       {
         id: "users",
@@ -92,7 +92,7 @@ const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    title: "Email Analytics",
+    title: "Email analytics",
     items: [
       {
         id: "all-inbox",
@@ -113,7 +113,7 @@ const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    title: "Legal & Policies",
+    title: "Legal & policies",
     items: [
       {
         id: "terms",
@@ -134,7 +134,7 @@ const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    title: "Admin Management",
+    title: "Admin management",
     items: [
       {
         id: "roles",
