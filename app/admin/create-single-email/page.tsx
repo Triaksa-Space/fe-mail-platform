@@ -135,7 +135,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
 
       if (password.length < 6) {
         toast({
-          description: "Password must be at least 6 characters long. Please try again.",
+          description: "Minimum password must be 6 characters.",
           variant: "destructive",
         });
         return;
@@ -157,7 +157,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
 
       // Show success toast
       toast({
-        description: `Email: ${username}@${selectedDomain} Password: ${password} successfully created!`,
+        description: `email created successfully.`,
         variant: "default",
       });
 
@@ -184,7 +184,11 @@ const CreateSingleEmailPageContent: React.FC = () => {
     }
   };
 
-  const isFormValid = username && password;
+  const passwordError =
+    password.length > 0 && password.length < 6
+      ? "Minimum password must be 6 characters."
+      : "";
+  const isFormValid = Boolean(username && password && password.length >= 6);
 
   if (!allowed) return null;
 
@@ -243,7 +247,12 @@ const CreateSingleEmailPageContent: React.FC = () => {
               {/* Password Input with Floating Label */}
               <div className="flex-1 relative flex flex-col">
                 <div className="h-3.5"></div>
-                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3">
+                <div
+                  className={cn(
+                    "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 flex items-center gap-3",
+                    passwordError ? "outline-red-500" : "outline-neutral-200"
+                  )}
+                >
                   <input
                     type="text"
                     value={password}
@@ -278,6 +287,11 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 <div className="px-1 absolute left-2 top-1.5 bg-white inline-flex justify-center items-center">
                   <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Password</span>
                 </div>
+                {passwordError && (
+                  <span className="mt-1 text-xs text-red-600 font-normal font-['Roboto'] leading-4">
+                    {passwordError}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -331,7 +345,7 @@ const CreateSingleEmailPageContent: React.FC = () => {
                     <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">Password</span>
                     <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5">:</span>
                   </div>
-                  <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5 font-mono">{createdEmail.password}</span>
+                  <span className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5">{createdEmail.password}</span>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -352,9 +366,9 @@ const CreateSingleEmailPageContent: React.FC = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => setCreatedEmail(null)}
-                className="w-5 h-5 flex items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
+                className="w-5 h-5 flex items-center justify-center text-neutral-800 transition-colors"
               >
-                <XMarkIcon className="w-4 h-4" />
+                <XMarkIcon className="w-5 h-5" />
               </Button>
             </div>
           </AdminContentCard>
