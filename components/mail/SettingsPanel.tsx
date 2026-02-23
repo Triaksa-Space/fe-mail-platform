@@ -57,7 +57,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </div>
         <CenterTruncate
           side="right"
-          className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5"
+          className="text-neutral-800 text-sm font-semibold font-['Roboto'] leading-5"
         >
           {email}
         </CenterTruncate>
@@ -122,7 +122,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               "outline outline-1 outline-offset-[-1px] outline-neutral-200"
             )}
           >
-            <h3 className="text-base font-semibold normal-neutral-800 mb-4">Change password</h3>
+            <h3 className="text-base font-medium text-neutral-800 mb-2">Change password</h3>
             <ChangePasswordForm />
           </div>
 
@@ -134,7 +134,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               "outline outline-1 outline-offset-[-1px] outline-neutral-200"
             )}
           >
-            <h3 className="text-base font-normal text-neutral-800 mb-4">Email binding</h3>
+            <h3 className="text-base font-medium text-neutral-800 mb-2">Email binding</h3>
             <EmailBindingForm initialEmail={bindingEmail} />
           </div>
         </div>
