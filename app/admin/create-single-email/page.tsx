@@ -35,7 +35,11 @@ const CreateSingleEmailPageContent: React.FC = () => {
   const { toast } = useToast();
 
   // State variables
-  const [selectedDomain, setSelectedDomain] = useState("");
+  const [selectedDomain, setSelectedDomain] = useState(() =>
+    typeof window !== "undefined" && window.location.hostname.includes("staging")
+      ? "staging.mailria.com"
+      : "mailria.com"
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
