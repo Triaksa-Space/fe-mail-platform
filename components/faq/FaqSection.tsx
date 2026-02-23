@@ -159,7 +159,7 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
       </div>
 
       {/* FAQ Items */}
-      <div className="self-stretch md:mt-6 flex flex-col justify-start items-start">
+      <div className="self-stretch flex flex-col justify-start items-start">
         {category.items.map((item, idx) => (
           <FaqAccordionItem
             key={item.id}
