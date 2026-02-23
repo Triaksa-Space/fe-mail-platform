@@ -306,7 +306,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 onClick={() => updateCount(count - 1)}
                 disabled={count <= 2}
                 className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0",
+                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
                   count <= 2
                     ? "text-neutral-300 cursor-not-allowed"
                     : "text-neutral-600 hover:bg-neutral-200"
