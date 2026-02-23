@@ -56,7 +56,8 @@ interface EmailDetail {
   SenderEmail: string;
   SenderName: string;
   Subject: string;
-  Body: string;
+  Body?: string;
+  body?: string;
   BodyEml: string;
   RelativeTime: string;
   ListAttachments?: { Filename: string; URL: string }[];
@@ -332,7 +333,7 @@ export default function AdminAllInboxPage() {
                   {/* Email Body Card */}
                   <AdminEmailBodyCard
                     subject={selectedEmail.subject}
-                    body={emailDetail?.Body}
+                    body={emailDetail?.Body || emailDetail?.body}
                     fallbackText={selectedEmail.preview || "No content"}
                     attachments={parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments)}
                     onDownloadAttachment={handleDownloadAttachment}
