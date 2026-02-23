@@ -61,7 +61,7 @@ const SentList: React.FC<SentListProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col h-full relative overflow-hidden gap-5",
+        "flex flex-col h-full relative overflow-hidden gap-4",
         fullWidth
           ? "w-full max-w-none"
           : "w-full lg:w-[360px] xl:w-[420px] lg:border-r lg:border-neutral-200",
