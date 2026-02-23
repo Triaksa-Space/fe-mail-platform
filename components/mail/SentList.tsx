@@ -231,14 +231,14 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
             </div>
 
             {/* Subject line */}
-            <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 break-words text-left">
+            <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
               {cleanSentSubject(email.subject)}
             </p>
           </div>
         </div>
 
         {/* Snippet/Preview */}
-        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap break-all text-left">
+        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
           {email.snippet || "No preview available"}
         </p>
       </div>

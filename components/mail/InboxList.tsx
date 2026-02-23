@@ -290,7 +290,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
             {/* Subject line */}
             <p
               className={cn(
-                "w-full min-w-0 text-sm font-['Roboto'] leading-5 text-left break-words",
+                "w-full min-w-0 text-sm font-['Roboto'] leading-5 text-left truncate",
                 isUnread
                   ? "font-semibold text-neutral-800"
                   : "font-normal text-neutral-600",
@@ -302,7 +302,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
         </div>
 
         {/* Snippet/Preview */}
-        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 text-left break-words">
+        <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 text-left truncate">
           {email.snippet || "No preview available"}
         </p>
       </div>
