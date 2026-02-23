@@ -144,7 +144,7 @@ const FaqSection: React.FC<FaqSectionProps> = ({ category, className }) => {
   return (
     <div
       className={cn(
-        "self-stretch p-0 md:p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden flex flex-col justify-start items-start",
+        "self-stretch p-0 md:px-4 md:pt-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 overflow-hidden flex flex-col justify-start items-start",
         className
       )}
     >
