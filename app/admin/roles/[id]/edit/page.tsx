@@ -254,7 +254,7 @@ const EditAdminPageContent: React.FC = () => {
                     {/* Form Fields Row */}
                     <div className="self-stretch inline-flex justify-start items-start gap-4">
                         {/* Username Input */}
-                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                        <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
                                 <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
@@ -277,7 +277,7 @@ const EditAdminPageContent: React.FC = () => {
                         </div>
 
                         {/* Password Input */}
-                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                        <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
                                 <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3 overflow-hidden">
@@ -311,7 +311,7 @@ const EditAdminPageContent: React.FC = () => {
                         </div>
 
                         {/* Role Select */}
-                        <div className="flex-1 inline-flex flex-col justify-start items-start gap-2">
+                        <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-2">
                             <div className="self-stretch relative flex flex-col justify-start items-start">
                                 <div className="self-stretch h-3.5"></div>
                                 <RolePermissionDropdown

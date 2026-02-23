@@ -67,7 +67,7 @@ const RolePermissionDropdown: React.FC<RolePermissionDropdownProps> = ({
           disabled ? "cursor-not-allowed bg-neutral-50" : "cursor-pointer"
         )}
       >
-        <div className="flex-1 text-left text-sm font-normal font-['Roboto'] leading-4 text-neutral-800 truncate">
+        <div className="flex-1 min-w-0 text-left text-sm font-normal font-['Roboto'] leading-4 text-neutral-800 truncate">
           {selectedText || "Select role"}
         </div>
         <ChevronDown className={cn("w-5 h-5 text-neutral-800 transition-transform", isOpen && "rotate-180")} />
@@ -87,7 +87,7 @@ const RolePermissionDropdown: React.FC<RolePermissionDropdownProps> = ({
                 <span
                   className={cn(
                     "w-4 h-4 rounded flex items-center justify-center",
-                    isSelected ? "bg-sky-600" : "bg-white border-[1.5px] border-neutral-300"
+                    isSelected ? "bg-primary-500" : "bg-white border-[1.5px] border-neutral-300"
                   )}
                 >
                   {isSelected && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
