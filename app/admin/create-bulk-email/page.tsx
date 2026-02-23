@@ -368,7 +368,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 active={isRandomPasswordActive}
                 onChange={toggleRandomPassword}
                 label="Random pass"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap w-32"
               />
 
               <div className="relative min-w-0 flex flex-col">

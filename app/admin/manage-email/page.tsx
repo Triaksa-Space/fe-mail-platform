@@ -271,7 +271,7 @@ export default function AdminAllInboxPage() {
             /* Email Detail View - Full Width */
             <div className="h-full min-h-0 flex flex-col gap-5">
               {/* Breadcrumb Navigation */}
-              <div className="self-stretch inline-flex justify-start items-center gap-1">
+              <div className="shrink-0 self-stretch inline-flex justify-start items-center gap-1">
                 {/* Back */}
                 <Button
                   variant="ghost"
@@ -308,7 +308,7 @@ export default function AdminAllInboxPage() {
               ) : (
                 <>
                   {/* Email Meta Card */}
-                  <div className="p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-2">
+                  <div className="shrink-0 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col gap-2">
                     <div className="flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
                         <div className="flex justify-start items-center gap-1">
@@ -331,15 +331,17 @@ export default function AdminAllInboxPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <AdminEmailBodyCard
-                    subject={selectedEmail.subject}
-                    body={emailDetail?.Body || emailDetail?.body}
-                    fallbackText={selectedEmail.preview || "No content"}
-                    attachments={parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments)}
-                    onDownloadAttachment={handleDownloadAttachment}
-                    isDownloading={isDownloadingAttachment}
-                    className="self-stretch flex-1 min-h-0"
-                  />
+                  <div className="flex-1 min-h-0 overflow-y-auto">
+                    <AdminEmailBodyCard
+                      subject={selectedEmail.subject}
+                      body={emailDetail?.Body || emailDetail?.body}
+                      fallbackText={selectedEmail.preview || "No content"}
+                      attachments={parseAttachments(emailDetail?.attachments, emailDetail?.ListAttachments)}
+                      onDownloadAttachment={handleDownloadAttachment}
+                      isDownloading={isDownloadingAttachment}
+                      className="self-stretch"
+                    />
+                  </div>
                 </>
               )}
             </div>

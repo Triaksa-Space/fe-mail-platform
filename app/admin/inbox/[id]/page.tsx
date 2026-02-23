@@ -239,7 +239,7 @@ export default function AdminInboxDetailPage() {
             </div>
 
             {/* Scrollable: body email + attachments */}
-            <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-5 pb-5">
+            <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-5">
               <AdminEmailBodyCard
                 subject={subject}
                 body={email.body}
