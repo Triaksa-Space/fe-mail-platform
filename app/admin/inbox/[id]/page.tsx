@@ -139,9 +139,9 @@ export default function AdminInboxDetailPage() {
   return (
     <AdminLayout>
       <Toaster />
-      <div className="inline-flex flex-col justify-start items-start gap-5 w-full flex-1 min-h-0">
+      <div className="flex flex-col w-full h-full gap-5">
         {/* Breadcrumb Header */}
-        <div className="self-stretch inline-flex justify-between items-center">
+        <div className="shrink-0 self-stretch inline-flex justify-between items-center">
           <div className="flex justify-start items-center gap-1">
             {/* Back */}
             <Button
@@ -202,7 +202,8 @@ export default function AdminInboxDetailPage() {
             </Button>
           </div>
         ) : email ? (
-          <div className="self-stretch flex-1 min-h-0 flex flex-col justify-start items-start gap-5">
+          <div className="self-stretch flex-1 min-h-0 flex flex-col gap-5">
+            {/* From/To - tidak ikut scroll */}
             <div className="self-stretch shrink-0 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] border border-neutral-100 flex flex-col justify-start items-start gap-2">
               <div className="self-stretch flex flex-col justify-start items-start gap-0.5">
                 <div className="self-stretch inline-flex justify-between items-start">
@@ -237,15 +238,18 @@ export default function AdminInboxDetailPage() {
               </div>
             </div>
 
-            <AdminEmailBodyCard
-              subject={subject}
-              body={email.body}
-              fallbackText={email.preview || "No content available"}
-              attachments={attachments}
-              onDownloadAttachment={handleDownloadAttachment}
-              isDownloading={isDownloading}
-              className="self-stretch flex-1 min-h-0"
-            />
+            {/* Scrollable: body email + attachments */}
+            <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-5 pb-5">
+              <AdminEmailBodyCard
+                subject={subject}
+                body={email.body}
+                fallbackText={email.preview || "No content available"}
+                attachments={attachments}
+                onDownloadAttachment={handleDownloadAttachment}
+                isDownloading={isDownloading}
+                className="self-stretch"
+              />
+            </div>
           </div>
         ) : null}
       </div>

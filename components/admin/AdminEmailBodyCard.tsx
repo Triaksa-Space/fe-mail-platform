@@ -88,7 +88,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "px-4 pt-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-[16px] min-h-0 overflow-hidden",
+      "px-4 pt-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-[16px]",
       attachmentItems.length > 0 ? "pb-4" : "pb-0",
       className
     )}>
@@ -101,7 +101,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div className="min-h-0 overflow-auto">
+      <div>
         {body ? (
           <iframe
             srcDoc={body}
