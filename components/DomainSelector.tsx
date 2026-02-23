@@ -7,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useAuthStore } from "@/stores/useAuthStore"
 
 interface Domain {
   ID: number
@@ -22,19 +21,15 @@ interface DomainSelectorProps {
 
 export default function DomainSelector({ value, onChange, className }: DomainSelectorProps) {
   const [domains, setDomains] = useState<Domain[]>([])
-  const token = useAuthStore((state) => state.token)
-  
+
   useEffect(() => {
     const fetchDomains = async () => {
       try {
-        if (!token) {
-          return;
-        }
         const response = await apiClient.get("/domain/dropdown")
         const data: Domain[] = response.data
         setDomains(data)
         if (data.length > 0) {
-          onChange(data[1].Domain)
+          onChange(data[0].Domain)
         }
       } catch (error) {
         console.error('Failed to fetch domains:', error)
@@ -42,7 +37,7 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
     }
 
     fetchDomains()
-  }, [token]) // Only fetch once when component mounts
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Select
