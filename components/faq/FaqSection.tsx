@@ -84,12 +84,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
   isLast,
 }) => {
   return (
-    <div
-      className={cn(
-        "self-stretch flex flex-col justify-start items-start",
-        !isLast && "border-b border-neutral-200"
-      )}
-    >
+    <div className="self-stretch flex flex-col justify-start items-start">
       <Button
         variant="ghost"
         onClick={onToggle}
@@ -125,6 +120,8 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
           </p>
         </div>
       </div>
+
+      {!isLast && <div className="h-px bg-neutral-200 -mx-4 self-stretch" />}
     </div>
   );
 };
