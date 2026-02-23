@@ -89,7 +89,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 
   return (
     <div className={cn(
-      "p-4 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-[16px] min-h-0 overflow-hidden",
+      "px-4 pt-4 pb-0 bg-white rounded-xl shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] outline outline-1 outline-offset-[-1px] outline-neutral-200 flex flex-col gap-[16px] min-h-0 overflow-hidden",
       className
     )}>
       {/* Subject */}
