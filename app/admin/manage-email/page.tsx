@@ -378,7 +378,7 @@ export default function AdminAllInboxPage() {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    {emails.map((email) => (
+                    {emails.map((email, idx) => (
                       <AdminEmailListRow
                         key={email.id}
                         primaryText={email.from_name || email.from || "Unknown"}
@@ -388,6 +388,7 @@ export default function AdminAllInboxPage() {
                         dateText={formatEmailListDate(email.received_at)}
                         isUnread={!email.is_read}
                         isSelected={false}
+                        isLast={idx === emails.length - 1}
                         onClick={() => handleSelectEmail(email)}
                       />
                     ))}

@@ -13,6 +13,7 @@ interface AdminEmailListRowProps {
   dateText: string;
   isUnread?: boolean;
   isSelected?: boolean;
+  isLast?: boolean;
   onClick?: () => void;
 }
 
@@ -24,6 +25,7 @@ const AdminEmailListRow: React.FC<AdminEmailListRowProps> = ({
   dateText,
   isUnread = false,
   isSelected = false,
+  isLast = false,
   onClick,
 }) => {
   return (
@@ -33,6 +35,7 @@ const AdminEmailListRow: React.FC<AdminEmailListRowProps> = ({
       className={cn(
         isSelected ? CARD_STYLES.selected : CARD_STYLES.interactive,
         "h-auto self-stretch w-full text-left px-4 py-2 inline-flex justify-start items-center gap-2 min-w-0",
+        isLast && "outline-none shadow-none",
       )}
     >
       <div className="flex-1 min-w-0 inline-flex flex-col justify-start items-start gap-1">
