@@ -94,7 +94,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
         variant="ghost"
         onClick={onToggle}
         className={cn(
-          "self-stretch h-auto min-h-0 pt-4 px-4 justify-start items-start gap-3 w-full text-left hover:bg-transparent",
+          "self-stretch h-auto min-h-0 pt-4 lg:px-0 justify-start items-start gap-3 w-full text-left hover:bg-transparent",
           isOpen ? "pb-3" : "pb-4"
         )}
         aria-expanded={isOpen}
@@ -119,7 +119,7 @@ const FaqAccordionItem: React.FC<FaqAccordionItemProps> = ({
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="self-stretch pl-8 pr-4 pb-4 flex items-start">
+        <div className="self-stretch pl-8 lg:pl-4 pr-4 pb-4 flex items-start">
           <p className="flex-1 whitespace-pre-line text-neutral-500 text-sm font-normal leading-5">
             {renderAnswerWithLinks(item.answer)}
           </p>
