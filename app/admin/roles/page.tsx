@@ -33,20 +33,7 @@ type SortField = 'username' | 'last_active_at' | 'created_at';
 type SortOrder = 'asc' | 'desc';
 
 // Last Active Badge Component - matching user list style
-const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean }> = ({
-    lastActiveAt,
-    isOnline,
-}) => {
-    // If online, show online badge
-    if (isOnline) {
-        return (
-            <div className="h-5 px-1.5 py-0.5 bg-green-50 rounded-3xl flex justify-center items-center gap-1">
-                <div className="text-center justify-center text-green-500 text-xs font-medium font-['Roboto'] leading-5">Online</div>
-            </div>
-        );
-    }
-
-    // Calculate time difference
+const LastActiveBadge: React.FC<{ lastActiveAt: string | null }> = ({ lastActiveAt }) => {
     if (!lastActiveAt) {
         return (
             <div className="h-5 px-1.5 py-0.5 bg-neutral-100 rounded-3xl flex justify-center items-center gap-1">
@@ -78,7 +65,7 @@ const LastActiveBadge: React.FC<{ lastActiveAt: string | null; isOnline: boolean
 
     if (diffMins < 5) {
         // Online
-        badgeClass += " bg-primary-50";
+        badgeClass += " bg-success-50";
         textClass += " text-success-500";
         displayText = "Online";
     } else if (diffMins < 60) {
@@ -398,7 +385,6 @@ const RolesPermissionsPageContent: React.FC = () => {
                                         <div className="w-32 min-h-11 px-4 py-3 flex items-center justify-center">
                                             <LastActiveBadge
                                                 lastActiveAt={admin.last_active_at}
-                                                isOnline={admin.is_online}
                                             />
                                         </div>
                                         {/* Role/Permissions */}
