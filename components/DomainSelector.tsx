@@ -39,13 +39,18 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
     fetchDomains()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const selectedLabel = domains.find(d => d.Domain === value)?.Domain
+
   return (
     <Select
       value={value}
       onValueChange={onChange}
     >
       <SelectTrigger className={className || "w-[180px]"}>
-        <SelectValue placeholder="Select domain" />
+        {selectedLabel
+          ? <span>{selectedLabel}</span>
+          : <SelectValue placeholder="Select domain" />
+        }
       </SelectTrigger>
       <SelectContent>
         {domains.map((domain) => (
