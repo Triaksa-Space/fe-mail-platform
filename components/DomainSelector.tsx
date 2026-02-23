@@ -31,11 +31,10 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
           return;
         }
         const response = await apiClient.get("/domain/dropdown")
-        setDomains(response.data)
-        // Set default domain if no value is provided
-        if (!value && response.data.length > 0) {
-          const defaultDomainObj = response.data[0]
-          onChange(defaultDomainObj.Domain)
+        const data: Domain[] = response.data
+        setDomains(data)
+        if (data.length > 0) {
+          onChange(data[1].Domain)
         }
       } catch (error) {
         console.error('Failed to fetch domains:', error)

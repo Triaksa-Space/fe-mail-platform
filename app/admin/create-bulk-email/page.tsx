@@ -61,6 +61,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
   const roleId = useAuthStore((state) => state.roleId);
   const storedToken = useAuthStore.getState().getStoredToken();
 
+  const [countInput, setCountInput] = useState("2")
+  const [passwordLengthInput, setPasswordLengthInput] = useState("6")
   const [receiveEmail, setReceiveEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
@@ -118,12 +120,14 @@ const CreateBulkEmailPageContent: React.FC = () => {
   const updateCount = (newCount: number) => {
     if (newCount >= 2 && newCount <= 100) {
       setCount(newCount)
+      setCountInput(String(newCount))
     }
   }
 
   const updatePasswordLength = (newLength: number) => {
     if (newLength >= 6 && newLength <= 32) {
       setPasswordLength(newLength)
+      setPasswordLengthInput(String(newLength))
     }
   }
 
@@ -266,16 +270,25 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center justify-center gap-3">
                   <input
                     type="text"
-                    value={count}
+                    value={countInput}
                     onChange={(e) => {
                       const value = e.target.value;
                       if (/^\d*$/.test(value)) {
+                        setCountInput(value);
                         const numericValue = parseInt(value, 10);
-                        if (!isNaN(numericValue) && numericValue <= 100) {
+                        if (!isNaN(numericValue) && numericValue >= 2 && numericValue <= 100) {
                           setCount(numericValue);
-                        } else if (value === "") {
-                          setCount(2);
                         }
+                      }
+                    }}
+                    onBlur={() => {
+                      const numericValue = parseInt(countInput, 10);
+                      if (!countInput || isNaN(numericValue) || numericValue < 2) {
+                        setCount(2);
+                        setCountInput("2");
+                      } else if (numericValue > 100) {
+                        setCount(100);
+                        setCountInput("100");
                       }
                     }}
                     className="w-full bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none text-center"
@@ -366,16 +379,25 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 )}>
                   <input
                     type="text"
-                    value={passwordLength}
+                    value={passwordLengthInput}
                     onChange={(e) => {
                       const value = e.target.value;
                       if (/^\d*$/.test(value)) {
+                        setPasswordLengthInput(value);
                         const numericValue = parseInt(value, 10);
-                        if (!isNaN(numericValue) && numericValue <= 32) {
+                        if (!isNaN(numericValue) && numericValue >= 6 && numericValue <= 32) {
                           setPasswordLength(numericValue);
-                        } else if (value === "") {
-                          setPasswordLength(6);
                         }
+                      }
+                    }}
+                    onBlur={() => {
+                      const numericValue = parseInt(passwordLengthInput, 10);
+                      if (!passwordLengthInput || isNaN(numericValue) || numericValue < 6) {
+                        setPasswordLength(6);
+                        setPasswordLengthInput("6");
+                      } else if (numericValue > 32) {
+                        setPasswordLength(32);
+                        setPasswordLengthInput("32");
                       }
                     }}
                     disabled={!isRandomPasswordActive}
