@@ -21,6 +21,7 @@ interface DomainSelectorProps {
 
 export default function DomainSelector({ value, onChange, className }: DomainSelectorProps) {
   const [domains, setDomains] = useState<Domain[]>([])
+  const [effectiveValue, setEffectiveValue] = useState(value)
 
   useEffect(() => {
     const fetchDomains = async () => {
@@ -29,8 +30,9 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
         const data: Domain[] = response.data
         setDomains(data)
         if (data.length > 0) {
-          const currentValueExists = value && data.some(d => d.Domain === value)
+          const currentValueExists = effectiveValue && data.some(d => d.Domain === effectiveValue)
           if (!currentValueExists) {
+            setEffectiveValue(data[0].Domain)
             onChange(data[0].Domain)
           }
         }
@@ -42,12 +44,19 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
     fetchDomains()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const selectedLabel = domains.find(d => d.Domain === value)?.Domain
+  useEffect(() => {
+    setEffectiveValue(value)
+  }, [value])
+
+  const selectedLabel = domains.find(d => d.Domain === effectiveValue)?.Domain
 
   return (
     <Select
-      value={value}
-      onValueChange={onChange}
+      value={effectiveValue}
+      onValueChange={(v) => {
+        setEffectiveValue(v)
+        onChange(v)
+      }}
     >
       <SelectTrigger className={className || "w-[180px]"}>
         {selectedLabel
