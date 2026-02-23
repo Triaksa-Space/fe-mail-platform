@@ -233,14 +233,8 @@ const ChangePasswordSection: React.FC = () => {
                         disabled={!isFormValid || isLoading}
                         className="h-10 px-4 py-2.5 btn-primary-skin flex justify-center items-center gap-1.5 transition-colors"
                     >
-                        <Check className={cn(
-                            "w-5 h-5",
-                            isFormValid && !isLoading ? "text-white" : "text-white"
-                        )} />
-                        <span className={cn(
-                            "text-center text-base font-medium font-['Roboto'] leading-4",
-                            isFormValid && !isLoading ? "text-white" : "text-white"
-                        )}>
+                        <Check className="w-5 h-5" />
+                        <span className="text-center text-base font-medium font-['Roboto'] leading-4">
                             {isLoading ? "Changing..." : "Change password"}
                         </span>
                     </Button>

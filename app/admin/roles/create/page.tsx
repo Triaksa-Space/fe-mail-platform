@@ -202,8 +202,8 @@ const CreateAdminPageContent: React.FC = () => {
                             disabled={!canCreate}
                             className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
                         >
-                            <UserPlus className="w-5 h-5 text-white" />
-                            <span className="text-center text-white text-base font-medium font-['Roboto'] leading-4">Create admin</span>
+                            <UserPlus className="w-5 h-5" />
+                            <span className="text-center text-base font-medium font-['Roboto'] leading-4">Create admin</span>
                         </Button>
                     </div>
                 </div>
