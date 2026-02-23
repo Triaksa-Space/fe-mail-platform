@@ -29,7 +29,10 @@ export default function DomainSelector({ value, onChange, className }: DomainSel
         const data: Domain[] = response.data
         setDomains(data)
         if (data.length > 0) {
-          onChange(data[0].Domain)
+          const currentValueExists = value && data.some(d => d.Domain === value)
+          if (!currentValueExists) {
+            onChange(data[0].Domain)
+          }
         }
       } catch (error) {
         console.error('Failed to fetch domains:', error)
