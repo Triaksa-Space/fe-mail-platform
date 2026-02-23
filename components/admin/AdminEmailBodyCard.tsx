@@ -119,7 +119,7 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
             scrolling="no"
           />
         ) : (
-          <p className="text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap break-words">
+          <p className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap break-words">
             {fallbackText || "No content"}
           </p>
         )}

@@ -10,8 +10,8 @@ export default {
   theme: {
   		extend: {
   			fontFamily: {
-  				sans: ["var(--font-roboto)", "Roboto", "sans-serif"],
-  				mono: ["var(--font-roboto)", "Roboto", "sans-serif"],
+  				sans: ["Roboto", "sans-serif"],
+  				mono: ["Roboto", "sans-serif"],
   			},
   		colors: {
   			blue: {
