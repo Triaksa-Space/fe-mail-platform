@@ -92,7 +92,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
             <div className="flex items-stretch gap-4">
               {/* Change Password Section - Left Side */}
               <div className="flex-1 flex flex-col gap-4">
-                <h3 className="text-neutral-800 text-base font-normal font-['Roboto'] leading-6">Change Password</h3>
+                <h3 className="text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Change Password</h3>
                 <div className="flex-1 flex flex-col">
                   <ChangePasswordForm />
                 </div>
@@ -103,7 +103,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
               {/* Email Binding Section - Right Side */}
               <div className="flex-1 flex flex-col gap-4">
-                <h3 className="text-neutral-800 text-base font-normal font-['Roboto'] leading-6">Email binding</h3>
+                <h3 className="text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Email binding</h3>
                 <div className="flex-1 flex flex-col">
                   <EmailBindingForm initialEmail={bindingEmail} />
                 </div>
