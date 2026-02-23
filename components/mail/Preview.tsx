@@ -211,7 +211,7 @@ const Preview: React.FC<PreviewProps> = ({
         "flex-1 flex flex-col"
       )}>
         {shouldShowLoading ? (
-          <div className="flex flex-col gap-5" role="status" aria-busy="true">
+          <div className="flex flex-col gap-4" role="status" aria-busy="true">
             {/* Skeleton for header */}
             <div className="pr-5 flex justify-between items-center">
               <div className="w-10 h-10 bg-neutral-200 rounded-lg animate-pulse" />
@@ -246,7 +246,8 @@ const Preview: React.FC<PreviewProps> = ({
           </div>
         ) : (
           <div className={cn(
-            "flex flex-col gap-5 pb-0 flex-1",
+            "flex flex-col gap-4 flex-1",
+            attachmentItems.length > 0 && "pb-4",
             isTransitioning && "animate-fade-in"
           )}>
             {/* Header with Back and Action Buttons */}
