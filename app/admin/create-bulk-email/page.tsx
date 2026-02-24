@@ -217,7 +217,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
         {/* Form Card */}
         <AdminContentCard className="w-full p-4">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            {/* Row 1: Email + Random toggle | Domain | Quantity + buttons */}
+            {/* Rows: Email + Domain + Quantity | Password + Password length + Receive email */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_max-content_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
               <div className="relative min-w-0 flex flex-col">
                 <div className="h-3.5"></div>
@@ -334,10 +334,8 @@ const CreateBulkEmailPageContent: React.FC = () => {
               >
                 <PlusIcon className="w-5 h-5" />
               </Button>
-            </div>
 
             {/* Row 2: Same password + Random toggle | Password length + buttons | Email for receiving */}
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_max-content_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
               <div className="relative min-w-0 flex flex-col">
                 <div className="h-3.5"></div>
                 <div className={cn(
@@ -372,84 +370,86 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 active={isRandomPasswordActive}
                 onChange={toggleRandomPassword}
                 label="Random pass"
-                className="whitespace-nowrap w-32"
+                className="whitespace-nowrap"
               />
 
-              <div className="relative min-w-0 flex flex-col">
-                <div className="h-3.5"></div>
-                <div className={cn(
-                  "h-10 px-3 py-2 rounded-lg outline outline-1 outline-neutral-200 flex items-center justify-center gap-3 overflow-hidden",
-                  !isRandomPasswordActive ? "bg-neutral-100" : "bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]"
-                )}>
-                  <input
-                    type="text"
-                    value={passwordLengthInput}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (/^\d*$/.test(value)) {
-                        setPasswordLengthInput(value);
-                        const numericValue = parseInt(value, 10);
-                        if (!isNaN(numericValue) && numericValue >= 6 && numericValue <= 32) {
-                          setPasswordLength(numericValue);
+              <div className="min-w-0 flex items-end gap-4 lg:col-span-3">
+                <div className="relative flex-1 flex flex-col">
+                  <div className="h-3.5"></div>
+                  <div className={cn(
+                    "h-10 px-3 py-2 rounded-lg outline outline-1 outline-neutral-200 flex items-center justify-center gap-3 overflow-hidden",
+                    !isRandomPasswordActive ? "bg-neutral-100" : "bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]"
+                  )}>
+                    <input
+                      type="text"
+                      value={passwordLengthInput}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          setPasswordLengthInput(value);
+                          const numericValue = parseInt(value, 10);
+                          if (!isNaN(numericValue) && numericValue >= 6 && numericValue <= 32) {
+                            setPasswordLength(numericValue);
+                          }
                         }
-                      }
-                    }}
-                    onBlur={() => {
-                      const numericValue = parseInt(passwordLengthInput, 10);
-                      if (!passwordLengthInput || isNaN(numericValue) || numericValue < 6) {
-                        setPasswordLength(6);
-                        setPasswordLengthInput("6");
-                      } else if (numericValue > 32) {
-                        setPasswordLength(32);
-                        setPasswordLengthInput("32");
-                      }
-                    }}
-                    disabled={!isRandomPasswordActive}
-                    className={cn(
-                      "w-full bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none text-center",
-                      !isRandomPasswordActive ? "text-neutral-300" : "text-neutral-800"
-                    )}
-                  />
+                      }}
+                      onBlur={() => {
+                        const numericValue = parseInt(passwordLengthInput, 10);
+                        if (!passwordLengthInput || isNaN(numericValue) || numericValue < 6) {
+                          setPasswordLength(6);
+                          setPasswordLengthInput("6");
+                        } else if (numericValue > 32) {
+                          setPasswordLength(32);
+                          setPasswordLengthInput("32");
+                        }
+                      }}
+                      disabled={!isRandomPasswordActive}
+                      className={cn(
+                        "w-full bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none text-center",
+                        !isRandomPasswordActive ? "text-neutral-300" : "text-neutral-800"
+                      )}
+                    />
+                  </div>
+                  <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                    <span className={cn(
+                      "text-[10px] font-normal font-['Roboto'] leading-4",
+                      !isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
+                    )}>Password length</span>
+                  </div>
                 </div>
-                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
-                  <span className={cn(
-                    "text-[10px] font-normal font-['Roboto'] leading-4",
-                    !isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
-                  )}>Password length</span>
-                </div>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  onClick={() => updatePasswordLength(passwordLength - 1)}
+                  disabled={!isRandomPasswordActive || passwordLength <= 6}
+                  className={cn(
+                    "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
+                    !isRandomPasswordActive || passwordLength <= 6
+                      ? "text-neutral-300 cursor-not-allowed"
+                      : "text-neutral-600 hover:bg-neutral-200"
+                  )}
+                >
+                  <MinusIcon className="w-4 h-4" />
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  onClick={() => updatePasswordLength(passwordLength + 1)}
+                  disabled={!isRandomPasswordActive || passwordLength >= 32}
+                  className={cn(
+                    "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
+                    !isRandomPasswordActive || passwordLength >= 32
+                      ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
+                      : "text-primary-500 hover:bg-primary-100"
+                  )}
+                >
+                  <PlusIcon className="w-5 h-5" />
+                </Button>
               </div>
-
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
-                onClick={() => updatePasswordLength(passwordLength - 1)}
-                disabled={!isRandomPasswordActive || passwordLength <= 6}
-                className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
-                  !isRandomPasswordActive || passwordLength <= 6
-                    ? "text-neutral-300 cursor-not-allowed"
-                    : "text-neutral-600 hover:bg-neutral-200"
-                )}
-              >
-                <MinusIcon className="w-4 h-4" />
-              </Button>
-
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
-                onClick={() => updatePasswordLength(passwordLength + 1)}
-                disabled={!isRandomPasswordActive || passwordLength >= 32}
-                className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
-                  !isRandomPasswordActive || passwordLength >= 32
-                    ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
-                    : "text-primary-500 hover:bg-primary-100"
-                )}
-              >
-                <PlusIcon className="w-5 h-5" />
-              </Button>
 
               <div className="relative min-w-0 flex flex-col lg:col-span-3">
                 <div className="h-3.5"></div>
