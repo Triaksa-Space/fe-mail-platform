@@ -213,9 +213,9 @@ const ViewAdminPageContent: React.FC = () => {
                             variant="outline"
                             size="icon"
                             onClick={() => setIsDeleteModalOpen(true)}
-                            className="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 hover:bg-red-50 transition-colors"
+                            className="flex w-10 h-10 px-4 py-2.5 justify-center items-center gap-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 hover:bg-red-50 transition-colors"
                         >
-                            <TrashIcon className="w-5 h-5 text-red-500" />
+                            <TrashIcon className="w-5 h-5 shrink-0 text-destructive-500" />
                         </Button>
                     </div>
                 </div>
