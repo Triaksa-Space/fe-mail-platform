@@ -193,9 +193,8 @@ const EmailManagementPageContent: React.FC = () => {
 
         try {
             setIsLoading(true);
-            await apiClient.put("/user/change_password", {
+            await apiClient.put("/user/change_password/admin", {
                 new_password: passwordForAdmin,
-                old_password: "",
                 user_id: selectedAdmin.id,
             });
 
