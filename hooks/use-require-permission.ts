@@ -14,10 +14,14 @@ export function useRequirePermission(permission: PermissionKey): { allowed: bool
   const _hasHydrated = useAuthStore((state) => state._hasHydrated);
   const hasPermission = useAuthStore((state) => state.hasPermission);
   const roleId = useAuthStore((state) => state.roleId);
+  const token = useAuthStore((state) => state.token);
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
     if (!_hasHydrated) return;
+
+    // User is logging out — skip permission check entirely
+    if (!token) return;
 
     // SuperAdmin always has access
     if (roleId === 0) {
@@ -34,7 +38,7 @@ export function useRequirePermission(permission: PermissionKey): { allowed: bool
     } else {
       setAllowed(true);
     }
-  }, [_hasHydrated, hasPermission, permission, roleId, router]);
+  }, [_hasHydrated, token, hasPermission, permission, roleId, router]);
 
   return { allowed };
 }
