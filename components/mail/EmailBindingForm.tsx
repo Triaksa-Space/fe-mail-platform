@@ -9,6 +9,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import DOMPurify from "dompurify";
 import { ArrowPathIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
 
 interface EmailBindingFormProps {
   initialEmail?: string;
@@ -97,7 +98,8 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between gap-5">
+    <>
+      <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between gap-5">
       <div className="flex flex-col gap-3">
         {/* Email Input */}
         <div className="relative flex flex-col">
@@ -173,7 +175,9 @@ const EmailBindingForm: React.FC<EmailBindingFormProps> = ({
           </span>
         </Button>
       )}
-    </form>
+      </form>
+      <Toaster />
+    </>
   );
 };
 

@@ -9,6 +9,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import DOMPurify from "dompurify";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
 
 const ChangePasswordForm: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -117,7 +118,8 @@ const ChangePasswordForm: React.FC = () => {
   const isFormValid = isFormFilled && newPassword === confirmPassword;
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
+    <>
+      <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
       <div className="flex flex-col gap-3">
         {/* Old Password */}
         <div className="relative flex flex-col">
@@ -298,7 +300,9 @@ const ChangePasswordForm: React.FC = () => {
           {isLoading ? "Changing..." : "Change password"}
         </span>
       </Button>
-    </form>
+      </form>
+      <Toaster />
+    </>
   );
 };
 
