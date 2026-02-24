@@ -143,7 +143,6 @@ const menuGroups: MenuGroup[] = [
         iconSolid: KeySolidIcon,
         href: "/admin/roles",
         permission: "roles_permissions",
-        superAdminOnly: true, // Only SuperAdmin can access
       },
     ],
   },

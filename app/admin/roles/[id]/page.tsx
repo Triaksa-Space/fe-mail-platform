@@ -28,6 +28,7 @@ const ViewAdminPageContent: React.FC = () => {
     const adminId = params?.id as string;
 
     const roleId = useAuthStore((state) => state.roleId);
+    const hasPermission = useAuthStore((state) => state.hasPermission);
     const [authLoaded, setAuthLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
@@ -54,11 +55,11 @@ const ViewAdminPageContent: React.FC = () => {
             return;
         }
 
-        // Only SuperAdmin (roleId = 0) can access this page
-        if (roleId !== 0) {
+        // SuperAdmin or admin with roles_permissions can access this page
+        if (roleId !== 0 && !hasPermission('roles_permissions')) {
             router.replace("/admin");
         }
-    }, [authLoaded, roleId, router]);
+    }, [authLoaded, roleId, hasPermission, router]);
 
     // Fetch admin data: GET /admin/admins/:id
     const fetchAdmin = useCallback(async () => {
@@ -104,9 +105,9 @@ const ViewAdminPageContent: React.FC = () => {
     }, [adminId, router, toast]);
 
     useEffect(() => {
-        if (!authLoaded || roleId !== 0) return;
+        if (!authLoaded || (roleId !== 0 && !hasPermission('roles_permissions'))) return;
         fetchAdmin();
-    }, [authLoaded, roleId, adminId, fetchAdmin]);
+    }, [authLoaded, roleId, hasPermission, adminId, fetchAdmin]);
 
     // Handle edit click
     const handleEditClick = () => {
@@ -211,7 +212,7 @@ const ViewAdminPageContent: React.FC = () => {
                         <Button
                             variant="outline"
                             onClick={() => setIsDeleteModalOpen(true)}
-                            className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center gap-2 overflow-hidden hover:bg-red-50 transition-colors"
+                            className="w-10 h-10 p-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-red-200 flex justify-center items-center overflow-hidden hover:bg-red-50 transition-colors"
                         >
                             <TrashIcon className="w-5 h-5 text-red-500" />
                         </Button>

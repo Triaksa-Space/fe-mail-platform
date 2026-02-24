@@ -25,6 +25,7 @@ const EditAdminPageContent: React.FC = () => {
     const adminId = params?.id as string;
 
     const roleId = useAuthStore((state) => state.roleId);
+    const hasPermission = useAuthStore((state) => state.hasPermission);
     const [authLoaded, setAuthLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
@@ -52,11 +53,11 @@ const EditAdminPageContent: React.FC = () => {
             return;
         }
 
-        // Only SuperAdmin (roleId = 0) can access this page
-        if (roleId !== 0) {
+        // SuperAdmin or admin with roles_permissions can access this page
+        if (roleId !== 0 && !hasPermission('roles_permissions')) {
             router.replace("/admin");
         }
-    }, [authLoaded, roleId, router]);
+    }, [authLoaded, roleId, hasPermission, router]);
 
     // Fetch admin data: GET /admin/admins/:id
     const fetchAdmin = useCallback(async () => {
@@ -105,9 +106,9 @@ const EditAdminPageContent: React.FC = () => {
     }, [adminId, router, toast]);
 
     useEffect(() => {
-        if (!authLoaded || roleId !== 0) return;
+        if (!authLoaded || (roleId !== 0 && !hasPermission('roles_permissions'))) return;
         fetchAdmin();
-    }, [authLoaded, roleId, adminId, fetchAdmin]);
+    }, [authLoaded, roleId, hasPermission, adminId, fetchAdmin]);
 
     // PUT /admin/admins/:id
     const handleSave = async () => {
@@ -206,7 +207,7 @@ const EditAdminPageContent: React.FC = () => {
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => router.push(`/admin/roles/${adminId}`)}
+                        onClick={() => router.push("/admin/roles")}
                         className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors h-auto"
                     >
                         <ArrowLeftIcon className="w-5 h-5 text-neutral-600" />
