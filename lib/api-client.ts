@@ -189,6 +189,14 @@ apiClient.interceptors.response.use(
       }
     }
 
+    // Handle 403 Forbidden - redirect to forbidden page
+    if (error.response?.status === 403) {
+      if (typeof window !== "undefined") {
+        window.location.href = "/forbidden";
+      }
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );
