@@ -105,6 +105,7 @@ const RolesPermissionsPageContent: React.FC = () => {
     const createdUsername = searchParams.get("created");
     const token = useAuthStore((state) => state.token);
     const roleId = useAuthStore((state) => state.roleId);
+    const hasPermission = useAuthStore((state) => state.hasPermission);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
@@ -134,11 +135,11 @@ const RolesPermissionsPageContent: React.FC = () => {
             return;
         }
 
-        // Only SuperAdmin (roleId = 0) can access this page
-        if (roleId !== 0) {
+        // SuperAdmin or admin with roles_permissions can access this page
+        if (roleId !== 0 && !hasPermission('roles_permissions')) {
             router.replace("/admin");
         }
-    }, [authLoaded, roleId, router]);
+    }, [authLoaded, roleId, hasPermission, router]);
 
     useEffect(() => {
         if (!createdUsername) return;
@@ -209,14 +210,14 @@ const RolesPermissionsPageContent: React.FC = () => {
     }, [currentPage, pageSize, sortField, sortOrder, searchQuery, router]);
 
     useEffect(() => {
-        if (!authLoaded || roleId !== 0) return;
+        if (!authLoaded || (roleId !== 0 && !hasPermission('roles_permissions'))) return;
 
         const timeoutId = setTimeout(() => {
             fetchAdmins();
         }, 300);
 
         return () => clearTimeout(timeoutId);
-    }, [authLoaded, token, currentPage, pageSize, sortField, sortOrder, searchQuery, roleId, fetchAdmins]);
+    }, [authLoaded, token, currentPage, pageSize, sortField, sortOrder, searchQuery, roleId, hasPermission, fetchAdmins]);
 
     // Reset to page 1 when search query changes
     useEffect(() => {
