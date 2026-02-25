@@ -51,11 +51,7 @@ const ToggleSwitch: React.FC<{
 
 const CreateBulkEmailPageContent: React.FC = () => {
   const { allowed } = useRequirePermission("create_bulk");
-  const [selectedDomain, setSelectedDomain] = useState(() =>
-    typeof window !== "undefined" && window.location.hostname.includes("staging")
-      ? "staging.mailria.com"
-      : "mailria.com"
-  )
+  const [selectedDomain, setSelectedDomain] = useState("")
   const [count, setCount] = useState(2)
   const [password, setPassword] = useState("")
   const [baseName, setBaseName] = useState("")
