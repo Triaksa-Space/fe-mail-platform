@@ -62,6 +62,14 @@ const ALLOWED_EXTENSIONS = new Set([
   ".zip", ".rar", ".7z",
 ]);
 
+const QUOTED_IFRAME_STYLES = `
+  html, body { overflow-y: hidden; overflow-x: auto; }
+  body { margin: 0; padding: 0; font-family: Roboto, system-ui, sans-serif; font-size: 13px; line-height: 1.5; color: #374151; background: white; overflow-wrap: anywhere; word-break: break-word; }
+  div, p, span, a, td, th, li { overflow-wrap: anywhere; word-break: break-word; }
+  img, table { max-width: 100%; height: auto; }
+  a { color: #027AEA; }
+`;
+
 const ComposeModal: React.FC<ComposeModalProps> = ({
   isOpen,
   onClose,
@@ -82,27 +90,26 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const replyBodyRef = useRef<HTMLTextAreaElement | null>(null);
   const forwardToRef = useRef<HTMLInputElement | null>(null);
   const [forwardIframeHeight, setForwardIframeHeight] = useState("auto");
+  const [replyIframeHeight, setReplyIframeHeight] = useState("auto");
 
-  const handleForwardIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
-    const iframe = e.target as HTMLIFrameElement;
-    if (iframe.contentWindow) {
-      const iframeDoc = iframe.contentWindow.document;
-      const style = iframeDoc.createElement("style");
-      style.textContent = `
-        html, body { overflow-y: hidden; overflow-x: auto; }
-        body { margin: 0; padding: 0; font-family: Roboto, system-ui, sans-serif; font-size: 13px; line-height: 1.5; color: #374151; background: white; overflow-wrap: anywhere; word-break: break-word; }
-        div, p, span, a, td, th, li { overflow-wrap: anywhere; word-break: break-word; }
-        img, table { max-width: 100%; height: auto; }
-        a { color: #027AEA; }
-      `;
-      iframeDoc.head.appendChild(style);
-      iframeDoc.querySelectorAll("a").forEach((link) => {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noopener noreferrer");
-      });
-      setForwardIframeHeight(`${iframeDoc.body.scrollHeight}px`);
-    }
-  };
+  const makeIframeLoadHandler = (setHeight: (h: string) => void) =>
+    (e: React.SyntheticEvent<HTMLIFrameElement>) => {
+      const iframe = e.target as HTMLIFrameElement;
+      if (iframe.contentWindow) {
+        const iframeDoc = iframe.contentWindow.document;
+        const style = iframeDoc.createElement("style");
+        style.textContent = QUOTED_IFRAME_STYLES;
+        iframeDoc.head.appendChild(style);
+        iframeDoc.querySelectorAll("a").forEach((link) => {
+          link.setAttribute("target", "_blank");
+          link.setAttribute("rel", "noopener noreferrer");
+        });
+        setHeight(`${iframeDoc.body.scrollHeight}px`);
+      }
+    };
+
+  const handleForwardIframeLoad = makeIframeLoadHandler(setForwardIframeHeight);
+  const handleReplyIframeLoad = makeIframeLoadHandler(setReplyIframeHeight);
 
   // Formats a date string to "Tue, Jan 6, 2026 at 5:35 AM" style
   const formatForwardDate = (dateStr: string) => {
@@ -182,43 +189,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
         initialAttachments = forwardData.attachments;
         setForwardIframeHeight("auto");
       } else if (replyTo) {
-        // Reply mode
+        // Reply mode — user types fresh reply; original email shown via iframe below
         initialTo = replyTo.email;
         initialSubject = replyTo.subject.startsWith("Re:")
           ? replyTo.subject
           : `Re: ${replyTo.subject}`;
-
-        let plainText = "";
-        if (replyTo.body) {
-          const tmp = document.createElement("div");
-          tmp.innerHTML = replyTo.body;
-          plainText = tmp.textContent || tmp.innerText || "";
-        }
-
-        const replyDate = new Date(replyTo.date);
-        const hasValidReplyDate = !Number.isNaN(replyDate.getTime());
-        const dateTimeText = hasValidReplyDate
-          ? `${replyDate.toLocaleDateString("en-US", {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })} at ${replyDate.toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "2-digit",
-              hour12: true,
-            })}`
-          : replyTo.date;
-
-        initialMessage = [
-          "",
-          "",
-          `On ${dateTimeText} ${replyTo.from}`,
-          `<${replyTo.email}> wrote:`,
-          "",
-          plainText,
-        ].join("\n");
-
+        initialMessage = "";
+        setReplyIframeHeight("auto");
       }
 
       setTo(initialTo);
@@ -367,6 +344,16 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           `</div>` +
           `<div style="margin-top:8px;">${DOMPurify.sanitize(forwardData.body)}</div>`;
         bodyToSend = userHtml + metaHtml;
+      } else if (isReplyMode && replyTo) {
+        const userHtml = message.trim() ? `<div>${plainTextToHtml(message)}</div>` : "";
+        const quoteHeader =
+          `<div style="margin-top:16px;color:#4B5563;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
+          `On ${plainTextToHtml(replyTo.date)} ${plainTextToHtml(replyTo.from)} &lt;${plainTextToHtml(replyTo.email)}&gt; wrote:` +
+          `</div>`;
+        const quoteBody = replyTo.body
+          ? `<blockquote style="margin:8px 0 0 0;padding-left:12px;border-left:3px solid #e5e7eb;">${DOMPurify.sanitize(replyTo.body)}</blockquote>`
+          : "";
+        bodyToSend = userHtml + quoteHeader + quoteBody;
       } else {
         bodyToSend = plainTextToHtml(message);
       }
@@ -655,23 +642,45 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   </div>
                 </div>
 
-                {/* Reply Mode - Card 2: Body */}
-                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col justify-start items-start gap-3 overflow-hidden">
-                  <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
-                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex flex-col gap-3">
-                        <textarea
-                          ref={replyBodyRef}
-                          autoFocus={isOpen && isReplyMode}
-                          id="compose-body"
-                          placeholder="Compose email"
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                {/* Reply Mode - Card 2: Body (single card) */}
+                <div className="self-stretch flex-1 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
+                  {/* User's reply textarea — auto-grows */}
+                  <textarea
+                    ref={replyBodyRef}
+                    autoFocus={isOpen && isReplyMode}
+                    id="compose-body"
+                    placeholder="Compose email"
+                    value={message}
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                    className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden min-h-[80px] mb-3"
+                  />
+
+                  {/* 1 enter space */}
+                  <div className="h-5 shrink-0" />
+
+                  {/* Quote header */}
+                  <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5 pb-3">
+                    On {formatForwardDate(replyTo!.date)} {replyTo!.from}
+                    <br />
+                    &lt;{replyTo!.email}&gt; wrote:
+                  </p>
+
+                  {/* Original email HTML */}
+                  {replyTo!.body && (
+                    <iframe
+                      srcDoc={replyTo!.body}
+                      className="w-full"
+                      style={{ height: replyIframeHeight, border: "none", display: "block" }}
+                      onLoad={handleReplyIframeLoad}
+                      title="Original email content"
+                      sandbox="allow-same-origin allow-scripts allow-popups"
+                      scrolling="no"
+                    />
+                  )}
                 </div>
               </>
             ) : isForwardMode ? (

@@ -104,6 +104,7 @@ const InboxPageContent: React.FC = () => {
   const [selectedEmail, setSelectedEmail] = useState<Mail | null>(null);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [forwardData, setForwardData] = useState<ForwardData | undefined>(undefined);
+  const [replyHtmlBody, setReplyHtmlBody] = useState<string | undefined>(undefined);
 
   // Data state
   const [userEmail, setUserEmail] = useState("");
@@ -477,8 +478,9 @@ const InboxPageContent: React.FC = () => {
     setIsComposeOpen(true);
   };
 
-  const handleReply = () => {
+  const handleReply = (htmlBody?: string) => {
     if (!selectedEmail) return;
+    setReplyHtmlBody(htmlBody);
     setForwardData(undefined);
     setIsComposeOpen(true);
   };
@@ -665,6 +667,7 @@ const InboxPageContent: React.FC = () => {
         onClose={() => {
           setIsComposeOpen(false);
           setForwardData(undefined);
+          setReplyHtmlBody(undefined);
         }}
         onSent={handleEmailSent}
         sentCount={sentCount}
@@ -678,7 +681,7 @@ const InboxPageContent: React.FC = () => {
                 subject: selectedEmail.subject,
                 from: selectedEmail.from,
                 date: selectedEmail.date,
-                body: selectedEmail.body,
+                body: replyHtmlBody || selectedEmail.body,
               }
             : undefined
         }

@@ -23,7 +23,7 @@ import { useRelativeTimeTicker } from "@/hooks/use-relative-time-ticker";
 interface PreviewProps {
   email: Mail | null;
   onBack?: () => void;
-  onReply?: () => void;
+  onReply?: (htmlBody?: string) => void;
   onForward?: (data: ForwardData) => void;
   showBackButton?: boolean;
   className?: string;
@@ -183,6 +183,13 @@ const Preview: React.FC<PreviewProps> = ({
     url: att.URL,
   }));
 
+  // Build reply body and call onReply
+  const handleReplyClick = () => {
+    if (!onReply) return;
+    const htmlBody = isSentView ? email?.body : (emailDetail?.Body || email?.body);
+    onReply(htmlBody);
+  };
+
   // Build forward data and call onForward
   const handleForwardClick = () => {
     if (!onForward || !email) return;
@@ -276,7 +283,7 @@ const Preview: React.FC<PreviewProps> = ({
                 <div className="flex justify-end items-center gap-3">
                   <Button
                     variant="outline"
-                    onClick={onReply}
+                    onClick={handleReplyClick}
                     className="h-10 px-4 py-2.5 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 gap-2 hover:bg-neutral-50"
                   >
                     <Reply className="w-4 h-4 text-neutral-800" />
