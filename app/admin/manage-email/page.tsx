@@ -278,12 +278,19 @@ export default function AdminAllInboxPage() {
               disabled={isRefreshing}
               className={cn(
                 BUTTON_STYLES.icon,
-                "disabled:opacity-50 disabled:cursor-not-allowed"
+                isRefreshing
+                  ? "bg-neutral-100 cursor-not-allowed"
+                  : "bg-white hover:bg-neutral-50"
               )}
               aria-label="Refresh"
             >
               <ArrowPathIcon
-                className={cn("w-4 h-4 text-neutral-800", isRefreshing && "animate-spin")}
+                className={cn(
+                  "w-4 h-4",
+                  isRefreshing
+                    ? "text-primary-500 animate-spin"
+                    : "text-neutral-800"
+                )}
               />
             </Button>
           </div>
@@ -355,7 +362,7 @@ export default function AdminAllInboxPage() {
                   </div>
 
                   {/* Email Body Card */}
-                  <div className="flex-1 min-h-0 overflow-y-auto">
+                  <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-5">
                     <AdminEmailBodyCard
                       subject={selectedEmail.subject}
                       body={emailDetail?.Body || emailDetail?.body}
@@ -389,7 +396,7 @@ export default function AdminAllInboxPage() {
               </div> */}
 
               {/* Email List */}
-              <div className="flex-1 overflow-y-auto scrollbar-auto-hide">
+              <div className="flex-1 overflow-y-auto">
                 {isLoading ? (
                   <AdminLoadingPlaceholder heightClassName="h-32" />
                 ) : error ? (
@@ -404,7 +411,7 @@ export default function AdminAllInboxPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 p-1">
                     {emails.map((email, idx) => (
                       <AdminEmailListRow
                         key={email.id}

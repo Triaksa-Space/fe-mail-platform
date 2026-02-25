@@ -255,7 +255,7 @@ export default function OverviewPage() {
       });
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
+      setTimeout(() => setIsRefreshing(false), 1000);
     }
   }, []);
 
@@ -310,14 +310,18 @@ export default function OverviewPage() {
             disabled={isRefreshing || isLoading}
             className={cn(
               BUTTON_STYLES.icon,
-              "disabled:opacity-50 disabled:cursor-not-allowed"
+              isRefreshing
+                ? "bg-neutral-100 cursor-not-allowed"
+                : "bg-white hover:bg-neutral-50"
             )}
-            aria-label="Refresh data"
+            aria-label="Refresh"
           >
             <ArrowPathIcon
               className={cn(
-                "w-5 h-5 text-neutral-800",
-                isRefreshing && "animate-spin"
+                "w-5 h-5",
+                isRefreshing
+                  ? "text-primary-500 animate-spin"
+                  : "text-neutral-800"
               )}
             />
           </Button>

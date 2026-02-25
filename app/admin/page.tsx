@@ -101,15 +101,15 @@ const LastActiveBadge: React.FC<{ lastActiveRaw: string }> = ({ lastActiveRaw })
         // Recent (sky/blue)
         badgeClass += " bg-primary-50";
         textClass += " text-neutral-700";
-        displayText = `${diffMins} minutes ago`;
+        displayText = `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`;
     } else if (diffHours < 24) {
         badgeClass += " bg-neutral-100";
         textClass += " text-neutral-700";
-        displayText = `${diffHours} hours ago`;
+        displayText = `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
     } else {
         badgeClass += " bg-neutral-100";
         textClass += " text-neutral-700";
-        displayText = `${diffDays} days ago`;
+        displayText = `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
     }
 
     return (
