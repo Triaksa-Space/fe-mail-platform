@@ -55,7 +55,7 @@ interface AdminUser {
     created: string;
 }
 
-type SortField = 'last_login' | 'created_at';
+type SortField = 'last_login' | 'created_at' | 'email' | 'created_by_name';
 type SortOrder = 'asc' | 'desc' | '';
 
 const formatDate = (value: string) => {
@@ -409,10 +409,11 @@ const EmailManagementPageContent: React.FC = () => {
                                     <Button
                                         variant="ghost"
                                         type="button"
-                                        className="h-auto p-0 inline-flex items-center gap-1 cursor-default hover:bg-transparent"
+                                        onClick={() => toggleSort('email')}
+                                        className="h-auto p-0 inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Name</div>
-                                        <ChevronUpDownIcon className="w-2 h-[14px] shrink-0 text-neutral-500" />
+                                        {renderSortIcon('email')}
                                     </Button>
                                 </div>
                                 <div className="flex-1 h-11 px-4 py-3 flex items-center">
@@ -439,10 +440,11 @@ const EmailManagementPageContent: React.FC = () => {
                                     <Button
                                         variant="ghost"
                                         type="button"
-                                        className="h-auto p-0 inline-flex items-center gap-1 cursor-default hover:bg-transparent"
+                                        onClick={() => toggleSort('created_by_name')}
+                                        className="h-auto p-0 inline-flex items-center gap-1 hover:text-neutral-900 transition-colors"
                                     >
                                         <div className="text-neutral-700 text-sm font-medium font-['Roboto'] leading-5">Created by</div>
-                                        <ChevronUpDownIcon className="w-2 h-[14px] shrink-0 text-neutral-500" />
+                                        {renderSortIcon('created_by_name')}
                                     </Button>
                                 </div>
                                 <div className="w-[72px] h-11 px-4 py-3 flex justify-center items-center">
