@@ -15,12 +15,33 @@ function parseDateInput(date: Date | string): Date {
   // milliseconds, so strip extra fractional digits beyond 3.
   const trimmed = raw.replace(/(\.\d{3})\d+/, "$1");
 
-  const hasTimezone = /(?:Z|[+-]\d{2}:\d{2})$/.test(trimmed);
-  const hasTime = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(trimmed);
+  // Normalize some common backend timezone forms:
+  // - "+0700" -> "+07:00"
+  // - trailing " UTC" -> "Z"
+  const withTz = trimmed
+    .replace(/([+-]\d{2})(\d{2})$/, "$1:$2")
+    .replace(/\sUTC$/, "Z");
 
-  // Backend may return UTC timestamps without timezone, e.g. "2026-02-25T09:10:00".
-  // Treat those as UTC to avoid local-time misparse (which can look like "future/just now").
-  const normalized = !hasTimezone && hasTime ? `${trimmed.replace(" ", "T")}Z` : trimmed;
+  const hasTimezone = /(?:Z|[+-]\d{2}:\d{2})$/.test(withTz);
+  const hasTime = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(trimmed);
+  const normalized = withTz.replace(" ", "T");
+
+  if (!hasTimezone && hasTime) {
+    // Some endpoints send naive timestamps in local time, others in UTC.
+    // Parse both and choose the one closest to "now" to avoid large future offsets.
+    const localDate = new Date(normalized);
+    const utcDate = new Date(`${normalized}Z`);
+
+    if (!Number.isNaN(localDate.getTime()) && !Number.isNaN(utcDate.getTime())) {
+      const now = Date.now();
+      return Math.abs(localDate.getTime() - now) <= Math.abs(utcDate.getTime() - now)
+        ? localDate
+        : utcDate;
+    }
+    if (!Number.isNaN(localDate.getTime())) return localDate;
+    return utcDate;
+  }
+
   return new Date(normalized);
 }
 
