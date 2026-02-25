@@ -341,7 +341,7 @@ export default function AdminAllSentPage() {
                           </span>
                         </div>
                         <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">
-                          {formatRelativeTime(selectedEmail.sent_at)}
+                          {selectedEmail.sent_at ? formatRelativeTime(selectedEmail.sent_at) : ""}
                         </span>
                       </div>
                       <div className="flex justify-start items-start gap-1">

@@ -9,12 +9,18 @@ function parseDateInput(date: Date | string): Date {
   if (date instanceof Date) return date;
 
   const raw = date.trim();
-  const hasTimezone = /(?:Z|[+-]\d{2}:\d{2})$/.test(raw);
-  const hasTime = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?$/.test(raw);
+
+  // Truncate sub-millisecond precision — Go backends often send microseconds or
+  // nanoseconds (e.g. "2026-02-25T09:10:00.123456789Z"). Browsers only support
+  // milliseconds, so strip extra fractional digits beyond 3.
+  const trimmed = raw.replace(/(\.\d{3})\d+/, "$1");
+
+  const hasTimezone = /(?:Z|[+-]\d{2}:\d{2})$/.test(trimmed);
+  const hasTime = /\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(trimmed);
 
   // Backend may return UTC timestamps without timezone, e.g. "2026-02-25T09:10:00".
   // Treat those as UTC to avoid local-time misparse (which can look like "future/just now").
-  const normalized = !hasTimezone && hasTime ? `${raw.replace(" ", "T")}Z` : raw;
+  const normalized = !hasTimezone && hasTime ? `${trimmed.replace(" ", "T")}Z` : trimmed;
   return new Date(normalized);
 }
 
