@@ -133,29 +133,21 @@ export default function AdminAllInboxPage() {
 
       // Handle response with pagination object
       if (data && Array.isArray(data.data)) {
-        const nextEmails = selectedEmail
+        const nextEmails = selectedEmail?.id
           ? data.data.map((email) =>
               email.id === selectedEmail.id ? { ...email, is_read: true } : email,
             )
           : data.data;
         setEmails(nextEmails);
-        setSelectedEmail((prev) => {
-          if (!prev) return null;
-          return nextEmails.find((email) => email.id === prev.id) || prev;
-        });
         setTotal(data.pagination?.total || data.data.length);
         setTotalPages(data.pagination?.total_pages || Math.ceil((data.pagination?.total || data.data.length) / pageSize));
       } else if (Array.isArray(data)) {
-        const nextEmails = selectedEmail
+        const nextEmails = selectedEmail?.id
           ? data.map((email) =>
               email.id === selectedEmail.id ? { ...email, is_read: true } : email,
             )
           : data;
         setEmails(nextEmails);
-        setSelectedEmail((prev) => {
-          if (!prev) return null;
-          return nextEmails.find((email) => email.id === prev.id) || prev;
-        });
         setTotal(data.length);
         setTotalPages(Math.ceil(data.length / pageSize));
       } else {
@@ -172,7 +164,7 @@ export default function AdminAllInboxPage() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [token, page, pageSize, debouncedSearch, selectedEmail]);
+  }, [token, page, pageSize, debouncedSearch, selectedEmail?.id]);
 
   // Initial fetch
   useEffect(() => {
