@@ -14,29 +14,62 @@ interface Domain {
 }
 
 interface DomainSelectorProps {
-  value: string
+  value?: string
   onChange: (value: string) => void
   className?: string
+  defaultIndex?: number
+  selectedIndex?: number
 }
 
-export default function DomainSelector({ value, onChange, className }: DomainSelectorProps) {
+export default function DomainSelector({
+  value,
+  onChange,
+  className,
+  defaultIndex = 0,
+  selectedIndex,
+}: DomainSelectorProps) {
   const [domains, setDomains] = useState<Domain[]>([])
 
   useEffect(() => {
     const fetchDomains = async () => {
       try {
         const response = await apiClient.get("/domain/dropdown")
-        const data: Domain[] = response.data
+        const data: Domain[] = Array.isArray(response.data) ? response.data : []
         setDomains(data)
-        if (data.length > 0 && !value) {
-          onChange(data[0].Domain)
-        }
       } catch (error) {
         console.error('Failed to fetch domains:', error)
       }
     }
     fetchDomains()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (domains.length === 0) return
+
+    // Backward-compat: if caller still passes index as string ("0", "1"), map it.
+    if (value && /^\d+$/.test(value)) {
+      const fromValueIndex = domains[Number(value)]?.Domain
+      if (fromValueIndex && fromValueIndex !== value) {
+        onChange(fromValueIndex)
+      }
+      return
+    }
+
+    if (typeof selectedIndex === "number") {
+      const selectedDomainByIndex = domains[selectedIndex]?.Domain
+      if (selectedDomainByIndex && selectedDomainByIndex !== value) {
+        onChange(selectedDomainByIndex)
+      }
+      return
+    }
+
+    if (!value) {
+      const defaultDomain = domains[defaultIndex]?.Domain ?? domains[0]?.Domain
+      if (defaultDomain) {
+        onChange(defaultDomain)
+      }
+    }
+  }, [domains, value, selectedIndex, defaultIndex, onChange])
 
   return (
     <Select
