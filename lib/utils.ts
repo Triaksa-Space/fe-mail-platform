@@ -42,7 +42,30 @@ function parseDateInput(date: Date | string): Date {
     return utcDate;
   }
 
-  return new Date(normalized);
+  const parsed = new Date(normalized);
+
+  // Some sent endpoints can return local-time values labeled as UTC ("...Z").
+  // If parsed time is unexpectedly far in the future, try local parsing and
+  // keep the interpretation closer to "now".
+  if (hasTimezone && !Number.isNaN(parsed.getTime())) {
+    const diffMs = parsed.getTime() - Date.now();
+    const isSuspiciousFuture = diffMs > 90 * 60 * 1000;
+    if (isSuspiciousFuture) {
+      const withoutTz = normalized.replace(/(?:Z|[+-]\d{2}:\d{2})$/, "");
+      const localFallback = new Date(withoutTz);
+      if (!Number.isNaN(localFallback.getTime())) {
+        const now = Date.now();
+        if (
+          Math.abs(localFallback.getTime() - now) <
+          Math.abs(parsed.getTime() - now)
+        ) {
+          return localFallback;
+        }
+      }
+    }
+  }
+
+  return parsed;
 }
 
 /**
