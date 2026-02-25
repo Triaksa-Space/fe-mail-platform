@@ -63,7 +63,7 @@ const ALLOWED_EXTENSIONS = new Set([
 ]);
 
 const QUOTED_IFRAME_STYLES = `
-  html, body { overflow-y: hidden; overflow-x: auto; }
+  html, body { overflow-y: auto; overflow-x: auto; }
   body { margin: 0; padding: 0; font-family: Roboto, system-ui, sans-serif; font-size: 13px; line-height: 1.5; color: #374151; background: white; overflow-wrap: anywhere; word-break: break-word; }
   div, p, span, a, td, th, li { overflow-wrap: anywhere; word-break: break-word; }
   img, table { max-width: 100%; height: auto; }
@@ -87,10 +87,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const [isSending, setIsSending] = useState(false);
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
   const [hasShownLimitToast, setHasShownLimitToast] = useState(false);
-  const replyBodyRef = useRef<HTMLTextAreaElement | null>(null);
   const forwardToRef = useRef<HTMLInputElement | null>(null);
-  const [forwardIframeHeight, setForwardIframeHeight] = useState("auto");
-  const [replyIframeHeight, setReplyIframeHeight] = useState("auto");
+  const replyComposerIframeRef = useRef<HTMLIFrameElement | null>(null);
+  const forwardComposerIframeRef = useRef<HTMLIFrameElement | null>(null);
+  const [forwardIframeHeight, setForwardIframeHeight] = useState("100%");
+  const [replyIframeHeight, setReplyIframeHeight] = useState("100%");
+
+  const normalizeEditorText = (value: string) => value.replace(/\u00A0/g, " ").replace(/\r/g, "");
 
   const makeIframeLoadHandler = (setHeight: (h: string) => void) =>
     (e: React.SyntheticEvent<HTMLIFrameElement>) => {
@@ -104,7 +107,17 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           link.setAttribute("target", "_blank");
           link.setAttribute("rel", "noopener noreferrer");
         });
-        setHeight(`${iframeDoc.body.scrollHeight}px`);
+        const editor = iframeDoc.getElementById("compose-editor") as HTMLDivElement | null;
+        const syncMessage = () => {
+          if (!editor) return;
+          const nextValue = normalizeEditorText(editor.innerText);
+          setMessage(nextValue.trim() ? nextValue : "");
+          setHeight("100%");
+        };
+        if (editor) {
+          editor.addEventListener("input", syncMessage);
+        }
+        syncMessage();
       }
     };
 
@@ -131,6 +144,12 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/\n/g, "<br>");
+
+  const escapeHtml = (text: string) =>
+    text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
 
   // Track initial form state for dirty detection
   const initialStateRef = useRef<FormState>({
@@ -187,7 +206,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
         // User types their own message above; forwarded content shown via iframe below
         initialMessage = "";
         initialAttachments = forwardData.attachments;
-        setForwardIframeHeight("auto");
+        setForwardIframeHeight("100%");
       } else if (replyTo) {
         // Reply mode — user types fresh reply; original email shown via iframe below
         initialTo = replyTo.email;
@@ -195,7 +214,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           ? replyTo.subject
           : `Re: ${replyTo.subject}`;
         initialMessage = "";
-        setReplyIframeHeight("auto");
+        setReplyIframeHeight("100%");
       }
 
       setTo(initialTo);
@@ -244,11 +263,10 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 
     const timeoutId = window.setTimeout(() => {
       if (isReplyMode) {
-        const textarea = replyBodyRef.current;
-        if (textarea) {
-          textarea.focus();
-          textarea.setSelectionRange(0, 0);
-          textarea.scrollTop = 0;
+        const iframe = replyComposerIframeRef.current;
+        const editor = iframe?.contentWindow?.document.getElementById("compose-editor") as HTMLDivElement | null;
+        if (editor) {
+          editor.focus();
         }
         return;
       }
@@ -478,6 +496,75 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 
   if (!isOpen) return null;
 
+  const replyComposerSrcDoc = replyTo ? `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      ${QUOTED_IFRAME_STYLES}
+      #wrapper { padding: 0; }
+      #compose-editor {
+        min-height: 20px;
+        padding: 0 0 32px 0;
+        margin-bottom: 0;
+        outline: none;
+        color: #111827;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+      #compose-editor:empty::before { content: attr(data-placeholder); color: #9CA3AF; }
+      #quote-header { margin-top: 0; margin-bottom: 12px; color: #4B5563; font-size: 14px; line-height: 20px; }
+      #quote-body { color: #4B5563; }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="compose-editor" contenteditable="true" data-placeholder="Compose email"></div>
+      <div id="quote-header">On ${escapeHtml(formatForwardDate(replyTo.date))} ${escapeHtml(replyTo.from)} <br /> &lt;${escapeHtml(replyTo.email)}&gt; wrote:</div>
+      <div id="quote-body">${DOMPurify.sanitize(replyTo.body || "")}</div>
+    </div>
+  </body>
+</html>` : "";
+
+  const forwardComposerSrcDoc = forwardData ? `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      ${QUOTED_IFRAME_STYLES}
+      #wrapper { padding: 0; }
+      #compose-editor {
+        min-height: 20px;
+        padding: 0 0 32px 0;
+        margin-bottom: 0;
+        outline: none;
+        color: #111827;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+      #compose-editor:empty::before { content: attr(data-placeholder); color: #9CA3AF; }
+      #forward-meta { margin-top: 0; margin-bottom: 12px; color: #4B5563; font-size: 14px; line-height: 20px; }
+      #quote-body { color: #4B5563; }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="compose-editor" contenteditable="true" data-placeholder="Compose email"></div>
+      <br />
+      <div id="forward-meta">
+        <div>---------- Forwarded message ----------</div>
+        <div>From: ${forwardData.fromName ? `${escapeHtml(forwardData.fromName)} ` : ""}&lt;${escapeHtml(forwardData.from)}&gt;</div>
+        <div>Date: ${escapeHtml(formatForwardDate(forwardData.date))}</div>
+        <div>Subject: ${escapeHtml(forwardData.subject)}</div>
+        <div>To: &lt;${escapeHtml(forwardData.to)}&gt;</div>
+      </div>
+      <div id="quote-body">${DOMPurify.sanitize(forwardData.body || "")}</div>
+    </div>
+  </body>
+</html>` : "";
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
@@ -594,7 +681,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           </div>
 
           {/* Form Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-4 flex flex-col justify-start items-start gap-4 md:px-4 md:pb-4 md:pt-4">
+          <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 pb-4 flex flex-col justify-start items-start gap-4 md:px-4 md:pb-4 md:pt-4">
             {isReplyMode ? (
               <>
                 {/* Reply Mode - Card 1: Reply to + Subject */}
@@ -643,44 +730,17 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 </div>
 
                 {/* Reply Mode - Card 2: Body (single card) */}
-                <div className="self-stretch flex-1 min-h-0 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
-                  {/* User's reply textarea — auto-grows */}
-                  <textarea
-                    ref={replyBodyRef}
-                    autoFocus={isOpen && isReplyMode}
-                    id="compose-body"
-                    placeholder="Compose email"
-                    value={message}
-                    onChange={(e) => {
-                      setMessage(e.target.value);
-                      e.target.style.height = "auto";
-                      e.target.style.height = `${e.target.scrollHeight}px`;
-                    }}
-                    className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden"
+                <div className="self-stretch flex-1 min-h-0 min-w-0 p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] overflow-hidden">
+                  <iframe
+                    ref={replyComposerIframeRef}
+                    srcDoc={replyComposerSrcDoc}
+                    className="w-full"
+                    style={{ height: replyIframeHeight, border: "none", display: "block" }}
+                    onLoad={handleReplyIframeLoad}
+                    title="Reply composer content"
+                    sandbox="allow-same-origin allow-scripts allow-popups"
+                    scrolling="auto"
                   />
-
-                  {/* 1 enter space */}
-                  <div className="h-5 shrink-0" />
-
-                  {/* Quote header */}
-                  <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5 pb-3">
-                    On {formatForwardDate(replyTo!.date)} {replyTo!.from}
-                    <br />
-                    &lt;{replyTo!.email}&gt; wrote:
-                  </p>
-
-                  {/* Original email HTML */}
-                  {replyTo!.body && (
-                    <iframe
-                      srcDoc={replyTo!.body}
-                      className="w-full"
-                      style={{ height: replyIframeHeight, border: "none", display: "block" }}
-                      onLoad={handleReplyIframeLoad}
-                      title="Original email content"
-                      sandbox="allow-same-origin allow-scripts allow-popups"
-                      scrolling="no"
-                    />
-                  )}
                 </div>
               </>
             ) : isForwardMode ? (
@@ -740,52 +800,17 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 </div>
 
                 {/* Forward Mode - Card 2: Body (single card) */}
-                <div className="self-stretch flex-1 min-h-0 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
-                  {/* User's compose area — auto-grows, no internal scroll */}
-                  <textarea
-                    id="compose-body"
-                    placeholder="Compose email"
-                    value={message}
-                    onChange={(e) => {
-                      setMessage(e.target.value);
-                      e.target.style.height = "auto";
-                      e.target.style.height = `${e.target.scrollHeight}px`;
-                    }}
-                    className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden"
+                <div className="self-stretch flex-1 min-h-0 min-w-0 p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] overflow-hidden">
+                  <iframe
+                    ref={forwardComposerIframeRef}
+                    srcDoc={forwardComposerSrcDoc}
+                    className="w-full"
+                    style={{ height: forwardIframeHeight, border: "none", display: "block" }}
+                    onLoad={handleForwardIframeLoad}
+                    title="Forward composer content"
+                    sandbox="allow-same-origin allow-scripts allow-popups"
+                    scrolling="auto"
                   />
-
-                  {/* 1 enter = 1 line height (20px) before forwarded block */}
-                  <div className="h-5 shrink-0" />
-
-                  {/* Forwarded message metadata */}
-                  <div className="flex flex-col pb-3">
-                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">---------- Forwarded message ----------</p>
-                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
-                      From: {forwardData!.fromName && `${forwardData!.fromName} `}&lt;{forwardData!.from}&gt;
-                    </p>
-                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
-                      Date: {formatForwardDate(forwardData!.date)}
-                    </p>
-                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
-                      Subject: {forwardData!.subject}
-                    </p>
-                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
-                      To: &lt;{forwardData!.to}&gt;
-                    </p>
-                  </div>
-
-                  {/* Forwarded email body rendered as HTML — no wrapper scroll */}
-                  {forwardData!.body && (
-                    <iframe
-                      srcDoc={forwardData!.body}
-                      className="w-full"
-                      style={{ height: forwardIframeHeight, border: "none", display: "block" }}
-                      onLoad={handleForwardIframeLoad}
-                      title="Forwarded email content"
-                      sandbox="allow-same-origin allow-scripts allow-popups"
-                      scrolling="no"
-                    />
-                  )}
                 </div>
               </>
             ) : (
