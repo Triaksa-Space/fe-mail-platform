@@ -83,3 +83,16 @@ export function formatRelativeTime(date: Date | string): string {
     });
   }
 }
+
+/**
+ * Prefer server-provided relative time when available, otherwise compute from timestamp.
+ */
+export function resolveRelativeTime(
+  date: Date | string | undefined,
+  serverRelativeTime?: string | null,
+): string {
+  const relative = (serverRelativeTime || "").trim();
+  if (relative) return relative;
+  if (!date) return "";
+  return formatRelativeTime(date);
+}

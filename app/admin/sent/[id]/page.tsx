@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { formatRelativeTime } from "@/lib/utils";
+import { resolveRelativeTime } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,8 @@ interface SentEmailDetail {
   status?: string;
   sent_at: string;
   created_at?: string;
+  relative_time?: string;
+  RelativeTime?: string;
 }
 
 // Loading skeleton
@@ -228,7 +230,10 @@ export default function AdminSentDetailPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-neutral-600 text-xs font-normal leading-5 line-clamp-1">
-                      {formatRelativeTime(email.sent_at)}
+                      {resolveRelativeTime(
+                        email.sent_at,
+                        email.relative_time || email.RelativeTime,
+                      )}
                     </div>
                   </div>
                 </div>

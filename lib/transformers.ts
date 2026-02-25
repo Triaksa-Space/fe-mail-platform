@@ -54,6 +54,8 @@ export interface ApiSentEmail {
   attachments?: string;
   sent_at: string;
   created_at?: string;
+  relative_time?: string;
+  RelativeTime?: string;
 }
 
 /**

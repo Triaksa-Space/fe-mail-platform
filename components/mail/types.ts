@@ -1,6 +1,6 @@
 // Mail types for the Gmail-style UI
 import { Email } from "@/types/email";
-import { formatRelativeTime } from "@/lib/utils";
+import { resolveRelativeTime } from "@/lib/utils";
 
 export interface MailAttachment {
   Filename: string;
@@ -52,6 +52,8 @@ export interface ApiSentEmail {
   sent_at: string;
   created_at?: string;
   has_attachments?: boolean;
+  relative_time?: string;
+  RelativeTime?: string;
 }
 
 // API response for sent email detail
@@ -66,6 +68,8 @@ export interface ApiSentEmailDetail {
   sent_at: string;
   has_attachments?: boolean;
   attachments?: string | string[]; // Can be JSON string or array
+  relative_time?: string;
+  RelativeTime?: string;
 }
 
 function cleanPreviewText(text?: string): string {
@@ -86,7 +90,10 @@ export function transformSentEmail(email: ApiSentEmail): SentMail {
     to: email.to_email || email.to || "",
     subject: email.subject,
     snippet: cleanPreviewText(email.body || email.body_preview),
-    date: formatRelativeTime(email.sent_at),
+    date: resolveRelativeTime(
+      email.sent_at,
+      email.relative_time || email.RelativeTime,
+    ),
     sent_at: email.sent_at,
     status: email.status,
     has_attachments: email.has_attachments,

@@ -542,7 +542,10 @@ const InboxPageContent: React.FC = () => {
           subject: detail?.subject || selectedSentEmail.subject,
           snippet: detail?.body_preview || selectedSentEmail.snippet,
           body: detail?.body || selectedSentEmail.snippet,
-          date: selectedSentEmail.date,
+          date:
+            detail?.relative_time ||
+            detail?.RelativeTime ||
+            selectedSentEmail.date,
           sentAt: detail?.sent_at || selectedSentEmail.sent_at,
           unread: false,
           // Convert string[] to JSON string if needed for consistent handling

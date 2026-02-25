@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, resolveRelativeTime } from "@/lib/utils";
 import {
   Reply,
   Forward,
@@ -175,8 +175,8 @@ const Preview: React.FC<PreviewProps> = ({
 
   const attachments = getAttachments();
   const displayDate =
-    isSentView && email.sentAt
-      ? formatRelativeTime(email.sentAt)
+    isSentView
+      ? resolveRelativeTime(email.sentAt, email.date)
       : emailDetail?.RelativeTime || email.date;
   const originalDateForCompose = email.sentAt || email.date;
   const attachmentItems = attachments.map((att) => ({

@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { apiClient } from "@/lib/api-client";
 import { Toaster } from "@/components/ui/toaster";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, resolveRelativeTime } from "@/lib/utils";
 import { CARD_STYLES, BUTTON_STYLES } from "@/lib/styles";
 import AdminLayout from "@/components/admin/AdminLayout";
 import PaginationComponent from "@/components/PaginationComponent";
@@ -45,6 +45,8 @@ interface SentEmail {
   status?: string;
   sent_at: string;
   created_at?: string;
+  relative_time?: string;
+  RelativeTime?: string;
 }
 
 interface UserDetails {
@@ -487,7 +489,10 @@ const SentEmailRow: React.FC<SentEmailRowProps> = ({ email, onClick }) => {
                 To: {email.to || "Unknown"}
               </div>
               <div className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
-                {formatRelativeTime(email.sent_at)}
+                {resolveRelativeTime(
+                  email.sent_at,
+                  email.relative_time || email.RelativeTime,
+                )}
               </div>
             </div>
             <div className="self-stretch text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate">

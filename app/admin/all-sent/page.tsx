@@ -5,7 +5,7 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, resolveRelativeTime } from "@/lib/utils";
 import { BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
@@ -15,7 +15,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import AttachmentList from "@/components/mail/AttachmentList";
 import AdminContentCard from "@/components/admin/AdminContentCard";
-import AdminEmailListRow, { formatEmailListDate } from "@/components/admin/AdminEmailListRow";
+import AdminEmailListRow from "@/components/admin/AdminEmailListRow";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
@@ -49,7 +49,6 @@ interface EmailDetail {
   Subject?: string;
   Body?: string;
   BodyEml?: string;
-  RelativeTime?: string;
   ListAttachments?: { Filename: string; URL: string }[];
   Recipients?: string[];
   id?: string;
@@ -60,6 +59,8 @@ interface EmailDetail {
   body_preview?: string;
   attachments?: string;
   sent_at?: string;
+  relative_time?: string;
+  RelativeTime?: string;
 }
 
 export default function AdminAllSentPage() {
@@ -341,7 +342,13 @@ export default function AdminAllSentPage() {
                           </span>
                         </div>
                         <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5">
-                          {selectedEmail.sent_at ? formatRelativeTime(selectedEmail.sent_at) : ""}
+                          {resolveRelativeTime(
+                            selectedEmail.sent_at,
+                            selectedEmail.relative_time ||
+                              selectedEmail.RelativeTime ||
+                              emailDetail?.relative_time ||
+                              emailDetail?.RelativeTime,
+                          )}
                         </span>
                       </div>
                       <div className="flex justify-start items-start gap-1">
@@ -435,7 +442,10 @@ export default function AdminAllSentPage() {
                         subject={email.subject || "(No subject)"}
                         snippet={email.body_preview || "No preview available"}
                         sideText={email.from || email.user_email || "Unknown"}
-                        dateText={formatEmailListDate(email.sent_at)}
+                        dateText={resolveRelativeTime(
+                          email.sent_at,
+                          email.relative_time || email.RelativeTime,
+                        )}
                         isUnread={email.is_read === false}
                         isSelected={false}
                         onClick={() => handleSelectEmail(email)}

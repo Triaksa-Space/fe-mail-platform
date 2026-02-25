@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import Image from "next/image";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, resolveRelativeTime } from "@/lib/utils";
 import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CenterTruncate from "@/components/ui/center-truncate";
@@ -229,7 +229,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
                 </span>
               </div>
               <span className="shrink-0 text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
-                {email.sent_at ? formatRelativeTime(email.sent_at) : email.date}
+                {email.date || resolveRelativeTime(email.sent_at)}
               </span>
             </div>
 
