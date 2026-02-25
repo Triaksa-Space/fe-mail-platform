@@ -58,10 +58,9 @@ const ChangePasswordSection: React.FC = () => {
 
         try {
             setIsLoading(true);
-            await apiClient.put("/user/change_password/admin", {
-                new_password: newPassword,
+            await apiClient.put("/user/change_password", {
                 old_password: oldPassword,
-                user_id: 0 // 0 indicates self
+                new_password: newPassword,
             });
 
             toast({

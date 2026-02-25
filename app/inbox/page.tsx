@@ -344,9 +344,9 @@ const InboxPageContent: React.FC = () => {
       isRequestInProgressRef.current = true;
 
       try {
-        const response = await apiClient.get("/email/by_user", { signal });
+        const response = await apiClient.get<Email[]>("/email/by_user", { signal });
 
-        const transformedEmails = response.data.map((email: Email) =>
+        const transformedEmails: Mail[] = response.data.map((email) =>
           transformEmailToMail(email),
         );
         setEmails(transformedEmails);
