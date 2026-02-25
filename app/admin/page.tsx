@@ -520,7 +520,7 @@ const EmailManagementPageContent: React.FC = () => {
                         </div>
 
                         {/* Pagination */}
-                        {users.length > 0 && !searchTerm.trim().length && (
+                        {totalPages > 1 && (
                             <div className="self-stretch">
                                 <PaginationComponent
                                     totalPages={totalPages}

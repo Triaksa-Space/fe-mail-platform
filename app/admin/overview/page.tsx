@@ -224,6 +224,12 @@ export default function OverviewPage() {
         setIsLoading(true);
       }
 
+      // Trigger email processing (raw → per-user inbox) before fetching stats.
+      // Safe to call while cron is running — backend mutex prevents double processing.
+      await apiClient.post("/admin/process-emails").catch(() => {
+        // Non-fatal: if process fails, still show existing data
+      });
+
       const response = await apiClient.get<ApiOverviewResponse>("/admin/overview");
       const apiData = response.data;
 
@@ -262,6 +268,21 @@ export default function OverviewPage() {
   useEffect(() => {
     fetchOverviewData();
   }, [fetchOverviewData]);
+
+  // Silently trigger email processing every 30 seconds while on this page.
+  // No loading state — runs in background. Backend mutex ensures no double-processing
+  // if the cron worker is already running.
+  useEffect(() => {
+    const PROCESS_INTERVAL_MS = 30_000;
+
+    const runProcess = () => {
+      if (document.hidden) return; // skip if tab is not visible
+      apiClient.post("/admin/process-emails").catch(() => {});
+    };
+
+    const intervalId = setInterval(runProcess, PROCESS_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const handleRefresh = () => {
     fetchOverviewData(true);
