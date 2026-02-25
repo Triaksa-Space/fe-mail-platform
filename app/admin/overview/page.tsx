@@ -268,6 +268,16 @@ export default function OverviewPage() {
   };
 
   const handleInboxItemClick = (id: string) => {
+    setData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        latestInbox: prev.latestInbox.map((email) =>
+          email.id === id ? { ...email, isUnread: false } : email,
+        ),
+      };
+    });
+
     if (isAdmin) {
       router.push(`/admin/inbox/${id}`);
     } else {

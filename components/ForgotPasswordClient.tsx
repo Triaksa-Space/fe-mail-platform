@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { usePasswordMask } from "@/hooks/use-password-mask";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, AlertTriangle, Eye, EyeOff } from "lucide-react";
@@ -46,26 +47,10 @@ export default function ForgotPasswordClient() {
   ];
 
   // Step 3: New Password
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const newPasswordMaskLength = (() => {
-    if (!newPassword) return 0;
-    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-      return Array.from(segmenter.segment(newPassword)).length;
-    }
-    return Array.from(newPassword).length;
-  })();
-  const confirmPasswordMaskLength = (() => {
-    if (!confirmPassword) return 0;
-    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-      return Array.from(segmenter.segment(confirmPassword)).length;
-    }
-    return Array.from(confirmPassword).length;
-  })();
+  const newPasswordMask = usePasswordMask(showNewPassword);
+  const confirmPasswordMask = usePasswordMask(showConfirmPassword);
 
   const router = useRouter();
   const { toast } = useToast();
@@ -317,6 +302,9 @@ export default function ForgotPasswordClient() {
   // Step 3: Reset password
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const newPassword = newPasswordMask.password;
+    const confirmPassword = confirmPasswordMask.password;
 
     if (!newPassword || !confirmPassword) return;
 
@@ -700,24 +688,15 @@ export default function ForgotPasswordClient() {
                           <div className="flex-1 flex items-center gap-2">
                             <LockClosedIcon className="w-5 h-5 text-neutral-400" />
                             <div className="relative flex-1">
-                              <input
+                                      <input
                                 id="new-password"
-                                type="text"
                                 placeholder="***********"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                className={`w-full text-sm font-normal placeholder:text-[#9CA3AF] bg-transparent outline-none ${
-                                  showNewPassword
-                                    ? "text-neutral-800"
-                                    : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
-                                }`}
+                                autoComplete="new-password"
                                 required
+                                ref={newPasswordMask.inputRef}
+                                {...newPasswordMask.inputProps}
+                                className="w-full text-sm font-normal text-neutral-800 placeholder:text-[#9CA3AF] bg-transparent outline-none"
                               />
-                              {!showNewPassword && newPasswordMaskLength > 0 && (
-                                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
-                                  {"*".repeat(newPasswordMaskLength)}
-                                </span>
-                              )}
                             </div>
                           </div>
                           <Button
@@ -747,7 +726,7 @@ export default function ForgotPasswordClient() {
                         <div
                           className={cn(
                             "h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3",
-                            confirmPassword && newPassword !== confirmPassword
+                            confirmPasswordMask.password && newPasswordMask.password !== confirmPasswordMask.password
                               ? "outline-red-500"
                               : "outline-neutral-200",
                           )}
@@ -757,25 +736,13 @@ export default function ForgotPasswordClient() {
                             <div className="relative flex-1">
                               <input
                                 id="confirm-password"
-                                type="text"
                                 placeholder="***********"
-                                value={confirmPassword}
-                                onChange={(e) =>
-                                  setConfirmPassword(e.target.value)
-                                }
-                                className={`w-full text-sm font-normal placeholder:text-[#9CA3AF] bg-transparent outline-none ${
-                                  showConfirmPassword
-                                    ? "text-neutral-800"
-                                    : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
-                                }`}
+                                autoComplete="new-password"
                                 required
+                                ref={confirmPasswordMask.inputRef}
+                                {...confirmPasswordMask.inputProps}
+                                className="w-full text-sm font-normal text-neutral-800 placeholder:text-[#9CA3AF] bg-transparent outline-none"
                               />
-                              {!showConfirmPassword &&
-                                confirmPasswordMaskLength > 0 && (
-                                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
-                                    {"*".repeat(confirmPasswordMaskLength)}
-                                  </span>
-                                )}
                             </div>
                           </div>
                           <Button
@@ -799,7 +766,7 @@ export default function ForgotPasswordClient() {
                             Repeat password
                           </span>
                         </div>
-                        {confirmPassword && newPassword !== confirmPassword && (
+                        {confirmPasswordMask.password && newPasswordMask.password !== confirmPasswordMask.password && (
                           <p className="text-xs text-red-500 mt-1">
                             Your confirmation password doesn&apos;t match
                           </p>
@@ -812,9 +779,9 @@ export default function ForgotPasswordClient() {
                         type="submit"
                         disabled={
                           isLoading ||
-                          !newPassword ||
-                          !confirmPassword ||
-                          newPassword !== confirmPassword
+                          !newPasswordMask.password ||
+                          !confirmPasswordMask.password ||
+                          newPasswordMask.password !== confirmPasswordMask.password
                         }
                         className="w-full text-base font-medium"
                       >

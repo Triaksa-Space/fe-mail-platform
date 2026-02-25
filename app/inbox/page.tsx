@@ -182,7 +182,15 @@ const InboxPageContent: React.FC = () => {
     );
 
     if (emailToSelect) {
-      setSelectedEmail(emailToSelect);
+      const readEmail = { ...emailToSelect, unread: false };
+      setSelectedEmail(readEmail);
+      setEmails((prevEmails) =>
+        prevEmails.map((item) =>
+          item.email_encode_id === readEmail.email_encode_id
+            ? { ...item, unread: false }
+            : item,
+        ),
+      );
       router.replace("/inbox");
     }
   }, [authLoaded, emailParam, emails, router]);
@@ -342,6 +350,14 @@ const InboxPageContent: React.FC = () => {
           transformEmailToMail(email),
         );
         setEmails(transformedEmails);
+        setSelectedEmail((prevSelected) => {
+          if (!prevSelected) return null;
+          return (
+            transformedEmails.find(
+              (item) => item.email_encode_id === prevSelected.email_encode_id,
+            ) || prevSelected
+          );
+        });
         setError(null);
       } catch (err) {
         if (!signal?.aborted) {
@@ -425,7 +441,15 @@ const InboxPageContent: React.FC = () => {
 
   // Handlers
   const handleSelectEmail = (email: Mail) => {
-    setSelectedEmail(email);
+    const readEmail = { ...email, unread: false };
+    setSelectedEmail(readEmail);
+    setEmails((prevEmails) =>
+      prevEmails.map((item) =>
+        item.email_encode_id === readEmail.email_encode_id
+          ? { ...item, unread: false }
+          : item,
+      ),
+    );
   };
 
   const handleSelectSentEmail = (email: SentMail) => {

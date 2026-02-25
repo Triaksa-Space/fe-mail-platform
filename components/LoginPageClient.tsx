@@ -16,25 +16,18 @@ import { LoginResponse } from "@/lib/api-types";
 import { LockClosedIcon } from "@heroicons/react/24/outline";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { usePasswordMask } from "@/hooks/use-password-mask";
 
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const passwordMask = usePasswordMask(showPassword);
   const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [blockedUntil, setBlockedUntil] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState(0);
 
-  const passwordMaskLength = (() => {
-    if (!password) return 0;
-    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-      return Array.from(segmenter.segment(password)).length;
-    }
-    return Array.from(password).length;
-  })();
 
   const { setAuth } = useAuthStore();
   const token = useAuthStore((state) => state.token);
@@ -102,7 +95,7 @@ export default function LoginPageClient() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!loginEmail || !password) return;
+    if (!loginEmail || !passwordMask.password) return;
 
     setLoginError("");
     setIsLoading(true);
@@ -112,7 +105,7 @@ export default function LoginPageClient() {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
         {
           email: loginEmail,
-          password: password,
+          password: passwordMask.password,
           remember_me: rememberMe,
         },
         {
@@ -184,13 +177,13 @@ export default function LoginPageClient() {
     }
   };
 
-  const isFormValid = loginEmail && password;
+  const isFormValid = loginEmail && passwordMask.password;
 
   useEffect(() => {
     if (!blockedUntil) return;
     setBlockedUntil(null);
     setCountdown(0);
-  }, [loginEmail, password]);
+  }, [loginEmail, passwordMask.password]);
 
   return (
     <>
@@ -273,35 +266,21 @@ export default function LoginPageClient() {
                           <input
                             id="password"
                             name="password"
-                            type="text"
-                            placeholder="***********"
                             autoComplete="current-password"
+                            placeholder="***********"
                             required
-                            value={password}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const sanitizedValue = DOMPurify.sanitize(value).replace(
-                              /\s/g,
-                              ""
-                            );
-                            setPassword(sanitizedValue);
-                            if (loginError) setLoginError("");
-                            if (blockedUntil) {
-                              setBlockedUntil(null);
-                              setCountdown(0);
-                            }
-                          }}
-                            className={`w-full text-sm font-normal placeholder:text-[#9CA3AF] bg-transparent outline-none ${
-                              showPassword
-                                ? "text-neutral-800"
-                                : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
-                            }`}
+                            ref={passwordMask.inputRef}
+                            {...passwordMask.inputProps}
+                            onChange={(e) => {
+                              passwordMask.inputProps.onChange(e);
+                              if (loginError) setLoginError("");
+                              if (blockedUntil) {
+                                setBlockedUntil(null);
+                                setCountdown(0);
+                              }
+                            }}
+                            className="w-full text-sm font-normal text-neutral-800 placeholder:text-[#9CA3AF] bg-transparent outline-none"
                           />
-                          {!showPassword && passwordMaskLength > 0 && (
-                            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
-                              {"*".repeat(passwordMaskLength)}
-                            </span>
-                          )}
                         </div>
                       </div>
                       <Button

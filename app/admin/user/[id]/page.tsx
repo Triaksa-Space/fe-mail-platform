@@ -238,6 +238,13 @@ export default function UserDetailPage() {
 
   // Handle inbox email click
   const handleInboxEmailClick = (email: InboxEmail) => {
+    setInboxEmails((prevEmails) =>
+      prevEmails.map((item) =>
+        item.email_encode_id === email.email_encode_id
+          ? { ...item, IsRead: true }
+          : item,
+      ),
+    );
     router.push(`/admin/inbox/${email.email_encode_id}`);
   };
 

@@ -133,11 +133,29 @@ export default function AdminAllInboxPage() {
 
       // Handle response with pagination object
       if (data && Array.isArray(data.data)) {
-        setEmails(data.data);
+        const nextEmails = selectedEmail
+          ? data.data.map((email) =>
+              email.id === selectedEmail.id ? { ...email, is_read: true } : email,
+            )
+          : data.data;
+        setEmails(nextEmails);
+        setSelectedEmail((prev) => {
+          if (!prev) return null;
+          return nextEmails.find((email) => email.id === prev.id) || prev;
+        });
         setTotal(data.pagination?.total || data.data.length);
         setTotalPages(data.pagination?.total_pages || Math.ceil((data.pagination?.total || data.data.length) / pageSize));
       } else if (Array.isArray(data)) {
-        setEmails(data);
+        const nextEmails = selectedEmail
+          ? data.map((email) =>
+              email.id === selectedEmail.id ? { ...email, is_read: true } : email,
+            )
+          : data;
+        setEmails(nextEmails);
+        setSelectedEmail((prev) => {
+          if (!prev) return null;
+          return nextEmails.find((email) => email.id === prev.id) || prev;
+        });
         setTotal(data.length);
         setTotalPages(Math.ceil(data.length / pageSize));
       } else {
@@ -154,7 +172,7 @@ export default function AdminAllInboxPage() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [token, page, pageSize, debouncedSearch]);
+  }, [token, page, pageSize, debouncedSearch, selectedEmail]);
 
   // Initial fetch
   useEffect(() => {
@@ -193,7 +211,13 @@ export default function AdminAllInboxPage() {
   };
 
   const handleSelectEmail = (email: ApiEmail) => {
-    setSelectedEmail(email);
+    const readEmail = { ...email, is_read: true };
+    setSelectedEmail(readEmail);
+    setEmails((prevEmails) =>
+      prevEmails.map((item) =>
+        item.id === readEmail.id ? { ...item, is_read: true } : item,
+      ),
+    );
   };
 
   const handleClosePreview = () => {

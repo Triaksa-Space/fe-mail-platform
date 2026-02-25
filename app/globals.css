@@ -187,6 +187,9 @@
     @apply bg-background text-foreground;
     font-family: 'Roboto', sans-serif;
   }
+  input[type="password"] {
+    letter-spacing: 0;
+  }
 }
 
 /* ========================================

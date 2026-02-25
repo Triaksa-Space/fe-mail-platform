@@ -6,60 +6,47 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
-import DOMPurify from "dompurify";
 import { LockClosedIcon } from "@heroicons/react-v1/outline"
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
+import { usePasswordMask } from "@/hooks/use-password-mask";
 
 const ChangePasswordForm: React.FC = () => {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const currentPasswordMask = usePasswordMask(showCurrentPassword);
+  const newPasswordMask = usePasswordMask(showNewPassword);
+  const confirmPasswordMask = usePasswordMask(showConfirmPassword);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { toast } = useToast();
 
-  const getMaskLength = (value: string) => {
-    if (!value) return 0;
-    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-      return Array.from(segmenter.segment(value)).length;
-    }
-    return Array.from(value).length;
-  };
-
-  const currentPasswordMaskLength = getMaskLength(currentPassword);
-  const newPasswordMaskLength = getMaskLength(newPassword);
-  const confirmPasswordMaskLength = getMaskLength(confirmPassword);
   const passwordsDoNotMatch =
-    confirmPassword.length > 0 && newPassword !== confirmPassword;
+    confirmPasswordMask.password.length > 0 &&
+    newPasswordMask.password !== confirmPasswordMask.password;
 
   useEffect(() => {
-    if (!currentPassword) {
-      setShowCurrentPassword(false);
-    }
-  }, [currentPassword]);
+    if (!currentPasswordMask.password) setShowCurrentPassword(false);
+  }, [currentPasswordMask.password]);
 
   useEffect(() => {
-    if (!newPassword) {
-      setShowNewPassword(false);
-    }
-  }, [newPassword]);
+    if (!newPasswordMask.password) setShowNewPassword(false);
+  }, [newPasswordMask.password]);
 
   useEffect(() => {
-    if (!confirmPassword) {
-      setShowConfirmPassword(false);
-    }
-  }, [confirmPassword]);
+    if (!confirmPasswordMask.password) setShowConfirmPassword(false);
+  }, [confirmPasswordMask.password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
     setError(null);
+
+    const currentPassword = currentPasswordMask.password;
+    const newPassword = newPasswordMask.password;
+    const confirmPassword = confirmPasswordMask.password;
 
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
@@ -93,9 +80,9 @@ const ChangePasswordForm: React.FC = () => {
       });
 
       // Reset form
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      currentPasswordMask.setPassword("");
+      newPasswordMask.setPassword("");
+      confirmPasswordMask.setPassword("");
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {
@@ -112,10 +99,10 @@ const ChangePasswordForm: React.FC = () => {
   };
 
   const isFormFilled =
-    currentPassword.length > 0 &&
-    newPassword.length > 0 &&
-    confirmPassword.length > 0;
-  const isFormValid = isFormFilled && newPassword === confirmPassword;
+    currentPasswordMask.password.length > 0 &&
+    newPasswordMask.password.length > 0 &&
+    confirmPasswordMask.password.length > 0;
+  const isFormValid = isFormFilled && newPasswordMask.password === confirmPasswordMask.password;
 
   return (
     <>
@@ -131,32 +118,19 @@ const ChangePasswordForm: React.FC = () => {
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
                 <input
-                  type="text"
                   placeholder="***********"
-                  value={currentPassword}
-                  onChange={(e) =>
-                    setCurrentPassword(
-                      DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-                    )
-                  }
-                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 ${
-                    showCurrentPassword
-                      ? "text-neutral-800"
-                      : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
-                  }`}
+                  autoComplete="current-password"
+                  ref={currentPasswordMask.inputRef}
+                  {...currentPasswordMask.inputProps}
+                  className="w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 text-neutral-800"
                 />
-                {!showCurrentPassword && currentPasswordMaskLength > 0 && (
-                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
-                    {"*".repeat(currentPasswordMaskLength)}
-                  </span>
-                )}
               </div>
             </div>
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              disabled={!currentPassword}
+              disabled={!currentPasswordMask.password}
               onClick={() => setShowCurrentPassword(!showCurrentPassword)}
               className="h-5 w-5 p-0 shrink-0 hover:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
             >
@@ -187,32 +161,19 @@ const ChangePasswordForm: React.FC = () => {
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
                 <input
-                  type="text"
                   placeholder="***********"
-                  value={newPassword}
-                  onChange={(e) =>
-                    setNewPassword(
-                      DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-                    )
-                  }
-                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 ${
-                    showNewPassword
-                      ? "text-neutral-800"
-                      : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
-                  }`}
+                  autoComplete="new-password"
+                  ref={newPasswordMask.inputRef}
+                  {...newPasswordMask.inputProps}
+                  className="w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 text-neutral-800"
                 />
-                {!showNewPassword && newPasswordMaskLength > 0 && (
-                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
-                    {"*".repeat(newPasswordMaskLength)}
-                  </span>
-                )}
               </div>
             </div>
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              disabled={!newPassword}
+              disabled={!newPasswordMask.password}
               onClick={() => setShowNewPassword(!showNewPassword)}
               className="h-5 w-5 p-0 shrink-0 hover:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
             >
@@ -238,32 +199,19 @@ const ChangePasswordForm: React.FC = () => {
               <LockClosedIcon className="w-5 h-5 text-neutral-400" />
               <div className="relative flex-1">
                 <input
-                  type="text"
                   placeholder="***********"
-                  value={confirmPassword}
-                  onChange={(e) =>
-                    setConfirmPassword(
-                      DOMPurify.sanitize(e.target.value).replace(/\s/g, "")
-                    )
-                  }
-                  className={`w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 ${
-                    showConfirmPassword
-                      ? "text-neutral-800"
-                      : "text-transparent caret-neutral-800 font-mono tracking-[0.04em] selection:text-transparent selection:bg-transparent"
-                  }`}
+                  autoComplete="new-password"
+                  ref={confirmPasswordMask.inputRef}
+                  {...confirmPasswordMask.inputProps}
+                  className="w-full bg-transparent border-none outline-none text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400 text-neutral-800"
                 />
-                {!showConfirmPassword && confirmPasswordMaskLength > 0 && (
-                  <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm font-normal text-neutral-800 font-mono tracking-[0.04em]">
-                    {"*".repeat(confirmPasswordMaskLength)}
-                  </span>
-                )}
               </div>
             </div>
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              disabled={!confirmPassword}
+              disabled={!confirmPasswordMask.password}
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="h-5 w-5 p-0 shrink-0 hover:bg-transparent disabled:opacity-40 disabled:cursor-not-allowed"
             >
