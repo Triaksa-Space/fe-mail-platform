@@ -152,7 +152,7 @@ export default function AdminAllSentPage() {
       setEmails([]);
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
+      setTimeout(() => setIsRefreshing(false), 1000);
     }
   }, [token, page, pageSize, debouncedSearch]);
 

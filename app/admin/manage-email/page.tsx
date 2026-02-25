@@ -162,7 +162,7 @@ export default function AdminAllInboxPage() {
       setEmails([]);
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
+      setTimeout(() => setIsRefreshing(false), 1000);
     }
   }, [token, page, pageSize, debouncedSearch, selectedEmail?.id]);
 
