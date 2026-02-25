@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 export interface ForwardData {
   from: string;
+  fromName?: string;
   to: string;
   date: string;
   subject: string;
@@ -80,6 +81,42 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const [hasShownLimitToast, setHasShownLimitToast] = useState(false);
   const replyBodyRef = useRef<HTMLTextAreaElement | null>(null);
   const forwardToRef = useRef<HTMLInputElement | null>(null);
+  const [forwardIframeHeight, setForwardIframeHeight] = useState("auto");
+
+  const handleForwardIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
+    const iframe = e.target as HTMLIFrameElement;
+    if (iframe.contentWindow) {
+      const iframeDoc = iframe.contentWindow.document;
+      const style = iframeDoc.createElement("style");
+      style.textContent = `
+        html, body { overflow-y: hidden; overflow-x: auto; }
+        body { margin: 0; padding: 0; font-family: Roboto, system-ui, sans-serif; font-size: 13px; line-height: 1.5; color: #374151; background: white; overflow-wrap: anywhere; word-break: break-word; }
+        div, p, span, a, td, th, li { overflow-wrap: anywhere; word-break: break-word; }
+        img, table { max-width: 100%; height: auto; }
+        a { color: #027AEA; }
+      `;
+      iframeDoc.head.appendChild(style);
+      iframeDoc.querySelectorAll("a").forEach((link) => {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener noreferrer");
+      });
+      setForwardIframeHeight(`${iframeDoc.body.scrollHeight}px`);
+    }
+  };
+
+  // Formats a date string to "Tue, Jan 6, 2026 at 5:35 AM" style
+  const formatForwardDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    const datePart = date.toLocaleDateString("en-US", {
+      weekday: "short", month: "short", day: "numeric", year: "numeric",
+    });
+    const timePart = date.toLocaleTimeString("en-US", {
+      hour: "numeric", minute: "2-digit", hour12: true,
+    });
+    return `${datePart} at ${timePart}`;
+  };
+
   // Converts plain text to safe HTML (escapes special chars, preserves line breaks)
   const plainTextToHtml = (text: string) =>
     text
@@ -140,26 +177,10 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           ? forwardData.subject
           : `Fwd: ${forwardData.subject}`;
 
-        let forwardBodyText = "";
-        if (forwardData.body) {
-          const tmp = document.createElement("div");
-          tmp.innerHTML = forwardData.body;
-          forwardBodyText = tmp.textContent || tmp.innerText || "";
-        }
-
-        initialMessage = [
-          "",
-          "",
-          "---------- Forwarded message ----------",
-          `From: ${forwardData.from}`,
-          `Date: ${forwardData.date}`,
-          `Subject: ${forwardData.subject}`,
-          `To: ${forwardData.to}`,
-          "",
-          forwardBodyText,
-        ].join("\n");
-
+        // User types their own message above; forwarded content shown via iframe below
+        initialMessage = "";
         initialAttachments = forwardData.attachments;
+        setForwardIframeHeight("auto");
       } else if (replyTo) {
         // Reply mode
         initialTo = replyTo.email;
@@ -300,7 +321,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   }, []);
 
   const handleSend = async () => {
-    if (!to || !subject || !message) {
+    if (!to || !subject || (!isForwardMode && !message)) {
       toast({
         description: "Please fill all required fields",
         variant: "destructive",
@@ -328,10 +349,28 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     setIsSending(true);
 
     try {
+      let bodyToSend: string;
+      if (isForwardMode && forwardData) {
+        const userHtml = message.trim()
+          ? `<div>${plainTextToHtml(message)}</div>`
+          : "";
+        const senderLabel = forwardData.fromName
+          ? `${forwardData.fromName} <${forwardData.from}>`
+          : forwardData.from;
+        const metaHtml =
+          `<div style="margin-top:16px;color:#4B5563;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
+          `On ${plainTextToHtml(formatForwardDate(forwardData.date))} ${plainTextToHtml(senderLabel)} wrote:` +
+          `</div>` +
+          `<div style="margin-top:8px;">${DOMPurify.sanitize(forwardData.body)}</div>`;
+        bodyToSend = userHtml + metaHtml;
+      } else {
+        bodyToSend = plainTextToHtml(message);
+      }
+
       await apiClient.post("/email/send/resend", {
         to,
         subject,
-        body: plainTextToHtml(message),
+        body: bodyToSend,
         attachments: attachments.map((att) => att.url),
       });
 
@@ -443,7 +482,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
     }
   };
 
-  const isFormValid = to && subject && message && !isLimitReached;
+  const isFormValid = to && subject && (isForwardMode || !!message) && !isLimitReached;
   const isDisabled = isSending || isUploading || !isFormValid;
 
   if (!isOpen) return null;
@@ -687,21 +726,46 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                   </div>
                 </div>
 
-                {/* Forward Mode - Card 2: Body */}
-                <div className="self-stretch flex-1 min-w-0 p-3 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col justify-start items-start gap-2 overflow-hidden">
-                  <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-2 overflow-hidden">
-                    <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-1">
-                      <div className="self-stretch flex-1 px-3 py-2 bg-white rounded-lg border border-neutral-200 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] flex flex-col gap-3">
-                        <textarea
-                          id="compose-body"
-                          placeholder="Compose email"
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          className="flex-1 w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none min-h-[200px]"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                {/* Forward Mode - Card 2: Body (single card) */}
+                <div className="self-stretch flex-1 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
+                  {/* User's compose area — auto-grows, no internal scroll */}
+                  <textarea
+                    id="compose-body"
+                    placeholder="Compose email"
+                    value={message}
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                      e.target.style.height = "auto";
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                    className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden"
+                  />
+
+                  {/* 1 enter = 1 line height (20px) before "On..." */}
+                  <div className="h-5 shrink-0" />
+
+                  {/* Forwarded message label */}
+                  <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5 pb-3">
+                    On {formatForwardDate(forwardData!.date)}{" "}
+                    {forwardData!.fromName ? forwardData!.fromName : forwardData!.from}
+                    {forwardData!.fromName && (
+                      <><br />&lt;{forwardData!.from}&gt;</>
+                    )}{" "}
+                    wrote:
+                  </p>
+
+                  {/* Forwarded email body rendered as HTML — no wrapper scroll */}
+                  {forwardData!.body && (
+                    <iframe
+                      srcDoc={forwardData!.body}
+                      className="w-full"
+                      style={{ height: forwardIframeHeight, border: "none", display: "block" }}
+                      onLoad={handleForwardIframeLoad}
+                      title="Forwarded email content"
+                      sandbox="allow-same-origin allow-scripts allow-popups"
+                      scrolling="no"
+                    />
+                  )}
                 </div>
               </>
             ) : (

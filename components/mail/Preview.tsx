@@ -202,7 +202,8 @@ const Preview: React.FC<PreviewProps> = ({
     }));
 
     onForward({
-      from: isSentView ? email.from : (emailDetail?.SenderEmail || email.fromEmail || email.from),
+      from: isSentView ? email.fromEmail || email.from : (emailDetail?.SenderEmail || email.fromEmail || email.from),
+      fromName: isSentView ? email.from : (emailDetail?.SenderName || email.name),
       to: isSentView ? (email.to || "") : (userEmail || ""),
       date: displayDate,
       subject: email.subject,
