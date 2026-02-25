@@ -25,6 +25,7 @@ const LoadingFallback: React.FC = () => (
 // ============================================
 const ChangePasswordSection: React.FC = () => {
     const { toast } = useToast();
+    const { setToken, setRefreshToken } = useAuthStore();
 
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -58,10 +59,18 @@ const ChangePasswordSection: React.FC = () => {
 
         try {
             setIsLoading(true);
-            await apiClient.put("/user/change_password", {
+            const response = await apiClient.put("/user/change_password", {
                 old_password: oldPassword,
                 new_password: newPassword,
             });
+
+            // Update tokens in store so current device stays logged in
+            if (response.data?.access_token) {
+                setToken(response.data.access_token);
+            }
+            if (response.data?.refresh_token) {
+                setRefreshToken(response.data.refresh_token);
+            }
 
             toast({
                 description: "Password changed successfully.",
