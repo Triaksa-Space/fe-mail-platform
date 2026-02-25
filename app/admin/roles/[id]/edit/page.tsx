@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense, useCallback } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import { Check } from 'lucide-react';
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,7 +22,10 @@ import { Button } from "@/components/ui/button";
 const EditAdminPageContent: React.FC = () => {
     const router = useRouter();
     const params = useParams();
+    const searchParams = useSearchParams();
     const adminId = params?.id as string;
+    const from = searchParams.get('from');
+    const backPath = from === 'list' ? '/admin/roles' : `/admin/roles/${adminId}`;
 
     const roleId = useAuthStore((state) => state.roleId);
     const hasPermission = useAuthStore((state) => state.hasPermission);
@@ -178,7 +181,7 @@ const EditAdminPageContent: React.FC = () => {
     };
 
     const handleCancel = () => {
-        router.push(`/admin/roles/${adminId}`);
+        router.push(backPath);
     };
 
     // Check if form is valid
@@ -207,7 +210,7 @@ const EditAdminPageContent: React.FC = () => {
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => router.push("/admin/roles")}
+                        onClick={() => router.push(backPath)}
                         className="w-8 h-8 p-1 rounded flex justify-center items-center gap-1 overflow-hidden hover:bg-neutral-100 transition-colors h-auto"
                     >
                         <ArrowLeftIcon className="w-5 h-5 text-neutral-600" />

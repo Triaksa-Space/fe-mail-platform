@@ -425,10 +425,10 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   onClick={() => updatePasswordLength(passwordLength - 1)}
                   disabled={!isRandomPasswordActive || passwordLength <= 6}
                   className={cn(
-                    "w-10 h-10 p-2 rounded-lg border border-neutral-200 bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
-                    !isRandomPasswordActive || passwordLength <= 6
-                      ? "text-neutral-300 cursor-not-allowed"
-                      : "text-neutral-600 hover:bg-neutral-200"
+                    "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 disabled:border-neutral-200 disabled:bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
+                  count <= 2
+                    ? "text-neutral-300 cursor-not-allowed"
+                    : "text-primary-500 hover:bg-neutral-200"
                   )}
                 >
                   <MinusIcon className="w-4 h-4" />

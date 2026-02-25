@@ -111,7 +111,7 @@ const ViewAdminPageContent: React.FC = () => {
 
     // Handle edit click
     const handleEditClick = () => {
-        router.push(`/admin/roles/${adminId}/edit`);
+        router.push(`/admin/roles/${adminId}/edit?from=view`);
     };
 
     // Handle delete

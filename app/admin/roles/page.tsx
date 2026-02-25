@@ -243,7 +243,7 @@ const RolesPermissionsPageContent: React.FC = () => {
     };
 
     const handleEditClick = (admin: AdminUser) => {
-        router.push(`/admin/roles/${admin.id}/edit`);
+        router.push(`/admin/roles/${admin.id}/edit?from=list`);
     };
 
     const handleDeleteClick = (admin: AdminUser) => {

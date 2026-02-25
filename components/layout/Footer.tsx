@@ -17,7 +17,7 @@ interface FooterProps {
 }
 
 const defaultLinks: FooterLink[] = [
-  { label: "Buy email", href: "/buy" },
+  { label: "Buy email", href: "https://gamemarket.gg/market/mailria" },
   { label: "FAQ", href: "/faq" },
   { label: "Terms of services", href: "/terms" },
   { label: "Privacy policy", href: "/privacy" },
