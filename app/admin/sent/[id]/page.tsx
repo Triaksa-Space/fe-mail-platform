@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
 import AttachmentList from "@/components/mail/AttachmentList";
+import { useRelativeTimeTicker } from "@/hooks/use-relative-time-ticker";
 import {
   Mail,
 } from "lucide-react";
@@ -64,6 +65,8 @@ function DetailSkeleton() {
 }
 
 export default function AdminSentDetailPage() {
+  useRelativeTimeTicker();
+
   const router = useRouter();
   const params = useParams();
   const emailId = params.id as string;

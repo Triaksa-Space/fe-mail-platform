@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CenterTruncate from "@/components/ui/center-truncate";
@@ -12,6 +12,7 @@ import { useMinimumLoading } from "@/hooks/use-minimum-loading";
 import { LazyList } from "@/components/VirtualList";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
+import { useRelativeTimeTicker } from "@/hooks/use-relative-time-ticker";
 
 interface SentListProps {
   emails: SentMail[];
@@ -43,6 +44,8 @@ const SentList: React.FC<SentListProps> = ({
   userEmail,
   isComposeOpen = false,
 }) => {
+  useRelativeTimeTicker();
+
   const { shouldShowLoading, isTransitioning } = useMinimumLoading(isLoading, {
     minimumDuration: 300,
   });
@@ -226,7 +229,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
                 </span>
               </div>
               <span className="shrink-0 text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 truncate">
-                {email.date}
+                {email.sent_at ? formatRelativeTime(email.sent_at) : email.date}
               </span>
             </div>
 

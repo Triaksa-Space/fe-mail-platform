@@ -18,6 +18,7 @@ export interface Mail {
   snippet: string;
   body: string;
   date: string;
+  sentAt?: string;
   unread: boolean;
   attachments?: MailAttachment[] | string; // MailAttachment[] for inbox, JSON string for sent
 }
@@ -32,6 +33,7 @@ export interface SentMail {
   snippet: string;
   body?: string;
   date: string;
+  sent_at?: string;
   status?: string;
   has_attachments?: boolean;
   attachments?: string; // JSON string array of URLs
@@ -85,6 +87,7 @@ export function transformSentEmail(email: ApiSentEmail): SentMail {
     subject: email.subject,
     snippet: cleanPreviewText(email.body || email.body_preview),
     date: formatRelativeTime(email.sent_at),
+    sent_at: email.sent_at,
     status: email.status,
     has_attachments: email.has_attachments,
   };

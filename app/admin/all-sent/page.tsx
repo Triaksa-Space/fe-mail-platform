@@ -29,6 +29,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 import { useRequirePermission } from "@/hooks/use-require-permission";
+import { useRelativeTimeTicker } from "@/hooks/use-relative-time-ticker";
 
 interface AdminSentResponse {
   data: ApiSentEmail[];
@@ -62,6 +63,8 @@ interface EmailDetail {
 }
 
 export default function AdminAllSentPage() {
+  useRelativeTimeTicker();
+
   const { allowed } = useRequirePermission("all_sent");
   const token = useAuthStore((state) => state.token);
   const { toast } = useToast();

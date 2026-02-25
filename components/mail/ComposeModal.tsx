@@ -80,6 +80,13 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
   const [hasShownLimitToast, setHasShownLimitToast] = useState(false);
   const replyBodyRef = useRef<HTMLTextAreaElement | null>(null);
   const forwardToRef = useRef<HTMLInputElement | null>(null);
+  // Converts plain text to safe HTML (escapes special chars, preserves line breaks)
+  const plainTextToHtml = (text: string) =>
+    text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br>");
 
   // Track initial form state for dirty detection
   const initialStateRef = useRef<FormState>({
@@ -129,18 +136,27 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
 
       if (forwardData) {
         // Forward mode
-        initialSubject = forwardData.subject;
+        initialSubject = forwardData.subject.startsWith("Fwd:")
+          ? forwardData.subject
+          : `Fwd: ${forwardData.subject}`;
+
+        let forwardBodyText = "";
+        if (forwardData.body) {
+          const tmp = document.createElement("div");
+          tmp.innerHTML = forwardData.body;
+          forwardBodyText = tmp.textContent || tmp.innerText || "";
+        }
 
         initialMessage = [
           "",
           "",
-          "---------- Forwarded message ---------",
+          "---------- Forwarded message ----------",
           `From: ${forwardData.from}`,
           `Date: ${forwardData.date}`,
           `Subject: ${forwardData.subject}`,
           `To: ${forwardData.to}`,
           "",
-          forwardData.body,
+          forwardBodyText,
         ].join("\n");
 
         initialAttachments = forwardData.attachments;
@@ -151,7 +167,6 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           ? replyTo.subject
           : `Re: ${replyTo.subject}`;
 
-        // Build quoted original email content (plain text, editable like forward)
         let plainText = "";
         if (replyTo.body) {
           const tmp = document.createElement("div");
@@ -182,6 +197,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           "",
           plainText,
         ].join("\n");
+
       }
 
       setTo(initialTo);
@@ -315,7 +331,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       await apiClient.post("/email/send/resend", {
         to,
         subject,
-        body: message,
+        body: plainTextToHtml(message),
         attachments: attachments.map((att) => att.url),
       });
 

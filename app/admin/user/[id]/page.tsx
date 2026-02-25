@@ -14,6 +14,7 @@ import { EnvelopeOpenIcon } from '@heroicons/react/24/solid';
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import { Button } from "@/components/ui/button";
 import CenterTruncate from "@/components/ui/center-truncate";
+import { useRelativeTimeTicker } from "@/hooks/use-relative-time-ticker";
 
 // Inbox email interface (from /email/by_user/:id)
 interface InboxEmail {
@@ -55,6 +56,8 @@ interface UserDetails {
 }
 
 export default function UserDetailPage() {
+  useRelativeTimeTicker();
+
   const params = useParams();
   const router = useRouter();
   const roleId = useAuthStore((state) => state.roleId);

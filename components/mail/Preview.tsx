@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import {
   Reply,
   Forward,
@@ -18,6 +18,7 @@ import EmailBodyCard from "./EmailBodyCard";
 import AttachmentList from "./AttachmentList";
 import { Attachment, extractFilenameFromUrl } from "@/lib/attachmentUtils";
 import { ForwardData } from "./ComposeModal";
+import { useRelativeTimeTicker } from "@/hooks/use-relative-time-ticker";
 
 interface PreviewProps {
   email: Mail | null;
@@ -40,6 +41,8 @@ const Preview: React.FC<PreviewProps> = ({
   isSentView = false,
   isSentDetailLoading = false,
 }) => {
+  useRelativeTimeTicker();
+
   const [emailDetail, setEmailDetail] = useState<EmailDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -171,6 +174,10 @@ const Preview: React.FC<PreviewProps> = ({
   };
 
   const attachments = getAttachments();
+  const displayDate =
+    isSentView && email.sentAt
+      ? formatRelativeTime(email.sentAt)
+      : emailDetail?.RelativeTime || email.date;
   const attachmentItems = attachments.map((att) => ({
     name: att.Filename,
     url: att.URL,
@@ -197,7 +204,7 @@ const Preview: React.FC<PreviewProps> = ({
     onForward({
       from: isSentView ? email.from : (emailDetail?.SenderEmail || email.fromEmail || email.from),
       to: isSentView ? (email.to || "") : (userEmail || ""),
-      date: emailDetail?.RelativeTime || email.date,
+      date: displayDate,
       subject: email.subject,
       body: plainText,
       attachments: fwdAttachments,
@@ -300,7 +307,7 @@ const Preview: React.FC<PreviewProps> = ({
                       </span>
                     </div>
                     <span className="text-neutral-600 text-xs font-normal font-['Roboto'] leading-5 line-clamp-1">
-                      {emailDetail?.RelativeTime || email.date}
+                      {displayDate}
                     </span>
                   </div>
                   {/* To row */}
