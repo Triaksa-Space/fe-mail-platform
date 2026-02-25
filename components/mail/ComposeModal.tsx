@@ -354,12 +354,16 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
         const userHtml = message.trim()
           ? `<div>${plainTextToHtml(message)}</div>`
           : "";
-        const senderLabel = forwardData.fromName
-          ? `${forwardData.fromName} <${forwardData.from}>`
-          : forwardData.from;
+        const fromLabel = forwardData.fromName
+          ? `${plainTextToHtml(forwardData.fromName)} &lt;${plainTextToHtml(forwardData.from)}&gt;`
+          : `&lt;${plainTextToHtml(forwardData.from)}&gt;`;
         const metaHtml =
           `<div style="margin-top:16px;color:#4B5563;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
-          `On ${plainTextToHtml(formatForwardDate(forwardData.date))} ${plainTextToHtml(senderLabel)} wrote:` +
+          `<div>---------- Forwarded message ----------</div>` +
+          `<div>From: ${fromLabel}</div>` +
+          `<div>Date: ${plainTextToHtml(formatForwardDate(forwardData.date))}</div>` +
+          `<div>Subject: ${plainTextToHtml(forwardData.subject)}</div>` +
+          `<div>To: &lt;${plainTextToHtml(forwardData.to)}&gt;</div>` +
           `</div>` +
           `<div style="margin-top:8px;">${DOMPurify.sanitize(forwardData.body)}</div>`;
         bodyToSend = userHtml + metaHtml;
@@ -741,18 +745,25 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                     className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden"
                   />
 
-                  {/* 1 enter = 1 line height (20px) before "On..." */}
+                  {/* 1 enter = 1 line height (20px) before forwarded block */}
                   <div className="h-5 shrink-0" />
 
-                  {/* Forwarded message label */}
-                  <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5 pb-3">
-                    On {formatForwardDate(forwardData!.date)}{" "}
-                    {forwardData!.fromName ? forwardData!.fromName : forwardData!.from}
-                    {forwardData!.fromName && (
-                      <><br />&lt;{forwardData!.from}&gt;</>
-                    )}{" "}
-                    wrote:
-                  </p>
+                  {/* Forwarded message metadata */}
+                  <div className="flex flex-col pb-3">
+                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">---------- Forwarded message ----------</p>
+                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
+                      From: {forwardData!.fromName && `${forwardData!.fromName} `}&lt;{forwardData!.from}&gt;
+                    </p>
+                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
+                      Date: {formatForwardDate(forwardData!.date)}
+                    </p>
+                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
+                      Subject: {forwardData!.subject}
+                    </p>
+                    <p className="text-[#4B5563] text-sm font-normal font-['Roboto'] leading-5">
+                      To: &lt;{forwardData!.to}&gt;
+                    </p>
+                  </div>
 
                   {/* Forwarded email body rendered as HTML — no wrapper scroll */}
                   {forwardData!.body && (
