@@ -468,7 +468,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
             // Mobile: full screen with 16px vertical padding
             "h-full py-4",
             // Desktop: centered modal with max dimensions
-            "md:h-auto md:py-0 md:max-h-[min(800px,90vh)] md:max-w-sm lg:max-w-[900px] md:rounded-lg md:shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] md:bg-white"
+            "md:py-0 md:max-w-sm lg:max-w-[900px] md:rounded-lg md:shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] md:bg-white",
+            "md:h-[800px] md:max-h-[90vh]"
           )}
         >
           {/* Header Action Row */}
