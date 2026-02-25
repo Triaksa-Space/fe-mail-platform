@@ -214,7 +214,7 @@ const Preview: React.FC<PreviewProps> = ({
       to: isSentView ? (email.to || "") : (userEmail || ""),
       date: displayDate,
       subject: email.subject,
-      body: plainText,
+      body: htmlBody || plainText,
       attachments: fwdAttachments,
     });
   };

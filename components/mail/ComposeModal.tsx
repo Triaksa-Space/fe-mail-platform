@@ -643,7 +643,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 </div>
 
                 {/* Reply Mode - Card 2: Body (single card) */}
-                <div className="self-stretch flex-1 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
+                <div className="self-stretch flex-1 min-h-0 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
                   {/* User's reply textarea — auto-grows */}
                   <textarea
                     ref={replyBodyRef}
@@ -656,7 +656,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                       e.target.style.height = "auto";
                       e.target.style.height = `${e.target.scrollHeight}px`;
                     }}
-                    className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden min-h-[80px] mb-3"
+                    className="w-full bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-5 placeholder:text-neutral-400 resize-none overflow-hidden"
                   />
 
                   {/* 1 enter space */}
@@ -740,7 +740,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
                 </div>
 
                 {/* Forward Mode - Card 2: Body (single card) */}
-                <div className="self-stretch flex-1 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
+                <div className="self-stretch flex-1 min-h-0 min-w-0 px-3 py-2 bg-white rounded-xl border border-neutral-200 shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)] flex flex-col gap-0 overflow-y-auto overflow-x-hidden">
                   {/* User's compose area — auto-grows, no internal scroll */}
                   <textarea
                     id="compose-body"
