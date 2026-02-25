@@ -178,6 +178,7 @@ const Preview: React.FC<PreviewProps> = ({
     isSentView && email.sentAt
       ? formatRelativeTime(email.sentAt)
       : emailDetail?.RelativeTime || email.date;
+  const originalDateForCompose = email.sentAt || email.date;
   const attachmentItems = attachments.map((att) => ({
     name: att.Filename,
     url: att.URL,
@@ -212,7 +213,7 @@ const Preview: React.FC<PreviewProps> = ({
       from: isSentView ? email.fromEmail || email.from : (emailDetail?.SenderEmail || email.fromEmail || email.from),
       fromName: isSentView ? email.from : (emailDetail?.SenderName || undefined),
       to: isSentView ? (email.to || "") : (userEmail || ""),
-      date: displayDate,
+      date: originalDateForCompose,
       subject: email.subject,
       body: htmlBody || plainText,
       attachments: fwdAttachments,

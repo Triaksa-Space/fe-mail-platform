@@ -680,7 +680,7 @@ const InboxPageContent: React.FC = () => {
                 email: selectedEmail.fromEmail || selectedEmail.from,
                 subject: selectedEmail.subject,
                 from: selectedEmail.from,
-                date: selectedEmail.date,
+                date: selectedEmail.sentAt || selectedEmail.date,
                 body: replyHtmlBody || selectedEmail.body,
               }
             : undefined

@@ -126,6 +126,7 @@ export function transformEmailToMail(email: Email): Mail {
     snippet: email.Preview,
     body: email.Body,
     date: email.RelativeTime,
+    sentAt: email.Timestamp,
     unread: !email.IsRead,
     attachments,
   };

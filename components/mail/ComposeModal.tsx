@@ -353,7 +353,7 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
           ? `${plainTextToHtml(forwardData.fromName)} &lt;${plainTextToHtml(forwardData.from)}&gt;`
           : `&lt;${plainTextToHtml(forwardData.from)}&gt;`;
         const metaHtml =
-          `<div style="margin-top:16px;color:#4B5563;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
+          `<div style="margin-top:16px;color:#262626;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
           `<div>---------- Forwarded message ----------</div>` +
           `<div>From: ${fromLabel}</div>` +
           `<div>Date: ${plainTextToHtml(formatForwardDate(forwardData.date))}</div>` +
@@ -365,8 +365,8 @@ const ComposeModal: React.FC<ComposeModalProps> = ({
       } else if (isReplyMode && replyTo) {
         const userHtml = message.trim() ? `<div>${plainTextToHtml(message)}</div>` : "";
         const quoteHeader =
-          `<div style="margin-top:16px;color:#4B5563;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
-          `On ${plainTextToHtml(replyTo.date)} ${plainTextToHtml(replyTo.from)} &lt;${plainTextToHtml(replyTo.email)}&gt; wrote:` +
+          `<div style="margin-top:16px;color:#262626;font-size:14px;font-family:Roboto,sans-serif;line-height:20px;">` +
+          `On ${plainTextToHtml(formatForwardDate(replyTo.date))} ${plainTextToHtml(replyTo.from)} &lt;${plainTextToHtml(replyTo.email)}&gt; wrote:` +
           `</div>`;
         const quoteBody = replyTo.body
           ? `<blockquote style="margin:8px 0 0 0;padding-left:12px;border-left:3px solid #e5e7eb;">${DOMPurify.sanitize(replyTo.body)}</blockquote>`
