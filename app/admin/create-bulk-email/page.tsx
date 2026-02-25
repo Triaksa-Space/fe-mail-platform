@@ -309,14 +309,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 type="button"
                 onClick={() => updateCount(count - 1)}
                 disabled={count <= 2}
-                className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 disabled:border-neutral-200 disabled:bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
-                  count <= 2
-                    ? "text-neutral-300 cursor-not-allowed"
-                    : "text-primary-500 hover:bg-neutral-200"
-                )}
+                className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
               >
-                <MinusIcon className="w-4 h-4" />
+                <MinusIcon className="w-5 h-5" />
               </Button>
 
               <Button
@@ -325,12 +320,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                 type="button"
                 onClick={() => updateCount(count + 1)}
                 disabled={count >= 100}
-                className={cn(
-                  "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0",
-                  count >= 100
-                    ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
-                    : "text-primary-500 hover:bg-primary-100"
-                )}
+                className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
               >
                 <PlusIcon className="w-5 h-5" />
               </Button>
@@ -424,14 +414,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   type="button"
                   onClick={() => updatePasswordLength(passwordLength - 1)}
                   disabled={!isRandomPasswordActive || passwordLength <= 6}
-                  className={cn(
-                    "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 disabled:border-neutral-200 disabled:bg-neutral-100 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
-                  count <= 2
-                    ? "text-neutral-300 cursor-not-allowed"
-                    : "text-primary-500 hover:bg-neutral-200"
-                  )}
+                  className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
                 >
-                  <MinusIcon className="w-4 h-4" />
+                  <MinusIcon className="w-5 h-5" />
                 </Button>
 
                 <Button
@@ -440,12 +425,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
                   type="button"
                   onClick={() => updatePasswordLength(passwordLength + 1)}
                   disabled={!isRandomPasswordActive || passwordLength >= 32}
-                  className={cn(
-                    "w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 flex justify-center items-center gap-1 shrink-0 disabled:opacity-100",
-                    !isRandomPasswordActive || passwordLength >= 32
-                      ? "border-neutral-200 bg-neutral-100 text-neutral-300 cursor-not-allowed"
-                      : "text-primary-500 hover:bg-primary-100"
-                  )}
+                  className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
                 >
                   <PlusIcon className="w-5 h-5" />
                 </Button>
