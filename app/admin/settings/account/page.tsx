@@ -7,6 +7,7 @@ import { LogOut } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from "next/navigation";
 import { theme } from '@/app/theme';
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 
 const AccountPage: React.FC = () => {
   const router = useRouter();
@@ -38,7 +39,7 @@ const AccountPage: React.FC = () => {
   }
 
   if (!authLoaded) {
-    return <div>Loading...</div>;
+    return <AdminLoadingPlaceholder heightClassName="h-64" />;
   }
 
   if (!isAuthorized) {

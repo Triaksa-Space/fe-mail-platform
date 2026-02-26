@@ -1,19 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CircleXIcon, X, SendIcon, Paperclip } from 'lucide-react';
 import { Button } from './ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Toaster } from "@/components/ui/toaster";
 import axios from "axios";
+import { apiClient } from "@/lib/api-client";
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import LoadingProcessingPage from './ProcessLoading';
 import FooterNav from './FooterNav';
 import LoadingUploadingPage from './UploadLoading ';
 import DOMPurify from 'dompurify';
+import { PaperAirplaneIcon, XMarkIcon, PaperClipIcon } from "@heroicons/react/24/outline"
 
 // Interfaces
 interface UploadedAttachment {
@@ -53,14 +54,7 @@ const Send: React.FC = () => {
   const fetchEmailDetail = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/by_user/detail/${emailId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await apiClient.get(`/email/by_user/detail/${emailId}`);
 
       if (response.status === 200) {
         const data = response.data;
@@ -129,17 +123,7 @@ const Send: React.FC = () => {
         attachments: attachments.map(att => att.url),
       };
 
-      await axios.post(
-        // `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send/url_attachment`,
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/send/resend`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/send/resend", payload);
 
       toast({
         description: "Email sent successfully!",
@@ -156,7 +140,7 @@ const Send: React.FC = () => {
       } else {
         let errorMessage = "Failed to send email. Please try again.";
         if (axios.isAxiosError(error) && error.response?.data?.error) {
-          errorMessage = error.response.data.error;
+          errorMessage = error.response.data.message;
         }
         toast({
           description: errorMessage,
@@ -198,26 +182,21 @@ const Send: React.FC = () => {
         formData.append('attachment', file);
 
         try {
-          const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/upload/attachment`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
-              },
-              onUploadProgress: (progressEvent) => {
-                const percentCompleted = Math.round(
-                  (progressEvent.loaded * 100) / (progressEvent.total || 1)
-                );
-                setUploading(prevUploading =>
-                  prevUploading.map(upload =>
-                    upload.id === fileId ? { ...upload, progress: percentCompleted } : upload
-                  )
-                );
-              },
-            }
-          );
+          const response = await apiClient.post("/email/upload/attachment", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            onUploadProgress: (progressEvent) => {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / (progressEvent.total || 1)
+              );
+              setUploading(prevUploading =>
+                prevUploading.map(upload =>
+                  upload.id === fileId ? { ...upload, progress: percentCompleted } : upload
+                )
+              );
+            },
+          });
 
           const fileUrl = response.data.url;
 
@@ -227,7 +206,7 @@ const Send: React.FC = () => {
         } catch (error) {
           let errorMsg = `Failed to upload "${file.name}".`;
           if (axios.isAxiosError(error) && error.response?.data?.error) {
-            errorMsg += ` ${error.response.data.error}`;
+            errorMsg += ` ${error.response.data.message}`;
           }
           toast({
             description: errorMsg,
@@ -247,22 +226,15 @@ const Send: React.FC = () => {
     const attachmentToRemove = attachments[index];
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
-        { url: [attachmentToRemove.url] },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/delete-attachment", {
+        url: [attachmentToRemove.url],
+      });
 
       setAttachments(attachments.filter((_, i) => i !== index));
     } catch (error) {
       let errorMsg = `Failed to remove "${attachmentToRemove.name}".`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMsg += ` ${error.response.data.error}`;
+        errorMsg += ` ${error.response.data.message}`;
       }
       toast({
         description: errorMsg,
@@ -275,22 +247,13 @@ const Send: React.FC = () => {
   const handleCancel = async () => {
     try {
       const urls = attachments.map(att => att.url);
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/email/delete-attachment`,
-        { url: urls },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await apiClient.post("/email/delete-attachment", { url: urls });
 
       setAttachments([]);
     } catch (error) {
       let errorMsg = `Failed to remove attachments.`;
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMsg += ` ${error.response.data.error}`;
+        errorMsg += ` ${error.response.data.message}`;
       }
       toast({
         description: errorMsg,
@@ -313,7 +276,7 @@ const Send: React.FC = () => {
               router.push('/inbox');
             }}
           >
-            <CircleXIcon className="h-5 w-5" />
+            <XMarkIcon className="h-5 w-5" />
           </Button>
         </div>
         <div className='flex items-center gap-2'>
@@ -327,7 +290,7 @@ const Send: React.FC = () => {
               accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .jpg, .jpeg, .png, .gif, .bmp, .tiff, .mp3, .wav, .aac, .ogg, .mp4, .mov, .avi, .mkv, .zip, .rar, .7z, .tar, .gz, .webp"
             />
             <label htmlFor="attachments" className="cursor-pointer flex items-center gap-2 hover:bg-[#F5E193] p-2 rounded">
-              <Paperclip className="h-5 w-5" />
+              <PaperClipIcon className="h-5 w-5 text-neutral-800" />
             </label>
           </div>
         </div>
@@ -339,7 +302,7 @@ const Send: React.FC = () => {
             onClick={handleSendEmail}
             disabled={isLoading || uploading.length > 0}
           >
-            <SendIcon className="h-5 w-5" />
+            <PaperAirplaneIcon className="h-5 w-5" />
           </Button>
         </div>
       </header>
@@ -358,23 +321,23 @@ const Send: React.FC = () => {
               {/* Email Composition Form */}
               <div className="flex bg-white text-sm">
                 <div className="flex items-center gap-2 w-12">
-                  <label className="mt-2 text-gray-700 text-sm mb-2" htmlFor="from">
+                  <label className="mt-2 text-neutral-700 text-sm mb-2" htmlFor="from">
                     From
                   </label>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="ml-2 text-gray-700 text-sm">{email}</span>
+                  <span className="ml-2 text-neutral-700 text-sm">{email}</span>
                 </div>
               </div>
               <div className="flex bg-white text-sm w-full">
                 <div className="flex items-center gap-2 w-12">
-                  <label className="mt-3 text-gray-700 text-sm mb-2" htmlFor="to">
+                  <label className="mt-3 text-neutral-700 text-sm mb-2" htmlFor="to">
                     To
                   </label>
                 </div>
                 <div className="mt-2 flex-1">
                   <Input
-                    className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="text-sm shadow appearance-none border w-full py-1 px-2 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="to"
                     type="email"
                     placeholder="Recipient's email"
@@ -389,7 +352,7 @@ const Send: React.FC = () => {
               </div>
               <div className="mb-2 mt-2">
                 <Input
-                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="subject"
                   placeholder="Subject"
                   value={subject}
@@ -402,7 +365,7 @@ const Send: React.FC = () => {
               </div>
               <div className="mb-4">
                 <Textarea
-                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="text-sm shadow appearance-none border w-full py-1 px-2 text-neutral-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="message"
                   rows={13}
                   placeholder="Compose email"
@@ -424,9 +387,9 @@ const Send: React.FC = () => {
                 {attachments.map((file, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-2 bg-gray-50"
+                    className="flex items-center justify-between p-2 bg-neutral-50"
                   >
-                    <span className="text-sm text-gray-600 truncate">
+                    <span className="text-sm text-neutral-600 truncate">
                       {file.name}
                     </span>
                     <Button
@@ -436,7 +399,7 @@ const Send: React.FC = () => {
                       className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
                       onClick={() => handleRemoveAttachment(index)}
                     >
-                      <X className="h-4 w-4" />
+                      <XMarkIcon className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}
@@ -452,3 +415,4 @@ const Send: React.FC = () => {
 };
 
 export default Send;
+

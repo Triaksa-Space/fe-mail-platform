@@ -1,35 +1,68 @@
 'use client'
 
 import { useEffect, useState, Suspense } from "react"
-import { Minus, Plus } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import FooterAdminNav from "@/components/FooterAdminNav"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { useAuthStore } from "@/stores/useAuthStore"
 import axios from 'axios'
+import { apiClient } from "@/lib/api-client"
 import DomainSelector from "@/components/DomainSelector"
 import LoadingProcessingPage from "@/components/ProcessLoading"
-import { useRouter } from "next/dist/client/components/navigation"
+import { useRouter } from "next/navigation"
 import DOMPurify from 'dompurify';
+import { cn } from "@/lib/utils"
+import { AdminLayout, AdminContentCard } from "@/components/admin"
+import { CheckCircleIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
+import { Button } from "@/components/ui/button";
+import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
+import { useRequirePermission } from "@/hooks/use-require-permission";
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
-  <div className="flex justify-center items-center h-full"></div>
+  <AdminLoadingPlaceholder heightClassName="h-64" />
+);
+
+// Toggle Switch Component
+const ToggleSwitch: React.FC<{
+  active: boolean;
+  onChange: () => void;
+  label: string;
+  className?: string;
+}> = ({ active, onChange, label, className }) => (
+  <div className={cn("h-10 min-w-0 flex justify-start items-center gap-1", className)}>
+    <Button
+      variant="ghost"
+      type="button"
+      onClick={onChange}
+      className="w-10 h-6 p-0 relative"
+    >
+      <div className={cn(
+        "w-10 h-6 rounded-3xl transition-colors",
+        active ? "bg-primary-500" : "bg-neutral-200"
+      )}></div>
+      <div className={cn(
+        "w-5 h-5 absolute top-[1.5px] bg-white rounded-full transition-all",
+        active ? "left-[18.5px]" : "left-[1.5px]"
+      )}></div>
+    </Button>
+    <span className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-4">{label}</span>
+  </div>
 );
 
 const CreateBulkEmailPageContent: React.FC = () => {
-  const [selectedDomain, setSelectedDomain] = useState("mailria.com")
+  const { allowed } = useRequirePermission("create_bulk");
+  const [selectedDomain, setSelectedDomain] = useState("")
   const [count, setCount] = useState(2)
   const [password, setPassword] = useState("")
   const [baseName, setBaseName] = useState("")
+  const [passwordLength, setPasswordLength] = useState(6)
   const { toast } = useToast()
   const router = useRouter();
-  const token = useAuthStore((state) => state.token)
   const roleId = useAuthStore((state) => state.roleId);
   const storedToken = useAuthStore.getState().getStoredToken();
 
+  const [countInput, setCountInput] = useState("2")
+  const [passwordLengthInput, setPasswordLengthInput] = useState("6")
   const [receiveEmail, setReceiveEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isRandomPasswordActive, setIsRandomPasswordActive] = useState(false);
@@ -41,6 +74,11 @@ const CreateBulkEmailPageContent: React.FC = () => {
   // Initialize authLoaded on component mount
   useEffect(() => {
     setAuthLoaded(true);
+  }, []);
+
+  // Set page title
+  useEffect(() => {
+    document.title = "Create Bulk - Admin Mailria";
   }, []);
 
   // Redirect users based on authentication and role
@@ -63,12 +101,9 @@ const CreateBulkEmailPageContent: React.FC = () => {
   }
 
   const toggleRandomPassword = () => {
+    setIsRandomPasswordActive(!isRandomPasswordActive);
     if (!isRandomPasswordActive) {
-      generateRandomPassword();
-      setIsRandomPasswordActive(true);
-    } else {
       setPassword("");
-      setIsRandomPasswordActive(false);
     }
   };
 
@@ -83,44 +118,23 @@ const CreateBulkEmailPageContent: React.FC = () => {
   };
 
   const updateCount = (newCount: number) => {
-    if (newCount >= 1 && newCount <= 100) {
+    if (newCount >= 2 && newCount <= 100) {
       setCount(newCount)
+      setCountInput(String(newCount))
     }
   }
 
-  // const generateRandomNames = () => {
-  //   setIsRandom(true)
-  // }
-
-  const generateRandomPassword = () => {
-    const lower = "abcdefghijklmnopqrstuvwxyz";
-    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const numbers = "0123456789";
-    const symbols = "!@#$%^&*";
-    const allChars = lower + upper + numbers + symbols;
-
-    // Ensure at least one character from each category
-    let password = "";
-    password += lower.charAt(Math.floor(Math.random() * lower.length));
-    password += upper.charAt(Math.floor(Math.random() * upper.length));
-    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
-    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
-
-    // Fill the remaining characters
-    for (let i = 4; i < 8; i++) {
-      password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+  const updatePasswordLength = (newLength: number) => {
+    if (newLength >= 6 && newLength <= 32) {
+      setPasswordLength(newLength)
+      setPasswordLengthInput(String(newLength))
     }
-
-    // Shuffle the password to randomize character positions
-    password = password.split('').sort(() => 0.5 - Math.random()).join('');
-
-    setPassword(password);
-    // setIsPasswordRandom(true)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!password) {
+
+    if (!isRandomPasswordActive && !password) {
       toast({
         description: "Please provide a password.",
         variant: "destructive",
@@ -134,7 +148,7 @@ const CreateBulkEmailPageContent: React.FC = () => {
       })
       return
     }
-    if (password.length < 6) {
+    if (!isRandomPasswordActive && password.length < 6) {
       toast({
         description: "Password must be at least 6 characters long. Please try again.",
         variant: "destructive",
@@ -143,36 +157,32 @@ const CreateBulkEmailPageContent: React.FC = () => {
     }
     setIsLoading(true)
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/bulk`,
-        {
-          base_name: baseName || "random",
-          quantity: count,
-          password: password,
-          send_to: receiveEmail,
-          domain: selectedDomain
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      await apiClient.post("/user/bulk", {
+        base_name: baseName || "random",
+        quantity: count,
+        password: isRandomPasswordActive ? `random:${passwordLength}` : password,
+        send_to: receiveEmail,
+        domain: selectedDomain
+      })
       toast({
-        description: `Successfully created ${count} accounts.`,
+        title: `${count} email created successfully.`,
+        description: (
+          <>
+            {count} email created successfully.
+            <br />
+            Email list has been send to {receiveEmail}
+          </>
+        ),
         variant: "default",
       })
       // Reset the form
       setBaseName("")
       setPassword("")
       setReceiveEmail("")
-      // setIsRandom(false)
-      // setIsPasswordRandom(false)
     } catch (error) {
       let errorMessage = "Failed to create users. Please try again."
       if (axios.isAxiosError(error) && error.response?.data?.error) {
-        errorMessage = error.response.data.error
+        errorMessage = error.response.data.message
       }
       toast({
         description: errorMessage,
@@ -185,157 +195,280 @@ const CreateBulkEmailPageContent: React.FC = () => {
     }
   }
 
+  const isFormValid = receiveEmail && (baseName || isRandomNameActive) && (password || isRandomPasswordActive);
+
+  if (!allowed) return null;
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="flex-1 overflow-auto pb-20">
-        <div className="p-4 border-b flex items-center justify-between shadow appearance-non">
-          <Toaster />
+    <AdminLayout>
+      <Toaster />
+      <div className="inline-flex flex-col justify-start items-start gap-5 w-full self-stretch">
+        {/* Page Header */}
+        <div className="self-stretch inline-flex justify-start items-center gap-5">
+          <div className="text-neutral-800 text-2xl font-semibold font-['Roboto'] leading-8">
+            Create Bulk
+          </div>
         </div>
 
-        <div className="max-w-md mx-auto p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-
-            <div className="flex items-start gap-4">
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  onClick={toggleRandomName}
-                  className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomNameActive
-                    ? "bg-yellow-300 hover:bg-yellow-400"
-                    : "bg-[#ffeeac] hover:bg-yellow-300"
-                    }`}
-                >
-                  {isRandomNameActive ? "Random Name" : "Random Name"}
-                </Button>
+        {/* Form Card */}
+        <AdminContentCard className="w-full p-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Rows: Email + Domain + Quantity | Password + Password length + Receive email */}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.1fr)_max-content_minmax(0,1.35fr)_40px_40px_minmax(0,1.15fr)_40px_40px] lg:items-end">
+              <div className="relative min-w-0 flex flex-col">
+                <div className="h-3.5"></div>
+                <div className={cn(
+                  "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3",
+                  isRandomNameActive ? "bg-neutral-100" : "bg-white"
+                )}>
+                  <input
+                    type="text"
+                    value={isRandomNameActive ? "" : baseName}
+                    onChange={(e) => {
+                      const value = e.target.value.toLowerCase();
+                      const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+                      const domPurifyValue = DOMPurify.sanitize(sanitizedValue);
+                      setBaseName(domPurifyValue);
+                    }}
+                    placeholder="Insert email"
+                    disabled={isRandomNameActive}
+                    className={cn(
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-400",
+                      isRandomNameActive ? "text-neutral-400" : "text-neutral-800"
+                    )}
+                  />
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className={cn(
+                    "text-[10px] font-normal font-['Roboto'] leading-4",
+                    isRandomNameActive ? "text-neutral-400" : "text-neutral-800"
+                  )}>Email</span>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center gap-2 mt-auto mb-4">
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="shadow appearance-non h-12 w-12 rounded-none "
-                    onClick={() => updateCount(count - 1)}
-                    disabled={count <= 2}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Input
+              <ToggleSwitch
+                active={isRandomNameActive}
+                onChange={toggleRandomName}
+                label="Random email"
+                className="whitespace-nowrap"
+              />
+
+              <div className="relative min-w-0 flex flex-col lg:col-span-3">
+                <div className="h-3.5"></div>
+                <DomainSelector
+                  value={selectedDomain}
+                  onChange={(value) => setSelectedDomain(value)}
+                  className="h-10 w-full bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] border border-neutral-200 text-neutral-800 text-sm font-normal font-['Roboto'] [&>button]:h-full [&>button]:border-0 [&>button]:shadow-none [&>button]:ring-0 [&>button]:rounded-lg"
+                />
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center z-10">
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Domain</span>
+                </div>
+              </div>
+
+              <div className="relative min-w-0 flex flex-col">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center justify-center gap-3">
+                  <input
                     type="text"
-                    value={count}
+                    value={countInput}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (/^\d*$/.test(value)) { // Allow only digits
+                      if (/^\d*$/.test(value)) {
+                        setCountInput(value);
                         const numericValue = parseInt(value, 10);
-                        if (numericValue < 101) {
+                        if (!isNaN(numericValue) && numericValue >= 2 && numericValue <= 100) {
                           setCount(numericValue);
-                        } else if (value === "") {
-                          setCount(0); // Allow clearing the input
                         }
                       }
                     }}
-                    className="shadow appearance-non w-full h-12 text-center"
+                    onBlur={() => {
+                      const numericValue = parseInt(countInput, 10);
+                      if (!countInput || isNaN(numericValue) || numericValue < 2) {
+                        setCount(2);
+                        setCountInput("2");
+                      } else if (numericValue > 100) {
+                        setCount(100);
+                        setCountInput("100");
+                      }
+                    }}
+                    className="w-full bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none text-center"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="shadow appearance-non h-12 w-12 rounded-none"
-                    onClick={() => updateCount(count + 1)}
-                    disabled={count >= 100}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
                 </div>
-                <p className="text-center text-xs text-red-500">
-                  Minimum 2, max 100
-                </p>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4 whitespace-nowrap">Quantity (minimum 2, maximum 100)</span>
+                </div>
+              </div>
+
+              <Button
+                variant="outline"
+                size="icon"
+                type="button"
+                onClick={() => updateCount(count - 1)}
+                disabled={count <= 2}
+                className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
+              >
+                <MinusIcon className="w-5 h-5" />
+              </Button>
+
+              <Button
+                variant="outline"
+                size="icon"
+                type="button"
+                onClick={() => updateCount(count + 1)}
+                disabled={count >= 100}
+                className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
+              >
+                <PlusIcon className="w-5 h-5" />
+              </Button>
+
+            {/* Row 2: Same password + Random toggle | Password length + buttons | Email for receiving */}
+              <div className="relative min-w-0 flex flex-col">
+                <div className="h-3.5"></div>
+                <div className={cn(
+                  "h-10 px-3 py-2 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3",
+                  isRandomPasswordActive ? "bg-neutral-100" : "bg-white"
+                )}>
+                  <input
+                    type="text"
+                    value={password}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                      setPassword(sanitizedValue);
+                    }}
+                    placeholder="Insert password"
+                    disabled={isRandomPasswordActive}
+                    className={cn(
+                      "flex-1 bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-400",
+                      isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
+                    )}
+                  />
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className={cn(
+                    "text-[10px] font-normal font-['Roboto'] leading-4",
+                    isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
+                  )}>Same password</span>
+                </div>
+              </div>
+
+              <ToggleSwitch
+                active={isRandomPasswordActive}
+                onChange={toggleRandomPassword}
+                label="Random pass"
+                className="whitespace-nowrap"
+              />
+
+              <div className="min-w-0 flex items-end gap-4 lg:col-span-3">
+                <div className="relative flex-1 flex flex-col">
+                  <div className="h-3.5"></div>
+                  <div className={cn(
+                    "h-10 px-3 py-2 rounded-lg outline outline-1 outline-neutral-200 flex items-center justify-center gap-3 overflow-hidden",
+                    !isRandomPasswordActive ? "bg-neutral-100" : "bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]"
+                  )}>
+                    <input
+                      type="text"
+                      value={passwordLengthInput}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value)) {
+                          setPasswordLengthInput(value);
+                          const numericValue = parseInt(value, 10);
+                          if (!isNaN(numericValue) && numericValue >= 6 && numericValue <= 32) {
+                            setPasswordLength(numericValue);
+                          }
+                        }
+                      }}
+                      onBlur={() => {
+                        const numericValue = parseInt(passwordLengthInput, 10);
+                        if (!passwordLengthInput || isNaN(numericValue) || numericValue < 6) {
+                          setPasswordLength(6);
+                          setPasswordLengthInput("6");
+                        } else if (numericValue > 32) {
+                          setPasswordLength(32);
+                          setPasswordLengthInput("32");
+                        }
+                      }}
+                      disabled={!isRandomPasswordActive}
+                      className={cn(
+                        "w-full bg-transparent text-sm font-normal font-['Roboto'] leading-4 outline-none text-center",
+                        !isRandomPasswordActive ? "text-neutral-300" : "text-neutral-800"
+                      )}
+                    />
+                  </div>
+                  <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                    <span className={cn(
+                      "text-[10px] font-normal font-['Roboto'] leading-4",
+                      !isRandomPasswordActive ? "text-neutral-400" : "text-neutral-800"
+                    )}>Password length</span>
+                  </div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  onClick={() => updatePasswordLength(passwordLength - 1)}
+                  disabled={!isRandomPasswordActive || passwordLength <= 6}
+                  className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
+                >
+                  <MinusIcon className="w-5 h-5" />
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  onClick={() => updatePasswordLength(passwordLength + 1)}
+                  disabled={!isRandomPasswordActive || passwordLength >= 32}
+                  className="w-10 h-10 p-2 rounded-lg border border-primary-100 bg-primary-50 text-primary-500 flex justify-center items-center gap-1 shrink-0 [&_svg]:size-5 disabled:opacity-100 disabled:border-neutral-200 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:cursor-not-allowed enabled:hover:text-primary-600 enabled:hover:bg-primary-100 enabled:active:text-primary-500 enabled:active:bg-primary-100 enabled:active:border-primary-200"
+                >
+                  <PlusIcon className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="relative min-w-0 flex flex-col lg:col-span-3">
+                <div className="h-3.5"></div>
+                <div className="h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-neutral-200 flex items-center gap-3">
+                  <input
+                    type="email"
+                    value={receiveEmail}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, '');
+                      setReceiveEmail(sanitizedValue);
+                    }}
+                    placeholder="Insert email"
+                    className="flex-1 bg-transparent text-neutral-800 text-sm font-normal font-['Roboto'] leading-4 outline-none placeholder:text-neutral-400"
+                  />
+                </div>
+                <div className="px-1 absolute left-2 top-1 bg-white inline-flex justify-center items-center">
+                  <span className="text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Email for receiving list</span>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Input
-                value={isRandomNameActive ? "random" : baseName}
-                placeholder="Email (numeric)"
-                className={
-                  isRandomNameActive
-                    ? "shadow appearance-none flex-1 h-12 bg-gray-300"
-                    : "shadow appearance-none flex-1 h-12"
-                }
-                onChange={(e) => {
-                  const value = e.target.value.toLowerCase();
-                  setBaseName(value.replace(/\s/g, '')); // Remove spaces
-                  const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
-                  const domPurifyValue = DOMPurify.sanitize(sanitizedValue); // Sanitize
-                  setBaseName(domPurifyValue);
-                }}
-                disabled={isRandomNameActive}
-              />
-              <span className="text-lg">@</span>
-              <DomainSelector
-                value={selectedDomain}
-                onChange={(value) => setSelectedDomain(value)}
-                className="shadow appearance-non w-[180px]"
-              />
-            </div>
+            {/* Divider */}
+            <div className="w-full h-px bg-neutral-300"></div>
 
-            <div className="flex items-center gap-2">
-              <Input
-                type="text"
-                value={password}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
-                  setPassword(sanitizedValue); // Remove spaces
-                }}
-                placeholder="Password"
-                className={isRandomPasswordActive ? "shadow appearance-non flex-1 h-12 bg-gray-300" : "shadow appearance-non flex-1 h-12"}
-                disabled={isRandomPasswordActive}
-              />
-              <span className="text-lg text-white">@</span>
-              <Button
-                type="button"
-                onClick={toggleRandomPassword}
-                className={`shadow appearance-none w-[180px] h-12 font-bold text-black ${isRandomPasswordActive
-                  ? "bg-yellow-300 hover:bg-yellow-400"
-                  : "bg-[#ffeeac] hover:bg-yellow-300"
-                  }`}
-              >
-                {isRandomPasswordActive ? "Random Password" : "Random Password"}
-              </Button>
-            </div>
-
-            <Input
-              type="email"
-              value={receiveEmail}
-              onChange={(e) => {
-                const value = e.target.value;
-                const sanitizedValue = DOMPurify.sanitize(value).replace(/\s/g, ''); // Sanitize and remove spaces
-                setReceiveEmail(sanitizedValue); // Remove spaces
-              }}
-              placeholder="Email for receiving list"
-              className="shadow appearance-non h-12"
-            />
-
-            <div className="flex justify-center">
+            {/* Submit Button - Right Aligned */}
+            <div className="flex justify-end">
               <Button
                 type="submit"
-                className={`shadow appearance-non h-11 w-3/4 max-w-xs font-bold text-black ${!receiveEmail || !baseName || !password
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-[#ffeeac] hover:bg-yellow-300"
-                  }`}
-                disabled={!receiveEmail || !baseName || !password}
+                disabled={!isFormValid || isLoading}
+                className="h-10 px-4 py-2.5 btn-primary-skin inline-flex justify-center items-center gap-1.5 transition-colors"
               >
-                Create
+                <CheckCircleIcon className="w-5 h-5" />
+                <span className="text-base font-medium font-['Roboto'] leading-4">Create email</span>
               </Button>
             </div>
           </form>
-        </div>
+        </AdminContentCard>
       </div>
-      {isLoading && (
-        <LoadingProcessingPage />
-      )}
-      <FooterAdminNav />
-    </div>
+
+      {/* Loading Indicator */}
+      {isLoading && <LoadingProcessingPage message={`Creating ${count} accounts...`} />}
+    </AdminLayout>
   )
 }
 

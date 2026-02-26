@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import axios from 'axios';
+import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,8 +14,6 @@ import DOMPurify from 'dompurify';
 
 const Settings: React.FC = () => {
   const router = useRouter();
-  const token = useAuthStore((state) => state.token);
-  // const roleId = useAuthStore((state) => state.roleId);
 
   useEffect(() => {
     const storedToken = useAuthStore.getState().getStoredToken();
@@ -62,19 +61,18 @@ const Settings: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/change_password`,
-        {
-          old_password: currentPassword,
-          new_password: newPassword
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const response = await apiClient.put("/user/change_password", {
+        old_password: currentPassword,
+        new_password: newPassword,
+      });
+
+      // Update tokens to keep current session alive
+      if (response.data?.access_token) {
+        useAuthStore.getState().setToken(response.data.access_token);
+      }
+      if (response.data?.refresh_token) {
+        useAuthStore.getState().setRefreshToken(response.data.refresh_token);
+      }
 
       // Reset form
       setCurrentPassword('');
@@ -91,7 +89,7 @@ const Settings: React.FC = () => {
           setOldPasswordError("The password you entered is incorrect.");
         } else if (err.response?.data?.error) {
           toast({
-            description: `Failed to update password. ${err.response.data.error}`,
+            description: `Failed to update password. ${err.response.data.message}`,
             variant: "destructive",
           });
         } else {
@@ -172,7 +170,7 @@ const Settings: React.FC = () => {
               <Button
                 className={`w-3/4 py-2 px-4 shadow appearance-non font-bold rounded focus:outline-none focus:shadow-outline ${
                   isLoading || !currentPassword || !newPassword || !confirmPassword
-                    ? 'bg-gray-300 text-black cursor-not-allowed'
+                    ? 'bg-neutral-300 text-black cursor-not-allowed'
                     : 'bg-[#ffeeac] hover:bg-yellow-300 text-black'
                 }`}
                 onClick={handleSubmit}

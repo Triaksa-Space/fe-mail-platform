@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { XMarkIcon } from "@heroicons/react/24/outline"
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationEllipsis } from "@/components/ui/pagination";
-import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationComponentProps {
   totalCount: number;
@@ -39,60 +37,46 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
       endPage = totalPages - 1;
     }
 
-    pages.push(
-      <PaginationItem key={1}>
-        <PaginationLink
-          onClick={() => onPageChange(1)}
-          isActive={1 === currentPage}
-          className="hover:bg-gray-100 cursor-pointer"
-        >
-          1
-        </PaginationLink>
-      </PaginationItem>
+    const PageButton = ({ page, isActive }: { page: number; isActive: boolean }) => (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => onPageChange(page)}
+        className="w-9 h-9 rounded-lg cursor-pointer hover:bg-neutral-50"
+      >
+        <span className={`text-sm font-medium font-['Roboto'] leading-4 ${isActive ? "text-primary-500" : "text-neutral-700"}`}>
+          {page.toString().padStart(2, '0')}
+        </span>
+      </Button>
     );
 
+    const Ellipsis = () => (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsDialogOpen(true)}
+        className="w-9 h-9 rounded-lg hover:bg-neutral-50 cursor-pointer"
+      >
+        <span className="text-neutral-800 text-sm font-medium font-['Roboto'] leading-4">...</span>
+      </Button>
+    );
+
+    pages.push(<PageButton key={1} page={1} isActive={1 === currentPage} />);
+
     if (startPage > 2) {
-      pages.push(
-        <PaginationItem key="start-ellipsis">
-          <PaginationEllipsis onClick={() => setIsDialogOpen(true)} className="cursor-pointer" />
-        </PaginationItem>
-      );
+      pages.push(<Ellipsis key="start-ellipsis" />);
     }
 
     for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <PaginationItem key={i}>
-          <PaginationLink
-            onClick={() => onPageChange(i)}
-            isActive={i === currentPage}
-            className="hover:bg-gray-100 cursor-pointer"
-          >
-            {i}
-          </PaginationLink>
-        </PaginationItem>
-      );
+      pages.push(<PageButton key={i} page={i} isActive={i === currentPage} />);
     }
 
     if (endPage < totalPages - 1) {
-      pages.push(
-        <PaginationItem key="end-ellipsis">
-          <PaginationEllipsis onClick={() => setIsDialogOpen(true)} className="cursor-pointer" />
-        </PaginationItem>
-      );
+      pages.push(<Ellipsis key="end-ellipsis" />);
     }
 
     if (totalPages > 1) {
-      pages.push(
-        <PaginationItem key={totalPages}>
-          <PaginationLink
-            onClick={() => onPageChange(totalPages)}
-            isActive={totalPages === currentPage}
-            className="hover:bg-gray-100 cursor-pointer"
-          >
-            {totalPages}
-          </PaginationLink>
-        </PaginationItem>
-      );
+      pages.push(<PageButton key={totalPages} page={totalPages} isActive={totalPages === currentPage} />);
     }
 
     return pages;
@@ -112,83 +96,66 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
   };
 
   return (
-    <div className="pagination-container gap-4 px-4">
-      <div className="pagination-info text-sm text-gray-500">
-        Showing{" "}
-        {totalCount === 0
-          ? "0"
-          : `${(currentPage - 1) * pageSize + 1}-${Math.min(currentPage * pageSize, totalCount)}`}{" "}
-        of {totalCount}
+    <div className="inline-flex justify-between items-center w-full">
+      {/* Showing Results */}
+      <div className="rounded-sm outline outline-1 outline-offset-[-0.50px] outline-neutral-100 inline-flex flex-col justify-center items-start gap-2">
+        <div className="inline-flex justify-start items-center gap-2">
+          <div className="px-3 py-2 text-justify justify-center text-neutral-700 text-sm font-normal font-['Roboto'] leading-4">
+            Showing {totalCount > 0 ? ((currentPage - 1) * pageSize) + 1 : 0} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} results
+          </div>
+        </div>
       </div>
 
-      <div className="pagination-controls flex space-x-2">
-        <Pagination>
-          <PaginationContent className="flex">
-            {currentPage > 1 && (
-              <>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => onPageChange(1)}
-                    aria-label="Go to first page"
-                    className="hover:bg-gray-100 cursor-pointer"
-                  >
-                    <ChevronFirst className="h-4 w-4 cursor-pointer" />
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => onPageChange(currentPage - 1)}
-                    aria-label="Go to previous page"
-                    className="hover:bg-gray-100 cursor-pointer"
-                  >
-                    <ChevronLeft className="h-4 w-4 cursor-pointer" />
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-            {renderPaginationItems()}
-            {currentPage < totalPages && (
-              <>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => onPageChange(currentPage + 1)}
-                    aria-label="Go to next page"
-                    className="hover:bg-gray-100 cursor-pointer"
-                  >
-                    <ChevronRight className="h-4 w-4 cursor-pointer" />
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => onPageChange(totalPages)}
-                    aria-label="Go to last page"
-                    className="hover:bg-gray-100 cursor-pointer"
-                  >
-                    <ChevronLast className="h-4 w-4 cursor-pointer" />
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-          </PaginationContent>
-        </Pagination>
+      {/* Pagination Controls */}
+      <div className="inline-flex justify-end items-center gap-1">
+        {renderPaginationItems()}
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Go to Page</DialogTitle>
-          </DialogHeader>
-          <Input
-            type="number"
-            min={1}
-            max={totalPages}
-            value={pageInput}
-            onChange={(e) => setPageInput(e.target.value)}
-            placeholder="Enter page number"
-          />
-          <DialogFooter>
-            <Button onClick={handlePageInputSubmit}>Go</Button>
-          </DialogFooter>
+        <DialogContent className="w-80 p-4 bg-white rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08)] inline-flex flex-col justify-start items-center gap-4 overflow-hidden [&>button]:hidden">
+          <DialogTitle className="sr-only">Go to page</DialogTitle>
+          {/* Header */}
+          <div className="self-stretch inline-flex justify-between items-center">
+            <div className="justify-center text-neutral-800 text-base font-medium font-['Roboto'] leading-6">Go to Page</div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsDialogOpen(false)}
+              className="w-10 h-10 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline-neutral-200 overflow-hidden hover:bg-neutral-50"
+            >
+              <XMarkIcon className="w-5 h-5 text-neutral-800" />
+            </Button>
+          </div>
+
+          {/* Input */}
+          <div className="self-stretch flex flex-col justify-start items-start gap-2">
+            <div className="self-stretch relative flex flex-col justify-start items-start">
+              <div className="self-stretch h-3.5"></div>
+              <div className="self-stretch h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] outline-neutral-200 inline-flex justify-start items-center gap-3">
+                <input
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  value={pageInput}
+                  onChange={(e) => setPageInput(e.target.value)}
+                  placeholder={`1 - ${totalPages}`}
+                  className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
+                />
+              </div>
+              <div className="px-1 left-[8px] top-0 absolute bg-white inline-flex justify-center items-center gap-2.5">
+                <div className="justify-center text-neutral-800 text-[10px] font-normal font-['Roboto'] leading-4">Page number</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Button */}
+          <Button
+            onClick={handlePageInputSubmit}
+            disabled={!pageInput}
+            className="self-stretch h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
+          >
+            <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Go</div>
+          </Button>
         </DialogContent>
       </Dialog>
     </div>
@@ -196,3 +163,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
 };
 
 export default PaginationComponent;
+
+
+

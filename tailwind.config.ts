@@ -8,8 +8,24 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
+  		extend: {
+  			fontFamily: {
+  				sans: ["Roboto", "sans-serif"],
+  				mono: ["Roboto", "sans-serif"],
+  			},
   		colors: {
+  			blue: {
+  				50: "var(--primary-50)",
+  				100: "var(--primary-100)",
+  				200: "var(--primary-200)",
+  				300: "var(--primary-300)",
+  				400: "var(--primary-400)",
+  				500: "var(--primary-500)",
+  				600: "var(--primary-600)",
+  				700: "var(--primary-700)",
+  				800: "var(--primary-800)",
+  				900: "var(--primary-900)",
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -22,7 +38,17 @@ export default {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				foreground: 'hsl(var(--primary-foreground))',
+  				50: 'var(--primary-50)',
+  				100: 'var(--primary-100)',
+  				200: 'var(--primary-200)',
+  				300: 'var(--primary-300)',
+  				400: 'var(--primary-400)',
+  				500: 'var(--primary-500)',
+  				600: 'var(--primary-600)',
+  				700: 'var(--primary-700)',
+  				800: 'var(--primary-800)',
+  				900: 'var(--primary-900)',
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',
@@ -38,7 +64,44 @@ export default {
   			},
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
+  				foreground: 'hsl(var(--destructive-foreground))',
+  				50: 'var(--destructive-50)',
+  				100: 'var(--destructive-100)',
+  				200: 'var(--destructive-200)',
+  				300: 'var(--destructive-300)',
+  				400: 'var(--destructive-400)',
+  				500: 'var(--destructive-500)',
+  				600: 'var(--destructive-600)',
+  				700: 'var(--destructive-700)',
+  				800: 'var(--destructive-800)',
+  				900: 'var(--destructive-900)',
+  			},
+  			neutral: {
+  				50: 'var(--neutral-50)',
+  				100: 'var(--neutral-100)',
+  				200: 'var(--neutral-200)',
+  				300: 'var(--neutral-300)',
+  				400: 'var(--neutral-400)',
+  				500: 'var(--neutral-500)',
+  				600: 'var(--neutral-600)',
+  				700: 'var(--neutral-700)',
+  				800: 'var(--neutral-800)',
+  				900: 'var(--neutral-900)',
+  			},
+  			success: {
+  				50: 'var(--success-50)',
+  				500: 'var(--success-500)',
+  				600: 'var(--success-600)',
+  			},
+  			error: {
+  				50: 'var(--error-50)',
+  				500: 'var(--error-500)',
+  				600: 'var(--error-600)',
+  			},
+  			warning: {
+  				50: 'var(--warning-50)',
+  				500: 'var(--warning-500)',
+  				600: 'var(--warning-600)',
   			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
@@ -55,8 +118,22 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+  		keyframes: {
+  			'fade-in': {
+  				'0%': { opacity: '0' },
+  				'100%': { opacity: '1' },
+  			},
+  			'fade-in-up': {
+  				'0%': { opacity: '0', transform: 'translateY(10px)' },
+  				'100%': { opacity: '1', transform: 'translateY(0)' },
+  			},
+  		},
+  		animation: {
+  			'fade-in': 'fade-in 200ms ease-out',
+  			'fade-in-up': 'fade-in-up 200ms ease-out',
+  		},
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

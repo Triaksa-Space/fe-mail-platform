@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Roboto, sans-serif;
-}
+/* ========================================
+   MAILRIA DESIGN SYSTEM
+   ======================================== */
 
-/* styles.css or a CSS module */
+/* Table styles */
 .table-container {
   overflow-x: auto;
 }
@@ -38,20 +38,99 @@ body {
   .pagination-controls {
     justify-content: center;
     overflow-y: auto;
-    max-height: 200px; /* Adjust as needed */
+    max-height: 200px;
   }
 }
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* Neutral Colors (Gray) */
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3F4F6;
+    --neutral-200: #E5E7EB;
+    --neutral-300: #D1D5DB;
+    --neutral-400: #9CA3AF;
+    --neutral-500: #6B7280;
+    --neutral-600: #4B5563;
+    --neutral-700: #374151;
+    --neutral-800: #1F2937;
+    --neutral-900: #111827;
+
+    /* Primary Colors (Blue) */
+    --primary-50: #E6F2FD;
+    --primary-100: #CCE4FB;
+    --primary-200: #9ACAF7;
+    --primary-300: #67AFF2;
+    --primary-400: #027AEA;
+    --primary-500: #027AEA;
+    --primary-600: #0262BB;
+    --primary-700: #01315E;
+    --primary-800: #01315E;
+    --primary-900: #00182F;
+
+    /* Primary Button Tokens */
+    --primary-300-main: #67AFF2;
+    --primary-400-main: #3595EE;
+    --primary-500-main: #027AEA;
+    --primary-600-main: #0262BB;
+
+    /* Success Colors (Green) */
+    --success-50: #F0FDF4;
+    --success-100: #DCFCE7;
+    --success-200: #BBF7D0;
+    --success-300: #86EFAC;
+    --success-400: #4ADE80;
+    --success-500: #22C55E;
+    --success-600: #16A34A;
+    --success-700: #15803D;
+    --success-800: #166534;
+    --success-900: #14532D;
+
+    /* Warning Colors (Orange) */
+    --warning-50: #FFFBEB;
+    --warning-100: #FEF3C7;
+    --warning-200: #FDE68A;
+    --warning-300: #FCD34D;
+    --warning-400: #FBBF24;
+    --warning-500: #F59E0B;
+    --warning-600: #D97706;
+    --warning-700: #B45309;
+    --warning-800: #92400E;
+    --warning-900: #78350F;
+
+    /* Destructive Colors (Red) */
+    --destructive-50: #FEF2F2;
+    --destructive-100: #FEE2E2;
+    --destructive-200: #FECACA;
+    --destructive-300: #FCA5A5;
+    --destructive-400: #F87171;
+    --destructive-500: #EF4444;
+    --destructive-600: #DC2626;
+    --destructive-700: #B91C1C;
+    --destructive-800: #991B1B;
+    --destructive-900: #7F1D1D;
+
+    /* Error Colors (Alias to Destructive) */
+    --error-50: #FEF2F2;
+    --error-100: #FEE2E2;
+    --error-200: #FECACA;
+    --error-300: #FCA5A5;
+    --error-400: #F87171;
+    --error-500: #EF4444;
+    --error-600: #DC2626;
+    --error-700: #B91C1C;
+    --error-800: #991B1B;
+    --error-900: #7F1D1D;
+
+    /* Shadcn/UI CSS Variables */
+    --background: 210 20% 98%; /* neutral-50 */
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 239 84% 67%; /* #6366F1 */
+    --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -62,7 +141,7 @@ body {
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 239 84% 67%; /* #6366F1 */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -70,6 +149,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -77,7 +157,7 @@ body {
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -101,8 +181,212 @@ body {
 @layer base {
   * {
     @apply border-border;
+    font-family: 'Roboto', sans-serif;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Roboto', sans-serif;
+  }
+  input[type="password"] {
+    letter-spacing: 0;
   }
 }
+
+/* ========================================
+   COMPONENT UTILITIES
+   ======================================== */
+
+@layer components {
+  .search-input {
+    @apply transition-all;
+  }
+
+  .search-input-wrapper:focus-within {
+    border-radius: 8px;
+    border: 1px solid var(--primary-300);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(225, 225, 254, 0.7);
+    outline: none;
+  }
+
+  /* Page Layout - Mobile */
+  .page-layout-mobile {
+    @apply flex flex-col justify-between items-center;
+    @apply w-full max-w-[390px] min-h-[844px] p-4;
+  }
+
+  /* Page Layout - Desktop */
+  .page-layout-desktop {
+    @apply flex flex-col justify-between items-center;
+    @apply w-full max-w-[1440px] min-h-screen py-8 px-[180px];
+  }
+
+  /* Auth Card */
+  .auth-card {
+    @apply bg-white rounded-xl shadow-lg p-6 w-full max-w-sm;
+  }
+
+  /* Input Base */
+  .input-base {
+    @apply h-10 text-sm border-neutral-200 rounded-lg;
+    @apply focus:border-primary-500 focus:ring-2 focus:ring-primary-100;
+    @apply placeholder:text-neutral-400;
+  }
+
+  /* Button Primary */
+  .btn-primary {
+    @apply h-10 text-sm font-semibold rounded-lg text-white;
+    @apply transition-colors duration-200;
+    @apply border border-[var(--primary-500-main)] bg-[var(--primary-500-main)];
+    @apply hover:border-[var(--primary-600-main)] hover:bg-[var(--primary-600-main)];
+    @apply shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)];
+    @apply disabled:bg-[var(--primary-300-main)] disabled:border-[var(--primary-400-main)];
+    @apply disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary-skin {
+    @apply rounded-lg text-white;
+    @apply transition-colors duration-200;
+    @apply border border-[var(--primary-500-main)] bg-[var(--primary-500-main)];
+    @apply hover:border-[var(--primary-600-main)] hover:bg-[var(--primary-600-main)];
+    @apply shadow-[0px_2px_6px_0px_rgba(16,24,40,0.06)];
+    @apply disabled:bg-[var(--primary-300-main)] disabled:border-[var(--primary-400-main)];
+    @apply disabled:text-white disabled:opacity-100 disabled:cursor-not-allowed;
+  }
+
+  /* Button Secondary */
+  .btn-secondary {
+    @apply bg-neutral-100 hover:bg-neutral-200 text-neutral-700;
+    @apply h-10 text-sm font-medium rounded-lg;
+    @apply transition-colors duration-200;
+  }
+
+  /* Link Style */
+  .link-primary {
+    @apply text-primary-500 hover:text-primary-500 hover:underline;
+    @apply text-sm transition-colors duration-200;
+  }
+
+  /* Feature Card */
+  .feature-card {
+    @apply flex items-center gap-3 p-3 rounded-lg;
+    @apply bg-white border border-neutral-100;
+  }
+}
+
+/* ========================================
+   PERFORMANCE & ANIMATION UTILITIES
+   ======================================== */
+
+@layer utilities {
+  /* GPU-accelerated animations */
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out forwards;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out forwards;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-slide-up,
+    .animate-slide-down {
+      animation: none;
+    }
+  }
+
+  /* Content visibility for better scroll performance */
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+  }
+
+  /* Smooth scrolling optimization */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* Hardware acceleration hint */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* Optimize text rendering */
+  .text-optimized {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: neutralscale;
+  }
+
+  /* Hide scrollbar by default and show on interaction */
+  .scrollbar-auto-hide {
+    scrollbar-width: none;
+    scrollbar-gutter: stable;
+  }
+
+  .scrollbar-auto-hide::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .scrollbar-auto-hide:hover {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-auto-hide:hover::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-auto-hide:hover::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb {
+    background: var(--neutral-300);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-auto-hide:hover::-webkit-scrollbar-thumb:hover {
+    background: var(--neutral-400);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

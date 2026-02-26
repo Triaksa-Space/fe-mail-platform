@@ -550,9 +550,9 @@ export const theme = {
   colors: {
     primary: '#ffeeac',           // Yellow/gold accent
     primaryHover: '#f7d65d',      // Darker yellow
-    secondary: '#f0f0f0',         // Light gray
+    secondary: '#f0f0f0',         // Light neutral
     textPrimary: '#333',          // Dark text
-    textSecondary: '#666',        // Gray text
+    textSecondary: '#666',        // neutral text
     error: '#e3342f',             // Red
     background: '#ffffff',        // White
     border: '#e2e8f0',            // Light border
@@ -574,7 +574,7 @@ export const theme = {
 - **Primary**: Yellow/Gold (`#ffeeac`) - Used for buttons, active states
 - **Hover**: Darker yellow (`#F5E193`, `#f7d65d`)
 - **Background**: White (`#ffffff`)
-- **Text**: Dark gray (`#333`)
+- **Text**: Dark neutral (`#333`)
 
 ---
 

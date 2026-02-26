@@ -1,0 +1,71 @@
+"use client";
+
+import React from "react";
+import { cn } from "@/lib/utils";
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from "@/components/ui/button";
+
+interface FaqSearchProps {
+  value: string;
+  onChange: (value: string) => void;
+  resultCount: number;
+  className?: string;
+}
+
+const FaqSearch: React.FC<FaqSearchProps> = ({
+  value,
+  onChange,
+  resultCount,
+  className,
+}) => {
+  const handleClear = () => {
+    onChange("");
+  };
+
+  return (
+    <div className={cn("self-stretch flex flex-col justify-start items-start gap-2", className)}>
+      {/* Search Input */}
+      <div className="self-stretch relative">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Search any question here"
+          className={cn(
+            "search-input self-stretch w-full h-10 px-3 py-2 bg-white rounded-lg",
+            "shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)]",
+            "outline outline-1 outline-offset-[-1px] outline-neutral-200",
+            "text-sm text-neutral-900 placeholder:text-neutral-400",
+            "transition-all pr-12"
+          )}
+        />
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
+          {value ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleClear}
+              className="h-5 w-5 text-neutral-400 hover:text-neutral-600 hover:bg-transparent transition-colors"
+              aria-label="Clear search"
+            >
+              <XMarkIcon className="h-4 w-4" />
+            </Button>
+          ) : (
+            <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />
+          )}
+        </div>
+      </div>
+
+      {/* Result Count */}
+      {value.trim() && (
+        <p className="text-xs text-neutral-500 leading-4">
+          {resultCount} result{resultCount > 1 ? "s" : ""} &quot;{value}&quot;
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default FaqSearch;
+
+

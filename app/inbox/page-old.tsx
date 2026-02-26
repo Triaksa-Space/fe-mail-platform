@@ -10,8 +10,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { theme } from "../theme";
-import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ArrowPathIcon} from "@heroicons/react/24/outline"
 
 // Loading fallback component
 const LoadingFallback: React.FC = () => (
@@ -183,7 +183,7 @@ const InboxPageContent: React.FC = () => {
               handleRefresh();
             }}
           >
-            <RefreshCw className="h-6 w-6" />
+            <ArrowPathIcon className="h-6 w-6" />
           </Button>
         </h1>
         <h1
@@ -216,7 +216,7 @@ const InboxPageContent: React.FC = () => {
               {emails.map((email) => (
                 <div
                   key={email.ID}
-                  className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-gray-100 
+                  className={`p-4 cursor-pointer transform transition duration-300 ease-in-out hover:scale-101 hover:shadow-lg hover:bg-neutral-100 
                       ${!email.IsRead ? "bg-[#F2F6FC]" : ""}`}
                   onClick={() => router.push(`/inbox/${email.email_encode_id}`)}
                 >
@@ -253,7 +253,7 @@ const InboxPageContent: React.FC = () => {
             </div>
           ) : (
             <div
-              className="p-4 text-center cursor-pointer text-blue-500 underline"
+              className="p-4 text-center cursor-pointer text-primary-500 underline"
               onClick={() => window.location.reload()}
             >
               No emails found. Please refresh your browser.
@@ -280,3 +280,5 @@ const InboxPage: React.FC = () => (
 );
 
 export default InboxPage;
+
+

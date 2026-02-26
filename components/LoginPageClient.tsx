@@ -1,0 +1,374 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Mail, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
+import FeatureList from "@/components/FeatureList";
+import { PageLayout, AuthCard, Footer } from "@/components/layout";
+import DOMPurify from "dompurify";
+import { LoginResponse } from "@/lib/api-types";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { usePasswordMask } from "@/hooks/use-password-mask";
+
+export default function LoginPageClient() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordMask = usePasswordMask(showPassword);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [blockedUntil, setBlockedUntil] = useState<Date | null>(null);
+  const [countdown, setCountdown] = useState(0);
+
+
+  const { setAuth } = useAuthStore();
+  const token = useAuthStore((state) => state.token);
+  const roleId = useAuthStore((state) => state.roleId);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!token || roleId === null) return;
+
+    // Redirect based on stored role
+    if (roleId === 0 || roleId === 2) {
+      router.push("/admin/overview");
+    } else if (roleId === 1) {
+      router.push("/inbox");
+    }
+  }, [token, roleId, router]);
+
+  const resetStatus = searchParams.get("reset");
+  useEffect(() => {
+    if (resetStatus !== "success") return;
+    toast({
+      description: "Password changed successfully.",
+      variant: "default",
+    });
+    router.replace("/");
+  }, [resetStatus, toast, router]);
+
+  useEffect(() => {
+    if (!blockedUntil) return;
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const diff = Math.ceil((blockedUntil.getTime() - now.getTime()) / 1000);
+
+      if (diff <= 0) {
+        setBlockedUntil(null);
+        setCountdown(0);
+      } else {
+        setCountdown(diff);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [blockedUntil]);
+
+  const formatCountdown = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const parseLockoutSeconds = (message?: string) => {
+    if (!message) return null;
+    const minutesMatch = message.match(/(\d+)\s*minutes?/i);
+    const secondsMatch = message.match(/(\d+)\s*seconds?/i);
+    const minutes = minutesMatch ? Number(minutesMatch[1]) : 0;
+    const seconds = secondsMatch ? Number(secondsMatch[1]) : 0;
+    const total = minutes * 60 + seconds;
+    return total > 0 ? total : null;
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!loginEmail || !passwordMask.password) return;
+
+    setLoginError("");
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post<LoginResponse>(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/login`,
+        {
+          email: loginEmail,
+          password: passwordMask.password,
+          remember_me: rememberMe,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const { access_token, refresh_token, user } = response.data;
+
+      // Fetch user details to get permissions (for admin users)
+      let permissions: string[] = user.permissions || [];
+      if (user.role_id === 0 || user.role_id === 2) {
+        try {
+          const userMeResponse = await axios.get<{ permissions: string[] }>(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+              },
+            }
+          );
+          permissions = userMeResponse.data.permissions || [];
+        } catch {
+          // If fetching permissions fails, continue with empty permissions
+          console.error("Failed to fetch user permissions");
+        }
+      }
+
+      // Store all auth data including permissions
+      setAuth({
+        token: access_token,
+        refreshToken: refresh_token,
+        email: user.email,
+        roleId: user.role_id,
+        permissions: permissions,
+        rememberMe: rememberMe,
+      });
+
+      // Redirect based on role
+      if (user.role_id === 0 || user.role_id === 2) {
+        router.push("/admin/overview");
+      } else if (user.role_id === 1) {
+        router.push("/inbox");
+      }
+    } catch (error) {
+      let errorMessage = "Invalid email or password";
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const data = error.response.data as { message?: string; blocked_until?: string; error?: string };
+        if (data.blocked_until) {
+          setBlockedUntil(new Date(data.blocked_until));
+          errorMessage = data.message || "Too many failed attempts. Try again in 5 minutes.";
+        } else if (data.error === "AUTH_ACCOUNT_LOCKED") {
+          const lockSeconds = parseLockoutSeconds(data.message);
+          if (lockSeconds) {
+            setBlockedUntil(new Date(Date.now() + lockSeconds * 1000));
+            errorMessage = data.message || "Account temporarily locked.";
+          } else if (data.message) {
+            errorMessage = data.message;
+          }
+        } else if (data.message) {
+          errorMessage = data.message;
+        }
+      }
+      setLoginError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const isFormValid = loginEmail && passwordMask.password;
+
+  useEffect(() => {
+    if (!blockedUntil) return;
+    setBlockedUntil(null);
+    setCountdown(0);
+  }, [loginEmail, passwordMask.password]);
+
+  return (
+    <>
+      <PageLayout variant="auth" className="gap-4 md:gap-8">
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full gap-8">
+          {/* Auth Card */}
+          <AuthCard>
+            {/* Logo + Tagline */}
+            <div className="flex flex-col items-center gap-0.5 mb-6 md:mb-6">
+              <Image
+                src="/mailria.png"
+                alt="Mailria"
+                width={112}
+                height={40}
+                className="h-10 w-28"
+                priority
+              />
+              <p className="text-sm font-normal italic text-neutral-400">
+                Nothing Extra. Just What Matters.
+              </p>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={onSubmit} className="flex flex-col gap-4 md:gap-4">
+              <div className="flex flex-col gap-5 md:gap-5">
+                <div className="flex flex-col gap-3 md:gap-3">
+                  {/* Email Field with Floating Label */}
+                  <div className="relative flex flex-col">
+                    <div className="h-3.5" />
+                    <div
+                      className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3 ${
+                        loginError ? "outline-red-500" : "outline-neutral-200"
+                      }`}
+                    >
+                      <div className="flex-1 flex items-center gap-2">
+                        <Mail className="w-5 h-5 text-neutral-400" />
+                        <input
+                          id="email"
+                          name="email"
+                          type="text"
+                          placeholder="example@mailria.com"
+                          required
+                          value={loginEmail}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const sanitizedValue = DOMPurify.sanitize(value).replace(
+                              /\s/g,
+                              ""
+                            );
+                            setLoginEmail(sanitizedValue);
+                            if (loginError) setLoginError("");
+                            if (blockedUntil) {
+                              setBlockedUntil(null);
+                              setCountdown(0);
+                            }
+                          }}
+                          className="flex-1 text-sm font-normal text-neutral-800 placeholder:text-[#9CA3AF] bg-transparent outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div className="px-1 absolute left-2 top-0 bg-white">
+                      <span className="text-[10px] font-normal text-neutral-800 leading-4">
+                        Email
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Password Field with Floating Label */}
+                  <div className="relative flex flex-col">
+                    <div className="h-3.5" />
+                    <div
+                      className={`h-10 px-3 py-2 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.04)] outline outline-1 outline-offset-[-1px] flex items-center gap-3 ${
+                        loginError ? "outline-red-500" : "outline-neutral-200"
+                      }`}
+                    >
+                      <div className="flex-1 flex items-center gap-2">
+                        <LockClosedIcon className="w-5 h-5 text-neutral-400" />
+                        <div className="relative flex-1">
+                          <input
+                            id="password"
+                            name="password"
+                            autoComplete="current-password"
+                            placeholder="***********"
+                            required
+                            ref={passwordMask.inputRef}
+                            {...passwordMask.inputProps}
+                            onChange={(e) => {
+                              passwordMask.inputProps.onChange(e);
+                              if (loginError) setLoginError("");
+                              if (blockedUntil) {
+                                setBlockedUntil(null);
+                                setCountdown(0);
+                              }
+                            }}
+                            className="w-full text-sm font-normal text-neutral-800 placeholder:text-[#9CA3AF] bg-transparent outline-none"
+                          />
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="h-auto w-auto p-0 hover:bg-transparent"
+                      >
+                        {showPassword ? (
+                          <Eye className="w-5 h-5 text-neutral-800" />
+                        ) : (
+                          <EyeOff className="w-5 h-5 text-neutral-800" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="px-1 absolute left-2 top-0 bg-white">
+                      <span className="text-[10px] font-normal text-neutral-800 leading-4">
+                        Password
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {loginError && (
+                  <p className="text-[12px] font-normal text-red-500">
+                    {loginError}
+                  </p>
+                )}
+
+                {/* Remember me + Forgot Password */}
+                <div className="my-0 flex items-center justify-between">
+                  <Checkbox
+                    id="remember-me"
+                    label="Remember me"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm font-normal text-primary-500 hover:text-primary-500 hover:underline transition-colors"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+
+                {/* Submit Button */}
+                <Button
+                  className="w-full text-base font-medium"
+                  type="submit"
+                  disabled={isLoading || !isFormValid || !!blockedUntil}
+                >
+                  {blockedUntil ? (
+                    <span className="inline-flex items-center gap-2">
+                      <LockClosedIcon className="h-4 w-4" />
+                      <span>Login ({formatCountdown(countdown)})</span>
+                    </span>
+                  ) : (isLoading ? "Signing in..." : "Login")}
+                </Button>
+              </div>
+
+              {/* Support By */}
+              <p className="text-xs font-normal text-center">
+                <span className="text-neutral-800">Support by: </span>
+                <a
+                  className="text-primary-500 font-medium underline"
+                  href="https://gamemarket.gg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GameMarket.gg
+                </a>{" "}
+                <span className="text-neutral-800">Ultimate gaming marketplace!</span>
+              </p>
+            </form>
+          </AuthCard>
+
+          {/* Why Mailria Section */}
+          <FeatureList />
+        </div>
+
+        {/* Footer */}
+      <Footer />
+      </PageLayout>
+
+      <Toaster />
+    </>
+  );
+}
+
+
+
