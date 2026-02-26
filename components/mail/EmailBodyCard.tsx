@@ -60,6 +60,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
   className,
 }) => {
   const [iframeHeight, setIframeHeight] = useState("auto");
+  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
@@ -79,6 +80,7 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
       const height = iframeDoc.body.scrollHeight;
       setIframeHeight(`${height}px`);
     }
+    setIframeLoaded(true);
   };
 
   // Convert Attachment[] to AttachmentList format
@@ -104,22 +106,34 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
       {/* Body */}
       <div className="min-h-0 overflow-auto">
         {body ? (
-          <iframe
-            srcDoc={body}
-            className="w-full"
-            style={{
-              height: iframeHeight,
-              width: "100%",
-              border: "none",
-              display: "block",
-              margin: 0,
-              padding: 0,
-            }}
-            onLoad={handleIframeLoad}
-            title="Email content"
-            sandbox="allow-same-origin allow-scripts allow-popups"
-            scrolling="no"
-          />
+          <div className="relative">
+            {!iframeLoaded && (
+              <div className="flex flex-col gap-2 py-2">
+                <div className="h-3 bg-neutral-100 rounded animate-pulse w-3/4" />
+                <div className="h-3 bg-neutral-100 rounded animate-pulse w-full" />
+                <div className="h-3 bg-neutral-100 rounded animate-pulse w-5/6" />
+                <div className="h-3 bg-neutral-100 rounded animate-pulse w-2/3" />
+              </div>
+            )}
+            <iframe
+              srcDoc={body}
+              className="w-full"
+              style={{
+                height: iframeHeight,
+                width: "100%",
+                border: "none",
+                display: "block",
+                margin: 0,
+                padding: 0,
+                visibility: iframeLoaded ? "visible" : "hidden",
+                position: iframeLoaded ? "static" : "absolute",
+              }}
+              onLoad={handleIframeLoad}
+              title="Email content"
+              sandbox="allow-same-origin allow-scripts allow-popups"
+              scrolling="no"
+            />
+          </div>
         ) : (
           <p className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap">
             {fallbackText || "No content"}

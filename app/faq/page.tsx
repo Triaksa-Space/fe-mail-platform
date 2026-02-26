@@ -64,7 +64,7 @@ const FaqPage: React.FC = () => {
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto relative z-10"
+        className="flex-1 overflow-y-auto overflow-x-hidden relative z-10"
       >
         <div className="min-h-full flex flex-col">
           {/* Main Content with padding */}

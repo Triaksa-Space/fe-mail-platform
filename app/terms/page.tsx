@@ -123,7 +123,7 @@ const TermsPage: React.FC = () => {
       {/* Scrollable Content */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto relative z-10"
+        className="flex-1 overflow-y-auto overflow-x-hidden relative z-10"
       >
         {/* Main Content with padding */}
         <div className="p-4 md:p-8 pb-0 md:pb-0">
