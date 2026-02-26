@@ -70,23 +70,57 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
-    if (iframe.contentWindow) {
-      const iframeDoc = iframe.contentWindow.document;
-
-      const style = iframeDoc.createElement("style");
-      style.textContent = IFRAME_STYLES;
-      iframeDoc.head.appendChild(style);
-
-      const links = iframeDoc.querySelectorAll("a");
-      links.forEach((link) => {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noopener noreferrer");
-      });
-
-      const height = iframeDoc.body.scrollHeight;
-      setIframeHeight(`${height}px`);
+    if (!iframe.contentWindow) {
+      setIframeLoaded(true);
+      return;
     }
-    setIframeLoaded(true);
+
+    const iframeDoc = iframe.contentWindow.document;
+
+    const style = iframeDoc.createElement("style");
+    style.textContent = IFRAME_STYLES;
+    iframeDoc.head.appendChild(style);
+
+    const links = iframeDoc.querySelectorAll("a");
+    links.forEach((link) => {
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+    });
+
+    const finalizeHeight = () => {
+      requestAnimationFrame(() => {
+        const height = iframeDoc.body.scrollHeight;
+        setIframeHeight(`${height}px`);
+        setIframeLoaded(true);
+      });
+    };
+
+    // Wait for all images to finish loading before calculating height,
+    // so scrollHeight reflects the true content size (avoids half-page jump).
+    const images = Array.from(iframeDoc.querySelectorAll<HTMLImageElement>("img"));
+    const pending = images.filter((img) => !img.complete);
+
+    if (pending.length === 0) {
+      finalizeHeight();
+      return;
+    }
+
+    let remaining = pending.length;
+    // Fallback: show after 5 s regardless, so slow/blocked images don't hang the UI.
+    const fallbackTimer = setTimeout(finalizeHeight, 5000);
+
+    const onSettled = () => {
+      remaining--;
+      if (remaining <= 0) {
+        clearTimeout(fallbackTimer);
+        finalizeHeight();
+      }
+    };
+
+    pending.forEach((img) => {
+      img.addEventListener("load", onSettled, { once: true });
+      img.addEventListener("error", onSettled, { once: true });
+    });
   };
 
   // Convert Attachment[] to AttachmentList format
