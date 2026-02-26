@@ -25,7 +25,7 @@ jobs:
 
       - name: Build & push image
         run: |
-          IMAGE_URI=888577043011.dkr.ecr.ap-southeast-1.amazonaws.com/gamemarket:prod-mailria-latest
+          IMAGE_URI=888577043011.dkr.ecr.ap-southeast-1.amazonaws.com/gamemarket:staging-mailria-latest
           docker build \
           --build-arg NEXT_PUBLIC_TINYMCE_API_KEY=${{ secrets.NEXT_PUBLIC_TINYMCE_API_KEY }} \
           -t $IMAGE_URI .
