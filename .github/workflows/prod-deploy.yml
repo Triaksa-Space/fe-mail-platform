@@ -1,4 +1,4 @@
-name: Staging Mailria-Build to ECR & Deploy to EC2
+name: PROD Mailria-Build to ECR & Deploy to EC2
 
 on:
   push:
