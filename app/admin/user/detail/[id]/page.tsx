@@ -45,6 +45,7 @@ const EmailDetailPage: React.FC = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadingFile, setDownloadingFile] = useState<string | null>(null);
   const [iframeHeight, setIframeHeight] = useState("400px");
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const [authLoaded, setAuthLoaded] = useState(false);
 
   // Auth check
@@ -133,46 +134,77 @@ const EmailDetailPage: React.FC = () => {
   // Handle iframe load
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
-    if (iframe.contentWindow) {
-      const iframeDoc = iframe.contentWindow.document;
-
-      // Add styles
-      const style = iframeDoc.createElement("style");
-      style.textContent = `
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          font-size: 14px;
-          line-height: 1.6;
-          color: #1F2937;
-          background: white;
-        }
-        img, table {
-          max-width: 100%;
-          height: auto;
-        }
-        a {
-          color: #027AEA;
-        }
-        pre {
-          white-space: pre-wrap;
-          word-wrap: break-word;
-        }
-      `;
-      iframeDoc.head.appendChild(style);
-
-      // Make links open in new tab
-      const links = iframeDoc.querySelectorAll("a");
-      links.forEach((link) => {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noopener noreferrer");
-      });
-
-      // Adjust height
-      const height = Math.max(iframeDoc.body.scrollHeight + 8, 200);
-      setIframeHeight(`${height}px`);
+    if (!iframe.contentWindow) {
+      setIframeLoaded(true);
+      return;
     }
+
+    const iframeDoc = iframe.contentWindow.document;
+
+    const style = iframeDoc.createElement("style");
+    style.textContent = `
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #1F2937;
+        background: white;
+      }
+      img, table {
+        max-width: 100%;
+        height: auto;
+      }
+      a {
+        color: #027AEA;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    `;
+    iframeDoc.head.appendChild(style);
+
+    const links = iframeDoc.querySelectorAll("a");
+    links.forEach((link) => {
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+    });
+
+    const finalizeHeight = () => {
+      requestAnimationFrame(() => {
+        const height = Math.max(iframeDoc.body.scrollHeight + 8, 200);
+        setIframeHeight(`${height}px`);
+        setIframeLoaded(true);
+      });
+    };
+
+    // Wait for all images to finish loading before calculating height,
+    // so scrollHeight reflects the true content size (avoids half-page jump).
+    const images = Array.from(iframeDoc.querySelectorAll<HTMLImageElement>("img"));
+    const pending = images.filter((img) => !img.complete);
+
+    if (pending.length === 0) {
+      finalizeHeight();
+      return;
+    }
+
+    let remaining = pending.length;
+    const fallbackTimer = setTimeout(finalizeHeight, 5000);
+
+    const onSettled = () => {
+      remaining--;
+      if (remaining <= 0) {
+        clearTimeout(fallbackTimer);
+        finalizeHeight();
+      }
+    };
+
+    pending.forEach((img) => {
+      img.addEventListener("load", onSettled, { once: true });
+      img.addEventListener("error", onSettled, { once: true });
+    });
   };
 
   // Get filename from path
@@ -281,7 +313,12 @@ const EmailDetailPage: React.FC = () => {
 
             {/* Email Body Card */}
             <AdminContentCard className="flex-1 min-h-0 overflow-hidden">
-              <div className="h-full overflow-auto">
+              <div className="h-full overflow-auto relative">
+                {!iframeLoaded && email.Body && (
+                  <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px] flex items-center justify-center rounded-lg">
+                    <ArrowPathIcon className="animate-spin h-6 w-6 text-neutral-400" />
+                  </div>
+                )}
                 {email.Body ? (
                   <iframe
                     srcDoc={email.Body}

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Attachment } from "@/lib/attachmentUtils";
 import AttachmentList from "@/components/mail/AttachmentList";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 interface AdminEmailBodyCardProps {
   subject: string;
@@ -60,25 +61,63 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
   className,
 }) => {
   const [iframeHeight, setIframeHeight] = useState("auto");
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+
+  useEffect(() => {
+    setIframeLoaded(false);
+    setIframeHeight("auto");
+  }, [body]);
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
-    if (iframe.contentWindow) {
-      const iframeDoc = iframe.contentWindow.document;
-
-      const style = iframeDoc.createElement("style");
-      style.textContent = IFRAME_STYLES;
-      iframeDoc.head.appendChild(style);
-
-      const links = iframeDoc.querySelectorAll("a");
-      links.forEach((link) => {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noopener noreferrer");
-      });
-
-      const height = iframeDoc.body.scrollHeight;
-      setIframeHeight(`${height}px`);
+    if (!iframe.contentWindow) {
+      setIframeLoaded(true);
+      return;
     }
+
+    const iframeDoc = iframe.contentWindow.document;
+
+    const style = iframeDoc.createElement("style");
+    style.textContent = IFRAME_STYLES;
+    iframeDoc.head.appendChild(style);
+
+    const links = iframeDoc.querySelectorAll("a");
+    links.forEach((link) => {
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+    });
+
+    const finalizeHeight = () => {
+      requestAnimationFrame(() => {
+        const height = iframeDoc.body.scrollHeight;
+        setIframeHeight(`${height}px`);
+        setIframeLoaded(true);
+      });
+    };
+
+    const images = Array.from(iframeDoc.querySelectorAll<HTMLImageElement>("img"));
+    const pending = images.filter((img) => !img.complete);
+
+    if (pending.length === 0) {
+      finalizeHeight();
+      return;
+    }
+
+    let remaining = pending.length;
+    const fallbackTimer = setTimeout(finalizeHeight, 5000);
+
+    const onSettled = () => {
+      remaining--;
+      if (remaining <= 0) {
+        clearTimeout(fallbackTimer);
+        finalizeHeight();
+      }
+    };
+
+    pending.forEach((img) => {
+      img.addEventListener("load", onSettled, { once: true });
+      img.addEventListener("error", onSettled, { once: true });
+    });
   };
 
   const attachmentItems = attachments.map((att) => ({
@@ -101,7 +140,12 @@ const AdminEmailBodyCard: React.FC<AdminEmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div>
+      <div className="relative">
+        {!iframeLoaded && body && (
+          <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px] flex items-center justify-center rounded-lg">
+            <ArrowPathIcon className="animate-spin h-6 w-6 text-neutral-400" />
+          </div>
+        )}
         {body ? (
           <iframe
             srcDoc={body}
