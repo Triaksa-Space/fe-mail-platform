@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Attachment } from "@/lib/attachmentUtils";
 import AttachmentList from "./AttachmentList";
@@ -61,6 +61,11 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
 }) => {
   const [iframeHeight, setIframeHeight] = useState("auto");
   const [iframeLoaded, setIframeLoaded] = useState(false);
+
+  useEffect(() => {
+    setIframeLoaded(false);
+    setIframeHeight("auto");
+  }, [body]);
 
   const handleIframeLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const iframe = e.target as HTMLIFrameElement;
