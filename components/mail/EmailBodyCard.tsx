@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Attachment } from "@/lib/attachmentUtils";
 import AttachmentList from "./AttachmentList";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 interface EmailBodyCardProps {
   subject: string;
@@ -109,36 +110,29 @@ const EmailBodyCard: React.FC<EmailBodyCardProps> = ({
       <div className="h-px bg-neutral-200 shrink-0" />
 
       {/* Body */}
-      <div className="min-h-0 overflow-auto">
-        {body ? (
-          <div className="relative">
-            {!iframeLoaded && (
-              <div className="flex flex-col gap-2 py-2">
-                <div className="h-3 bg-neutral-100 rounded animate-pulse w-3/4" />
-                <div className="h-3 bg-neutral-100 rounded animate-pulse w-full" />
-                <div className="h-3 bg-neutral-100 rounded animate-pulse w-5/6" />
-                <div className="h-3 bg-neutral-100 rounded animate-pulse w-2/3" />
-              </div>
-            )}
-            <iframe
-              srcDoc={body}
-              className="w-full"
-              style={{
-                height: iframeHeight,
-                width: "100%",
-                border: "none",
-                display: "block",
-                margin: 0,
-                padding: 0,
-                visibility: iframeLoaded ? "visible" : "hidden",
-                position: iframeLoaded ? "static" : "absolute",
-              }}
-              onLoad={handleIframeLoad}
-              title="Email content"
-              sandbox="allow-same-origin allow-scripts allow-popups"
-              scrolling="no"
-            />
+      <div className="min-h-0 overflow-auto relative">
+        {!iframeLoaded && body && (
+          <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px] flex items-center justify-center rounded-lg">
+            <ArrowPathIcon className="animate-spin h-6 w-6 text-neutral-400" />
           </div>
+        )}
+        {body ? (
+          <iframe
+            srcDoc={body}
+            className="w-full"
+            style={{
+              height: iframeHeight,
+              width: "100%",
+              border: "none",
+              display: "block",
+              margin: 0,
+              padding: 0,
+            }}
+            onLoad={handleIframeLoad}
+            title="Email content"
+            sandbox="allow-same-origin allow-scripts allow-popups"
+            scrolling="no"
+          />
         ) : (
           <p className="text-neutral-800 text-sm font-normal font-['Roboto'] leading-5 whitespace-pre-wrap">
             {fallbackText || "No content"}
