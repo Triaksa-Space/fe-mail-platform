@@ -124,7 +124,7 @@ export default function AdminAllInboxPage() {
         {
           params: {
             page,
-            page_size: pageSize,
+            limit: pageSize,
             ...(debouncedSearch && { search: debouncedSearch }),
           },
         }
