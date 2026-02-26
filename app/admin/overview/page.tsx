@@ -213,8 +213,7 @@ export default function OverviewPage() {
     document.title = "Overview - Admin Mailria";
   }, []);
 
-  // Check if user is admin (roleId 0 = SuperAdmin, roleId 2 = Admin)
-  const isAdmin = roleId === 0 || roleId === 2;
+  const isAdmin = roleId === 2;
 
   const fetchOverviewData = useCallback(async (showRefreshState = false) => {
     try {

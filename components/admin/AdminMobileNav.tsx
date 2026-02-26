@@ -13,7 +13,6 @@ interface NavItem {
   icon: React.ElementType;
   path: string;
   permission?: PermissionKey;
-  superAdminOnly?: boolean;
 }
 
 const AdminMobileNav: React.FC = () => {
@@ -24,16 +23,11 @@ const AdminMobileNav: React.FC = () => {
   const isUserListActive = pathname === "/admin" || pathname.startsWith("/admin/user");
   const isRolesActive = pathname === "/admin/roles" || pathname.startsWith("/admin/roles/");
 
-  // Check permission - SuperAdmin (roleId=0) has all permissions
   const checkPermission = (permission: PermissionKey): boolean => {
-    if (roleId === 0) return true;
     return permissions.includes(permission);
   };
 
   const handleNavigation = (item: NavItem) => {
-    if (item.superAdminOnly && roleId !== 0) {
-      return;
-    }
     if (item.permission && !checkPermission(item.permission)) {
       return;
     }
@@ -69,7 +63,6 @@ const AdminMobileNav: React.FC = () => {
       icon: Lock,
       path: "/admin/roles",
       permission: "roles_permissions",
-      superAdminOnly: true,
     },
     {
       id: "settings",
@@ -82,17 +75,7 @@ const AdminMobileNav: React.FC = () => {
 
   // Filter nav items based on permissions
   const navItems = allNavItems.filter((item) => {
-    // If store hasn't hydrated yet, show all non-superAdmin items
     if (!_hasHydrated || roleId === null) {
-      return !item.superAdminOnly;
-    }
-
-    if (item.superAdminOnly && roleId !== 0) {
-      return false;
-    }
-
-    // SuperAdmin sees everything
-    if (roleId === 0) {
       return true;
     }
 

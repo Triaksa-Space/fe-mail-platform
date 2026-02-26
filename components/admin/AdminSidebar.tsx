@@ -39,7 +39,6 @@ interface MenuItem {
   iconSolid: React.ElementType;
   href: string;
   permission?: PermissionKey; // Required permission to see this menu item
-  superAdminOnly?: boolean;   // Only SuperAdmin can see (e.g., roles_permissions)
 }
 
 interface MenuGroup {
@@ -160,19 +159,11 @@ const AdminSidebar: React.FC = () => {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
-  // Check permission - SuperAdmin (roleId=0) has all permissions
   const checkPermission = (permission: PermissionKey): boolean => {
-    // SuperAdmin bypasses all permission checks
-    if (roleId === 0) return true;
-    // Check if permission exists in array
     return permissions.includes(permission);
   };
 
   const handleNavigation = (item: MenuItem) => {
-    // Check permission before navigation
-    if (item.superAdminOnly && roleId !== 0) {
-      return;
-    }
     if (item.permission && !checkPermission(item.permission)) {
       return;
     }
@@ -190,27 +181,14 @@ const AdminSidebar: React.FC = () => {
     : Cog6ToothOutlineIcon;
 
   // Filter menu groups based on permissions
-  // If not hydrated yet or roleId is null, show all menus for SuperAdmin/Admin
   const filteredGroups = menuGroups
     .map((group) => ({
       ...group,
       items: group.items.filter((item) => {
-        // If store hasn't hydrated yet, show all non-superAdmin items
         if (!_hasHydrated || roleId === null) {
-          return !item.superAdminOnly;
-        }
-
-        // SuperAdmin-only items
-        if (item.superAdminOnly && roleId !== 0) {
-          return false;
-        }
-
-        // SuperAdmin sees everything
-        if (roleId === 0) {
           return true;
         }
 
-        // Check permission for regular admins
         if (item.permission) {
           return checkPermission(item.permission);
         }

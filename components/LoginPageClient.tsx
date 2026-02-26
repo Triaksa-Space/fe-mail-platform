@@ -41,7 +41,7 @@ export default function LoginPageClient() {
     if (!token || roleId === null) return;
 
     // Redirect based on stored role
-    if (roleId === 0 || roleId === 2) {
+    if (roleId === 2) {
       router.push("/admin/overview");
     } else if (roleId === 1) {
       router.push("/inbox");
@@ -119,7 +119,7 @@ export default function LoginPageClient() {
 
       // Fetch user details to get permissions (for admin users)
       let permissions: string[] = user.permissions || [];
-      if (user.role_id === 0 || user.role_id === 2) {
+      if (user.role_id === 2) {
         try {
           const userMeResponse = await axios.get<{ permissions: string[] }>(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/get_user_me`,
@@ -147,7 +147,7 @@ export default function LoginPageClient() {
       });
 
       // Redirect based on role
-      if (user.role_id === 0 || user.role_id === 2) {
+      if (user.role_id === 2) {
         router.push("/admin/overview");
       } else if (user.role_id === 1) {
         router.push("/inbox");

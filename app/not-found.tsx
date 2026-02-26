@@ -10,7 +10,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 export default function NotFound() {
   const roleId = useAuthStore((state) => state.roleId);
-  const isAdmin = roleId === 0 || roleId === 2;
+  const isAdmin = roleId === 2;
 
   if (isAdmin) {
     return (
