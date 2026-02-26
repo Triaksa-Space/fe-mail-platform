@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 const CreateAdminPageContent: React.FC = () => {
     const router = useRouter();
-    const roleId = useAuthStore((state) => state.roleId);
+    const hasPermission = useAuthStore((state) => state.hasPermission);
     const [authLoaded, setAuthLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,10 +39,10 @@ const CreateAdminPageContent: React.FC = () => {
             return;
         }
 
-        if (roleId !== 0) {
+        if (!hasPermission('roles_permissions')) {
             router.replace("/admin");
         }
-    }, [authLoaded, roleId, router]);
+    }, [authLoaded, hasPermission, router]);
 
     const handleCreateAdmin = async () => {
         setUsernameError(false);

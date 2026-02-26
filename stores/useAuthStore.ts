@@ -157,12 +157,8 @@ export const useAuthStore = create<AuthState>()(
         }
       },
       // Check if user has a specific permission
-      // SuperAdmin (roleId=0) always has all permissions
       hasPermission: (permission: PermissionKey) => {
         const state = get();
-        // SuperAdmin bypasses all permission checks
-        if (state.roleId === 0) return true;
-        // Check if permission exists in array
         return state.permissions.includes(permission);
       },
     }),

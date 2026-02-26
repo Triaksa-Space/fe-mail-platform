@@ -202,7 +202,7 @@ const InboxPageContent: React.FC = () => {
 
     if (!storedToken) {
       router.replace("/");
-    } else if (roleId === 0 || roleId === 2) {
+    } else if (roleId === 2) {
       router.replace("/not-found");
     }
   }, [authLoaded, storedToken, roleId, router]);
@@ -391,7 +391,7 @@ const InboxPageContent: React.FC = () => {
   // Initial fetch and auto-refresh
   useEffect(() => {
     if (!authLoaded) return;
-    if (!storedToken || roleId === 0 || roleId === 2) return;
+    if (!storedToken || roleId === 2) return;
 
     if (sentStatus === "success") {
       toast({

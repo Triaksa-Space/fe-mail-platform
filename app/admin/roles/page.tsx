@@ -135,8 +135,7 @@ const RolesPermissionsPageContent: React.FC = () => {
             return;
         }
 
-        // SuperAdmin or admin with roles_permissions can access this page
-        if (roleId !== 0 && !hasPermission('roles_permissions')) {
+        if (!hasPermission('roles_permissions')) {
             router.replace("/admin");
         }
     }, [authLoaded, roleId, hasPermission, router]);
@@ -210,7 +209,7 @@ const RolesPermissionsPageContent: React.FC = () => {
     }, [currentPage, pageSize, sortField, sortOrder, searchQuery, router]);
 
     useEffect(() => {
-        if (!authLoaded || (roleId !== 0 && !hasPermission('roles_permissions'))) return;
+        if (!authLoaded || !hasPermission('roles_permissions')) return;
 
         const timeoutId = setTimeout(() => {
             fetchAdmins();

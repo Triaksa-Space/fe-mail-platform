@@ -13,7 +13,6 @@ export function useRequirePermission(permission: PermissionKey): { allowed: bool
   const router = useRouter();
   const _hasHydrated = useAuthStore((state) => state._hasHydrated);
   const hasPermission = useAuthStore((state) => state.hasPermission);
-  const roleId = useAuthStore((state) => state.roleId);
   const token = useAuthStore((state) => state.token);
   const [allowed, setAllowed] = useState(false);
 
@@ -22,12 +21,6 @@ export function useRequirePermission(permission: PermissionKey): { allowed: bool
 
     // User is logging out — skip permission check entirely
     if (!token) return;
-
-    // SuperAdmin always has access
-    if (roleId === 0) {
-      setAllowed(true);
-      return;
-    }
 
     if (!hasPermission(permission)) {
       toast({
@@ -38,7 +31,7 @@ export function useRequirePermission(permission: PermissionKey): { allowed: bool
     } else {
       setAllowed(true);
     }
-  }, [_hasHydrated, token, hasPermission, permission, roleId, router]);
+  }, [_hasHydrated, token, hasPermission, permission, router]);
 
   return { allowed };
 }
