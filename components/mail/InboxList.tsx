@@ -235,7 +235,9 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
   const isUnread = email.unread;
   const displayDate = email.date
     .replace(/\bMinutes?\b/g, (match) => match.toLowerCase())
+    .replace(/\bHours?\b/g, (match) => match.toLowerCase())
     .replace(/\bMins?\b/gi, (match) => match.toLowerCase())
+    .replace(/\bHrs?\b/gi, (match) => match.toLowerCase())
     .replace(/(\d+)\s*M\b/g, "$1m");
 
   return (

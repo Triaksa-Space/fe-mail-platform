@@ -13,7 +13,7 @@ import { apiClient } from "@/lib/api-client";
 import { saveAs } from "file-saver";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { cn } from "@/lib/utils";
+import { cn, resolveRelativeTime } from "@/lib/utils";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import { ArrowPathIcon, UserIcon, ChevronLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -255,7 +255,7 @@ const EmailDetailPage: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-2 text-sm text-neutral-500">
                         <Clock className="h-4 w-4" />
-                        <span>{email.RelativeTime}</span>
+                        <span>{resolveRelativeTime(undefined, email.RelativeTime)}</span>
                       </div>
                     </div>
                   </div>
