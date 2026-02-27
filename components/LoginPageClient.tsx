@@ -146,9 +146,26 @@ export default function LoginPageClient() {
         rememberMe: rememberMe,
       });
 
-      // Redirect based on role
-      if (user.role_id === 2) {
-        router.push("/admin/overview");
+      // Redirect based on role and permissions
+      if (user.role_id === 0 || user.role_id === 2) {
+        // SuperAdmin always goes to overview; regular admins go to their first accessible page
+        if (user.role_id === 0 || permissions.includes("overview")) {
+          router.push("/admin/overview");
+        } else if (permissions.includes("user_list")) {
+          router.push("/admin");
+        } else if (permissions.includes("all_inbox")) {
+          router.push("/admin/manage-email");
+        } else if (permissions.includes("all_sent")) {
+          router.push("/admin/all-sent");
+        } else if (permissions.includes("create_single")) {
+          router.push("/admin/create-single-email");
+        } else if (permissions.includes("create_bulk")) {
+          router.push("/admin/create-bulk-email");
+        } else if (permissions.includes("roles_permissions")) {
+          router.push("/admin/roles");
+        } else {
+          router.push("/admin");
+        }
       } else if (user.role_id === 1) {
         router.push("/inbox");
       }

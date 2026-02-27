@@ -18,7 +18,8 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminContentCard from "@/components/admin/AdminContentCard";
 import PaginationComponent from "@/components/PaginationComponent";
 import { Toaster } from "@/components/ui/toaster";
-import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ChevronRightIcon, ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AdminLoadingPlaceholder from "@/components/admin/AdminLoadingPlaceholder";
 import { useRequirePermission } from "@/hooks/use-require-permission";
@@ -81,7 +82,7 @@ export default function AdminAllInboxPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Search state
-  const [searchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -118,10 +119,6 @@ export default function AdminAllInboxPage() {
     if (!token) return;
 
     try {
-      // Trigger email processing (raw → per-user inbox) before fetching.
-      // Non-fatal: backend mutex prevents double processing with cron.
-      await apiClient.post("/admin/process-emails").catch(() => {});
-
       const response = await apiClient.get<AdminInboxResponse>(
         `/admin/inbox`,
         {
@@ -384,12 +381,12 @@ export default function AdminAllInboxPage() {
           ) : (
             /* Email List View - Full Width */
             <AdminContentCard className="h-full flex flex-col overflow-hidden">
-              {/* Search Header
+              {/* Search Header */}
               <div className="flex items-center gap-3 p-4 border-b border-neutral-100">
                 <div className="relative flex-1">
                     <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
                     <Input
-                      placeholder="Search by sender, recipient, or subject..."
+                      placeholder="Search by email, sender, or subject..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="search-input pl-10 h-10 rounded-xl border-neutral-200"
@@ -398,7 +395,7 @@ export default function AdminAllInboxPage() {
                 <span className="text-sm text-neutral-500 whitespace-nowrap">
                   {total} emails
                 </span>
-              </div> */}
+              </div>
 
               {/* Email List */}
               <div className="flex-1 overflow-y-auto">
