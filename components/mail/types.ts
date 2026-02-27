@@ -133,7 +133,7 @@ export function transformEmailToMail(email: Email): Mail {
     snippet: email.Preview,
     body: email.Body,
     date: email.RelativeTime,
-    sentAt: email.Timestamp,
+    sentAt: email.received_at,
     unread: !email.IsRead,
     attachments,
   };

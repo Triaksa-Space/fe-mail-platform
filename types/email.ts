@@ -16,6 +16,6 @@ export interface Email {
   RelativeTime: string;
   Body: string; // May contain HTML content
   Recipient: string;
-  Timestamp: string;
+  received_at: string;
   ListAttachments: Attachment;
 }
