@@ -265,13 +265,15 @@ export default function OverviewPage() {
   }, []);
 
   useEffect(() => {
+    if (!allowed) return;
     fetchOverviewData();
-  }, [fetchOverviewData]);
+  }, [allowed, fetchOverviewData]);
 
   // Silently trigger email processing every 30 seconds while on this page.
   // No loading state — runs in background. Backend mutex ensures no double-processing
   // if the cron worker is already running.
   useEffect(() => {
+    if (!allowed) return;
     const PROCESS_INTERVAL_MS = 30_000;
 
     const runProcess = () => {
@@ -281,7 +283,7 @@ export default function OverviewPage() {
 
     const intervalId = setInterval(runProcess, PROCESS_INTERVAL_MS);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [allowed]);
 
   const handleRefresh = () => {
     fetchOverviewData(true);
