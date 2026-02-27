@@ -447,7 +447,7 @@ const InboxEmailRow: React.FC<InboxEmailRowProps> = ({ email, onClick }) => {
                   "text-xs font-['Roboto'] leading-5 truncate",
                   isUnread ? "text-neutral-800 font-semibold" : "text-neutral-600 font-normal"
                 )}>
-                  {email.RelativeTime}
+                  {resolveRelativeTime(undefined, email.RelativeTime)}
                 </div>
                 {isUnread && <div className="w-2 h-2 bg-primary-500 rounded-full"></div>}
               </div>
