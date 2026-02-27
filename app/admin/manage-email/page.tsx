@@ -118,6 +118,10 @@ export default function AdminAllInboxPage() {
     if (!token) return;
 
     try {
+      // Trigger email processing (raw → per-user inbox) before fetching.
+      // Non-fatal: backend mutex prevents double processing with cron.
+      await apiClient.post("/admin/process-emails").catch(() => {});
+
       const response = await apiClient.get<AdminInboxResponse>(
         `/admin/inbox`,
         {
@@ -171,6 +175,19 @@ export default function AdminAllInboxPage() {
     setIsLoading(true);
     fetchEmails();
   }, [fetchEmails]);
+
+  // Poll process-emails every 30s to keep inbox up to date without manual refresh
+  useEffect(() => {
+    const PROCESS_INTERVAL_MS = 30_000;
+
+    const runProcess = () => {
+      if (document.hidden) return;
+      apiClient.post("/admin/process-emails").catch(() => {});
+    };
+
+    const intervalId = setInterval(runProcess, PROCESS_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, []);
 
   // Fetch email detail
   useEffect(() => {
