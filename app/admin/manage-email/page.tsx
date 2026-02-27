@@ -176,18 +176,14 @@ export default function AdminAllInboxPage() {
     fetchEmails();
   }, [fetchEmails]);
 
-  // Poll process-emails every 30s to keep inbox up to date without manual refresh
+  // Auto-refresh: process new emails + re-fetch list every 30s
   useEffect(() => {
-    const PROCESS_INTERVAL_MS = 30_000;
-
-    const runProcess = () => {
+    const intervalId = setInterval(() => {
       if (document.hidden) return;
-      apiClient.post("/admin/process-emails").catch(() => {});
-    };
-
-    const intervalId = setInterval(runProcess, PROCESS_INTERVAL_MS);
+      fetchEmails();
+    }, 30_000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [fetchEmails]);
 
   // Fetch email detail
   useEffect(() => {
