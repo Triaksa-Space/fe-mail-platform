@@ -115,7 +115,13 @@ export function resolveRelativeTime(
   serverRelativeTime?: string | null,
 ): string {
   const relative = (serverRelativeTime || "").trim();
-  if (relative) return relative;
+  if (relative) {
+    return relative
+      .replace(/\bMinutes?\b/g, (match) => match.toLowerCase())
+      .replace(/\bHours?\b/g, (match) => match.toLowerCase())
+      .replace(/\bMins?\b/gi, (match) => match.toLowerCase())
+      .replace(/\bHrs?\b/gi, (match) => match.toLowerCase());
+  }
   if (!date) return "";
   return formatRelativeTime(date);
 }
