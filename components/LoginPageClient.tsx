@@ -32,6 +32,7 @@ export default function LoginPageClient() {
   const { setAuth } = useAuthStore();
   const token = useAuthStore((state) => state.token);
   const roleId = useAuthStore((state) => state.roleId);
+  const permissions = useAuthStore((state) => state.permissions);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,13 +41,29 @@ export default function LoginPageClient() {
   useEffect(() => {
     if (!token || roleId === null) return;
 
-    // Redirect based on stored role
-    if (roleId === 2) {
-      router.push("/admin/overview");
+    // Redirect based on stored role and permissions
+    if (roleId === 0 || roleId === 2) {
+      if (roleId === 0 || permissions.includes("overview")) {
+        router.push("/admin/overview");
+      } else if (permissions.includes("user_list")) {
+        router.push("/admin");
+      } else if (permissions.includes("all_inbox")) {
+        router.push("/admin/manage-email");
+      } else if (permissions.includes("all_sent")) {
+        router.push("/admin/all-sent");
+      } else if (permissions.includes("create_single")) {
+        router.push("/admin/create-single-email");
+      } else if (permissions.includes("create_bulk")) {
+        router.push("/admin/create-bulk-email");
+      } else if (permissions.includes("roles_permissions")) {
+        router.push("/admin/roles");
+      } else {
+        router.push("/admin");
+      }
     } else if (roleId === 1) {
       router.push("/inbox");
     }
-  }, [token, roleId, router]);
+  }, [token, roleId, permissions, router]);
 
   const resetStatus = searchParams.get("reset");
   useEffect(() => {
