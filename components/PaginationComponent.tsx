@@ -87,12 +87,12 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
   }, [currentPage]);
 
   const handlePageInputSubmit = () => {
-    const page = parseInt(pageInput);
-    if (page && page >= 1 && page <= totalPages) {
+    const page = parseInt(pageInput, 10);
+    if (!isNaN(page) && page >= 1 && page <= totalPages) {
       onPageChange(page);
+      setIsDialogOpen(false);
+      setPageInput("");
     }
-    setIsDialogOpen(false);
-    setPageInput("");
   };
 
   return (
@@ -138,6 +138,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
                   max={totalPages}
                   value={pageInput}
                   onChange={(e) => setPageInput(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") handlePageInputSubmit(); }}
                   placeholder={`1 - ${totalPages}`}
                   className="flex-1 bg-transparent border-none outline-none text-neutral-900 text-sm font-normal font-['Roboto'] leading-4 placeholder:text-neutral-400"
                 />
@@ -151,7 +152,7 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
           {/* Button */}
           <Button
             onClick={handlePageInputSubmit}
-            disabled={!pageInput}
+            disabled={!pageInput || isNaN(parseInt(pageInput, 10)) || parseInt(pageInput, 10) < 1 || parseInt(pageInput, 10) > totalPages}
             className="self-stretch h-10 px-4 py-2.5 btn-primary-skin gap-1.5 transition-colors"
           >
             <div className="text-center justify-center text-white text-base font-medium font-['Roboto'] leading-4">Go</div>
