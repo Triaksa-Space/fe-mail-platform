@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import HeartbeatProvider from "@/components/HeartbeatProvider";
 import SyncLogoutProvider from "@/components/SyncLogoutProvider";
 
 export const metadata: Metadata = {
@@ -34,6 +35,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <SyncLogoutProvider />
+        <HeartbeatProvider />
         <ErrorBoundary>{children}</ErrorBoundary>
       </body>
     </html>
