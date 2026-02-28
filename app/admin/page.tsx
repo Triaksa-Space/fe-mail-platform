@@ -33,6 +33,7 @@ interface EmailUser {
     lastActive: string;
     lastActiveRaw: string;
     created: string;
+    createdTime: string;
     createdByName: string;
 }
 
@@ -65,6 +66,16 @@ const formatDate = (value: string) => {
         day: "2-digit",
         month: "short",
         year: "numeric",
+    });
+};
+
+const formatTime = (value: string) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    return date.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
     });
 };
 
@@ -302,6 +313,7 @@ const EmailManagementPageContent: React.FC = () => {
                     lastActive: formatDate(lastLoginDate),
                     lastActiveRaw: lastLoginDate,
                     created: formatDate(user.CreatedAt),
+                    createdTime: formatTime(user.CreatedAt),
                     createdByName: user.CreatedByName,
                     user_encode_id: user.user_encode_id,
                 };
@@ -490,10 +502,15 @@ const EmailManagementPageContent: React.FC = () => {
                                             <LastActiveBadge lastActiveRaw={user.lastActiveRaw} />
                                         </div>
                                         {/* Created */}
-                                        <div className="flex-1 h-11 px-4 py-3 flex items-center">
+                                        <div className="flex-1 h-11 px-4 py-3 flex items-center gap-2">
                                             <div className="text-neutral-900 text-sm font-medium font-['Roboto'] leading-5">
                                                 {user.created}
                                             </div>
+                                            {user.createdTime && (
+                                                <div className="text-neutral-400 text-sm font-medium font-['Roboto'] leading-5">
+                                                    {user.createdTime}
+                                                </div>
+                                            )}
                                         </div>
                                         {/* Created By */}
                                         <div className="flex-1 h-11 px-4 py-3 flex items-center">
