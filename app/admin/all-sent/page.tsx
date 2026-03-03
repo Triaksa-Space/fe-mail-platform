@@ -5,7 +5,7 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { cn, resolveRelativeTime } from "@/lib/utils";
+import { cn, resolveRelativeTime, stripHtml } from "@/lib/utils";
 import { BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import { ApiSentEmail } from "@/lib/transformers";
@@ -388,7 +388,7 @@ export default function AdminAllSentPage() {
                     <AdminEmailBodyCard
                       subject={selectedEmail.subject}
                       body={emailDetail?.Body || emailDetail?.body}
-                      fallbackText={selectedEmail.body_preview || "No content"}
+                      fallbackText={stripHtml(selectedEmail.body_preview || "") || "No content"}
                       attachments={[]}
                       className="self-stretch"
                     />
@@ -456,7 +456,7 @@ export default function AdminAllSentPage() {
                         key={email.id}
                         primaryText={`To: ${email.to || "Unknown"}`}
                         subject={email.subject || "(No subject)"}
-                        snippet={email.body_preview || "No preview available"}
+                        snippet={stripHtml(email.body_preview || "") || "No preview available"}
                         sideText={email.from || email.user_email || "Unknown"}
                         dateText={resolveRelativeTime(
                           email.sent_at,
