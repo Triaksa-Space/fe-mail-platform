@@ -17,7 +17,7 @@ import {
     AdminLayout,
     PermissionChips
 } from "@/components/admin";
-import { AdminUser, AdminApiResponse } from "@/lib/admin-types";
+import { AdminUser, AdminApiResponse, formatLastActive } from "@/lib/admin-types";
 import { PencilSquareIcon, TrashIcon, UserIcon, ArrowLeftIcon, ChevronRightIcon, XMarkIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { Button } from "@/components/ui/button";
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
@@ -258,13 +258,37 @@ const ViewAdminPageContent: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Role Section */}
-                    <div className="flex flex-col justify-start items-start gap-1">
-                        <span className="text-neutral-700 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
-                        <PermissionChips
-                            permissions={admin?.permissions || []}
-                            className="flex-wrap"
-                        />
+                    {/* Last Active & Role Row */}
+                    <div className="self-stretch inline-flex justify-start items-start gap-4">
+                        {/* Last Active */}
+                        <div className="flex flex-col justify-start items-start gap-1">
+                            <span className="text-neutral-700 text-[10px] font-normal font-['Roboto'] leading-4">Last active</span>
+                            {(() => {
+                                const { text, variant } = formatLastActive(admin?.last_active_at ?? null, admin?.is_online);
+                                const badgeClass = variant === 'online'
+                                    ? "h-5 px-1.5 py-0.5 bg-success-50 rounded-3xl flex justify-center items-center gap-1"
+                                    : variant === 'recent'
+                                    ? "h-5 px-1.5 py-0.5 bg-primary-50 rounded-3xl flex justify-center items-center gap-1"
+                                    : "h-5 px-1.5 py-0.5 bg-neutral-100 rounded-3xl flex justify-center items-center gap-1";
+                                const textClass = variant === 'online'
+                                    ? "text-center text-success-500 text-xs font-medium font-['Roboto'] leading-5"
+                                    : "text-center text-neutral-700 text-xs font-medium font-['Roboto'] leading-5";
+                                return (
+                                    <div className={badgeClass}>
+                                        <div className={textClass}>{text}</div>
+                                    </div>
+                                );
+                            })()}
+                        </div>
+
+                        {/* Role/Permissions */}
+                        <div className="flex flex-col justify-start items-start gap-1">
+                            <span className="text-neutral-700 text-[10px] font-normal font-['Roboto'] leading-4">Role</span>
+                            <PermissionChips
+                                permissions={admin?.permissions || []}
+                                className="flex-wrap"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
