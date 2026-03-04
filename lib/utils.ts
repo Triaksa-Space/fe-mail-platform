@@ -108,6 +108,23 @@ export function formatRelativeTime(date: Date | string): string {
 }
 
 /**
+ * Strip HTML tags and decode common HTML entities, returning plain text.
+ * Used to sanitize body_preview fields before displaying as snippet text.
+ */
+export function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * Prefer server-provided relative time when available, otherwise compute from timestamp.
  */
 export function resolveRelativeTime(
