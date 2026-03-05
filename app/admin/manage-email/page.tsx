@@ -5,7 +5,7 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, formatRelativeTime, stripHtml } from "@/lib/utils";
 import { BUTTON_STYLES } from "@/lib/styles";
 import { parseAttachments } from "@/lib/attachmentUtils";
 import AdminEmailBodyCard from "@/components/admin/AdminEmailBodyCard";
@@ -419,7 +419,7 @@ export default function AdminAllInboxPage() {
                         key={email.id}
                         primaryText={email.from_name || email.from || "Unknown"}
                         subject={email.subject || "(No subject)"}
-                        snippet={email.preview || "No preview available"}
+                        snippet={stripHtml(email.preview || "") || "No preview available"}
                         sideText={email.user_email || "Unknown"}
                         dateText={formatEmailListDate(email.received_at)}
                         isUnread={!email.is_read}

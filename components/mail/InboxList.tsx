@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, stripHtml } from "@/lib/utils";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { EnvelopeOpenIcon } from "@heroicons/react/24/solid";
 import { Button } from "@/components/ui/button";
@@ -305,7 +305,7 @@ const InboxRow: React.FC<InboxRowProps> = memo(function InboxRow({
 
         {/* Snippet/Preview */}
         <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 text-left truncate">
-          {email.snippet || "No preview available"}
+          {stripHtml(email.snippet || "") || "No preview available"}
         </p>
       </div>
     </Button>

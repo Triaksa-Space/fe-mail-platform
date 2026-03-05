@@ -189,9 +189,25 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // Handle 403 Forbidden - redirect to forbidden page
+    // Handle 403 Forbidden - refresh permissions then redirect
     if (error.response?.status === 403) {
       if (typeof window !== "undefined") {
+        // Re-fetch permissions so the sidebar reflects revoked access immediately
+        const failingUrl = originalRequest.url || "";
+        if (!failingUrl.includes("/user/get_user_me")) {
+          const token = getAccessToken();
+          if (token) {
+            try {
+              const meResponse = await axios.get(`${API_BASE_URL}/user/get_user_me`, {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              const newPermissions: string[] = meResponse.data.permissions || [];
+              useAuthStore.getState().setPermissions(newPermissions);
+            } catch {
+              // Ignore — proceed with redirect regardless
+            }
+          }
+        }
         window.location.href = "/forbidden";
       }
       return Promise.reject(error);
