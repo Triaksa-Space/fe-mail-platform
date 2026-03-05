@@ -2,7 +2,7 @@
 
 import React, { memo } from "react";
 import Image from "next/image";
-import { cn, resolveRelativeTime } from "@/lib/utils";
+import { cn, resolveRelativeTime, stripHtml } from "@/lib/utils";
 import { PenSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CenterTruncate from "@/components/ui/center-truncate";
@@ -242,7 +242,7 @@ const SentRow: React.FC<SentRowProps> = memo(function SentRow({ email, isSelecte
 
         {/* Snippet/Preview */}
         <p className="w-full min-w-0 text-neutral-600 text-sm font-normal font-['Roboto'] leading-5 truncate text-left">
-          {email.snippet || "No preview available"}
+          {stripHtml(email.snippet || "") || "No preview available"}
         </p>
       </div>
     </Button>

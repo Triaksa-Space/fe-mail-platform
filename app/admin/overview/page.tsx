@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, stripHtml } from "@/lib/utils";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -185,7 +185,7 @@ function LatestListCard({
                 key={email.id}
                 primaryText={type === "sent" ? `To: ${email.name}` : email.name}
                 subject={email.subject || "(No subject)"}
-                snippet={email.snippet || "No preview available"}
+                snippet={stripHtml(email.snippet || "") || "No preview available"}
                 sideText={email.email || "Unknown"}
                 dateText={email.date}
                 isUnread={!!email.isUnread}
