@@ -3,6 +3,7 @@ import "./globals.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import HeartbeatProvider from "@/components/HeartbeatProvider";
 import SyncLogoutProvider from "@/components/SyncLogoutProvider";
+import SyncPermissionsProvider from "@/components/SyncPermissionsProvider";
 
 export const metadata: Metadata = {
   title: "Mailria: Nothing Extra. Just What Matters.",
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <SyncLogoutProvider />
         <HeartbeatProvider />
+        <SyncPermissionsProvider />
         <ErrorBoundary>{children}</ErrorBoundary>
       </body>
     </html>
