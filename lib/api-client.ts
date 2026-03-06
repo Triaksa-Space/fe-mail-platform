@@ -31,10 +31,10 @@ export const apiClient = axios.create({
   }],
 });
 
-// Track if we're currently refreshing
+// ─── Tab-local refresh state ────────────────────────────────────────────────
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (value: unknown) => void;
+  resolve: (value: string) => void;
   reject: (reason?: unknown) => void;
 }> = [];
 
@@ -43,13 +43,93 @@ const processQueue = (error: Error | null, token: string | null = null) => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token);
+      prom.resolve(token!);
     }
   });
   failedQueue = [];
 };
 
-// Get tokens from storage
+// ─── Fix 1: Cross-tab refresh lock (prevents multiple tabs refreshing simultaneously) ─
+const REFRESH_LOCK_KEY = "auth-refresh-lock";
+const REFRESH_LOCK_TTL = 8000; // 8 seconds max for a refresh round-trip
+
+function isAnotherTabRefreshing(): boolean {
+  if (typeof window === "undefined") return false;
+  const ts = Number(localStorage.getItem(REFRESH_LOCK_KEY) ?? 0);
+  return Date.now() - ts < REFRESH_LOCK_TTL;
+}
+
+function acquireRefreshLock(): void {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(REFRESH_LOCK_KEY, String(Date.now()));
+  }
+}
+
+function releaseRefreshLock(): void {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(REFRESH_LOCK_KEY);
+  }
+}
+
+// ─── Fix 1: BroadcastChannel to signal refresh result to waiting tabs ────────
+type RefreshBCMessage =
+  | { type: "refresh-done"; accessToken: string }
+  | { type: "refresh-failed" };
+
+const refreshBC =
+  typeof window !== "undefined" && "BroadcastChannel" in window
+    ? new BroadcastChannel("auth-refresh")
+    : null;
+
+/**
+ * Waits for the currently-refreshing tab to broadcast its result.
+ * Falls back to polling localStorage when BroadcastChannel is unavailable.
+ */
+function waitForOtherTabRefresh(): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const WAIT_TIMEOUT = REFRESH_LOCK_TTL + 2000;
+
+    if (refreshBC) {
+      const timeout = setTimeout(() => {
+        refreshBC.removeEventListener("message", handler);
+        // On timeout, try reading the fresh token (the lock may have been released)
+        const freshToken = getAccessToken();
+        freshToken
+          ? resolve(freshToken)
+          : reject(new Error("Cross-tab token refresh timed out"));
+      }, WAIT_TIMEOUT);
+
+      const handler = (e: MessageEvent<RefreshBCMessage>) => {
+        clearTimeout(timeout);
+        refreshBC.removeEventListener("message", handler);
+        if (e.data.type === "refresh-done") {
+          resolve(e.data.accessToken);
+        } else {
+          reject(new Error("Token refresh failed in another tab"));
+        }
+      };
+
+      refreshBC.addEventListener("message", handler);
+    } else {
+      // Fallback: poll until the lock is released then read fresh token
+      const pollStart = Date.now();
+      const pollInterval = setInterval(() => {
+        if (!isAnotherTabRefreshing()) {
+          clearInterval(pollInterval);
+          const freshToken = getAccessToken();
+          freshToken
+            ? resolve(freshToken)
+            : reject(new Error("Token refresh failed in another tab"));
+        } else if (Date.now() - pollStart >= WAIT_TIMEOUT) {
+          clearInterval(pollInterval);
+          reject(new Error("Cross-tab token refresh timed out"));
+        }
+      }, 200);
+    }
+  });
+}
+
+// ─── Token storage helpers ───────────────────────────────────────────────────
 const getAccessToken = (): string | null => {
   if (typeof window === "undefined") return null;
   const stored = safeStorage.getItem("auth-storage");
@@ -104,7 +184,93 @@ const clearTokens = () => {
   useAuthStore.getState().logout();
 };
 
-// Request interceptor - add auth header
+// ─── Fix 3: Token expiry helper for proactive refresh ───────────────────────
+function getTokenExpiresInMs(token: string): number {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp * 1000 - Date.now();
+  } catch {
+    return Infinity;
+  }
+}
+
+// ─── Fix 2: Core refresh call with one retry on network/server errors ────────
+async function doRefresh(
+  refreshToken: string
+): Promise<{ access_token: string; refresh_token: string }> {
+  for (let attempt = 0; attempt <= 1; attempt++) {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/token/refresh`, {
+        refresh_token: refreshToken,
+      });
+      return response.data;
+    } catch (err) {
+      const axiosErr = err as AxiosError;
+      // Retry once on network errors or 5xx server errors
+      const isRetryable = !axiosErr.response || axiosErr.response.status >= 500;
+      if (isRetryable && attempt === 0) {
+        await new Promise((r) => setTimeout(r, 2000));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error("Unreachable");
+}
+
+/**
+ * Performs a token refresh with cross-tab coordination:
+ * - Acquires the tab lock so other tabs wait instead of also refreshing
+ * - Broadcasts the result so waiting tabs can immediately proceed
+ * - Does NOT call clearTokens() — callers decide whether to logout on failure
+ */
+async function performRefresh(refreshToken: string): Promise<string> {
+  acquireRefreshLock();
+  isRefreshing = true;
+  try {
+    const { access_token, refresh_token: newRT } = await doRefresh(refreshToken);
+    setTokens(access_token, newRT);
+    processQueue(null, access_token);
+    refreshBC?.postMessage({
+      type: "refresh-done",
+      accessToken: access_token,
+    } as RefreshBCMessage);
+    return access_token;
+  } catch (err) {
+    processQueue(err as Error, null);
+    refreshBC?.postMessage({ type: "refresh-failed" } as RefreshBCMessage);
+    throw err;
+  } finally {
+    isRefreshing = false;
+    releaseRefreshLock();
+  }
+}
+
+// ─── Fix 3: Proactive refresh timer ──────────────────────────────────────────
+// Check every 60 seconds; if the access token expires in < 2 minutes, refresh
+// proactively before requests start failing with 401.
+if (typeof window !== "undefined") {
+  setInterval(() => {
+    const token = getAccessToken();
+    const rt = getRefreshToken();
+
+    if (!token || !rt || isRefreshing || isAnotherTabRefreshing()) return;
+
+    const expiresIn = getTokenExpiresInMs(token);
+    if (expiresIn > 0 && expiresIn < 2 * 60 * 1000) {
+      performRefresh(rt).catch((err) => {
+        // If the refresh token itself is invalid/expired (auth error), logout.
+        // Network errors are already retried once inside doRefresh; ignore those.
+        const axiosErr = err as AxiosError;
+        if (axiosErr.response && axiosErr.response.status < 500) {
+          clearTokens();
+        }
+      });
+    }
+  }, 60 * 1000);
+}
+
+// ─── Request interceptor — attach access token ───────────────────────────────
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
@@ -118,7 +284,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor - handle 401 and refresh token
+// ─── Response interceptor — handle 401 with cross-tab refresh coordination ───
 apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -128,7 +294,7 @@ apiClient.interceptors.response.use(
 
     // If error is 401 and we haven't retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Don't retry for endpoints where 401 can be a user-input/auth validation result.
+      // Don't retry for endpoints where 401 is a legitimate auth result
       if (
         originalRequest.url?.includes("/login") ||
         originalRequest.url?.includes("/token/refresh") ||
@@ -137,8 +303,8 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
       }
 
+      // Case 1: This tab is already refreshing — queue and wait
       if (isRefreshing) {
-        // Queue this request while refreshing
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -151,41 +317,38 @@ apiClient.interceptors.response.use(
           });
       }
 
+      // Fix 1 — Case 2: Another tab holds the refresh lock — wait for its result
+      if (isAnotherTabRefreshing()) {
+        try {
+          const newToken = await waitForOtherTabRefresh();
+          originalRequest._retry = true;
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return apiClient(originalRequest);
+        } catch {
+          clearTokens();
+          if (typeof window !== "undefined") window.location.href = "/";
+          return Promise.reject(error);
+        }
+      }
+
+      // Case 3: This tab will perform the refresh
       originalRequest._retry = true;
-      isRefreshing = true;
 
       const refreshToken = getRefreshToken();
-
       if (!refreshToken) {
-        isRefreshing = false;
         clearTokens();
-        if (typeof window !== "undefined") {
-          window.location.href = "/";
-        }
+        if (typeof window !== "undefined") window.location.href = "/";
         return Promise.reject(error);
       }
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/token/refresh`, {
-          refresh_token: refreshToken,
-        });
-
-        const { access_token, refresh_token: newRefreshToken } = response.data;
-
-        setTokens(access_token, newRefreshToken);
-        processQueue(null, access_token);
-
-        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+        const newToken = await performRefresh(refreshToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError as Error, null);
         clearTokens();
-        if (typeof window !== "undefined") {
-          window.location.href = "/";
-        }
+        if (typeof window !== "undefined") window.location.href = "/";
         return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
       }
     }
 
