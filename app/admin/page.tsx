@@ -219,12 +219,11 @@ const EmailManagementPageContent: React.FC = () => {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
-            setSearchTerm(""); // Reset search term to refresh the list
+            fetchUsers();
         } catch (error) {
             setPasswordForAdmin("");
             setConfirmPasswordForAdmin("");
             setSelectedAdmin(null);
-            setSearchTerm(""); // Reset search term to refresh the list
 
             let errorMessage = "Failed to change password. Please try again.";
             if (axios.isAxiosError(error) && error.response?.data?.error) {
