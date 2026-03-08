@@ -194,28 +194,19 @@ function getTokenExpiresInMs(token: string): number {
   }
 }
 
-// ─── Fix 2: Core refresh call with one retry on network/server errors ────────
+// ─── Core refresh call (no retry) ────────────────────────────────────────────
+// IMPORTANT: Do NOT retry refresh token requests on network errors.
+// If the server received the request and rotated the token but the response was
+// lost, retrying with the same (now-revoked) refresh token triggers the BE
+// "token reuse = theft" detection which revokes ALL sessions for this user on
+// every device. One-shot only; the BE grace period handles the retry side.
 async function doRefresh(
   refreshToken: string
 ): Promise<{ access_token: string; refresh_token: string }> {
-  for (let attempt = 0; attempt <= 1; attempt++) {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/token/refresh`, {
-        refresh_token: refreshToken,
-      });
-      return response.data;
-    } catch (err) {
-      const axiosErr = err as AxiosError;
-      // Retry once on network errors or 5xx server errors
-      const isRetryable = !axiosErr.response || axiosErr.response.status >= 500;
-      if (isRetryable && attempt === 0) {
-        await new Promise((r) => setTimeout(r, 2000));
-        continue;
-      }
-      throw err;
-    }
-  }
-  throw new Error("Unreachable");
+  const response = await axios.post(`${API_BASE_URL}/token/refresh`, {
+    refresh_token: refreshToken,
+  });
+  return response.data;
 }
 
 /**
@@ -246,9 +237,14 @@ async function performRefresh(refreshToken: string): Promise<string> {
   }
 }
 
-// ─── Fix 3: Proactive refresh timer ──────────────────────────────────────────
-// Check every 60 seconds; if the access token expires in < 2 minutes, refresh
-// proactively before requests start failing with 401.
+// ─── Proactive refresh timer ──────────────────────────────────────────────────
+// Per-device random jitter (0–60 s) so multiple devices logged in with the same
+// account do not all fire their proactive refresh at the exact same moment,
+// which would race on the server's refresh-token rotation.
+const _proactiveJitterMs = typeof window !== "undefined"
+  ? Math.random() * 60 * 1000   // 0–60 s, fixed for this page lifetime
+  : 0;
+
 if (typeof window !== "undefined") {
   setInterval(() => {
     const token = getAccessToken();
@@ -257,10 +253,13 @@ if (typeof window !== "undefined") {
     if (!token || !rt || isRefreshing || isAnotherTabRefreshing()) return;
 
     const expiresIn = getTokenExpiresInMs(token);
-    if (expiresIn > 0 && expiresIn < 2 * 60 * 1000) {
+    // Refresh when expiry falls inside the jitter window (90s base + jitter).
+    // Each device gets a slightly different threshold so they stagger naturally.
+    const refreshThreshold = 90 * 1000 + _proactiveJitterMs; // 90s–150s before expiry
+    if (expiresIn > 0 && expiresIn < refreshThreshold) {
       performRefresh(rt).catch((err) => {
-        // If the refresh token itself is invalid/expired (auth error), logout.
-        // Network errors are already retried once inside doRefresh; ignore those.
+        // Only logout on definitive auth errors (4xx). Network errors (no response)
+        // are intentionally NOT retried — see doRefresh comment.
         const axiosErr = err as AxiosError;
         if (axiosErr.response && axiosErr.response.status < 500) {
           clearTokens();
