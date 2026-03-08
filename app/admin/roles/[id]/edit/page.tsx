@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense, useCallback } from 'react';
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { apiClient } from "@/lib/api-client";
 import { Check } from 'lucide-react';
@@ -39,6 +39,7 @@ const EditAdminPageContent: React.FC = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [permissions, setPermissions] = useState<PermissionKey[]>([]);
+    const originalPassword = useRef('');
 
     const { toast } = useToast();
 
@@ -82,6 +83,7 @@ const EditAdminPageContent: React.FC = () => {
                 setAdmin(adminData);
                 setUsername(adminData.username);
                 setPassword(adminData.password || '');
+                originalPassword.current = adminData.password || '';
                 setPermissions(adminData.permissions);
             }
         } catch (error) {
@@ -123,7 +125,8 @@ const EditAdminPageContent: React.FC = () => {
             return;
         }
 
-        if (password && password.length < 6) {
+        const passwordChanged = password !== originalPassword.current;
+        if (passwordChanged && password.length < 6) {
             toast({
                 description: "Password must be at least 6 characters long.",
                 variant: "destructive",
@@ -151,8 +154,8 @@ const EditAdminPageContent: React.FC = () => {
                 permissions: permissions,
             };
 
-            // Only include password if it was changed
-            if (password) {
+            // Only include password if it was actually changed from the original value
+            if (passwordChanged && password) {
                 payload.password = password;
             }
 
