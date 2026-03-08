@@ -105,7 +105,15 @@ function waitForOtherTabRefresh(): Promise<string> {
         if (e.data.type === "refresh-done") {
           resolve(e.data.accessToken);
         } else {
-          reject(new Error("Token refresh failed in another tab"));
+          // "refresh-failed" may come from a tab that *lost* the race (not a
+          // genuine auth failure).  Before giving up, check whether a different
+          // tab already wrote a fresh access token to storage.  If it did,
+          // carry on; the next request will use the new token.  If storage is
+          // truly empty the session is gone and we reject as before.
+          const freshToken = getAccessToken();
+          freshToken
+            ? resolve(freshToken)
+            : reject(new Error("Token refresh failed in another tab"));
         }
       };
 
@@ -262,6 +270,17 @@ if (typeof window !== "undefined") {
         // are intentionally NOT retried — see doRefresh comment.
         const axiosErr = err as AxiosError;
         if (axiosErr.response && axiosErr.response.status < 500) {
+          // ─── Race-condition guard ────────────────────────────────────────────
+          // Two tabs can slip past the isAnotherTabRefreshing() check before
+          // either sets the lock and both try to rotate the same refresh token.
+          // The losing tab gets a 401 from /token/refresh even though the winning
+          // tab already stored a fresh token in localStorage.  If the refresh
+          // token has changed since we captured `rt`, we lost the race but the
+          // session is still alive — do NOT clear tokens in that case.
+          const currentRT = getRefreshToken();
+          if (currentRT && currentRT !== rt) {
+            return; // Another tab won the race — we are still authenticated.
+          }
           clearTokens();
         }
       });
@@ -293,11 +312,14 @@ apiClient.interceptors.response.use(
 
     // If error is 401 and we haven't retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Don't retry for endpoints where 401 is a legitimate auth result
+      // Don't retry for endpoints where 401 is a legitimate auth result, and
+      // don't trigger a refresh for the heartbeat (fire-and-forget ping — the
+      // proactive timer will handle any expired token on the next cycle).
       if (
         originalRequest.url?.includes("/login") ||
         originalRequest.url?.includes("/token/refresh") ||
-        originalRequest.url?.includes("/user/change_password")
+        originalRequest.url?.includes("/user/change_password") ||
+        originalRequest.url?.includes("/heartbeat")
       ) {
         return Promise.reject(error);
       }
@@ -324,6 +346,16 @@ apiClient.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return apiClient(originalRequest);
         } catch {
+          // Before logging out, check one final time: the lock-holder may have
+          // succeeded (or a third tab may have won the race) and already stored
+          // a fresh token while we were waiting.
+          const latestToken = getAccessToken();
+          const latestRT = getRefreshToken();
+          if (latestToken && latestRT) {
+            originalRequest._retry = true;
+            originalRequest.headers.Authorization = `Bearer ${latestToken}`;
+            return apiClient(originalRequest);
+          }
           clearTokens();
           if (typeof window !== "undefined") window.location.href = "/";
           return Promise.reject(error);
@@ -345,6 +377,19 @@ apiClient.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
+        // ─── Race-condition guard ──────────────────────────────────────────────
+        // If the refresh token in localStorage has been replaced by another tab
+        // since we captured `refreshToken`, we lost a cross-tab race but the
+        // session is still valid.  Retry the original request with the new token
+        // instead of logging out.
+        const currentRT = getRefreshToken();
+        if (currentRT && currentRT !== refreshToken) {
+          const latestToken = getAccessToken();
+          if (latestToken) {
+            originalRequest.headers.Authorization = `Bearer ${latestToken}`;
+            return apiClient(originalRequest);
+          }
+        }
         clearTokens();
         if (typeof window !== "undefined") window.location.href = "/";
         return Promise.reject(refreshError);

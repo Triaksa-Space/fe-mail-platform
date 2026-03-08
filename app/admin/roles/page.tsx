@@ -218,6 +218,17 @@ const RolesPermissionsPageContent: React.FC = () => {
         return () => clearTimeout(timeoutId);
     }, [authLoaded, token, currentPage, pageSize, sortField, sortOrder, searchQuery, roleId, hasPermission, fetchAdmins]);
 
+    // Auto-refresh every 30s so last_active_at badges stay current with Redis data
+    useEffect(() => {
+        if (!authLoaded || !hasPermission('roles_permissions')) return;
+
+        const intervalId = setInterval(() => {
+            fetchAdmins();
+        }, 30_000);
+
+        return () => clearInterval(intervalId);
+    }, [authLoaded, hasPermission, fetchAdmins]);
+
     // Reset to page 1 when search query changes
     useEffect(() => {
         setCurrentPage(1);
