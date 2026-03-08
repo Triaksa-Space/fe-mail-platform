@@ -18,12 +18,23 @@ import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { usePasswordMask } from "@/hooks/use-password-mask";
 
+const REMEMBERED_EMAIL_KEY = "remembered-email";
+
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginEmail, setLoginEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const passwordMask = usePasswordMask(showPassword);
   const [rememberMe, setRememberMe] = useState(false);
+
+  // On mount: pre-fill email + check "remember me" if a remembered email exists
+  useEffect(() => {
+    const saved = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+    if (saved) {
+      setLoginEmail(saved);
+      setRememberMe(true);
+    }
+  }, []);
   const [loginError, setLoginError] = useState("");
   const [blockedUntil, setBlockedUntil] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState(0);
@@ -151,6 +162,13 @@ export default function LoginPageClient() {
           // If fetching permissions fails, continue with empty permissions
           console.error("Failed to fetch user permissions");
         }
+      }
+
+      // Persist remembered email across sessions (separate from auth storage)
+      if (rememberMe) {
+        localStorage.setItem(REMEMBERED_EMAIL_KEY, user.email);
+      } else {
+        localStorage.removeItem(REMEMBERED_EMAIL_KEY);
       }
 
       // Store all auth data including permissions
