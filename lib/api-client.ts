@@ -262,6 +262,17 @@ if (typeof window !== "undefined") {
         // are intentionally NOT retried — see doRefresh comment.
         const axiosErr = err as AxiosError;
         if (axiosErr.response && axiosErr.response.status < 500) {
+          // ─── Race-condition guard ────────────────────────────────────────────
+          // Two tabs can slip past the isAnotherTabRefreshing() check before
+          // either sets the lock and both try to rotate the same refresh token.
+          // The losing tab gets a 401 from /token/refresh even though the winning
+          // tab already stored a fresh token in localStorage.  If the refresh
+          // token has changed since we captured `rt`, we lost the race but the
+          // session is still alive — do NOT clear tokens in that case.
+          const currentRT = getRefreshToken();
+          if (currentRT && currentRT !== rt) {
+            return; // Another tab won the race — we are still authenticated.
+          }
           clearTokens();
         }
       });
@@ -345,6 +356,19 @@ apiClient.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
+        // ─── Race-condition guard ──────────────────────────────────────────────
+        // If the refresh token in localStorage has been replaced by another tab
+        // since we captured `refreshToken`, we lost a cross-tab race but the
+        // session is still valid.  Retry the original request with the new token
+        // instead of logging out.
+        const currentRT = getRefreshToken();
+        if (currentRT && currentRT !== refreshToken) {
+          const latestToken = getAccessToken();
+          if (latestToken) {
+            originalRequest.headers.Authorization = `Bearer ${latestToken}`;
+            return apiClient(originalRequest);
+          }
+        }
         clearTokens();
         if (typeof window !== "undefined") window.location.href = "/";
         return Promise.reject(refreshError);
