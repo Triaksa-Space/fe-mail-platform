@@ -18,8 +18,17 @@ import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { usePasswordMask } from "@/hooks/use-password-mask";
 
-const REMEMBERED_EMAIL_KEY = "remembered-email";
-const REMEMBERED_PASSWORD_KEY = "remembered-password";
+const REMEMBERED_CREDENTIALS_KEY = "remembered-credentials"; // { [email]: password }
+const REMEMBERED_LAST_EMAIL_KEY = "remembered-last-email";
+
+function getCredentialsMap(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(REMEMBERED_CREDENTIALS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
 
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,18 +37,27 @@ export default function LoginPageClient() {
   const passwordMask = usePasswordMask(showPassword);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // On mount: pre-fill email + password + check "remember me" if remembered credentials exist
+  // On mount: pre-fill last used email + its password
   useEffect(() => {
-    const savedEmail = localStorage.getItem(REMEMBERED_EMAIL_KEY);
-    const savedPassword = localStorage.getItem(REMEMBERED_PASSWORD_KEY);
-    if (savedEmail) {
-      setLoginEmail(savedEmail);
-      setRememberMe(true);
-    }
-    if (savedPassword) {
-      passwordMask.setPassword(savedPassword);
+    const lastEmail = localStorage.getItem(REMEMBERED_LAST_EMAIL_KEY);
+    if (!lastEmail) return;
+    const map = getCredentialsMap();
+    setLoginEmail(lastEmail);
+    setRememberMe(true);
+    if (map[lastEmail]) {
+      passwordMask.setPassword(map[lastEmail]);
     }
   }, []);
+
+  // Auto-fill password when email matches a saved credential
+  useEffect(() => {
+    if (!loginEmail) return;
+    const map = getCredentialsMap();
+    if (map[loginEmail] !== undefined) {
+      passwordMask.setPassword(map[loginEmail]);
+      setRememberMe(true);
+    }
+  }, [loginEmail]);
   const [loginError, setLoginError] = useState("");
   const [blockedUntil, setBlockedUntil] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState(0);
@@ -170,12 +188,17 @@ export default function LoginPageClient() {
       }
 
       // Persist remembered credentials across sessions (separate from auth storage)
+      const credMap = getCredentialsMap();
       if (rememberMe) {
-        localStorage.setItem(REMEMBERED_EMAIL_KEY, user.email);
-        localStorage.setItem(REMEMBERED_PASSWORD_KEY, passwordMask.password);
+        credMap[user.email] = passwordMask.password;
+        localStorage.setItem(REMEMBERED_CREDENTIALS_KEY, JSON.stringify(credMap));
+        localStorage.setItem(REMEMBERED_LAST_EMAIL_KEY, user.email);
       } else {
-        localStorage.removeItem(REMEMBERED_EMAIL_KEY);
-        localStorage.removeItem(REMEMBERED_PASSWORD_KEY);
+        delete credMap[user.email];
+        localStorage.setItem(REMEMBERED_CREDENTIALS_KEY, JSON.stringify(credMap));
+        if (localStorage.getItem(REMEMBERED_LAST_EMAIL_KEY) === user.email) {
+          localStorage.removeItem(REMEMBERED_LAST_EMAIL_KEY);
+        }
       }
 
       // Store all auth data including permissions
