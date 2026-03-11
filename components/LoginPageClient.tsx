@@ -19,6 +19,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { usePasswordMask } from "@/hooks/use-password-mask";
 
 const REMEMBERED_EMAIL_KEY = "remembered-email";
+const REMEMBERED_PASSWORD_KEY = "remembered-password";
 
 export default function LoginPageClient() {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +28,16 @@ export default function LoginPageClient() {
   const passwordMask = usePasswordMask(showPassword);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // On mount: pre-fill email + check "remember me" if a remembered email exists
+  // On mount: pre-fill email + password + check "remember me" if remembered credentials exist
   useEffect(() => {
-    const saved = localStorage.getItem(REMEMBERED_EMAIL_KEY);
-    if (saved) {
-      setLoginEmail(saved);
+    const savedEmail = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+    const savedPassword = localStorage.getItem(REMEMBERED_PASSWORD_KEY);
+    if (savedEmail) {
+      setLoginEmail(savedEmail);
       setRememberMe(true);
+    }
+    if (savedPassword) {
+      passwordMask.setPassword(savedPassword);
     }
   }, []);
   const [loginError, setLoginError] = useState("");
@@ -164,11 +169,13 @@ export default function LoginPageClient() {
         }
       }
 
-      // Persist remembered email across sessions (separate from auth storage)
+      // Persist remembered credentials across sessions (separate from auth storage)
       if (rememberMe) {
         localStorage.setItem(REMEMBERED_EMAIL_KEY, user.email);
+        localStorage.setItem(REMEMBERED_PASSWORD_KEY, passwordMask.password);
       } else {
         localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+        localStorage.removeItem(REMEMBERED_PASSWORD_KEY);
       }
 
       // Store all auth data including permissions
