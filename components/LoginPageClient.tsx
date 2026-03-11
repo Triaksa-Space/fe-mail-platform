@@ -49,13 +49,16 @@ export default function LoginPageClient() {
     }
   }, []);
 
-  // Auto-fill password when email matches a saved credential
+  // Auto-fill password when email matches a saved credential, clear if not
   useEffect(() => {
     if (!loginEmail) return;
     const map = getCredentialsMap();
     if (map[loginEmail] !== undefined) {
       passwordMask.setPassword(map[loginEmail]);
       setRememberMe(true);
+    } else {
+      passwordMask.setPassword("");
+      setRememberMe(false);
     }
   }, [loginEmail]);
   const [loginError, setLoginError] = useState("");
